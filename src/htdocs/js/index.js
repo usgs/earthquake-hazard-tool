@@ -1,14 +1,7 @@
 'use strict';
 
-/*
-// Potential example...
-var App = require('App');
+var ApplicationView = require('ApplicationView');
 
-App({
-  option1: 'value1',
-  option2: true,
-  option3: 'value3'
+ApplicationView({
+  el: document.getElementById('application')
 });
-*/
-
-console.log('application running');
