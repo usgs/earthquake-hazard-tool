@@ -3,3 +3,5 @@
 .sass-cache
 dist
 node_modules
+**/config.ini
+**/httpd.conf
