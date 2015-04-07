@@ -3,12 +3,13 @@
 var Util = require('util/Util'),
     Meta = require('Meta');
 
+
 var Region = function (options) {
   var _this;
 
   _this = Meta(Util.extend({
     minlatitude: null,
-    maxlatitued: null,
+    maxlatitude: null,
     minlongitude: null,
     maxlongitude: null,
     gridspacing: null
