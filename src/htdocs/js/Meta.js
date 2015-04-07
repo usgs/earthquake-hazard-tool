@@ -4,7 +4,7 @@ var Model = require('mvc/Model'),
     Util = require('util/Util');
 
 
-var Meta = function(options) {
+var Meta = function (options) {
   var _this;
 
   _this = Model(Util.extend({
