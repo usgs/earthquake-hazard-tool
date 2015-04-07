@@ -10,7 +10,7 @@ var watch = {
       '!' + config.src + '/**/*.js'
     ],
     tasks: [
-      'copy:build'
+      'copy:dev'
     ]
   },
 
@@ -19,7 +19,7 @@ var watch = {
       config.src + '/htdocs/**/*.scss'
     ],
     tasks: [
-      'compass:build'
+      'compass:dev'
     ]
   },
 
@@ -28,9 +28,8 @@ var watch = {
       config.src + '/htdocs/**/*.js'
     ],
     tasks: [
-      'jshint:scripts',
-      'browserify:index',
-      'browserify:data',
+      'jshint:dev',
+      'browserify:index'
     ]
   },
 
