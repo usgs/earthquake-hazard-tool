@@ -5,8 +5,7 @@ var Model = require('mvc/Model'),
     Meta = require('Meta');
 
 var Region = function(options) {
-  var _this,
-      _initialize;
+  var _this;
 
   _this = Meta(Util.extend({
     minlatitude: null,
@@ -16,10 +15,7 @@ var Region = function(options) {
     gridspacing: null
   }, options));
 
-  _initialize = function (options) {
-    options = null;
-  };
-
-  _intialize(options);
   return _this;
-}
+};
+
+module.exports = Region;
