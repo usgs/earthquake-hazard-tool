@@ -20,7 +20,7 @@ var HazardCurve = function (options) {
    *    - Y-Values (yvals)  [Array<Number>]
    */
   _this = Model(Util.extend({
-    site: null,
+    analysis: null,
     xlabel: null,
     ylabel: null,
     xvals: null,
