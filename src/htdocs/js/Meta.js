@@ -14,11 +14,7 @@ var Meta = function(options) {
     displayorder: null
   }, options));
 
-  _initialize = function (options) {
-    options = null;
-  };
-
-  _initialize(options);
+  options = null;
   return _this;
 };
 
