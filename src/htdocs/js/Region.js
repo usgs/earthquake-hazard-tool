@@ -1,7 +1,6 @@
 'use strict';
 
-var Model = require('mvc/Model'),
-    Util = require('util/Util'),
+var Util = require('util/Util'),
     Meta = require('Meta');
 
 var Region = function (options) {
