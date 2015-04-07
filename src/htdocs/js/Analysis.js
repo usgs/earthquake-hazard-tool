@@ -2,7 +2,7 @@
 
 var Util = require('util/Util');
 
-var Site = function (options) {
+var Analysis = function (options) {
   var _this;
 
   _this = Model(Util.extend({
@@ -19,4 +19,4 @@ var Site = function (options) {
   return _this;
 };
 
-module.exports = Site;
+module.exports = Analysis;
