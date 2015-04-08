@@ -26,6 +26,15 @@ $dataFiles = array(
   'E2014RI_COUS0P05_SA1p0_760_0.05_Curves.tar.gz'
 );
 
+/**
+ * Utility function.
+ *
+ * Downloads and extracts the indicated file from FTP. Then parses the file
+ * to create a dataset in the database.
+ *
+ * @param dataFile {String}
+ *      The name of the file to download and parse.
+ */
 function loadFile ($dataFile) {
   global $editionFactory;
   global $regionFactory;
