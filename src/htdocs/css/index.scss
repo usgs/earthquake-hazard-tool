@@ -3,6 +3,8 @@
 @import 'hazdev-template/src/htdocs/css/_page.scss';
 @import 'hazdev-template/src/htdocs/css/_button.scss';
 
+@import 'hazdev-tablist/src/tablist/hazdev-tablist.scss';
+
 
 // DELETE - START >>>>
 .offcanvas-content,
@@ -15,9 +17,6 @@
   background-color: #ccc;
 }
 
-.main-content {
-  background: #fcc;
-}
 // <<<< DELETE - END 
 
 
@@ -25,6 +24,12 @@
 .application-header {
   background-color: #000;
   padding: 1em;
+}
+
+.application-content > .main-content,
+.application-content > .offcanvas-content {
+  margin:0;
+  padding:0;
 }
 
 .site-logo {
@@ -64,6 +69,7 @@
     width: 100%;
     left: -100%;
     transition: left 1s;
+    z-index: 1000;
   }
 
   > .main-content {
