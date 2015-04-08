@@ -2,13 +2,13 @@
 @import 'hazdev-template/src/htdocs/css/_variables.scss';
 @import 'hazdev-template/src/htdocs/css/_page.scss';
 @import 'hazdev-template/src/htdocs/css/_button.scss';
-@import 'hazdev-template/src/htdocs/css/flexible-grid.scss';
 
 
 // DELETE - START >>>>
 .offcanvas-content,
 .main-content {
   height: 500px;
+  padding: 0 1em;
 }
 
 .offcanvas-content {
@@ -81,13 +81,7 @@
     left: 0%;
     transition: left 1s;
   }
-
-  > .main-content {
-    width:100%;
-    transition: width 1s;
-  }
 }
-
 
 @media screen and (min-width: $breakpoint-offcanvas) {
 
@@ -98,8 +92,8 @@
   .application-content {
 
     > .offcanvas-content {
-      width: 30%;
-      left: -30%;
+      width: 25%;
+      left: -25%;
     }
   }
 
@@ -110,7 +104,7 @@
     }
 
     > .main-content {
-      width:70%;
+      width:75%;
     }
   }
 }

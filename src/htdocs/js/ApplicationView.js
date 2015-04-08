@@ -26,9 +26,9 @@ var ApplicationView = function (options) {
           '</a>' +
           '<button class="offcanvas-toggle">menu</button>' +
         '</header>' + 
-        '<section class="application-content row">' +
-          '<section class="offcanvas-content column one-of-four"><p>offcanvas-content</p></section>' +
-          '<section class="main-content column three-of-four"><p>main-content</p></section>' +
+        '<section class="application-content">' +
+          '<section class="offcanvas-content"><p>offcanvas-content</p></section>' +
+          '<section class="main-content"><p>main-content</p></section>' +
         '</section>';
 
     _toggleButton = _el.querySelector('.offcanvas-toggle');
