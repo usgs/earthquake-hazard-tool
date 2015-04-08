@@ -10,7 +10,9 @@ var ApplicationView = function (options) {
       _initialize,
 
       // variables
+      _curvesView,
       _el,
+      _mapView,
       _tabList,
       _toggleButton,
 
@@ -36,15 +38,48 @@ var ApplicationView = function (options) {
     _toggleButton = _el.querySelector('.offcanvas-toggle');
     _toggleButton.addEventListener('click', _toggleOffCanvas);
 
+    // create tablist as part of section.main-content
     _tabList = TabList({
-      el: _el.querySelector('.main-content'),
-      tabs: [
-        {
-          title: 'Content',
-          content: '<p>This is so tab panel content</p>'
-        }
-      ]
+      el: _el.querySelector('.main-content')
     });
+
+
+    /*** START >> EXAMPLE ***/
+
+    // Dummy up a view to add to the tablist
+    _mapView = View({
+      el: '<p>map content</p>'
+    });
+    _mapView.onSelect = function () {
+      console.log('onSelect _mapView');
+    };
+    _mapView.onDeselect = function () {
+      console.log('onDeselect _mapView');
+    };
+    _tabList.addTab({
+      'title': 'Map',
+      'content': _mapView.el,
+      'onSelect': _mapView.onSelect,
+      'onDeselect': _mapView.onDeselect
+    });
+    // Dummy up a second view to add to the tablist
+    _curvesView = View({
+      el: '<p>curves content</p>'
+    });
+    _curvesView.onSelect = function () {
+      console.log('onSelect _curvesView');
+    };
+    _curvesView.onDeselect = function () {
+      console.log('onDeselect _curvesView');
+    };
+    _tabList.addTab({
+      'title': 'Curves',
+      'content': _curvesView.el,
+      'onSelect': _curvesView.onSelect,
+      'onDeselect': _curvesView.onDeselect
+    });
+
+    /*** END << EXAMPLE ***/
 
     options = null;
   };
