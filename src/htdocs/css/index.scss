@@ -1,11 +1,117 @@
-/*
-@import css dependencies
-@import scss partials
 
-Note: There should exist at most one SCSS file for each web addressable page
-in the application. Each SCSS file can import additional SCSS partials or CSS
-files. Raw CSS files should be reserved for third-party libraries that do not
-provide SCSS alternatives.
+@import 'hazdev-template/src/htdocs/css/_variables.scss';
+@import 'hazdev-template/src/htdocs/css/_page.scss';
+@import 'hazdev-template/src/htdocs/css/_button.scss';
+@import 'hazdev-template/src/htdocs/css/flexible-grid.scss';
 
-This file probably has only a minimal ammount of selectors/styles.
-*/
+
+// DELETE - START >>>>
+.offcanvas-content,
+.main-content {
+  height: 500px;
+}
+
+.offcanvas-content {
+  background-color: #ccc;
+}
+
+.main-content {
+  background: #fcc;
+}
+// <<<< DELETE - END 
+
+
+
+.application-header {
+  background-color: #000;
+  padding: 1em;
+}
+
+.site-logo {
+  vertical-align: middle;
+  display: inline-block;
+  line-height: 0;
+
+  & img {
+    width: 95px;
+    height: 25px;
+  }
+}
+
+/** OFFCANVAS **/
+
+.offcanvas-toggle {
+  margin:0;
+  padding: 0 0.75em;
+  display:block;
+  height: 2em;
+  line-height: 2em;
+  position:absolute;
+  top:12px;
+  right:$spacing;
+  z-index:1005;
+  box-shadow: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+.application-content {
+
+  > .offcanvas-content {
+    display: block;
+    position:absolute;
+    width: 100%;
+    left: -100%;
+    transition: left 1s;
+  }
+
+  > .main-content {
+    display: block;
+    width:100%;
+    float:right;
+    transition: width 1s;
+  }
+}
+
+
+.offcanvas-enabled {
+
+  > .offcanvas-content {
+    left: 0%;
+    transition: left 1s;
+  }
+
+  > .main-content {
+    width:100%;
+    transition: width 1s;
+  }
+}
+
+
+@media screen and (min-width: $breakpoint-offcanvas) {
+
+  .offcanvas-toggle {
+    top: 16px;
+  }
+
+  .application-content {
+
+    > .offcanvas-content {
+      width: 30%;
+      left: -30%;
+    }
+  }
+
+  .offcanvas-enabled {
+
+    > .offcanvas-content {
+      left: 0%
+    }
+
+    > .main-content {
+      width:70%;
+    }
+  }
+}
+

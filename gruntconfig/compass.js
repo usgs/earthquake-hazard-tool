@@ -9,6 +9,7 @@ var compass = {
       cssDir: config.build + '/' + config.src,
       environment: 'development',
       importPath: [
+        'node_modules'
       ]
     }
   }

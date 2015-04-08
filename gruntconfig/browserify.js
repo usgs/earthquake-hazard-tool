@@ -19,6 +19,7 @@ var browerify = {
       debug: true,
       paths: [
         CWD + '/' + config.src + '/htdocs/js',
+        NODE_MODULES,
         NODE_MODULES + '/hazdev-tablist/src',
         NODE_MODULES + '/hazdev-webutils/src'
       ]
