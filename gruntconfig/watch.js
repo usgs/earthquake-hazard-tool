@@ -23,6 +23,15 @@ var watch = {
     ]
   },
 
+  test: {
+    files: [
+      config.test + '/**/*.js'
+    ],
+    tasks: [
+      'concurrent:test'
+    ]
+  },
+
   scripts: {
     files: [
       config.src + '/htdocs/**/*.js'
