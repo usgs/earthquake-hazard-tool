@@ -87,7 +87,8 @@ var connect = {
     options: {
       base: [
         config.build + '/' + config.src + '/htdocs',
-        config.example
+        config.example,
+        config.etc
       ],
       middleware: addMiddleware,
       open: 'http://localhost:' + config.examplePort + iniConfig.MOUNT_PATH +
@@ -100,6 +101,7 @@ var connect = {
     options: {
       base: [
         config.build + '/' + config.test,
+        config.etc,
         'node_modules' // primarily for mocha/chai
       ],
       open: 'http://localhost:' + config.testPort + '/test.html',
