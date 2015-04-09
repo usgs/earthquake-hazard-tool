@@ -3,6 +3,7 @@
 var concurrent = {
   dev: [
     'browserify:index',
+    'browserify:bundle',
     'copy:dev',
     'compass:dev'
   ],
