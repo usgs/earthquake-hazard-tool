@@ -91,8 +91,7 @@ var connect = {
         config.etc
       ],
       middleware: addMiddleware,
-      open: 'http://localhost:' + config.examplePort + iniConfig.MOUNT_PATH +
-          '/example.html',
+      open: 'http://localhost:' + config.examplePort + '/example.html',
       port: config.examplePort
     }
   },
