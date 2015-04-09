@@ -6,10 +6,10 @@ class Curve {
   public $datasetid = null;
   public $latitude = null;
   public $longitude = null;
-  public $afe = null;
+  public $yvals = null;
 
 
-  public function __construct ($id, $datasetid, $latitude, $longitude, $afe) {
+  public function __construct ($id, $datasetid, $latitude, $longitude, $yvals) {
     if ($id !== null) {
       $this->id = $id;
     }
@@ -22,8 +22,8 @@ class Curve {
     if ($longitude !== null) {
       $this->longitude = floatval($longitude);
     }
-    if ($afe !== null && is_array($afe)) {
-      $this->afe = $afe;
+    if ($yvals !== null && is_array($yvals)) {
+      $this->yvals = $yvals;
     }
   }
 

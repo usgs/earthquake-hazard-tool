@@ -82,9 +82,9 @@ class DataLoader {
       $tokens = explode(' ', $line);
       $latitude = floatval($tokens[0]);
       $longitude = floatval($tokens[1]);
-      $afe = array_map('floatval', array_slice($tokens, 2));
+      $yvals = array_map('floatval', array_slice($tokens, 2));
 
-      $curve = new Curve(null, $dataset->id, $latitude, $longitude, $afe);
+      $curve = new Curve(null, $dataset->id, $latitude, $longitude, $yvals);
       $curve = $this->curveFactory->set($curve);
 
       if ($showProgress && (
