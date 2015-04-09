@@ -3,16 +3,23 @@
 var config = require('./config');
 
 // List individual modules here. Each listed module will be aliased in the
-// "bundle", and will be set as an external in the "test".
-var EXPORTS = [
-  // config.src + '/htdocs/js/package/Class.js:package/Class'
-  process.cwd() + '/node_modules/hazdev-webutils/src/util/Xhr.js:util/Xhr'
-].concat([
+// "bundle", and will be set as an external in "test"s and "example"s.
+var CWD = process.cwd(),
+    EXPORTS = [];
+var addExports = function (basedir, files) {
+  files.forEach(function (f) {
+    EXPORTS.push(CWD + '/' + basedir + '/' + f + '.js:' + f);
+  });
+};
+// hazdev-webutils exports
+addExports('node_modules/hazdev-webutils/src', [
+  'util/Xhr'
+]);
+// project exports
+addExports(config.src + '/htdocs/js', [
   'HazardCurve',
   'HazardCurveGraphView'
-].map(function (f) {
-  return process.cwd() + '/' + config.src + '/htdocs/js/' + f + '.js:' + f;
-}));
+]);
 // Subsequent source files can then require "Class" with:
 // var Class = require('package/Class');
 
