@@ -4,11 +4,8 @@
 // has access to various (imt, vs30, edition, region) factories as well as a
 // database connection (db).
 
-include_once '../classes/DatasetFactory.class.php';
-include_once '../classes/CurveFactory.class.php';
-
-$datasetFactory = new DatasetFactory($db);
-$curveFactory = new CurveFactory($db);
+include_once 'DataLoader.class.php';
+include_once 'connect.admin.db.php'; // Provides $db
 
 //
 // List of files to download and load into the application database. Each file
@@ -26,105 +23,15 @@ $dataFiles = array(
   'E2014R1_COUS0P05_SA1p0_760_Curves.tar.gz'
 );
 
-/**
- * Utility function.
- *
- * Downloads and extracts the indicated file from FTP. Then parses the file
- * to create a dataset in the database.
- *
- * @param dataFile {String}
- *      The name of the file to download and parse.
- */
-function loadFile ($dataFile) {
-  global $editionFactory;
-  global $regionFactory;
-  global $imtFactory;
-  global $vs30Factory;
-
-  global $datasetFactory;
-  global $curveFactory;
-
-  global $ftpRoot;
-  global $downloadDir;
-  global $extractedDir;
-
-  // Get the file locally
-  $downloadFile = $ftpRoot . '/' . $dataFile;
-  $tgzFile = $downloadDir . DIRECTORY_SEPARATOR . $dataFile;
-  $txtFile = $extractedDir . DIRECTORY_SEPARATOR .
-      str_replace('.tar.gz', '.txt', $dataFile);
-
-  if (!downloadUrl($downloadFile, $tgzFile)) {
-    echo ' already downloaded.' . PHP_EOL;
-  }
-  extractTarGz($tgzFile, $extractedDir); // Should create $txtFile
-
-
-  // Parse the file name for metadata parameters
-  $tokens = explode('_', $dataFile);
-  $edition = $editionFactory->getId($tokens[0]);
-  $region = $regionFactory->getId($tokens[1]);
-  $imt = $imtFactory->getId($tokens[2]);
-  $vs30 = $vs30Factory->getId($tokens[3]);
-  $gridspacing = floatval($tokens[4]);
-
-  $dataset = new Dataset(null, $imt, $vs30, $edition, $region, array());
-
-  $fp = fopen($txtFile, 'r');
-
-  if (!$fp) {
-    throw new Exception('Failed to open text file for reading.');
-  }
-
-  $line = null;
-  $iml = array();
-  $metainfo = null;
-
-  // 3 lines of header text to discard
-  fgets($fp); fgets($fp); fgets($fp);
-
-  // Read IML values
-  while (($line = trim(fgets($fp))) !== false) {
-    if (strpos($line, ' ') !== false) {
-      break; // Done with IML values
-    }
-
-    $dataset->iml[] = floatval($line);
-  }
-
-  $dataset = $datasetFactory->set($dataset);
-
-  $progress = null;
-  do {
-    // Clean up input line
-    $line = trim($line);
-    $line = str_replace('   ', ' ', $line);
-    $line = str_replace('  ', ' ', $line);
-
-    $tokens = explode(' ', $line);
-    $latitude = floatval($tokens[0]);
-    $longitude = floatval($tokens[1]);
-    $afe = array_map('floatval', array_slice($tokens, 2));
-
-    $curve = new Curve(null, $dataset->id, $latitude, $longitude, $afe);
-    $curve = $curveFactory->set($curve);
-
-    if ($progress == null || intval($curve->latitude) != $progress) {
-      printf("  %f, %f\n", $curve->latitude, $curve->longitude);
-      $progress = intval($curve->latitude);
-    }
-  } while (($line = fgets($fp)) !== false);
-
-  fclose($fp);
-  unlink($txtFile);
-}
-
 $ftpRoot = 'ftp://hazards.cr.usgs.gov/web/earthquake-hazard-tool';
 
 $scratchDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR .
     'earthquake-hazard-tool';
 $downloadDir = $scratchDir . DIRECTORY_SEPARATOR . 'download';
 $extractedDir = $scratchDir . DIRECTORY_SEPARATOR . 'extracted';
+
+$dataLoader = new DataLoader($db);
+
 
 if (!is_dir($downloadDir)) {
   mkdir($downloadDir, 0777, true);
@@ -135,11 +42,33 @@ if (!is_dir($extractedDir)) {
 }
 
 foreach ($dataFiles as $dataFile) {
+  // Get the file locally
+  $downloadFile = $ftpRoot . '/' . $dataFile;
+  $tgzFile = $downloadDir . DIRECTORY_SEPARATOR . $dataFile;
+  $txtFile = $extractedDir . DIRECTORY_SEPARATOR .
+      str_replace('.tar.gz', '.txt', $dataFile);
+
   try {
-    loadFile($dataFile);
+
+    if (!downloadUrl($downloadFile, $tgzFile)) {
+      echo ' already downloaded.' . PHP_EOL;
+    }
+    extractTarGz($tgzFile, $extractedDir); // Should create $txtFile
+
+    echo 'Parsing and loading data file into database...';
+    $dataLoader->load($txtFile);
+    echo '...done.' . PHP_EOL;
+
   } catch (Exception $e) {
-    printf("Failed loading data file [%s].\n%s\n",
-        $dataFile, $e->getMessage());
+    echo PHP_EOL . 'Failed loading data file [' . $dataFile . '].' . PHP_EOL .
+        $e->getMessage() . PHP_EOL;
+  } finally {
+    if (file_exists($tgzFile)) {
+      unlink($tgzFile);
+    }
+    if (file_exists($txtFile)) {
+      unlink($txtFile);
+    }
   }
 }
 
