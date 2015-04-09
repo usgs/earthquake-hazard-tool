@@ -1,0 +1,1067 @@
+{
+  "status": "success",
+  "date": "2015-01-15T14:40:05+00:00",
+  "url": "http://0.0.0.0:8000/services/curve/any/any/any/any/35/-118",
+  "response": [
+    {
+      "metadata": {
+        "imt": {
+          "id": 1,
+          "value": "PGA",
+          "display": "Peak Ground Acceleration",
+          "displayorder": 1
+        },
+        "site": {
+          "id": 3,
+          "value": "760",
+          "display": "760 m/s - B/C Boundary",
+          "displayorder": 3
+        },
+        "edition": {
+          "id": 3,
+          "value": "E2008RIII",
+          "display": "USGS NSHM 2008 Rev. III",
+          "displayorder": 3
+        },
+        "region": {
+          "minlatitude": "24.60",
+          "maxlatitude": "50.00",
+          "minlongitude": "-118.00",
+          "maxlongitude": "-65.00",
+          "gridspacing": "0.05",
+          "id": 1,
+          "value": "COUS0P05",
+          "display": "Conterminous U.S. w/ 0.05 Grid",
+          "displayorder": 1
+        },
+        "latitude": 35,
+        "longitude": -118,
+        "ylabel": "Annual Frequency of Exceedance",
+        "xlabel": "Ground Motion (g)",
+        "xvals": [
+          0.005,
+          0.007,
+          0.0098,
+          0.0137,
+          0.0192,
+          0.0269,
+          0.0376,
+          0.0527,
+          0.0738,
+          0.103,
+          0.145,
+          0.203,
+          0.284,
+          0.397,
+          0.556,
+          0.778,
+          1.09,
+          1.52,
+          2.13
+        ]
+      },
+      "data": [
+        {
+          "id": 5862222,
+          "datasetid": 10,
+          "latitude": 35,
+          "longitude": -118,
+          "yvals": [
+            0.443,
+            0.3697,
+            0.2945,
+            0.2236,
+            0.1605,
+            0.1083,
+            0.06851,
+            0.04031,
+            0.02234,
+            0.0118,
+            0.005744,
+            0.002594,
+            0.001053,
+            0.0003777,
+            0.0001176,
+            0.00003213,
+            0.000007607,
+            0.000001499,
+            1.919E-7
+          ]
+        }
+      ]
+    },
+    {
+      "metadata": {
+        "imt": {
+          "id": 1,
+          "value": "PGA",
+          "display": "Peak Ground Acceleration",
+          "displayorder": 1
+        },
+        "site": {
+          "id": 3,
+          "value": "760",
+          "display": "760 m/s - B/C Boundary",
+          "displayorder": 3
+        },
+        "edition": {
+          "id": 4,
+          "value": "E2014RI",
+          "display": "USGS NSHM 2014 Rev. I",
+          "displayorder": 4
+        },
+        "region": {
+          "minlatitude": "24.60",
+          "maxlatitude": "50.00",
+          "minlongitude": "-118.00",
+          "maxlongitude": "-65.00",
+          "gridspacing": "0.05",
+          "id": 1,
+          "value": "COUS0P05",
+          "display": "Conterminous U.S. w/ 0.05 Grid",
+          "displayorder": 1
+        },
+        "latitude": 35,
+        "longitude": -118,
+        "ylabel": "Annual Frequency of Exceedance",
+        "xlabel": "Ground Motion (g)",
+        "xvals": [
+          0.005,
+          0.007,
+          0.0098,
+          0.0137,
+          0.0192,
+          0.0269,
+          0.0376,
+          0.0527,
+          0.0738,
+          0.103,
+          0.145,
+          0.203,
+          0.284,
+          0.397,
+          0.556,
+          0.778,
+          1.09,
+          1.52,
+          2.2,
+          3.3
+        ]
+      },
+      "data": [
+        {
+          "id": 360441,
+          "datasetid": 1,
+          "latitude": 35,
+          "longitude": -118,
+          "yvals": [
+            0.42828,
+            0.31781,
+            0.22801,
+            0.15821,
+            0.10569,
+            0.068264,
+            0.042897,
+            0.026156,
+            0.015574,
+            0.0090143,
+            0.0048615,
+            0.0024361,
+            0.0010979,
+            0.00043655,
+            0.00014932,
+            0.000043521,
+            0.000010681,
+            0.0000021774,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "metadata": {
+        "imt": {
+          "id": 3,
+          "value": "SA0p1",
+          "display": "0.10 Second Spectral Acceleration",
+          "displayorder": 3
+        },
+        "site": {
+          "id": 3,
+          "value": "760",
+          "display": "760 m/s - B/C Boundary",
+          "displayorder": 3
+        },
+        "edition": {
+          "id": 3,
+          "value": "E2008RIII",
+          "display": "USGS NSHM 2008 Rev. III",
+          "displayorder": 3
+        },
+        "region": {
+          "minlatitude": "24.60",
+          "maxlatitude": "50.00",
+          "minlongitude": "-118.00",
+          "maxlongitude": "-65.00",
+          "gridspacing": "0.05",
+          "id": 1,
+          "value": "COUS0P05",
+          "display": "Conterminous U.S. w/ 0.05 Grid",
+          "displayorder": 1
+        },
+        "latitude": 35,
+        "longitude": -118,
+        "ylabel": "Annual Frequency of Exceedance",
+        "xlabel": "Ground Motion (g)",
+        "xvals": [
+          0.0025,
+          0.006,
+          0.0098,
+          0.0137,
+          0.0192,
+          0.0269,
+          0.0376,
+          0.0527,
+          0.0738,
+          0.103,
+          0.145,
+          0.203,
+          0.284,
+          0.397,
+          0.556,
+          0.778,
+          1.09,
+          1.52,
+          2.13,
+          3.3
+        ]
+      },
+      "data": [
+        {
+          "id": 2194368,
+          "datasetid": 4,
+          "latitude": 35,
+          "longitude": -118,
+          "yvals": [
+            0.6171,
+            0.5039,
+            0.4089,
+            0.3373,
+            0.2657,
+            0.1995,
+            0.1423,
+            0.09557,
+            0.06046,
+            0.03628,
+            0.02036,
+            0.01096,
+            0.005562,
+            0.002627,
+            0.001132,
+            0.000442,
+            0.0001541,
+            0.00004917,
+            0.00001367,
+            0.000001982
+          ]
+        }
+      ]
+    },
+    {
+      "metadata": {
+        "imt": {
+          "id": 4,
+          "value": "SA0p2",
+          "display": "0.20 Second Spectral Acceleration",
+          "displayorder": 4
+        },
+        "site": {
+          "id": 3,
+          "value": "760",
+          "display": "760 m/s - B/C Boundary",
+          "displayorder": 3
+        },
+        "edition": {
+          "id": 2,
+          "value": "E2008RII",
+          "display": "USGS NSHM 2008 Rev. II",
+          "displayorder": 2
+        },
+        "region": {
+          "minlatitude": "24.60",
+          "maxlatitude": "50.00",
+          "minlongitude": "-118.00",
+          "maxlongitude": "-65.00",
+          "gridspacing": "0.05",
+          "id": 1,
+          "value": "COUS0P05",
+          "display": "Conterminous U.S. w/ 0.05 Grid",
+          "displayorder": 1
+        },
+        "latitude": 35,
+        "longitude": -118,
+        "ylabel": "Annual Frequency of Exceedance",
+        "xlabel": "Ground Motion (g)",
+        "xvals": [
+          0.005,
+          0.0075,
+          0.0113,
+          0.0169,
+          0.0253,
+          0.038,
+          0.057,
+          0.0854,
+          0.128,
+          0.192,
+          0.288,
+          0.432,
+          0.649,
+          0.973,
+          1.46,
+          2.19,
+          3.28,
+          4.92,
+          7.38
+        ]
+      },
+      "data": [
+        {
+          "id": 7084840,
+          "datasetid": 12,
+          "latitude": 35,
+          "longitude": -118,
+          "yvals": [
+            0.5855,
+            0.5235,
+            0.4424,
+            0.3526,
+            0.263,
+            0.1822,
+            0.1165,
+            0.06814,
+            0.03613,
+            0.01739,
+            0.007615,
+            0.002995,
+            0.001035,
+            0.0003098,
+            0.00007825,
+            0.00001677,
+            0.000002959,
+            3.532E-7,
+            1.657E-8
+          ]
+        }
+      ]
+    },
+    {
+      "metadata": {
+        "imt": {
+          "id": 4,
+          "value": "SA0p2",
+          "display": "0.20 Second Spectral Acceleration",
+          "displayorder": 4
+        },
+        "site": {
+          "id": 3,
+          "value": "760",
+          "display": "760 m/s - B/C Boundary",
+          "displayorder": 3
+        },
+        "edition": {
+          "id": 3,
+          "value": "E2008RIII",
+          "display": "USGS NSHM 2008 Rev. III",
+          "displayorder": 3
+        },
+        "region": {
+          "minlatitude": "24.60",
+          "maxlatitude": "50.00",
+          "minlongitude": "-118.00",
+          "maxlongitude": "-65.00",
+          "gridspacing": "0.05",
+          "id": 1,
+          "value": "COUS0P05",
+          "display": "Conterminous U.S. w/ 0.05 Grid",
+          "displayorder": 1
+        },
+        "latitude": 35,
+        "longitude": -118,
+        "ylabel": "Annual Frequency of Exceedance",
+        "xlabel": "Ground Motion (g)",
+        "xvals": [
+          0.005,
+          0.0075,
+          0.0113,
+          0.0169,
+          0.0253,
+          0.038,
+          0.057,
+          0.0854,
+          0.128,
+          0.192,
+          0.288,
+          0.432,
+          0.649,
+          0.973,
+          1.46,
+          2.19,
+          3.28,
+          4.92,
+          7.38
+        ]
+      },
+      "data": [
+        {
+          "id": 5250913,
+          "datasetid": 9,
+          "latitude": 35,
+          "longitude": -118,
+          "yvals": [
+            0.5855,
+            0.5235,
+            0.4424,
+            0.3526,
+            0.263,
+            0.1822,
+            0.1165,
+            0.06814,
+            0.03613,
+            0.01739,
+            0.007615,
+            0.002995,
+            0.001035,
+            0.0003098,
+            0.00007825,
+            0.00001677,
+            0.000002959,
+            3.532E-7,
+            1.657E-8
+          ]
+        }
+      ]
+    },
+    {
+      "metadata": {
+        "imt": {
+          "id": 4,
+          "value": "SA0p2",
+          "display": "0.20 Second Spectral Acceleration",
+          "displayorder": 4
+        },
+        "site": {
+          "id": 3,
+          "value": "760",
+          "display": "760 m/s - B/C Boundary",
+          "displayorder": 3
+        },
+        "edition": {
+          "id": 4,
+          "value": "E2014RI",
+          "display": "USGS NSHM 2014 Rev. I",
+          "displayorder": 4
+        },
+        "region": {
+          "minlatitude": "24.60",
+          "maxlatitude": "50.00",
+          "minlongitude": "-118.00",
+          "maxlongitude": "-65.00",
+          "gridspacing": "0.05",
+          "id": 1,
+          "value": "COUS0P05",
+          "display": "Conterminous U.S. w/ 0.05 Grid",
+          "displayorder": 1
+        },
+        "latitude": 35,
+        "longitude": -118,
+        "ylabel": "Annual Frequency of Exceedance",
+        "xlabel": "Ground Motion (g)",
+        "xvals": [
+          0.005,
+          0.0075,
+          0.0113,
+          0.0169,
+          0.0253,
+          0.038,
+          0.057,
+          0.0854,
+          0.128,
+          0.192,
+          0.288,
+          0.432,
+          0.649,
+          0.973,
+          1.46,
+          2.19,
+          3.28,
+          4.92,
+          7.38
+        ]
+      },
+      "data": [
+        {
+          "id": 1583059,
+          "datasetid": 3,
+          "latitude": 35,
+          "longitude": -118,
+          "yvals": [
+            0.72655,
+            0.55374,
+            0.40221,
+            0.28058,
+            0.18639,
+            0.11737,
+            0.070367,
+            0.040271,
+            0.022035,
+            0.011507,
+            0.0056545,
+            0.0025393,
+            0.0010042,
+            0.00034081,
+            0.000095189,
+            0.000021194,
+            0.0000035953,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "metadata": {
+        "imt": {
+          "id": 5,
+          "value": "SA0p3",
+          "display": "0.30 Second Spectral Acceleration",
+          "displayorder": 5
+        },
+        "site": {
+          "id": 3,
+          "value": "760",
+          "display": "760 m/s - B/C Boundary",
+          "displayorder": 3
+        },
+        "edition": {
+          "id": 3,
+          "value": "E2008RIII",
+          "display": "USGS NSHM 2008 Rev. III",
+          "displayorder": 3
+        },
+        "region": {
+          "minlatitude": "24.60",
+          "maxlatitude": "50.00",
+          "minlongitude": "-118.00",
+          "maxlongitude": "-65.00",
+          "gridspacing": "0.05",
+          "id": 1,
+          "value": "COUS0P05",
+          "display": "Conterminous U.S. w/ 0.05 Grid",
+          "displayorder": 1
+        },
+        "latitude": 35,
+        "longitude": -118,
+        "ylabel": "Annual Frequency of Exceedance",
+        "xlabel": "Ground Motion (g)",
+        "xvals": [
+          0.0025,
+          0.005,
+          0.0075,
+          0.0113,
+          0.0169,
+          0.0253,
+          0.038,
+          0.057,
+          0.0854,
+          0.128,
+          0.192,
+          0.288,
+          0.432,
+          0.649,
+          0.973,
+          1.46,
+          2.19,
+          3.28,
+          4.92,
+          7.38
+        ]
+      },
+      "data": [
+        {
+          "id": 4639604,
+          "datasetid": 8,
+          "latitude": 35,
+          "longitude": -118,
+          "yvals": [
+            0.6407,
+            0.5824,
+            0.5143,
+            0.4267,
+            0.333,
+            0.2432,
+            0.165,
+            0.1032,
+            0.05868,
+            0.02996,
+            0.01371,
+            0.005615,
+            0.002034,
+            0.0006384,
+            0.000171,
+            0.0000383,
+            0.000007316,
+            0.000001108,
+            1.031E-7,
+            2.737E-9
+          ]
+        }
+      ]
+    },
+    {
+      "metadata": {
+        "imt": {
+          "id": 6,
+          "value": "SA0p5",
+          "display": "0.50 Second Spectral Acceleration",
+          "displayorder": 6
+        },
+        "site": {
+          "id": 3,
+          "value": "760",
+          "display": "760 m/s - B/C Boundary",
+          "displayorder": 3
+        },
+        "edition": {
+          "id": 3,
+          "value": "E2008RIII",
+          "display": "USGS NSHM 2008 Rev. III",
+          "displayorder": 3
+        },
+        "region": {
+          "minlatitude": "24.60",
+          "maxlatitude": "50.00",
+          "minlongitude": "-118.00",
+          "maxlongitude": "-65.00",
+          "gridspacing": "0.05",
+          "id": 1,
+          "value": "COUS0P05",
+          "display": "Conterminous U.S. w/ 0.05 Grid",
+          "displayorder": 1
+        },
+        "latitude": 35,
+        "longitude": -118,
+        "ylabel": "Annual Frequency of Exceedance",
+        "xlabel": "Ground Motion (g)",
+        "xvals": [
+          0.0025,
+          0.005,
+          0.0075,
+          0.0113,
+          0.0169,
+          0.0253,
+          0.038,
+          0.057,
+          0.0854,
+          0.128,
+          0.192,
+          0.288,
+          0.432,
+          0.649,
+          0.973,
+          1.46,
+          2.19,
+          3.28,
+          4.92,
+          7.38
+        ]
+      },
+      "data": [
+        {
+          "id": 3416986,
+          "datasetid": 6,
+          "latitude": 35,
+          "longitude": -118,
+          "yvals": [
+            0.5193,
+            0.514,
+            0.4241,
+            0.3287,
+            0.2423,
+            0.1689,
+            0.1095,
+            0.06489,
+            0.03461,
+            0.01647,
+            0.006951,
+            0.002573,
+            0.0008171,
+            0.0002153,
+            0.0000456,
+            0.000007951,
+            0.00000114,
+            1.205E-7,
+            6.594E-9,
+            2.077E-12
+          ]
+        }
+      ]
+    },
+    {
+      "metadata": {
+        "imt": {
+          "id": 8,
+          "value": "SA1p0",
+          "display": "1.00 Second Spectral Acceleration",
+          "displayorder": 8
+        },
+        "site": {
+          "id": 3,
+          "value": "760",
+          "display": "760 m/s - B/C Boundary",
+          "displayorder": 3
+        },
+        "edition": {
+          "id": 2,
+          "value": "E2008RII",
+          "display": "USGS NSHM 2008 Rev. II",
+          "displayorder": 2
+        },
+        "region": {
+          "minlatitude": "24.60",
+          "maxlatitude": "50.00",
+          "minlongitude": "-118.00",
+          "maxlongitude": "-65.00",
+          "gridspacing": "0.05",
+          "id": 1,
+          "value": "COUS0P05",
+          "display": "Conterminous U.S. w/ 0.05 Grid",
+          "displayorder": 1
+        },
+        "latitude": 35,
+        "longitude": -118,
+        "ylabel": "Annual Frequency of Exceedance",
+        "xlabel": "Ground Motion (g)",
+        "xvals": [
+          0.0025,
+          0.00375,
+          0.00563,
+          0.00844,
+          0.0127,
+          0.019,
+          0.0285,
+          0.0427,
+          0.0641,
+          0.0961,
+          0.144,
+          0.216,
+          0.324,
+          0.487,
+          0.73,
+          1.09,
+          1.64,
+          2.46,
+          3.69,
+          5.54
+        ]
+      },
+      "data": [
+        {
+          "id": 6473531,
+          "datasetid": 11,
+          "latitude": 35,
+          "longitude": -118,
+          "yvals": [
+            0.476,
+            0.3872,
+            0.3011,
+            0.2255,
+            0.1616,
+            0.11,
+            0.06904,
+            0.03942,
+            0.02023,
+            0.009337,
+            0.003819,
+            0.001338,
+            0.0003858,
+            0.00008446,
+            0.00001278,
+            0.000001415,
+            1.203E-7,
+            1.053E-8,
+            2.27E-10,
+            3.1E-19
+          ]
+        }
+      ]
+    },
+    {
+      "metadata": {
+        "imt": {
+          "id": 8,
+          "value": "SA1p0",
+          "display": "1.00 Second Spectral Acceleration",
+          "displayorder": 8
+        },
+        "site": {
+          "id": 3,
+          "value": "760",
+          "display": "760 m/s - B/C Boundary",
+          "displayorder": 3
+        },
+        "edition": {
+          "id": 3,
+          "value": "E2008RIII",
+          "display": "USGS NSHM 2008 Rev. III",
+          "displayorder": 3
+        },
+        "region": {
+          "minlatitude": "24.60",
+          "maxlatitude": "50.00",
+          "minlongitude": "-118.00",
+          "maxlongitude": "-65.00",
+          "gridspacing": "0.05",
+          "id": 1,
+          "value": "COUS0P05",
+          "display": "Conterminous U.S. w/ 0.05 Grid",
+          "displayorder": 1
+        },
+        "latitude": 35,
+        "longitude": -118,
+        "ylabel": "Annual Frequency of Exceedance",
+        "xlabel": "Ground Motion (g)",
+        "xvals": [
+          0.0025,
+          0.00375,
+          0.00563,
+          0.00844,
+          0.0127,
+          0.019,
+          0.0285,
+          0.0427,
+          0.0641,
+          0.0961,
+          0.144,
+          0.216,
+          0.324,
+          0.487,
+          0.73,
+          1.09,
+          1.64,
+          2.46,
+          3.69,
+          5.54
+        ]
+      },
+      "data": [
+        {
+          "id": 2805677,
+          "datasetid": 5,
+          "latitude": 35,
+          "longitude": -118,
+          "yvals": [
+            0.476,
+            0.3872,
+            0.3011,
+            0.2255,
+            0.1616,
+            0.11,
+            0.06904,
+            0.03942,
+            0.02023,
+            0.009337,
+            0.003819,
+            0.001338,
+            0.0003858,
+            0.00008446,
+            0.00001278,
+            0.000001415,
+            1.203E-7,
+            1.053E-8,
+            2.27E-10,
+            3.1E-19
+          ]
+        }
+      ]
+    },
+    {
+      "metadata": {
+        "imt": {
+          "id": 8,
+          "value": "SA1p0",
+          "display": "1.00 Second Spectral Acceleration",
+          "displayorder": 8
+        },
+        "site": {
+          "id": 3,
+          "value": "760",
+          "display": "760 m/s - B/C Boundary",
+          "displayorder": 3
+        },
+        "edition": {
+          "id": 4,
+          "value": "E2014RI",
+          "display": "USGS NSHM 2014 Rev. I",
+          "displayorder": 4
+        },
+        "region": {
+          "minlatitude": "24.60",
+          "maxlatitude": "50.00",
+          "minlongitude": "-118.00",
+          "maxlongitude": "-65.00",
+          "gridspacing": "0.05",
+          "id": 1,
+          "value": "COUS0P05",
+          "display": "Conterminous U.S. w/ 0.05 Grid",
+          "displayorder": 1
+        },
+        "latitude": 35,
+        "longitude": -118,
+        "ylabel": "Annual Frequency of Exceedance",
+        "xlabel": "Ground Motion (g)",
+        "xvals": [
+          0.0025,
+          0.00375,
+          0.00563,
+          0.00844,
+          0.0127,
+          0.019,
+          0.0285,
+          0.0427,
+          0.0641,
+          0.0961,
+          0.144,
+          0.216,
+          0.324,
+          0.487,
+          0.73,
+          1.09,
+          1.64,
+          2.46,
+          3.69,
+          5.54
+        ]
+      },
+      "data": [
+        {
+          "id": 971750,
+          "datasetid": 2,
+          "latitude": 35,
+          "longitude": -118,
+          "yvals": [
+            0.59844,
+            0.42782,
+            0.29155,
+            0.18992,
+            0.11746,
+            0.069662,
+            0.039215,
+            0.021132,
+            0.01087,
+            0.0053229,
+            0.0024188,
+            0.00098245,
+            0.00034326,
+            0.000097325,
+            0.00002135,
+            0.0000032649,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "metadata": {
+        "imt": {
+          "id": 9,
+          "value": "SA2p0",
+          "display": "2.00 Second Spectral Acceleration",
+          "displayorder": 9
+        },
+        "site": {
+          "id": 3,
+          "value": "760",
+          "display": "760 m/s - B/C Boundary",
+          "displayorder": 3
+        },
+        "edition": {
+          "id": 3,
+          "value": "E2008RIII",
+          "display": "USGS NSHM 2008 Rev. III",
+          "displayorder": 3
+        },
+        "region": {
+          "minlatitude": "24.60",
+          "maxlatitude": "50.00",
+          "minlongitude": "-118.00",
+          "maxlongitude": "-65.00",
+          "gridspacing": "0.05",
+          "id": 1,
+          "value": "COUS0P05",
+          "display": "Conterminous U.S. w/ 0.05 Grid",
+          "displayorder": 1
+        },
+        "latitude": 35,
+        "longitude": -118,
+        "ylabel": "Annual Frequency of Exceedance",
+        "xlabel": "Ground Motion (g)",
+        "xvals": [
+          0.0025,
+          0.006,
+          0.0098,
+          0.0137,
+          0.0192,
+          0.0269,
+          0.0376,
+          0.0527,
+          0.0738,
+          0.103,
+          0.145,
+          0.203,
+          0.284,
+          0.397,
+          0.556,
+          0.778,
+          1.09,
+          1.52,
+          2.13,
+          3.3
+        ]
+      },
+      "data": [
+        {
+          "id": 4028295,
+          "datasetid": 7,
+          "latitude": 35,
+          "longitude": -118,
+          "yvals": [
+            0.2492,
+            0.1336,
+            0.08562,
+            0.05943,
+            0.03884,
+            0.02395,
+            0.01397,
+            0.00762,
+            0.003855,
+            0.001783,
+            0.0007125,
+            0.000247,
+            0.00006915,
+            0.00001395,
+            0.00000174,
+            1.226E-7,
+            6.923E-9,
+            2.758E-10,
+            3.1E-19,
+            3.1E-19
+          ]
+        }
+      ]
+    }
+  ]
+}

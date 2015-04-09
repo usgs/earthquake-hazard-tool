@@ -1,0 +1,118 @@
+{
+  "status": "usage",
+  "description": "Retrieves hazard curve data for an input location",
+  "syntax": "http://0.0.0.0:8000/services/curve/{edition}/{region}/{longitude}/{latitude}/{imt}/{site}",
+  "parameters": {
+    "imt": {
+      "description": "Intensity measure type",
+      "type": "integer",
+      "values": [
+        {
+          "id": 1,
+          "value": "PGA",
+          "display": "Peak Ground Acceleration",
+          "displayorder": 1
+        },
+        {
+          "id": 3,
+          "value": "SA0p1",
+          "display": "0.10 Second Spectral Acceleration",
+          "displayorder": 3
+        },
+        {
+          "id": 4,
+          "value": "SA0p2",
+          "display": "0.20 Second Spectral Acceleration",
+          "displayorder": 4
+        },
+        {
+          "id": 5,
+          "value": "SA0p3",
+          "display": "0.30 Second Spectral Acceleration",
+          "displayorder": 5
+        },
+        {
+          "id": 6,
+          "value": "SA0p5",
+          "display": "0.50 Second Spectral Acceleration",
+          "displayorder": 6
+        },
+        {
+          "id": 8,
+          "value": "SA1p0",
+          "display": "1.00 Second Spectral Acceleration",
+          "displayorder": 8
+        },
+        {
+          "id": 9,
+          "value": "SA2p0",
+          "display": "2.00 Second Spectral Acceleration",
+          "displayorder": 9
+        }
+      ]
+    },
+    "site": {
+      "description": "Site soil Vs30",
+      "type": "integer",
+      "values": [
+        {
+          "id": 3,
+          "value": "760",
+          "display": "760 m/s - B/C Boundary",
+          "displayorder": 3
+        }
+      ]
+    },
+    "edition": {
+      "description": "Data edition",
+      "type": "integer",
+      "values": [
+        {
+          "id": 2,
+          "value": "E2008RII",
+          "display": "USGS NSHM 2008 Rev. II",
+          "displayorder": 2
+        },
+        {
+          "id": 3,
+          "value": "E2008RIII",
+          "display": "USGS NSHM 2008 Rev. III",
+          "displayorder": 3
+        },
+        {
+          "id": 4,
+          "value": "E2014RI",
+          "display": "USGS NSHM 2014 Rev. I",
+          "displayorder": 4
+        }
+      ]
+    },
+    "region": {
+      "description": "Data region",
+      "type": "integer",
+      "values": [
+        {
+          "minlatitude": "24.60",
+          "maxlatitude": "50.00",
+          "minlongitude": "-118.00",
+          "maxlongitude": "-65.00",
+          "gridspacing": "0.05",
+          "id": 1,
+          "value": "COUS0P05",
+          "display": "Conterminous U.S. w/ 0.05 Grid",
+          "displayorder": 1
+        }
+      ]
+    },
+    "latitude": {
+      "description": "Decimal degrees latitude for location",
+      "type": "number",
+      "values": "[-90.0, 90.0] Additional restrictions based on region"
+    },
+    "longitude": {
+      "description": "Decimal degrees longitude for location",
+      "type": "number",
+      "values": "[-180.0, 180.0] Additional restrictions based on region"
+    }
+  }
+}
