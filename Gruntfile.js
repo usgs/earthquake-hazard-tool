@@ -26,6 +26,7 @@ module.exports = function (grunt) {
     'connect:data',
     'connect:template',
     'connect:dev',
+    'connect:example',
 
     'watch'
   ]);
@@ -40,7 +41,8 @@ module.exports = function (grunt) {
   grunt.registerTask('dist', [
     'build',
     'configureProxies:dist',
-    'connect:dist'
+    'connect:template',
+    'connect:dist:keepalive'
   ]);
 
   // runs tests against development version of library

@@ -83,10 +83,25 @@ var connect = {
     }
   },
 
+  example: {
+    options: {
+      base: [
+        config.build + '/' + config.src + '/htdocs',
+        config.example,
+        config.etc
+      ],
+      middleware: addMiddleware,
+      open: 'http://localhost:' + config.examplePort + iniConfig.MOUNT_PATH +
+          '/example.html',
+      port: config.examplePort
+    }
+  },
+
   test: {
     options: {
       base: [
         config.build + '/' + config.test,
+        config.etc,
         'node_modules' // primarily for mocha/chai
       ],
       open: 'http://localhost:' + config.testPort + '/test.html',
