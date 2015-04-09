@@ -29,10 +29,10 @@ $vs30s = array(
 );
 
 $editions = array(
-  new Metadata(null, 'E2008RI',   'USGS NSHM 2008 Rev. I',   1),
-  new Metadata(null, 'E2008RII',  'USGS NSHM 2008 Rev. II',  2),
-  new Metadata(null, 'E2008RIII', 'USGS NSHM 2008 Rev. III', 3),
-  new Metadata(null, 'E2014RI',   'USGS NSHM 2014 Rev. I',   4)
+  new Metadata(null, 'E2008R1', 'USGS NSHM 2008 Rev. 1', 1),
+  new Metadata(null, 'E2008R2', 'USGS NSHM 2008 Rev. 2', 2),
+  new Metadata(null, 'E2008R3', 'USGS NSHM 2008 Rev. 3', 3),
+  new Metadata(null, 'E2014R1', 'USGS NSHM 2014 Rev. 1', 4)
 );
 
 $regions = array(
