@@ -41,16 +41,16 @@ include_once './metadata.php';
 
 try {
 
-  if (!promptYesNo('Do you want to create an empty database schema?', true)) {
+  if (!promptYesNo('Do you want to create tables/views?', true)) {
     return;
   }
 
   $db->beginTransaction();
   $db->exec(file_get_contents('./schema.sql'));
   $db->commit();
-  echo 'Finished creating schema.' . PHP_EOL;
+  echo 'Finished creating tables/views.' . PHP_EOL;
 
-  if (!promptYesNo('Do you want to load metadata into the schema?', true)) {
+  if (!promptYesNo('Do you want to load metadata?', true)) {
     return;
   }
 
