@@ -28,14 +28,18 @@ describe('ApplicationView test suite.', function () {
 
       // check before
       offcanvas = div.querySelector('.offcanvas-enabled');
+      /* jshint -W030 */
       expect(offcanvas).to.be.null;
+      /* jshint +W030 */
 
       // fire a click event on toggle button
       toggleButton.click();
 
       // check after
       offcanvas = div.querySelector('.offcanvas-enabled');
+      /* jshint -W030 */
       expect(offcanvas).to.not.be.null;
+      /* jshint +W030 */
     });
   });
 });
