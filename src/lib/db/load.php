@@ -17,13 +17,13 @@ $curveFactory = new CurveFactory($db);
 // EDITION_REGION_IMT_VS30_GRIDSPACING_Curves.tgz
 //
 $dataFiles = array(
-  'E2008RIII_COUS0P05_PGA_760_0.05_Curves.tar.gz',
-  'E2008RIII_COUS0P05_SA0p2_760_0.05_Curves.tar.gz',
-  'E2008RIII_COUS0P05_SA1p0_760_0.05_Curves.tar.gz',
+  'E2008R3_COUS0P05_PGA_760_Curves.tar.gz',
+  'E2008R3_COUS0P05_SA0p2_760_Curves.tar.gz',
+  'E2008R3_COUS0P05_SA1p0_760_Curves.tar.gz',
 
-  'E2014RI_COUS0P05_PGA_760_0.05_Curves.tar.gz',
-  'E2014RI_COUS0P05_SA0p2_760_0.05_Curves.tar.gz',
-  'E2014RI_COUS0P05_SA1p0_760_0.05_Curves.tar.gz'
+  'E2014R1_COUS0P05_PGA_760_Curves.tar.gz',
+  'E2014R1_COUS0P05_SA0p2_760_Curves.tar.gz',
+  'E2014R1_COUS0P05_SA1p0_760_Curves.tar.gz'
 );
 
 /**
