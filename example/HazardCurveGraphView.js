@@ -1,11 +1,16 @@
 'use strict';
 
-var HazardCurveGraphView = require('HazardCurveGraphView');
+var HazardCurve = require('HazardCurve'),
+    HazardCurveGraphView = require('HazardCurveGraphView'),
+    Xhr = require('util/Xhr');
 
 
-var el = document.querySelector('#example'),
-    view;
-
-view = HazardCurveGraphView({
-  el: el
+Xhr.ajax({
+  url: 'data.json',
+  success: function (data) {
+    HazardCurveGraphView({
+      el: document.querySelector('#example'),
+      curve: HazardCurve(data.response[0])
+    });
+  }
 });

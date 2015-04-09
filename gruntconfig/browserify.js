@@ -6,9 +6,13 @@ var config = require('./config');
 // "bundle", and will be set as an external in the "test".
 var EXPORTS = [
   // config.src + '/htdocs/js/package/Class.js:package/Class'
-  process.cwd() + '/' + config.src +
-      '/htdocs/js/HazardCurveGraphView.js:HazardCurveGraphView'
-];
+  process.cwd() + '/node_modules/hazdev-webutils/src/util/Xhr.js:util/Xhr'
+].concat([
+  'HazardCurve',
+  'HazardCurveGraphView'
+].map(function (f) {
+  return process.cwd() + '/' + config.src + '/htdocs/js/' + f + '.js:' + f;
+}));
 // Subsequent source files can then require "Class" with:
 // var Class = require('package/Class');
 
