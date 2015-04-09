@@ -10,12 +10,18 @@ var EXPORTS = [
 // Subsequent source files can then require "Class" with:
 // var Class = require('package/Class');
 
+var CWD = process.cwd(),
+    NODE_MODULES = CWD + '/node_modules';
+
 var browerify = {
   options: {
     browserifyOptions: {
       debug: true,
       paths: [
-        process.cwd() + '/' + config.src + '/htdocs/js'
+        CWD + '/' + config.src + '/htdocs/js',
+        NODE_MODULES,
+        NODE_MODULES + '/hazdev-tablist/src',
+        NODE_MODULES + '/hazdev-webutils/src'
       ]
     }
   },
