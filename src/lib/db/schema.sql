@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS curve;
 DROP TABLE IF EXISTS dataset;
 DROP TABLE IF EXISTS region;
 DROP TABLE IF EXISTS edition;
-DROP TABLE IF EXISTS soil;
+DROP TABLE IF EXISTS vs30;
 DROP TABLE IF EXISTS imt;
 
 
@@ -16,13 +16,13 @@ CREATE TABLE imt (
   CONSTRAINT imt_identifier UNIQUE (value)
 );
 
-CREATE TABLE soil (
+CREATE TABLE vs30 (
   id SERIAL NOT NULL PRIMARY KEY,
   value TEXT NOT NULL,
   display TEXT NOT NULL,
   displayorder INTEGER NOT NULL,
 
-  CONSTRAINT soil_identifier UNIQUE (value)
+  CONSTRAINT vs30_identifier UNIQUE (value)
 );
 
 CREATE TABLE edition (
@@ -53,12 +53,12 @@ CREATE TABLE region (
 CREATE TABLE dataset (
   id SERIAL NOT NULL PRIMARY KEY,
   imtid INTEGER NOT NULL REFERENCES imt (id),
-  soilid INTEGER NOT NULL REFERENCES soil (id),
+  vs30id INTEGER NOT NULL REFERENCES vs30 (id),
   editionid INTEGER NOT NULL REFERENCES edition (id),
   regionid INTEGER NOT NULL REFERENCES region (id),
   iml DECIMAL ARRAY,
 
-  CONSTRAINT dataset_identifier UNIQUE (imtid, soilid, editionid, regionid)
+  CONSTRAINT dataset_identifier UNIQUE (imtid, vs30id, editionid, regionid)
 );
 
 CREATE TABLE curve (
@@ -74,7 +74,7 @@ CREATE TABLE curve (
 CREATE VIEW dataset_vw AS
   SELECT
     t.display AS imt,
-    s.display AS soil,
+    s.display AS vs30,
     e.display AS edition,
     r.display AS region,
     r.minlatitude AS minlatitude,
@@ -88,7 +88,7 @@ CREATE VIEW dataset_vw AS
   LEFT JOIN
     imt AS t ON (t.id = d.imtid)
   LEFT JOIN
-    soil AS s ON (s.id = d.soilid)
+    vs30 AS s ON (s.id = d.vs30id)
   LEFT JOIN
     edition AS e ON (e.id = d.editionid)
   LEFT JOIN
@@ -96,7 +96,7 @@ CREATE VIEW dataset_vw AS
   WHERE
     d.id IS NOT NULL AND
     d.imtid IS NOT NULL AND
-    d.soilid IS NOT NULL AND
+    d.vs30id IS NOT NULL AND
     d.editionid IS NOT NULL AND
     d.regionid IS NOT NULL
   ORDER BY

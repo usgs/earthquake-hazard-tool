@@ -18,7 +18,7 @@ $imts = array(
   new Metadata(null, 'SA5p0',  '5.00 Second Spectral Acceleration', 12)
 );
 
-$soils = array(
+$vs30s = array(
   new Metadata(null, '2000', '2000 m/s - Site Class A', 1),
   new Metadata(null, '1150', '1150 m/s - Site Class B', 2),
   new Metadata(null, '760',  '760 m/s - B/C Boundary',  3),

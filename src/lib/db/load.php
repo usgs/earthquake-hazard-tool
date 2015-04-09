@@ -1,7 +1,7 @@
 <?php
 
 // This file should be included by the setup.php file. As such, it assumes it
-// has access to various (imt, soil, edition, region) factories as well as a
+// has access to various (imt, vs30, edition, region) factories as well as a
 // database connection (db).
 
 include_once '../classes/DatasetFactory.class.php';
@@ -39,7 +39,7 @@ function loadFile ($dataFile) {
   global $editionFactory;
   global $regionFactory;
   global $imtFactory;
-  global $soilFactory;
+  global $vs30Factory;
 
   global $datasetFactory;
   global $curveFactory;
@@ -65,7 +65,7 @@ function loadFile ($dataFile) {
   $edition = $editionFactory->getId($tokens[0]);
   $region = $regionFactory->getId($tokens[1]);
   $imt = $imtFactory->getId($tokens[2]);
-  $vs30 = $soilFactory->getId($tokens[3]);
+  $vs30 = $vs30Factory->getId($tokens[3]);
   $gridspacing = floatval($tokens[4]);
 
   $dataset = new Dataset(null, $imt, $vs30, $edition, $region, array());

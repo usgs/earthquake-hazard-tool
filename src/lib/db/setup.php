@@ -33,7 +33,7 @@ if (strpos($adminDsn, 'pgsql') === 0) {
 }
 
 $imtFactory = new MetadataFactory($db, 'imt');
-$soilFactory = new MetadataFactory($db, 'soil');
+$vs30Factory = new MetadataFactory($db, 'vs30');
 $editionFactory = new MetadataFactory($db, 'edition');
 $regionFactory = new RegionFactory($db);
 
@@ -60,8 +60,8 @@ try {
     $imtFactory->set($imt);
   }
 
-  foreach ($soils as $soil) {
-    $soilFactory->set($soil);
+  foreach ($vs30s as $vs30) {
+    $vs30Factory->set($vs30);
   }
 
   foreach ($editions as $edition) {

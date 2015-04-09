@@ -45,9 +45,9 @@ class DatasetFactory {
     }
   }
 
-  public function getId ($imt, $soil, $edition, $region) {
+  public function getId ($imt, $vs30, $edition, $region) {
     $this->queryId->bindValue(':imt', intval($imt), PDO::PARAM_INT);
-    $this->queryId->bindValue(':soil', intval($soil), PDO::PARAM_INT);
+    $this->queryId->bindValue(':vs30', intval($vs30), PDO::PARAM_INT);
     $this->queryId->bindValue(':edition', intval($edition), PDO::PARAM_INT);
     $this->queryId->bindValue(':region', intval($region), PDO::PARAM_INT);
 
@@ -81,7 +81,7 @@ class DatasetFactory {
       SELECT
         id,
         imtid,
-        soilid,
+        vs30id,
         editionid,
         regionid,
         iml
@@ -98,21 +98,21 @@ class DatasetFactory {
         dataset
       WHERE
         imtid = :imt AND
-        soilid = :soil AND
+        vs30id = :vs30 AND
         editionid = :edition AND
         regionid = :region
     ');
 
 
     $this->insertDataset = $this->db->prepare('
-      INSERT INTO dataset (imtid, soilid, editionid, regionid, iml) VALUES
-          (:imt, :soil, :edition, :region, :iml)
+      INSERT INTO dataset (imtid, vs30id, editionid, regionid, iml) VALUES
+          (:imt, :vs30, :edition, :region, :iml)
     ');
 
     $this->updateDataset = $this->db->prepare('
       UPDATE dataset SET
         imt = :imt,
-        soil = :soil,
+        vs30 = :vs30,
         edition = :edition,
         region = :region,
         iml = :iml
@@ -123,19 +123,19 @@ class DatasetFactory {
 
   private function _create ($dataset) {
     $imt = intval($dataset->imt);
-    $soil = intval($dataset->soil);
+    $vs30 = intval($dataset->vs30);
     $edition = intval($dataset->edition);
     $region = intval($dataset->region);
 
     $this->insertDataset->bindValue(':imt', $imt, PDO::PARAM_INT);
-    $this->insertDataset->bindValue(':soil', $soil, PDO::PARAM_INT);
+    $this->insertDataset->bindValue(':vs30', $vs30, PDO::PARAM_INT);
     $this->insertDataset->bindValue(':edition', $edition, PDO::PARAM_INT);
     $this->insertDataset->bindValue(':region', $region, PDO::PARAM_INT);
     $this->insertDataset->bindValue(':iml',
         $this->_arrayToDbString($dataset->iml), PDO::PARAM_STR);
 
     $this->insertDataset->execute();
-    $dataset->id = $this->getId($imt, $soil, $edition, $region);
+    $dataset->id = $this->getId($imt, $vs30, $edition, $region);
 
     return $dataset;
   }
@@ -143,13 +143,13 @@ class DatasetFactory {
   private function _update ($dataset) {
     $id = intval($dataset->id);
     $imt = intval($dataset->imt);
-    $soil = intval($dataset->soil);
+    $vs30 = intval($dataset->vs30);
     $edition = intval($dataset->edition);
     $region = intval($dataset->region);
 
     $this->updateDataset->bindValue(':id', $id, PDO::PARAM_INT);
     $this->updateDataset->bindValue(':imt', $imt, PDO::PARAM_INT);
-    $this->updateDataset->bindValue(':soil', $soil, PDO::PARAM_INT);
+    $this->updateDataset->bindValue(':vs30', $vs30, PDO::PARAM_INT);
     $this->updateDataset->bindValue(':edition', $edition, PDO::PARAM_INT);
     $this->updateDataset->bindValue(':region', $region, PDO::PARAM_INT);
     $this->updateDataset->bindValue(':iml',
