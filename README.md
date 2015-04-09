@@ -55,7 +55,7 @@ PostgreSQL database locally.
   installation. This command will prompt you to enter a password for the
   `<db_admin_username>`.
 
-  > Note: We suggest defining a `.tmp` directory at the root level of this
+  > Note: We suggest defining a `.data` directory at the root level of this
   > application for the `<db_directory>`.
 
 1. Start/Stop PostgreSQL
