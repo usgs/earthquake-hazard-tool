@@ -1,6 +1,7 @@
 'use strict';
 
-var Util = require('util/Util');
+var Model = require('mvc/Model'),
+    Util = require('util/Util');
 
 var Analysis = function (options) {
   var _this;
