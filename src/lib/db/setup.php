@@ -19,46 +19,41 @@ $regionFactory = new RegionFactory($db);
 include_once './metadata.php';
 
 try {
-
-  if (!promptYesNo('Do you want to create tables/views?', true)) {
-    return;
+  if (promptYesNo('Do you want to create tables/views?', true)) {
+    $db->beginTransaction();
+    $db->exec(file_get_contents('./schema.sql'));
+    $db->commit();
+    echo 'Finished creating tables/views.' . PHP_EOL;
   }
 
-  $db->beginTransaction();
-  $db->exec(file_get_contents('./schema.sql'));
-  $db->commit();
-  echo 'Finished creating tables/views.' . PHP_EOL;
 
-  if (!promptYesNo('Do you want to load metadata?', true)) {
-    return;
+  if (promptYesNo('Do you want to load metadata?', true)) {
+    $db->beginTransaction();
+
+    foreach ($imts as $imt) {
+      $imtFactory->set($imt);
+    }
+
+    foreach ($vs30s as $vs30) {
+      $vs30Factory->set($vs30);
+    }
+
+    foreach ($editions as $edition) {
+      $editionFactory->set($edition);
+    }
+
+    foreach ($regions as $region) {
+      $regionFactory->set($region);
+    }
+
+    $db->commit();
+    echo 'Finished loading metadata.' . PHP_EOL;
   }
 
-  $db->beginTransaction();
 
-  foreach ($imts as $imt) {
-    $imtFactory->set($imt);
+  if (promptYesNo('Do you want to load static curve data?', true)) {
+    include_once './load.php';
   }
-
-  foreach ($vs30s as $vs30) {
-    $vs30Factory->set($vs30);
-  }
-
-  foreach ($editions as $edition) {
-    $editionFactory->set($edition);
-  }
-
-  foreach ($regions as $region) {
-    $regionFactory->set($region);
-  }
-
-  $db->commit();
-  echo 'Finished loading metadata.' . PHP_EOL;
-
-  if (!promptYesNo('Do you want to load static curve data?', true)) {
-    return;
-  }
-
-  include_once './load.php';
 
 } catch (Exception $e) {
 
