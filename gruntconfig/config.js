@@ -7,6 +7,7 @@ var config = {
   dataPort: 8007,
   dist: 'dist',
   distPort: 8003,
+  etc: 'etc',
   example: 'example',
   examplePort: 8004,
   liveReloadPort: 8009,
