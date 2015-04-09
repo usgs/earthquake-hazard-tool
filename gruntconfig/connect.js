@@ -83,6 +83,19 @@ var connect = {
     }
   },
 
+  example: {
+    options: {
+      base: [
+        config.build + '/' + config.src + '/htdocs',
+        config.example
+      ],
+      middleware: addMiddleware,
+      open: 'http://localhost:' + config.examplePort + iniConfig.MOUNT_PATH +
+          '/example.html',
+      port: config.examplePort
+    }
+  },
+
   test: {
     options: {
       base: [
