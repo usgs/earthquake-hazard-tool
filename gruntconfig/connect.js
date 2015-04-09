@@ -100,6 +100,7 @@ var connect = {
   test: {
     options: {
       base: [
+        config.build + '/' + config.src + '/htdocs',
         config.build + '/' + config.test,
         config.etc,
         'node_modules' // primarily for mocha/chai

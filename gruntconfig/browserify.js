@@ -6,6 +6,8 @@ var config = require('./config');
 // "bundle", and will be set as an external in the "test".
 var EXPORTS = [
   // config.src + '/htdocs/js/package/Class.js:package/Class'
+  process.cwd() + '/' + config.src +
+      '/htdocs/js/HazardCurveGraphView.js:HazardCurveGraphView'
 ];
 // Subsequent source files can then require "Class" with:
 // var Class = require('package/Class');
@@ -36,7 +38,7 @@ var browerify = {
   // the bundle used by tests
   bundle: {
     src: [],
-    dest: config.build + '/' + config.src + '/bundle.js',
+    dest: config.build + '/' + config.src + '/htdocs/js/bundle.js',
     options: {
       alias: EXPORTS
     }
@@ -45,7 +47,10 @@ var browerify = {
   // the bundle of test suites
   test: {
     src: [config.test + '/js/test.js'],
-    dest: config.build + '/' + config.test + '/js/test.js'
+    dest: config.build + '/' + config.test + '/js/test.js',
+    options: {
+      external: EXPORTS
+    }
   }
 };
 
