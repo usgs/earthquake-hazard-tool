@@ -47,21 +47,23 @@ $APACHE_CONFIG_FILE = $CONF_DIR . DIRECTORY_SEPARATOR . 'httpd.conf';
 $DEFAULTS = array(
   'APP_DIR' => $APP_DIR,
   'DATA_DIR' => str_replace('/apps/', '/data/', $APP_DIR),
-  'MOUNT_PATH' => ''//,
+  'MOUNT_PATH' => '',
 
-  // 'DB_DSN' => 'sqlite:data.db',
-  // 'DB_USER' => '',
-  // 'DB_PASS' => ''
+  'DB_DSN' => 'pgsql:host=localhost;port=5432;dbname=earthquake',
+  'DB_SCHEMA' => 'hazard',
+  'DB_USER' => 'web',
+  'DB_PASS' => ''
 );
 
 $HELP_TEXT = array(
   'APP_DIR' => 'Absolute path to application root directory',
   'DATA_DIR' => 'Absolute path to application data directory',
-  'MOUNT_PATH' => 'Url path to application'//,
+  'MOUNT_PATH' => 'Url path to application',
 
-  // 'DB_DSN' => 'Database connection DSN string',
-  // 'DB_USER' => 'Read-only username for database connections',
-  // 'DB_PASS' => 'Password for database user'
+  'DB_DSN' => 'Database connection DSN string',
+  'DB_SCHEMA' => 'Database schema (if applicable)',
+  'DB_USER' => 'Read-only username for database connections',
+  'DB_PASS' => 'Password for database user'
 );
 
 
@@ -91,3 +93,7 @@ file_put_contents($APACHE_CONFIG_FILE, '
     Allow from all
   </Location>
 ');
+
+if (promptYesNo('Would you like to perform database installation', false)) {
+  include_once 'db/setup.php';
+}
