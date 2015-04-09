@@ -3,34 +3,13 @@
 $oldDir = getcwd();
 chdir(dirname(__FILE__));
 
+include_once 'connect.admin.db.php';
 include_once '../install-funcs.inc.php';
 
 include_once '../classes/Metadata.class.php';
 include_once '../classes/MetadataFactory.class.php';
 include_once '../classes/RegionFactory.class.php';
 
-$configFile = '../../conf/config.ini';
-
-if (!file_exists($configFile)) {
-  echo 'Configuration file does not exist. Exiting.' . PHP_EOL;
-  exit (-1);
-}
-
-// provides DB_DSN
-$CONFIG = parse_ini_file($configFile);
-
-$adminDsn = configure('adminDsn', $CONFIG['DB_DSN'],
-    'Database DSN for administration');
-$adminUser = configure('adminUser', 'root', 'Database admin user ' .
-    'to use when creating database');
-$adminPass = configure('adminPass', '',
-    'Password for database admin user', true);
-
-$db = new PDO($adminDsn, $adminUser, $adminPass);
-$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-if (strpos($adminDsn, 'pgsql') === 0) {
-  $db->exec('SET SEARCH_PATH = ' . $CONFIG['DB_SCHEMA']);
-}
 
 $imtFactory = new MetadataFactory($db, 'imt');
 $vs30Factory = new MetadataFactory($db, 'vs30');
