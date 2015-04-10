@@ -107,6 +107,34 @@ try {
 } catch (Exception $ex) {
   // Improper usage, show usage
 
+  function get_metadata_with_support ($metadata, $type, $supports) {
+    global $datasetFactory;
+
+    $result = $metadata->toArray();
+    $result['supports'] = $datasetFactory->getSupport($type, $metadata->value,
+        $supports);
+
+    return $result;
+  }
+
+  function getEditions ($edition) {
+    return get_metadata_with_support($edition, 'edition', array('region'));
+  }
+
+  function getRegions ($region) {
+    return get_metadata_with_support($region, 'region', array('imt'));
+  }
+
+  function getImts ($imt) {
+    return get_metadata_with_support($imt, 'imt', array('vs30'));
+  }
+
+  function getVs30s ($vs30) {
+    $result = $vs30->toArray();
+    $result['supports'] = array();
+    return $result;
+  }
+
   echo json_encode(array(
     'status' => 'usage',
     'description' => 'Retrieves hazard curve data for an input location',
@@ -117,13 +145,13 @@ try {
         'label' => 'Data Edition',
         'description' => '',
         'type' => 'string',
-        'values' => $editionFactory->getAvailable()
+        'values' => array_map('getEditions', $editionFactory->getAvailable())
       ),
       'region' => array(
         'label' => 'Geographic Region',
         'description' => '',
         'type' => 'string',
-        'values' => $regionFactory->getAvailable()
+        'values' => array_map('getRegions', $regionFactory->getAvailable())
       ),
       'latitude' => array(
         'label' => 'Latitude',
@@ -141,13 +169,13 @@ try {
         'label' => 'Intensity Measure Type',
         'description' => '',
         'type' => 'string',
-        'values' => $imtFactory->getAvailable()
+        'values' => array_map('getImts', $imtFactory->getAvailable())
       ),
       'vs30' => array(
         'label' => 'Site Soil Conditions',
         'description' => '',
         'type' => 'string',
-        'values' => $soilFactory->getAvailable()
+        'values' => array_map('getVs30s', $soilFactory->getAvailable())
       )
     )
   ));
