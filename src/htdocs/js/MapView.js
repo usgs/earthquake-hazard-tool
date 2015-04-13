@@ -11,12 +11,7 @@ var MapView = function (options) {
 
       // variables
       _el,
-      _map,
-      _mapEl,
-
-      // methods
-      _onDeselect,
-      _onSelect;
+      _map;
 
   _this = View(options);
 
@@ -27,13 +22,11 @@ var MapView = function (options) {
         streetLayer,
         satelliteLayer;
 
-    _mapEl = document.createElement('div');
-    _mapEl.className = 'map-view';
-
     _el = _this.el;
-    _el.appendChild(_mapEl);
+    _el.className = 'map-view';
+    _el.setAttribute('style', 'height:100%;');
 
-    _map = new L.Map(_mapEl, {
+    _map = new L.Map(_el, {
       center: [0.0, 0.0],
       zoom: 2,
       zoomAnimation: true
@@ -85,26 +78,26 @@ var MapView = function (options) {
   /**
    * Called when tab is selected.
    */
-  _onSelect = function () {
+  _this._onSelect = function () {
+    _map.invalidateSize();
     console.log('triggered _onSelect');
   };
 
   /**
    * Called when tab is deselected.
    */
-  _onDeselect = function () {
+  _this._onDeselect = function () {
     console.log('triggered _onDeselect');
+  };
+
+  _this._getMap = function () {
+    return _map;
   };
 
   _this.destroy = function () {
       // variables
       _el = null;
       _map = null;
-      _mapEl = null;
-
-      // methods
-      _onDeselect = null;
-      _onSelect = null;
   };
 
   _initialize();
