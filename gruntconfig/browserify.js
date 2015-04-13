@@ -26,13 +26,13 @@ var addExports = function (basedir, files) {
 
 EXPORTS.push(CWD + '/etc/data.js:etc/data');
 EXPORTS.push(CWD + '/etc/metadata.js:etc/metadata');
+EXPORTS.push(NODE_MODULES + '/d3/d3.js:d3');
 
 // hazdev-webutils exports
 addExports('node_modules/hazdev-webutils/src', [
   'mvc/Collection',
   'mvc/Model',
   'mvc/View',
-
   'util/Util',
   'util/Xhr'
 ]);
