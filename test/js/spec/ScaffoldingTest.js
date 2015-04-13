@@ -16,7 +16,7 @@ describe('ApplicationView test suite.', function () {
   });
 
   describe('Constructor', function () {
-    it('Instatiates correctly', function () {
+    it('Instantiates correctly', function () {
       expect(div.innerHTML).to.not.be.equal('');
     });
   });
