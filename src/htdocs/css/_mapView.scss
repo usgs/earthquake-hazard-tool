@@ -2,7 +2,7 @@
 @import '_MousePosition';
 
 /* These inline styles should be placed on the MapView wrapper element */
-// position:fixed;
+// position:absolute;
 // top:0;
 // right:0;
 // bottom:0;
@@ -13,4 +13,5 @@
   position: relative;
   height: 100%;
   width: 100%;
+  border: 1px solid #fff;
 }
