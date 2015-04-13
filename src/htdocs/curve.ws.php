@@ -6,20 +6,37 @@
 header('Content-Type: application/json');
 
 include_once '../conf/config.inc.php';
+include_once '../lib/install-funcs.inc.php'; // Provides safefloatval
 
 include_once '../lib/classes/CurveFactory.class.php';
 include_once '../lib/classes/DatasetFactory.class.php';
 include_once '../lib/classes/MetadataFactory.class.php';
 include_once '../lib/classes/RegionFactory.class.php';
 
-$editionInput = isset($_GET['edition']) ? $_GET['edition'] : null;
-$regionInput = isset($_GET['region']) ? $_GET['region'] : null;
+if (isset($_GET['rewrite'])) {
+  $tokens = array_filter(explode('/', $_GET['rewrite']), function ($item) {
+    return strlen(trim($item)) > 0;
+  });
 
-$latitude = isset($_GET['latitude']) ? floatval($_GET['latitude']) : null;
-$longitude = isset($_GET['longitude']) ? floatval($_GET['longitude']) : null;
+  $editionInput = array_shift($tokens);
+  $regionInput = array_shift($tokens);
 
-$imtInput = isset($_GET['imt']) ? $_GET['imt'] : null;
-$soilInput = isset($_GET['vs30']) ? $_GET['vs30'] : null;
+  $longitude = safefloatval(array_shift($tokens));
+  $latitude = safefloatval(array_shift($tokens));
+
+  $imtInput = array_shift($tokens);
+  $soilInput = array_shift($tokens);
+} else {
+
+  $editionInput = isset($_GET['edition']) ? $_GET['edition'] : null;
+  $regionInput = isset($_GET['region']) ? $_GET['region'] : null;
+
+  $longitude = isset($_GET['longitude']) ? floatval($_GET['longitude']) : null;
+  $latitude = isset($_GET['latitude']) ? floatval($_GET['latitude']) : null;
+
+  $imtInput = isset($_GET['imt']) ? $_GET['imt'] : null;
+  $soilInput = isset($_GET['vs30']) ? $_GET['vs30'] : null;
+}
 
 
 $editionFactory = new MetadataFactory($DB, 'edition');
@@ -99,8 +116,8 @@ try {
     'status' => 'success',
     'date' => date('c'),
     'url' => sprintf("%s%s/services/curve/%s/%s/%s/%s/%s/%s", $request,
-        $CONFIG['MOUNT_PATH'], $_GET['edition'], $_GET['region'],
-        $_GET['longitude'], $_GET['latitude'], $_GET['imt'], $_GET['vs30']),
+        $CONFIG['MOUNT_PATH'], $editionInput, $regionInput,
+        $longitude, $latitude, $imtInput, $vs30Input),
     'response' => $curves
   ));
 
