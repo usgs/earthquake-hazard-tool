@@ -115,9 +115,9 @@ try {
   echo json_encode(array(
     'status' => 'success',
     'date' => date('c'),
-    'url' => sprintf("%s%s/services/curve/%s/%s/%s/%s/%s/%s", $request,
-        $CONFIG['MOUNT_PATH'], $editionInput, $regionInput,
-        $longitude, $latitude, $imtInput, $vs30Input),
+    'url' => sprintf("%s/%s/%s/%s/%s/%s/%s/%s", $request,
+        $_SERVER['REQUEST_URI'], $editionInput, $regionInput, $longitude,
+        $latitude, $imtInput, $vs30Input),
     'response' => $curves
   ));
 
@@ -157,7 +157,7 @@ try {
   echo str_replace('"supports":[]', '"supports":{}', json_encode(array(
     'status' => 'usage',
     'description' => 'Retrieves hazard curve data for an input location',
-    'syntax' => $request . $CONFIG['MOUNT_PATH'] . '/services/curve/' .
+    'syntax' => $request . $_SERVER['REQUEST_URI'] .
         '{edition}/{region}/{longitude}/{latitude}/{imt}/{vs30}',
     'parameters' => array(
       'edition' => array(
