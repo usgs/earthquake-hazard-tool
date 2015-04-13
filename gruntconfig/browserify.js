@@ -31,7 +31,8 @@ addExports('node_modules/hazdev-webutils/src', [
 // project exports
 addExports(config.src + '/htdocs/js', [
   'HazardCurve',
-  'HazardCurveGraphView'
+  'HazardCurveGraphView',
+  'MapView'
 ]);
 
 // Subsequent source files can then require "Class" with:

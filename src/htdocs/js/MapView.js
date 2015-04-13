@@ -1,7 +1,7 @@
 'use strict';
 
 var L = require('leaflet'),
-    Util = require('mvc/Util'),
+    Util = require('util/Util'),
     View = require('mvc/View'),
     MousePosition = require('map/MousePosition');
 
@@ -28,7 +28,7 @@ var MapView = function (options) {
         satelliteLayer;
 
     _mapEl = document.createElement('div');
-    _mapEl.className = 'map-wrapper';
+    _mapEl.className = 'map-view';
 
     _el = _this.el;
     _el.appendChild(_mapEl);
