@@ -61,7 +61,7 @@ body {
     left: 0;
     top: 0;
     right: 0;
-    height: 100%;
+    bottom: 0;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     -webkit-tap-highlight-color: transparent;
@@ -102,7 +102,10 @@ body {
   }
 
   > .main-content {
-    left: 0;
+    top: 16px;
+    right: 16px;
+    bottom: 16px;
+    left: 16px;
     // undo tablist margin
     margin: 0;
     transition: left $transition-time, width $transition-time;

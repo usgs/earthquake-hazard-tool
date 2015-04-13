@@ -29,11 +29,12 @@ var ApplicationView = function (options) {
           '<a href="/" class="site-logo">' +
             '<img alt="USGS" src="' + RETINA_USGS_LOGO + '"/>' +
           '</a>' +
-          '<button class="offcanvas-toggle">menu</button>' +
+          '<button class="offcanvas-toggle">Menu</button>' +
         '</header>' + 
         '<section class="application-content">' +
           '<section class="offcanvas-content">' +
-            '<p>offcanvas-content</p>' +
+            '<h3>offcanvas-content</h3>' +
+            '<p>This is where the offcanvas content should live.</p>' +
           '</section>' +
           '<section class="main-content"></section>' +
         '</section>';
