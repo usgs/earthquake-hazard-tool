@@ -39,8 +39,8 @@ var watch = {
     ],
     tasks: [
       'jshint:dev',
-      'browserify:bundle',
-      'browserify:index'
+      'browserify:index',
+      'browserify:bundle'
     ]
   },
 

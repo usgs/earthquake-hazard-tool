@@ -26,12 +26,19 @@ var addExports = function (basedir, files) {
 
 // hazdev-webutils exports
 addExports('node_modules/hazdev-webutils/src', [
+  'mvc/Collection',
+  'mvc/Model',
+  'mvc/View',
+
+  'util/Util',
   'util/Xhr'
 ]);
 // project exports
 addExports(config.src + '/htdocs/js', [
+  'Calculator',
   'HazardCurve',
   'HazardCurveGraphView',
+  'HazardResponse',
   'MapView'
 ]);
 
