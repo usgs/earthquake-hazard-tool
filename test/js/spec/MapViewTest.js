@@ -16,6 +16,17 @@ describe('Unit tests for "MapView"', function () {
       var view = MapView();
       view.destroy();
     });
+
+    it('Creates a map', function () {
+      var _el = document.createElement('div'),
+          view = MapView({
+            el: _el
+          });
+
+      expect(_el.querySelector('.leaflet-container')).not.to.be.undefined;
+
+    });
   });
+
 
 });
