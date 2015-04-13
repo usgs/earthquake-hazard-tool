@@ -91,12 +91,12 @@ try {
 
             $curves[] = array(
               'metadata' => array(
-                'edition' => $edition,
-                'region' => $region,
+                'edition' => $edition->toArray(),
+                'region' => $region->toArray(),
                 'latitude' => $latitude,
                 'longitude' => $longitude,
-                'imt' => $imt,
-                'vs30' => $vs30,
+                'imt' => $imt->toArray(),
+                'vs30' => $vs30->toArray(),
                 'xlabel' => 'Ground Motion (g)',
                 'ylabel' => 'Annual Frequency of Exceedence',
                 'xvals' => $dataset->iml
@@ -152,48 +152,45 @@ try {
     return $result;
   }
 
-  echo json_encode(array(
+  echo str_replace('"supports":[]', '"supports":{}', json_encode(array(
     'status' => 'usage',
     'description' => 'Retrieves hazard curve data for an input location',
     'syntax' => $request . $CONFIG['MOUNT_PATH'] . '/services/curve/' .
         '{edition}/{region}/{longitude}/{latitude}/{imt}/{vs30}',
     'parameters' => array(
       'edition' => array(
-        'label' => 'Data Edition',
+        'label' => 'Model edition',
         'description' => '',
         'type' => 'string',
         'values' => array_map('getEditions', $editionFactory->getAvailable())
       ),
       'region' => array(
-        'label' => 'Geographic Region',
-        'description' => '',
+        'label' => 'Model region',
         'type' => 'string',
         'values' => array_map('getRegions', $regionFactory->getAvailable())
       ),
       'latitude' => array(
-        'label' => 'Latitude',
-        'description' => 'Decimal degrees latitude for location',
+        'label' => 'Latitude (in decimal degrees)',
         'type' => 'number',
-        'values' => '[-90.0, 90.0] Additional restrictions based on region'
+        'values' => array('minimum' => -90.0, 'maximum' => 90.0)
       ),
       'longitude' => array(
-        'label' => 'Longitude',
-        'description' => 'Decimal degrees longitude for location',
+        'label' => 'Longitude (in decimal degrees)',
         'type' => 'number',
-        'values' => '[-180.0, 180.0] Additional restrictions based on region'
+        'values' => array('minimum' => -180.0, 'maximum' => 360.0)
       ),
       'imt' => array(
-        'label' => 'Intensity Measure Type',
+        'label' => 'Intensity measure type',
         'description' => '',
         'type' => 'string',
         'values' => array_map('getImts', $imtFactory->getAvailable())
       ),
       'vs30' => array(
-        'label' => 'Site Soil Conditions',
+        'label' => 'Site soil (Vs30)',
         'description' => '',
         'type' => 'string',
         'values' => array_map('getVs30s', $soilFactory->getAvailable())
       )
     )
-  ));
+  )));
 }
