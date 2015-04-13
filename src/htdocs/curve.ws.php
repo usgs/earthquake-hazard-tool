@@ -139,11 +139,13 @@ try {
   }
 
   function getRegions ($region) {
-    return get_metadata_with_support($region, 'region', array('imt'));
+    return get_metadata_with_support($region, 'region', array('imt', 'vs30'));
   }
 
   function getImts ($imt) {
-    return get_metadata_with_support($imt, 'imt', array('vs30'));
+    $result = $imt->toArray();
+    $result['supports'] = array();
+    return $result;
   }
 
   function getVs30s ($vs30) {
