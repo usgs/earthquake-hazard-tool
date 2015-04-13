@@ -38,7 +38,18 @@ var copy = {
     src: [
       'test.html'
     ]
+  },
+
+  leaflet: {
+    expand: true,
+    cwd: 'node_modules/leaflet/dist',
+    dest: config.build + '/' + config.src + '/htdocs/lib/leaflet',
+    src: [
+      'leaflet.css',
+      'images/**'
+    ]
   }
+
 };
 
 module.exports = copy;

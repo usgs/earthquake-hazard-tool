@@ -5,6 +5,7 @@ var concurrent = {
     'browserify:index',
     'browserify:bundle',
     'copy:dev',
+    'copy:leaflet',
     'compass:dev'
   ],
 
