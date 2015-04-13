@@ -36,8 +36,7 @@ var MapView = function (options) {
     _map = new L.Map(_mapEl, {
       center: [0.0, 0.0],
       zoom: 2,
-      zoomAnimation: true,
-      attributionControl: false
+      zoomAnimation: true
     });
 
     // Add layer control
@@ -76,6 +75,9 @@ var MapView = function (options) {
       _map.addControl(new MousePosition());
       _map.addControl(new L.Control.Scale({'position':'bottomleft'}));
     }
+
+    // disable mouse wheel zoom
+    _map.scrollWheelZoom.disable();
 
     options = null;
   };
