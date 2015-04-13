@@ -25,7 +25,7 @@ if (isset($_GET['rewrite'])) {
   $latitude = safefloatval(array_shift($tokens));
 
   $imtInput = array_shift($tokens);
-  $soilInput = array_shift($tokens);
+  $vs30Input = array_shift($tokens);
 } else {
 
   $editionInput = isset($_GET['edition']) ? $_GET['edition'] : null;
@@ -35,14 +35,14 @@ if (isset($_GET['rewrite'])) {
   $latitude = isset($_GET['latitude']) ? floatval($_GET['latitude']) : null;
 
   $imtInput = isset($_GET['imt']) ? $_GET['imt'] : null;
-  $soilInput = isset($_GET['vs30']) ? $_GET['vs30'] : null;
+  $vs30Input = isset($_GET['vs30']) ? $_GET['vs30'] : null;
 }
 
 
 $editionFactory = new MetadataFactory($DB, 'edition');
 $regionFactory = new RegionFactory($DB);
 $imtFactory = new MetadataFactory($DB, 'imt');
-$soilFactory = new MetadataFactory($DB, 'vs30');
+$vs30Factory = new MetadataFactory($DB, 'vs30');
 $datasetFactory = new DatasetFactory($DB);
 $curveFactory = new CurveFactory($DB);
 
@@ -71,15 +71,15 @@ try {
     $imts = array($imtFactory->get($imtFactory->getId($imtInput)));
   }
 
-  if ($soilInput === 'any') {
-    $soils = $soilFactory->getAvailable();
+  if ($vs30Input === 'any') {
+    $vs30s = $vs30Factory->getAvailable();
   } else {
-    $soils = array($soilFactory->get($soilFactory->getId($soilInput)));
+    $vs30s = array($vs30Factory->get($vs30Factory->getId($vs30Input)));
   }
 
 
   foreach ($imts as $imt) {
-    foreach ($soils as $vs30) {
+    foreach ($vs30s as $vs30) {
       foreach ($editions as $edition) {
         foreach ($regions as $region) {
           try {
@@ -191,7 +191,7 @@ try {
         'label' => 'Site soil (Vs30)',
         'description' => '',
         'type' => 'string',
-        'values' => array_map('getVs30s', $soilFactory->getAvailable())
+        'values' => array_map('getVs30s', $vs30Factory->getAvailable())
       )
     )
   )));
