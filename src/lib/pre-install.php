@@ -88,6 +88,10 @@ file_put_contents($APACHE_CONFIG_FILE, '
   Alias ' . $CONFIG['MOUNT_PATH'] . '/data ' . $CONFIG['DATA_DIR'] . '
   Alias ' . $CONFIG['MOUNT_PATH'] . ' ' . $CONFIG['APP_DIR'] . '/htdocs
 
+  RewriteEngine On
+  RewriteRule /hazws/staticcurve/1(.*)$ ' .
+      $CONFIG['MOUNT_PATH'] . '/curve.ws.php?rewrite=$1 [L,PT]
+
   <Location ' . $CONFIG['MOUNT_PATH'] . '>
     Order Allow,Deny
     Allow from all

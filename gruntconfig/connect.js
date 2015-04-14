@@ -10,6 +10,11 @@ dataProxyRewrite['^' + iniConfig.MOUNT_PATH + '/data'] = '';
 
 var rewrites = [
   {
+    from: '^/hazws/staticcurve/1(.*)$',
+    to: '/curve.ws.php?rewrite=$1'
+  },
+  // This is the generic MOUNT_PATH alias and should be final rewrite
+  {
     from: '^' + iniConfig.MOUNT_PATH + '/?(.*)$',
     to: '/$1'
   }

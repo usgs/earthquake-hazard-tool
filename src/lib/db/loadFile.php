@@ -22,6 +22,7 @@ $dataLoader = new DataLoader($db);
 
 foreach (array_slice($argv, 1) as $dataFile) {
   try {
+    echo $dataFile . PHP_EOL;
     $dataLoader->load($dataFile, null, true);
   } catch (Exception $ex) {
     $errors += 1;

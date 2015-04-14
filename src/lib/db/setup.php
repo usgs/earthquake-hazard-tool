@@ -22,6 +22,8 @@ try {
   if (promptYesNo('Do you want to create tables/views?', true)) {
     $db->beginTransaction();
     $db->exec(file_get_contents('./schema.sql'));
+    $db->exec('GRANT SELECT ON ALL TABLES IN SCHEMA ' . $CONFIG['DB_SCHEMA'] .
+        ' TO ' . $CONFIG['DB_USER']);
     $db->commit();
     echo 'Finished creating tables/views.' . PHP_EOL;
   }

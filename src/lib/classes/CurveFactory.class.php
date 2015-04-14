@@ -163,7 +163,7 @@ class CurveFactory {
     $this->insertCurve->bindValue(':latitude', $latitude, PDO::PARAM_STR);
     $this->insertCurve->bindValue(':longitude', $longitude, PDO::PARAM_STR);
     $this->insertCurve->bindValue(':afe',
-        $this->_arrayToDbString($curve->afe), PDO::PARAM_STR);
+        $this->_arrayToDbString($curve->yvals), PDO::PARAM_STR);
 
     $this->insertCurve->execute();
     $curve->id = $this->getId($datasetid, $latitude, $longitude);
@@ -182,7 +182,7 @@ class CurveFactory {
     $this->updateCurve->bindValue(':latitude', $latitude, PDO::PARAM_STR);
     $this->updateCurve->bindValue(':longitude', $longitude, PDO::PARAM_STR);
     $this->updateCurve->bindValue(':afe',
-        $this->_arrayToDbString($curve->afe), PDO::PARAM_STR);
+        $this->_arrayToDbString($curve->yvals), PDO::PARAM_STR);
 
     $this->updateCurve->execute();
     $curve->id = $this->getId($datasetid, $latitude, $longitude);

@@ -6,16 +6,16 @@
 $imts = array(
   new Metadata(null, 'PGA',    'Peak Ground Acceleration',           1),
   new Metadata(null, 'PGV',    'Peak Ground Velocity',               2),
-  new Metadata(null, 'SA0p1',  '0.10 Second Spectral Acceleration',  3),
-  new Metadata(null, 'SA0p2',  '0.20 Second Spectral Acceleration',  4),
-  new Metadata(null, 'SA0p3',  '0.30 Second Spectral Acceleration',  5),
-  new Metadata(null, 'SA0p5',  '0.50 Second Spectral Acceleration',  6),
-  new Metadata(null, 'SA0p75', '0.75 Second Spectral Acceleration',  7),
-  new Metadata(null, 'SA1p0',  '1.00 Second Spectral Acceleration',  8),
-  new Metadata(null, 'SA2p0',  '2.00 Second Spectral Acceleration',  9),
-  new Metadata(null, 'SA3p0',  '3.00 Second Spectral Acceleration', 10),
-  new Metadata(null, 'SA4p0',  '4.00 Second Spectral Acceleration', 11),
-  new Metadata(null, 'SA5p0',  '5.00 Second Spectral Acceleration', 12)
+  new Metadata(null, 'SA0P1',  '0.10 Second Spectral Acceleration',  3),
+  new Metadata(null, 'SA0P2',  '0.20 Second Spectral Acceleration',  4),
+  new Metadata(null, 'SA0P3',  '0.30 Second Spectral Acceleration',  5),
+  new Metadata(null, 'SA0P5',  '0.50 Second Spectral Acceleration',  6),
+  new Metadata(null, 'SA0P75', '0.75 Second Spectral Acceleration',  7),
+  new Metadata(null, 'SA1P0',  '1.00 Second Spectral Acceleration',  8),
+  new Metadata(null, 'SA2P0',  '2.00 Second Spectral Acceleration',  9),
+  new Metadata(null, 'SA3P0',  '3.00 Second Spectral Acceleration', 10),
+  new Metadata(null, 'SA4P0',  '4.00 Second Spectral Acceleration', 11),
+  new Metadata(null, 'SA5P0',  '5.00 Second Spectral Acceleration', 12)
 );
 
 $vs30s = array(

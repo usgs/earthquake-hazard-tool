@@ -85,20 +85,43 @@ CREATE VIEW dataset_vw AS
     d.iml AS iml
   FROM
     dataset AS d
-  LEFT JOIN
+  JOIN
     imt AS t ON (t.id = d.imtid)
-  LEFT JOIN
+  JOIN
     vs30 AS s ON (s.id = d.vs30id)
-  LEFT JOIN
+  JOIN
     edition AS e ON (e.id = d.editionid)
-  LEFT JOIN
+  JOIN
     region AS r ON (r.id = d.regionid)
-  WHERE
-    d.id IS NOT NULL AND
-    d.imtid IS NOT NULL AND
-    d.vs30id IS NOT NULL AND
-    d.editionid IS NOT NULL AND
-    d.regionid IS NOT NULL
+  ORDER BY
+    e.displayorder,
+    r.displayorder,
+    t.displayorder,
+    s.displayorder
+;
+
+CREATE VIEW dataset_vals_vw AS
+  SELECT
+    t.value AS imt,
+    s.value AS vs30,
+    e.value AS edition,
+    r.value AS region,
+    r.minlatitude AS minlatitude,
+    r.maxlatitude AS maxlatitude,
+    r.minlongitude AS minlongitude,
+    r.maxlongitude AS maxlongitude,
+    r.gridspacing AS gridspacing,
+    d.iml AS iml
+  FROM
+    dataset AS d
+  JOIN
+    imt AS t ON (t.id = d.imtid)
+  JOIN
+    vs30 AS s ON (s.id = d.vs30id)
+  JOIN
+    edition AS e ON (e.id = d.editionid)
+  JOIN
+    region AS r ON (r.id = d.regionid)
   ORDER BY
     e.displayorder,
     r.displayorder,

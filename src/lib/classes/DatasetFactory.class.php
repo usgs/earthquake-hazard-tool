@@ -66,6 +66,37 @@ class DatasetFactory {
     }
   }
 
+  public function getSupport ($metaType, $metaValue, $supportTypes=array()) {
+    $results = array();
+
+    foreach ($supportTypes as $supportType) {
+      $results[$supportType] = array();
+
+      $statement = $this->db->prepare(sprintf('
+        SELECT
+          DISTINCT(%s)
+        FROM
+          dataset_vals_vw
+        WHERE
+          %s = :metaValue
+        ',
+        $supportType,
+        $metaType
+      ));
+
+      $statement->bindValue(':metaValue', $metaValue, PDO::PARAM_STR);
+      $statement->execute();
+      $supportVals = $statement->fetchAll(PDO::FETCH_ASSOC);
+      $statement->closeCursor();
+
+      foreach ($supportVals as $supportVal) {
+        $results[$supportType][] = $supportVal[$supportType];
+      }
+    }
+
+    return $results;
+  }
+
   public function set ($dataset) {
     if ($dataset->id === null) {
       // No id, create new dataset
