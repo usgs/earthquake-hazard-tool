@@ -92,10 +92,10 @@ var MapView = function (options) {
     return _map;
   };
 
-  _this.destroy = function () {
+  _this.destroy = Util.compose(function () {
       // variables
       _map = null;
-  };
+  }, _this.destroy);
 
   _initialize();
   return _this;
