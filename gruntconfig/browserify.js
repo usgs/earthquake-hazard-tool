@@ -24,6 +24,9 @@ var addExports = function (basedir, files) {
 // List individual modules here. Each listed module will be aliased in the
 // "bundle", and will be set as an external in "test"s and "example"s.
 
+EXPORTS.push(CWD + '/etc/data.js:etc/data');
+EXPORTS.push(CWD + '/etc/metadata.js:etc/metadata');
+
 // hazdev-webutils exports
 addExports('node_modules/hazdev-webutils/src', [
   'mvc/Collection',

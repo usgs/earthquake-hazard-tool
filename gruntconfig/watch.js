@@ -25,7 +25,7 @@ var watch = {
 
   test: {
     files: [
-      config.test + '/**/*.js'
+      config.test + '/**/*'
     ],
     tasks: [
       'jshint:test',
