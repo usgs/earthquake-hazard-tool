@@ -78,16 +78,16 @@ var MapView = function (options) {
    */
   _this._onSelect = function () {
     _map.invalidateSize();
-    console.log('triggered _onSelect');
   };
 
   /**
    * Called when tab is deselected.
    */
-  _this._onDeselect = function () {
-    console.log('triggered _onDeselect');
-  };
+  _this._onDeselect = function () {};
 
+  /**
+   * Return the Leaflet map
+   */
   _this._getMap = function () {
     return _map;
   };
