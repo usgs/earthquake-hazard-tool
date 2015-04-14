@@ -54,15 +54,15 @@ var ApplicationView = function (options) {
     _tabList.addTab({
       'title': 'Map',
       'content': _mapView.el,
-      'onSelect': _mapView._onSelect,
-      'onDeselect': _mapView._onDeselect
+      'onSelect': _mapView.onSelect,
+      'onDeselect': _mapView.onDeselect
     });
     // style the map tab
     _tabList.el.lastChild.setAttribute('style',
       'position:absolute;top:40px;right:0;bottom:0;left:0;margin:0;padding:0;');
 
     // invalidate the map size
-    _mapView._getMap().invalidateSize();
+    _mapView.getMap().invalidateSize();
 
     options = null;
   };

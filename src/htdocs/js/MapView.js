@@ -76,19 +76,19 @@ var MapView = function (options) {
   /**
    * Called when tab is selected.
    */
-  _this._onSelect = function () {
+  _this.onSelect = function () {
     _map.invalidateSize();
   };
 
   /**
    * Called when tab is deselected.
    */
-  _this._onDeselect = function () {};
+  _this.onDeselect = function () {};
 
   /**
    * Return the Leaflet map
    */
-  _this._getMap = function () {
+  _this.getMap = function () {
     return _map;
   };
 
