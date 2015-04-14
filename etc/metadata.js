@@ -1,4 +1,4 @@
-{
+module.exports = {
   "status": "usage",
   "description": "Retrieves hazard curve data for an input location",
   "syntax": "http://localhost:8500/hazws/staticcurve/1/{edition}/{region}/{longitude}/{latitude}/{imt}/{vs30}",
@@ -115,4 +115,4 @@
       ]
     }
   }
-}
+};
