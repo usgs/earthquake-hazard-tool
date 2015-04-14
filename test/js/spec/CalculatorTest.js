@@ -1,4 +1,4 @@
-/* global afterEach, beforeEach, chai, describe, it, sinon */
+/* global after, before, chai, describe, it, sinon */
 'use strict';
 
 var Calculator = require('Calculator'),
@@ -38,7 +38,6 @@ describe('Calculator', function () {
 
   describe('Constructor', function () {
     it('can be constructed without blowing up', function () {
-
       expect(calculator).to.respondTo('destroy');
       expect(calculator).to.respondTo('getParameters');
       expect(calculator).to.respondTo('getResult');
@@ -46,11 +45,10 @@ describe('Calculator', function () {
   });
 
   describe('getParameters', function () {
-    var calculator = Calculator();
     it('throws an error for unknown services', function () {
       var unknownServiceParams = function () {
         calculator.getParameters('unknownServiceName');
-      }
+      };
       expect(unknownServiceParams).to.throw(Error);
     });
 
@@ -64,14 +62,13 @@ describe('Calculator', function () {
 
     it('calls the callback', function (done) {
       calculator.getParameters('staticcurve', function () {
-        done()
+        done();
       });
     });
 
     it('does not re-fetch parameters after fetched', function (done) {
       var callCount = stub.callCount;
-      calculator.getParameters('staticcurve', function (parameters) {
-
+      calculator.getParameters('staticcurve', function () {
         expect(stub.callCount).to.equal(callCount);
         done();
       });
@@ -82,7 +79,7 @@ describe('Calculator', function () {
     it('throws an error for unknown services', function () {
       var unknownServiceResult = function () {
         calculator.getResult('unknownServiceName');
-      }
+      };
       expect(unknownServiceResult).to.throw(Error);
     });
 
@@ -123,7 +120,6 @@ describe('Calculator', function () {
     });
 
     it('returns expected results', function (done) {
-
         calculator.getResult('staticcurve', {
           edition: 'E2014R1',
           region: 'COUS0P05',
@@ -132,21 +128,8 @@ describe('Calculator', function () {
           imt: 'PGA',
           vs30: '760'
         }, function (result) {
-          var actual = result.toJSON(),
-              expected = data.response[0].metadata;
-
-          expect(actual.edition.id).to.equal(expected.edition.id);
-          expect(actual.region.id).to.equal(expected.region.id);
-
-          expect(actual.longitude).to.equal(expected.longitude);
-          expect(actual.latitude).to.equal(expected.latitude);
-
-          expect(actual.imt.id).to.equal(expected.imt.id);
-          expect(actual.vs30.id).to.equal(expected.vs30.id);
-
-          expect(actual.curves.length).to.equal(1);
-
           // TODO :: Deal with multiple HazardResponse
+          expect(result.toJSON().curves.length).to.equal(1);
           done();
         });
     });
