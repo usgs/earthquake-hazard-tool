@@ -69,8 +69,6 @@ var MapView = function (options) {
 
     // disable mouse wheel zoom
     _map.scrollWheelZoom.disable();
-
-    options = null;
   };
 
   /**
@@ -97,7 +95,8 @@ var MapView = function (options) {
       _map = null;
   }, _this.destroy);
 
-  _initialize();
+  _initialize(options);
+  options = null;
   return _this;
 };
 
