@@ -8,6 +8,7 @@ mocha.ui('bdd');
 require('./spec/CalculatorTest');
 require('./spec/MapViewTest');
 require('./spec/HazardCurveGraphViewTest');
+require('./spec/HazardUtilTest');
 require('./spec/ScaffoldingTest');
 
 if (window.mochaPhantomJS) {
