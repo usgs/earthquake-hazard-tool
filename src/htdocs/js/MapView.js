@@ -10,7 +10,6 @@ var MapView = function (options) {
       _initialize,
 
       // variables
-      _el,
       _map;
 
   _this = View(options);
@@ -22,11 +21,10 @@ var MapView = function (options) {
         streetLayer,
         satelliteLayer;
 
-    _el = _this.el;
-    _el.className = 'map-view';
-    _el.setAttribute('style', 'height:100%;');
+    _this.el.className = 'map-view';
+    _this.el.setAttribute('style', 'height:100%;');
 
-    _map = new L.Map(_el, {
+    _map = new L.Map(_this.el, {
       center: [0.0, 0.0],
       zoom: 2,
       zoomAnimation: true
@@ -96,7 +94,6 @@ var MapView = function (options) {
 
   _this.destroy = function () {
       // variables
-      _el = null;
       _map = null;
   };
 
