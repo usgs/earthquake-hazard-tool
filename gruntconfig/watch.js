@@ -28,6 +28,7 @@ var watch = {
       config.test + '/**/*.js'
     ],
     tasks: [
+      'jshint:test',
       'concurrent:test'
     ]
   },
