@@ -6,8 +6,7 @@ var HazardUtil = require('HazardUtil');
 
 var EPSILON = 1E-20;
 
-var data = require('etc/data'),
-    expect = chai.expect;
+var expect = chai.expect;
 
 describe('HazardUtil', function () {
   describe('coallesce', function () {
