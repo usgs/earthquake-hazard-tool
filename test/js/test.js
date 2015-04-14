@@ -30,6 +30,7 @@ mocha.ui('bdd');
 require('./spec/ApplicationViewTest');
 require('./spec/CalculatorTest');
 require('./spec/MapViewTest');
+require('./spec/HazardCurveDataViewTest');
 require('./spec/HazardCurveGraphViewTest');
 require('./spec/HazardUtilTest');
 require('./spec/StaticCurveInputViewTest');
