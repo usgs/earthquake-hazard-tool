@@ -3,9 +3,11 @@
 @import 'hazdev-template/src/htdocs/css/_page.scss';
 @import 'hazdev-template/src/htdocs/css/_text.scss';
 @import 'hazdev-template/src/htdocs/css/_typography.scss';
+@import 'hazdev-template/src/htdocs/css/_form.scss';
 @import 'hazdev-tablist/src/tablist/hazdev-tablist.scss';
 
 @import '_MapView';
+@import '_StaticCurveInputView';
 
 /* Variables */
 $transition-time: 800ms;
