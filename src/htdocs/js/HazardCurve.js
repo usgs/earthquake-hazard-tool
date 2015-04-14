@@ -10,7 +10,7 @@ var HazardCurve = function (params) {
   var _this;
 
   _this = Model(Util.extend({
-    label: null,
+    label: 'Hazard Curve',
     data: Collection([])
   }, params));
 
