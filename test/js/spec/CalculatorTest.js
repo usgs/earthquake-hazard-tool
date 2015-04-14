@@ -1,13 +1,46 @@
 /* global after, before, chai, describe, it, sinon */
 'use strict';
 
-var Calculator = require('Calculator'),
+var Analysis = require('Analysis'),
+    Calculator = require('Calculator'),
+    Meta = require('Meta'),
+    Region = require('Region'),
+
     Xhr = require('util/Xhr');
 
 
 var data = require('etc/data'),
     expect = chai.expect,
     metadata = require('etc/metadata');
+
+var analysis,
+    edition,
+    imt,
+    latitude,
+    longitude,
+    region,
+    vs30;
+
+
+edition = Meta(metadata.parameters.edition.values[0]);
+region = Region(metadata.parameters.region.values[0]);
+
+longitude = -118.005;
+latitude = 35.005;
+
+imt = Meta(metadata.parameters.imt.values[0]);
+vs30 = Meta(metadata.parameters.vs30.values[0]);
+
+analysis = Analysis({
+  edition: edition,
+  region: region,
+
+  longitude: longitude,
+  latitude: latitude,
+
+  imt: imt,
+  vs30: vs30
+});
 
 describe('Calculator', function () {
 
@@ -85,7 +118,7 @@ describe('Calculator', function () {
 
     it('throws an error for bad input parameters', function () {
       var badInputParams = function () {
-        calculator.getResult('staticcurve', {});
+        calculator.getResult('staticcurve', Analysis());
       };
 
       expect(badInputParams).to.throw(Error);
@@ -93,43 +126,22 @@ describe('Calculator', function () {
 
     it('handles no callback provided', function () {
         var noCallback = function () {
-          calculator.getResult('staticcurve', {
-            edition: 'E2014R1',
-            region: 'COUS0P05',
-            longitude: -118.0,
-            latitude: 34.0,
-            imt: 'PGA',
-            vs30: '760'
-          });
+          calculator.getResult('staticcurve', analysis);
         };
 
         expect(noCallback).to.not.throw(Error);
     });
 
     it('calls the callback', function (done) {
-      calculator.getResult('staticcurve', {
-        edition: 'E2014R1',
-        region: 'COUS0P05',
-        longitude: -118.0,
-        latitude: 34.0,
-        imt: 'PGA',
-        vs30: '760'
-      }, function () {
+      calculator.getResult('staticcurve', analysis, function () {
         done();
       });
     });
 
     it('returns expected results', function (done) {
-        calculator.getResult('staticcurve', {
-          edition: 'E2014R1',
-          region: 'COUS0P05',
-          longitude: -118.0,
-          latitude: 34.0,
-          imt: 'PGA',
-          vs30: '760'
-        }, function (result) {
+        calculator.getResult('staticcurve', analysis, function (result) {
           // TODO :: Deal with multiple HazardResponse
-          expect(result.toJSON().curves.length).to.equal(1);
+          expect(result.result.toJSON().curves.length).to.equal(1);
           done();
         });
     });

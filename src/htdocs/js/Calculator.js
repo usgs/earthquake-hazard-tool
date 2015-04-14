@@ -91,6 +91,17 @@ var Calculator = function (params) {
     _this = null;
   };
 
+  /**
+   * Determines the parameters required in order to make a call to getResult
+   * for the given named service. This method may proceed asynchronously and
+   * the callback (if provided) is invoked with a single argument that is an
+   * object containg the required parameters for the named service.
+   *
+   * @param serviceName {String}
+   *      The name of the service for which to get the parameters.
+   * @param callback {Function}
+   *      The function to call once parameters have been fetched.
+   */
   _this.getParameters = function (serviceName, callback) {
     if (!_services.hasOwnProperty(serviceName)) {
       throw new Error('No such service [' + serviceName + '] recognized.');
@@ -105,8 +116,22 @@ var Calculator = function (params) {
     }
   };
 
-  _this.getResult = function (serviceName, inputParams, callback) {
-    var paramName,
+  /**
+   * Interacts with the web service for the named service and upon receiving
+   * results, sets the results to the serviceName property on the input
+   * analysis.
+   *
+   * @param serviceName {String}
+   *      The name of the service for which to get the parameters.
+   * @param analysis {Analysis}
+   *      The analysis onto which the result will be set once computed.
+   * @param callback {Function} Optional.
+   *      A callback function that will be invoked an object containing
+   *      the name of the service, the input analysis, and the computed result.
+   */
+  _this.getResult = function (serviceName, analysis, callback) {
+    var input,
+        paramName,
         params,
         service,
         url;
@@ -121,28 +146,42 @@ var Calculator = function (params) {
 
     if (url === null || params === null) {
       _fetchServiceDetails(serviceName, function () {
-        _this.getResult(serviceName, inputParams, callback);
+        _this.getResult(serviceName, analysis, callback);
       });
     } else {
       for (paramName in params) {
-        if (!inputParams.hasOwnProperty(paramName)) {
+        input = analysis.get(paramName);
+        if (typeof input === 'undefined' || input === null) {
           throw new Error('Invalid input parameters for given service name.');
         }
-        url = url.replace('{' + paramName + '}', inputParams[paramName]);
+        if (input.get) {
+          url = url.replace('{' + paramName + '}', input.get('value'));
+        } else {
+          url = url.replace('{' + paramName + '}', input);
+        }
       }
 
       Xhr.ajax({
         url: url,
         success: function (response) {
+          var result = service.constructor(response.response[0]),
+              properties = {};
+
+          properties[serviceName] = result;
+          analysis.set(properties);
+
           if (callback) {
             // TODO :: Handle multiple HazardResponse
-            callback(service.constructor(response.response[0]));
+            callback({
+              analysis: analysis,
+              serviceName: serviceName,
+              result: result
+            });
           }
         }
       });
     }
   };
-
 
 
   _initialize(params);
