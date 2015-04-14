@@ -97,12 +97,13 @@ var HazardResponse = function (params) {
         xvals,
         yvals;
 
+    data = rawData.data || [];
     metadata = rawData.metadata || {};
-    latitude = rawData.latitude;
-    longitude = rawData.longitude;
+
+    latitude = metadata.latitude;
+    longitude = metadata.longitude;
     xvals = metadata.xvals || [];
     yvals = [];
-    data = rawData.data || [];
 
     if (data.length === 1) {
       yvals = data[0].yvals;
@@ -118,12 +119,12 @@ var HazardResponse = function (params) {
       }
     } else if (data.length === 4) {
       // Interpolate top-left and top-right
-      topYVals = _interpolate(data[0].longitude, data[1].longtude,
+      topYVals = _interpolate(data[0].longitude, data[1].longitude,
           longitude, data[0].yvals, data[1].yvals);
 
       // Interpolate bottom-left and bottom-right
-      bottomYVals = _interpolate(data[0].longitude, data[1].longtude,
-          longitude, data[0].yvals, data[1].yvals);
+      bottomYVals = _interpolate(data[0].longitude, data[1].longitude,
+          longitude, data[2].yvals, data[3].yvals);
 
       // Interpolate top and bottom (interpolated values)
       yvals = _interpolate(data[0].latitude, data[2].latitude, latitude,
@@ -162,7 +163,7 @@ var HazardResponse = function (params) {
     y = [];
 
     for (i = 0; i < len; i++) {
-      y.push(y0 + ((y1[i] - y0[i]) / (x1 - x0)) * x);
+      y.push(y0[i] + ((y1[i] - y0[i]) / (x1 - x0)) * (x - x0));
     }
 
     return y;
