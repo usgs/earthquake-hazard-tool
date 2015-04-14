@@ -162,7 +162,6 @@ try {
     'parameters' => array(
       'edition' => array(
         'label' => 'Model edition',
-        'description' => '',
         'type' => 'string',
         'values' => array_map('getEditions', $editionFactory->getAvailable())
       ),
@@ -183,13 +182,11 @@ try {
       ),
       'imt' => array(
         'label' => 'Intensity measure type',
-        'description' => '',
         'type' => 'string',
         'values' => array_map('getImts', $imtFactory->getAvailable())
       ),
       'vs30' => array(
         'label' => 'Site soil (Vs30)',
-        'description' => '',
         'type' => 'string',
         'values' => array_map('getVs30s', $vs30Factory->getAvailable())
       )
