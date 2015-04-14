@@ -68,7 +68,7 @@ var Calculator = function (params) {
           _services[serviceName].params = response.parameters;
 
           if (_pendingServiceDetailsRequests.hasOwnProperty(serviceName)) {
-            _pendingServiceDetailsRequests.forEach(function (cb) {
+            _pendingServiceDetailsRequests[serviceName].forEach(function (cb) {
               cb(_services[serviceName].params);
             });
 
