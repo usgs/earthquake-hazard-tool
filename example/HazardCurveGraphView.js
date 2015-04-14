@@ -17,7 +17,9 @@ el.innerHTML = '<div class="graph"></div>' +
 // create view
 view = HazardCurveGraphView({
   el: el.querySelector('.graph'),
-  title: 'Example HazardCurveGraphView'
+  title: 'Example HazardCurveGraphView',
+  xAxisLabel: 'Ground Motion (g)',
+  yAxisLabel: 'Annual Frequency of Exceedence'
 });
 
 // example of selected curve
@@ -43,36 +45,3 @@ Xhr.ajax({
     );
   }
 });
-
-// form to control scales
-var xAxisLog,
-    yAxisLog,
-    setScales;
-
-el.querySelector('.controls').innerHTML =
-    '<form>' +
-    '<label for="xAxisLog">' +
-      '<input type="checkbox" id="xAxisLog" checked="checked"/>' +
-      'X Axis Log' +
-    '</label>' +
-    '<label for="yAxisLog">' +
-      '<input type="checkbox" id="yAxisLog" checked="checked"/>' +
-      'Y Axis Log' +
-    '</label>' +
-    '</form>';
-
-xAxisLog = el.querySelector('#xAxisLog');
-yAxisLog = el.querySelector('#yAxisLog');
-
-setScales = function () {
-  view.setScales(
-    xAxisLog.checked ? d3.scale.log() : d3.scale.linear(),
-    yAxisLog.checked ? d3.scale.log() : d3.scale.linear()
-  );
-};
-
-xAxisLog.addEventListener('change', setScales);
-yAxisLog.addEventListener('change', setScales);
-
-// initialize to form defaults
-setScales();
