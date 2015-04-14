@@ -87,6 +87,8 @@ var Calculator = function (params) {
 
     _fetchServiceDetails = null;
     _setServiceDetails = null;
+
+    _this = null;
   };
 
   _this.getParameters = function (serviceName, callback) {
@@ -95,7 +97,9 @@ var Calculator = function (params) {
     }
 
     if (_services[serviceName].params !== null) {
-      callback(_services[serviceName].params);
+      if (callback) {
+        callback(_services[serviceName].params);
+      }
     } else {
       _fetchServiceDetails(serviceName, callback);
     }
@@ -130,7 +134,10 @@ var Calculator = function (params) {
       Xhr.ajax({
         url: url,
         success: function (response) {
-          callback(service.constructor(response.response[0]));
+          if (callback) {
+            // TODO :: Handle multiple HazardResponse
+            callback(service.constructor(response.response[0]));
+          }
         }
       });
     }
