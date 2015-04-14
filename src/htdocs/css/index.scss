@@ -74,6 +74,11 @@ body {
   .main-content {
     z-index: 2;
   }
+
+  .tablist > .tablist-panel{
+    border: none;
+    border-top: 1px solid #ddd;
+  }
 }
 
 
@@ -102,10 +107,10 @@ body {
   }
 
   > .main-content {
-    top: 16px;
-    right: 16px;
-    bottom: 16px;
-    left: 16px;
+    top: 0;
+    right: 1px;
+    bottom: 1px;
+    left: 1px;
     // undo tablist margin
     margin: 0;
     transition: left $transition-time, width $transition-time;
