@@ -37,25 +37,43 @@ var MapView = function (options) {
     // Terrain layer
     terrainLayer = L.tileLayer(
         'http://{s}.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}.jpg',
-        {'subdomains': ['server', 'services']});
+        {
+          'subdomains': ['server', 'services'],
+          'attribution': 'Content may not reflect National Geographic\'s ' +
+              'current map policy. Sources: National Geographic, Esri, ' +
+              'DeLorme, HERE, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, ' +
+              'GEBCO, NOAA, increment P Corp.'
+        });
     layerControl.addBaseLayer(terrainLayer, 'Terrain');
 
     // Grayscale layer
     grayscaleLayer = L.tileLayer(
         'http://{s}.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}.jpg',
-        {'subdomains': ['server', 'services']});
+        {
+          'subdomains': ['server', 'services'],
+          'attribution': 'Sources: Esri, DeLorme, HERE, MapmyIndia,  &copy; ' +
+              'OpenStreetMap contributors, and the GIS community'
+        });
     layerControl.addBaseLayer(grayscaleLayer, 'Grayscale');
 
     // Street Layer
     streetLayer = L.tileLayer(
         'http://otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.jpg',
-        {'subdomains': '1234'});
+        {
+          'subdomains': '1234',
+          'attribution': 'Portions Courtesy NASA/JPL-Caltech and U.S. ' +
+              'Depart. of Agriculture, Farm Service Agency'
+        });
     layerControl.addBaseLayer(streetLayer, 'Street');
 
     //Satellite Layer
     satelliteLayer = L.tileLayer(
         'http://otile{s}.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg',
-        {'subdomains': '1234'});
+        {
+          'subdomains': '1234',
+          'attribution': '<a href="http://www.openstreetmap.org/copyright">' +
+              '&copy; OpenStreetMap contributors</a>'
+        });
     layerControl.addBaseLayer(satelliteLayer, 'Satellite');
 
     // Add to the map
