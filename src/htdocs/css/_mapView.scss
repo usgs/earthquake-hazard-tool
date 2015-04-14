@@ -16,6 +16,28 @@
   border: 1px solid #fff;
 }
 
-.leaflet-bottom > .leaflet-control-mouseposition {
-  margin-bottom: 2px;
+// applies to all leaflet-controls
+.leaflet-control {
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: 0 1px 1px #333;
+  color: #000;
+}
+
+// have attribution span entire bottom of map, raise the control-scale position
+.leaflet-bottom {
+  width: 100%;
+
+  > .leaflet-control-scale.leaflet-control {
+    margin-bottom: 26px;
+  }
+}
+
+.leaflet-control-attribution {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+  border-radius: 0;
+  text-align: center;
 }
