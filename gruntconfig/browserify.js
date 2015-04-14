@@ -44,7 +44,8 @@ addExports(config.src + '/htdocs/js', [
   'HazardResponse',
   'MapView',
   'Meta',
-  'Region'
+  'Region',
+  'StaticCurveInputView'
 ]);
 
 // Subsequent source files can then require "Class" with:
