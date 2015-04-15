@@ -119,7 +119,6 @@ var D3GraphView = function (options) {
               '<g class="padding">' +
                 '<rect class="inner-frame"></rect>' +
                 '<g class="plot-area">' +
-                  '<g class="data"></g>' +
                   '<g class="x">' +
                     '<g class="axis"></g>' +
                     '<text class="label" text-anchor="middle"></text>' +
@@ -128,6 +127,7 @@ var D3GraphView = function (options) {
                     '<g class="axis"></g>' +
                     '<text class="label" text-anchor="middle" transform="rotate(-90)"></text>' +
                   '</g>' +
+                  '<g class="data"></g>' +
                   '<g class="tooltip"></g>' +
                 '</g>' +
               '</g>' +
@@ -144,13 +144,13 @@ var D3GraphView = function (options) {
     _padding = _margin.querySelector('.padding');
     _innerFrame = _padding.querySelector('.inner-frame');
     _plotArea = _padding.querySelector('.plot-area');
-    _dataEl = _plotArea.querySelector('.data');
     _xEl = _plotArea.querySelector('.x');
     _xAxisEl = _xEl.querySelector('.axis');
     _xAxisLabel = _xEl.querySelector('.label');
     _yEl = _plotArea.querySelector('.y');
     _yAxisEl = _yEl.querySelector('.axis');
     _yAxisLabel = _yEl.querySelector('.label');
+    _dataEl = _plotArea.querySelector('.data');
     _tooltip = _plotArea.querySelector('.tooltip');
 
     _this.xAxis = d3.svg.axis()
