@@ -107,9 +107,7 @@ var HazardCurveGraphView = function (options) {
     _yLines.forEach(function (y) {
       var el = document.createElementNS('http://www.w3.org/2000/svg', 'g');
       if (y.classes) {
-        y.classes.forEach(function (c) {
-          el.classList.add(c);
-        });
+        el.setAttribute('class', y.classes.join(' '));
       }
       y.el = d3.select(el);
       y.textEl = y.el.append('text')
