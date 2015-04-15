@@ -78,7 +78,9 @@ var D3GraphView = function (options) {
       _xAxisLabel,
       _yEl,
       _yAxisEl,
-      _yAxisLabel;
+      _yAxisLabel,
+      // methods
+      _formatAxis;
 
   _this = View(options);
 
@@ -161,6 +163,48 @@ var D3GraphView = function (options) {
     _this.model.on('change', _this.render);
   };
 
+  /**
+   * Set axis ticks for log based scales.
+   * Clears axis ticks (for default formatting) for other scales.
+   *
+   * @param axis {d3.axis}
+   *        axis to format.
+   * @param scale {d3.scale}
+   *        axis scale.
+   */
+  _formatAxis = function (axis) {
+    var base,
+        baseLog,
+        end,
+        extent,
+        i,
+        scale,
+        start,
+        ticks,
+        value;
+
+    scale = axis.scale();
+    if (typeof scale.base !== 'function') {
+      // this is not a log scale
+      axis.tickValues(null);
+      return;
+    }
+
+    // convert min/max to base 10
+    extent = scale.domain();
+    base = 10;
+    baseLog = Math.log(base);
+    start = parseInt(Math.log(extent[0])/baseLog, 10) - 1;
+    end = parseInt(Math.log(extent[1])/baseLog, 10) + 1;
+    ticks = [];
+    for (i = start; i < end; i++) {
+      value = Math.pow(base, i);
+      if (value > extent[0] && value < extent[1]) {
+        ticks.push(value);
+      }
+    }
+    axis.tickValues(ticks);
+  };
 
   _this.render = function () {
     var height,
@@ -179,10 +223,19 @@ var D3GraphView = function (options) {
         paddingTop,
         title,
         width,
+        xAxis,
         xAxisLabel,
         xAxisScale,
+        xExtent,
+        yAxis,
         yAxisLabel,
-        yAxisScale;
+        yAxisScale,
+        yExtent;
+
+    xAxis = _this.xAxis;
+    yAxis = _this.yAxis;
+    xExtent = _this.getXExtent();
+    yExtent = _this.getYExtent();
 
     // get current settings
     options = _this.model.get();
@@ -224,20 +277,22 @@ var D3GraphView = function (options) {
         'translate(0,' + innerHeight + ')');
     // update axes
     xAxisScale.range([0, innerWidth]);
-    xAxisScale.domain(_this.getXExtent());
-    _this.xAxis.scale(xAxisScale);
-    d3.select(_xAxisEl).call(_this.xAxis);
+    xAxisScale.domain(xExtent);
+    xAxis.scale(xAxisScale);
+    _formatAxis(xAxis);
+    d3.select(_xAxisEl).call(xAxis);
     yAxisScale.range([innerHeight, 0]);
-    yAxisScale.domain(_this.getYExtent());
-    _this.yAxis.scale(yAxisScale);
-    d3.select(_yAxisEl).call(_this.yAxis);
-    // update label
+    yAxisScale.domain(yExtent);
+    yAxis.scale(yAxisScale);
+    _formatAxis(yAxis);
+    d3.select(_yAxisEl).call(yAxis);
+    // update labels
     _plotTitle.textContent = title;
     _xAxisLabel.textContent = xAxisLabel;
-    _yAxisLabel.textContent = yAxisLabel;
-
     _xAxisLabel.setAttribute('x', innerWidth / 2);
-    _xAxisLabel.setAttribute('y', _xAxisEl.getBBox().height + _xAxisLabel.getBBox().height);
+    _xAxisLabel.setAttribute('y',
+        _xAxisEl.getBBox().height + _xAxisLabel.getBBox().height);
+    _yAxisLabel.textContent = yAxisLabel;
     _yAxisLabel.setAttribute('x', -innerHeight / 2);
     _yAxisLabel.setAttribute('y', -_yAxisEl.getBBox().width - 10);
 
