@@ -32,6 +32,7 @@
     "grunt-contrib-uglify": "^0.7.0",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-mocha-phantomjs": "^0.6.0",
+    "hazdev-location-view": "usgs/hazdev-location-view",
     "hazdev-tablist": "usgs/hazdev-tablist",
     "hazdev-template": "usgs/hazdev-template",
     "hazdev-webutils": "usgs/hazdev-webutils",

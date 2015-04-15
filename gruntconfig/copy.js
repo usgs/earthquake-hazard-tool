@@ -48,6 +48,16 @@ var copy = {
       'leaflet.css',
       'images/**'
     ]
+  },
+
+  locationview: {
+    expand: true,
+    cwd: 'node_modules/hazdev-location-view/src/locationview',
+    dest: config.build + '/' + config.src + '/htdocs/css',
+    src: [
+      'images/cursor.cur',
+      'images/location-view-icons.png'
+    ]
   }
 
 };

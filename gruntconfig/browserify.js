@@ -36,6 +36,7 @@ addExports('node_modules/hazdev-webutils/src', [
   'util/Util',
   'util/Xhr'
 ]);
+
 // project exports
 addExports(config.src + '/htdocs/js', [
   'Analysis',
@@ -60,7 +61,8 @@ var browerify = {
         CWD + '/' + config.src + '/htdocs/js',
         NODE_MODULES,
         NODE_MODULES + '/hazdev-tablist/src',
-        NODE_MODULES + '/hazdev-webutils/src'
+        NODE_MODULES + '/hazdev-webutils/src',
+        NODE_MODULES + '/hazdev-location-view/src'
       ]
     }
   },
@@ -69,7 +71,12 @@ var browerify = {
   // the bundle used by the index page
   index: {
     src: [config.src + '/htdocs/js/index.js'],
-    dest: config.build + '/' + config.src + '/htdocs/js/index.js'
+    dest: config.build + '/' + config.src + '/htdocs/js/index.js',
+    options: {
+      external: [
+        'leaflet'
+      ]
+    }
   },
 
   // the bundle used by tests
@@ -77,7 +84,10 @@ var browerify = {
     src: [],
     dest: config.build + '/' + config.src + '/htdocs/js/bundle.js',
     options: {
-      alias: EXPORTS
+      alias: EXPORTS,
+      external: [
+        'leaflet'
+      ]
     }
   },
 
