@@ -1,7 +1,6 @@
 'use strict';
 
-var Collection = require('mvc/Collection'),
-    Model = require('mvc/Model'),
+var Model = require('mvc/Model'),
 
     Util = require('util/Util');
 
@@ -11,7 +10,7 @@ var HazardCurve = function (params) {
 
   _this = Model(Util.extend({
     label: 'Hazard Curve',
-    data: Collection([])
+    data: []
   }, params));
 
 
