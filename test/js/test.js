@@ -33,6 +33,7 @@ require('./spec/HazardCurveGraphViewTest');
 require('./spec/HazardUtilTest');
 require('./spec/ScaffoldingTest');
 require('./spec/StaticCurveInputViewTest');
+require('./spec/StaticCurveOutputViewTest');
 
 if (window.mochaPhantomJS) {
     window.mochaPhantomJS.run();
