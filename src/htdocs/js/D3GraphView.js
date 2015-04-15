@@ -97,6 +97,7 @@ var D3GraphView = function (options) {
       paddingLeft: 100,
       paddingRight: 100,
       paddingTop: 50,
+      pointRadius: 5,
       title: '',
       width: 960,
       xAxisLabel: '',

@@ -187,7 +187,7 @@ var HazardCurveLineView = function (options) {
     points.enter()
         .append('svg:circle')
         .attr('class', 'point')
-        .attr('r', 3)
+        .attr('r', _graph.model.get('pointRadius'))
         .on('mouseout', _onPointOut)
         .on('mouseover', _onPointOver);
     // set x,y coordinates
