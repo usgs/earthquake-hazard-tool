@@ -7,7 +7,7 @@
   }
 
   .axis {
-    font-size:.8em;
+    font-size: .8em;
 
     .domain,
     .tick > line {
@@ -17,6 +17,9 @@
   }
 
   .tooltip-content {
+    .label {
+      font-size: .8em;
+    }
     .value {
       font-weight: bold;
     }
@@ -76,7 +79,7 @@
     // currently selected hazard curve
     > .line {
       stroke: #333;
-      stroke-width:5;
+      stroke-width:3;
     }
     > .point {
     }
