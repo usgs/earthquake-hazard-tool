@@ -4,19 +4,6 @@ var d3 = require('d3'),
     Util = require('util/Util'),
     View = require('mvc/View');
 
-
-var EPSILON = Number.EPSILON;
-EPSILON = 1e-20;
-
-var __replaceZeros = function (n) {
-  if (n < EPSILON) {
-    return EPSILON;
-  } else {
-    return n;
-  }
-};
-
-
 /**
  * Display a single hazard curve on a HazardCurveGraphView.
  *
@@ -48,6 +35,8 @@ var HazardCurveLineView = function (options) {
       _x,
       _y,
       // methods
+      _getScaleX,
+      _getScaleY,
       _getX,
       _getY,
       _initData,
@@ -66,8 +55,8 @@ var HazardCurveLineView = function (options) {
     _graph = options.graph;
 
     _lineFormat = options.lineFormat || d3.svg.line();
-    _lineFormat.x(_getX);
-    _lineFormat.y(_getY);
+    _lineFormat.x(_getScaleX);
+    _lineFormat.y(_getScaleY);
 
     _line = _el.append('svg:path')
         .attr('class', 'line')
@@ -86,7 +75,7 @@ var HazardCurveLineView = function (options) {
    *        data point.
    * @return {Number} x plot coordinate.
    */
-  _getX = function (d) {
+  _getScaleX = function (d) {
     return _x(d[0]);
   };
 
@@ -97,21 +86,39 @@ var HazardCurveLineView = function (options) {
    *        data point.
    * @return {Number} y plot coordinate.
    */
-  _getY = function (d) {
+  _getScaleY = function (d) {
     return _y(d[1]);
+  };
+
+  /**
+   * Convert an x data coordinate from a data object.
+   *
+   * @param d {Array<Number>}
+   *        data point.
+   * @return {Number} x plot coordinate.
+   */
+  _getX = function (d) {
+    return d[0];
+  };
+
+  /**
+   * Get a y data coordinate from a data object.
+   *
+   * @param d {Array<Number>}
+   *        data point.
+   * @return {Number} y plot coordinate.
+   */
+  _getY = function (d) {
+    return d[1];
   };
 
   /**
    * Convert curve data array to an array of coordinates to plot.
    */
   _initData = function () {
-    var xvals = _curve.get('xvals'),
-        yvals = _curve.get('yvals')[0].yvals;
-    xvals = xvals.map(__replaceZeros);
-    yvals = yvals.map(__replaceZeros);
-    _data = d3.zip(xvals, yvals);
-    _this.xExtent = d3.extent(xvals);
-    _this.yExtent = d3.extent(yvals);
+    _data = _curve.get('data');
+    _this.xExtent = d3.extent(_data, _getX);
+    _this.yExtent = d3.extent(_data, _getY);
   };
 
   /**
@@ -136,7 +143,6 @@ var HazardCurveLineView = function (options) {
 
     point = d3.event.target;
     point.classList.remove('mouseover');
-    point.setAttribute('r', point.getAttribute('r') / 2);
 
     // clear previous tooltip
     _graph.showTooltip(null, null);
@@ -146,23 +152,22 @@ var HazardCurveLineView = function (options) {
    * Event listener for point mouseover.
    */
   _onPointOver = function (coords) {
-    var curve = _curve.get(),
-        point;
+    var point,
+        model;
 
     point = d3.event.target;
     point.classList.add('mouseover');
-    point.setAttribute('r', point.getAttribute('r') * 2);
 
+    model = _graph.model;
     _graph.showTooltip(coords, [
-      curve.edition.display,
+      _curve.get('label'),
       {
-        'label': curve.xlabel + ': ',
-        'value': (coords[0] === EPSILON ? 0 : coords[0])
+        'label': model.get('xAxisLabel') + ': ',
+        'value': coords[0]
       },
       {
-        'label': curve.ylabel + ': ',
-        'value': (coords[1] === EPSILON ? 0 :
-            coords[1].toExponential())
+        'label': model.get('yAxisLabel') + ': ',
+        'value': coords[1].toExponential(5)
       }
     ]);
   };
@@ -186,8 +191,8 @@ var HazardCurveLineView = function (options) {
         .on('mouseout', _onPointOut)
         .on('mouseover', _onPointOver);
     // set x,y coordinates
-    points.attr('cx', _getX)
-        .attr('cy', _getY);
+    points.attr('cx', _getScaleX)
+        .attr('cy', _getScaleY);
     points.exit()
         .on('mouseout', _onPointOut)
         .on('mouseover', _onPointOver)
