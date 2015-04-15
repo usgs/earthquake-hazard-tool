@@ -28,7 +28,32 @@ view = StaticCurveInputView({
 
 
 _onCalcComplete = function () {
-  output.innerHTML = JSON.stringify(analysis.toJSON(), null, 2);
+  var curve = analysis.get('staticcurve');
+
+  if (curve !== null) {
+    curve = '<dt>Result</dt><dd>' +
+        JSON.stringify(curve.get('curves').data()[0].get('data')) + '</dd>';
+  } else {
+    curve = '';
+  }
+
+  output.innerHTML = [
+    '<dl>',
+      '<dt>Edition</dt>',
+      '<dd>', analysis.get('edition').get('display'), '</dd>',
+      '<dt>Region</dt>',
+      '<dd>', analysis.get('region').get('display'), '</dd>',
+      '<dt>Location</dt>',
+      '<dd>(',
+        analysis.get('latitude'), ', ', analysis.get('longitude'),
+      ')</dd>',
+      '<dt>IMT</dt>',
+      '<dd>', analysis.get('imt').get('display'), '</dd>',
+      '<dt>Vs30</dt>',
+      '<dd>', analysis.get('vs30').get('display'), '</dd>',
+      curve,
+    '</dl>'
+  ].join('');
 };
 
 _onParamsReady = function (params) {
@@ -40,6 +65,7 @@ _onParamsReady = function (params) {
   });
 
   analysis.on('change', _onCalcComplete);
+  _onCalcComplete();
 };
 
 _onShowButtonClick = function () {
