@@ -1,7 +1,7 @@
 'use strict';
 
 var d3 = require('d3'),
-    HazardCurve = require('HazardCurve'),
+    HazardResponse = require('HazardResponse'),
     HazardCurveGraphView = require('HazardCurveGraphView'),
     Util = require('util/Util'),
     Xhr = require('util/Xhr');
@@ -19,7 +19,26 @@ view = HazardCurveGraphView({
   el: el.querySelector('.graph'),
   title: 'Example HazardCurveGraphView',
   xAxisLabel: 'Ground Motion (g)',
-  yAxisLabel: 'Annual Frequency of Exceedence'
+  yAxisLabel: 'Annual Frequency of Exceedence',
+  width: 640,
+  height: 400,
+  paddingLeft: 70,
+  paddingRight: 16,
+  paddingTop: 30,
+  yLines: [
+    {
+      anchor: 'right',
+      classes: ['rate', 'rate-5p50'],
+      label: '5% in 50 years',
+      value: -Math.log(.95) / 50
+    },
+    {
+      anchor: 'right',
+      classes: ['rate', 'rate-2p100'],
+      label: '2% in 100 years',
+      value: -Math.log(.98) / 100
+    }
+  ]
 });
 
 // example of selected curve
@@ -32,16 +51,13 @@ view.curves.on('select', function (curve) {
 Xhr.ajax({
   url: 'data.json',
   success: function (data) {
-    view.curves.reset(
-      data.response.map(function (d, index) {
-        return HazardCurve(Util.extend({},
-          d.metadata,
-          {
-            id: index,
-            yvals: d.data
-          }
-        ));
-      })
-    );
+    var response = HazardResponse(data.response[0]);
+    // update labels, suppress render; curves reset will render
+    view.model.set({
+      xAxisLabel: response.get('xlabel'),
+      yAxisLabel: response.get('ylabel')
+    }, {silent: true});
+    // show curves
+    view.curves.reset(response.get('curves').data());
   }
 });

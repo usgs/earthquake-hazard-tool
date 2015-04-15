@@ -40,7 +40,6 @@ addExports('node_modules/hazdev-webutils/src', [
 addExports(config.src + '/htdocs/js', [
   'Analysis',
   'Calculator',
-  'HazardCurve',
   'HazardCurveGraphView',
   'HazardResponse',
   'MapView',
