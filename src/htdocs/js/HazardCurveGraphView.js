@@ -284,15 +284,12 @@ var HazardCurveGraphView = function (options) {
   _this.plot = function (el) {
     var views = _views.data();
 
+    // add data lines
     if (views.length === 0) {
+      // no scale information available, clear plot
+      d3.select(el).selectAll('*').remove();
       return;
     }
-
-    // update curves
-    views.forEach(function (v) {
-      el.appendChild(v.el);
-      v.render();
-    });
 
     // make sure using current scale
     _x = _this.model.get('xAxisScale');
@@ -322,6 +319,12 @@ var HazardCurveGraphView = function (options) {
       }
       // position text and line at y value
       y.textEl.attr('y', _y(y.value));
+    });
+
+    // add curves
+    views.forEach(function (v) {
+      el.appendChild(v.el);
+      v.render();
     });
   };
 
