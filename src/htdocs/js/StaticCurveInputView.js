@@ -74,6 +74,8 @@ var StaticCurveInputView = function (params) {
    *
    */
   _initialize = function (params) {
+    params = params || {};
+
     _collections = {};
     _views = {};
 

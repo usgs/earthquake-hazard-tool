@@ -10,6 +10,7 @@ require('./spec/MapViewTest');
 require('./spec/HazardCurveGraphViewTest');
 require('./spec/HazardUtilTest');
 require('./spec/ScaffoldingTest');
+require('./spec/StaticCurveInputViewTest');
 
 if (window.mochaPhantomJS) {
     window.mochaPhantomJS.run();
