@@ -31,6 +31,7 @@ EXPORTS.push(NODE_MODULES + '/d3/d3.js:d3');
 // hazdev-webutils exports
 addExports('node_modules/hazdev-webutils/src', [
   'mvc/Collection',
+  'mvc/CollectionSelectBox',
   'mvc/Model',
   'mvc/View',
   'util/Util',
@@ -46,7 +47,8 @@ addExports(config.src + '/htdocs/js', [
   'MapView',
   'Meta',
   'Region',
-  'StaticCurveInputView'
+  'StaticCurveInputView',
+  'StaticCurveOutputView'
 ]);
 
 // Subsequent source files can then require "Class" with:
