@@ -6,9 +6,11 @@ var Model = require('mvc/Model'),
 
 
 var HazardCurve = function (params) {
-  var _this;
+  var _this,
+      i = 0;
 
   _this = Model(Util.extend({
+    id: 'curve-' + i++,
     label: 'Hazard Curve',
     data: []
   }, params));
