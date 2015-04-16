@@ -1,10 +1,11 @@
 .leaflet-control-background,
 .leaflet-control-scale { /* This is baked into Leaflet core. */
-  padding:4px 6px;
-  font-size:10px;
-  -webkit-border-radius:7px;
-  -moz-border-radius:7px;
-  border-radius:7px;
+  border-radius: 7px;
+  font-size: 10px;
+  padding: 4px 6px;
+
+  -moz-border-radius: 7px;
+  -webkit-border-radius: 7px;
 }
 
 .leaflet-control-scale {
@@ -16,24 +17,25 @@
 }
 
 .leaflet-control-scale-line {
-  border: 2px solid #777;
-  border-top: none;
-  line-height: 1.1;
-  padding: 2px 5px 1px;
-  font-size: 11px;
-  white-space: nowrap;
-  overflow: hidden;
-  -moz-box-sizing: content-box;
-  box-sizing: content-box;
   background: #fff;
   background: rgba(255, 255, 255, 0.5);
+  border: 2px solid #777;
+  border-top: none;
+  box-sizing: content-box;
+  font-size: 11px;
+  line-height: 1.1;
+  overflow: hidden;
+  padding: 2px 5px 1px;
+  white-space: nowrap;
+
+  -moz-box-sizing: content-box;
 }
 
 .leaflet-control-scale-line:nth-child(2) {
-  border-top: 2px solid #777;
-  padding-top: 1px;
   border-bottom: 0px;
+  border-top: 2px solid #777;
   margin-top: -2px;
+  padding-top: 1px;
 }
 
 .leaflet-control-scale.leaflet-control {

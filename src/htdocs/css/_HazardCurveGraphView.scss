@@ -59,21 +59,21 @@
   // hazard curve
   > .line {
     fill: none;
-    stroke: #999;
-    stroke-width:1;
     shape-rendering: geometricPrecision;
+    stroke: #999;
+    stroke-width: 1;
   }
 
   > .point {
     fill: #fff;
     stroke: #666;
-    stroke-width:1;
+    stroke-width: 1;
   }
 
   &.mouseover {
     // currently hovered hazard curve
     > .line {
-      stroke-width:3;
+      stroke-width: 3;
     }
     > .point {
       &.mouseover {
@@ -87,7 +87,7 @@
     // currently selected hazard curve
     > .line {
       stroke: #333;
-      stroke-width:3;
+      stroke-width: 3;
     }
     > .point {
     }
