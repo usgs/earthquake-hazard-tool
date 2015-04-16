@@ -19,11 +19,15 @@ var copy = {
     dest: config.dist,
     expand: true,
     src: [
+      '!**/*.js',
+      '!**/*.css',
+
       'conf/config.inc.php',
       'conf/config.ini',
 
       'htdocs/css/images/**/*',
       'htdocs/images/**/*',
+      'htdocs/lib/**/*',
       'htdocs/*.html',
       'htdocs/*.php',
 
