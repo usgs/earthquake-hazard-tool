@@ -102,11 +102,12 @@ var StaticCurveOutputView = function (params) {
 
   _onAnalysisDeselect = function (analysis) {
     analysis.off('change', _this.render);
+    _this.render(); // Clear the view
   };
 
   _onAnalysisSelect = function (analysis) {
     analysis.on('change', _this.render);
-    _this.render();
+    _this.render(); // Update the view
   };
 
   _onEditClick = function () {
@@ -240,6 +241,19 @@ var StaticCurveOutputView = function (params) {
       }
     } else {
       // Clear everything
+      _editionEl.innerHTML = '';
+      _regionEl.innerHTML = '';
+
+      _locationEl.innerHTML = '';
+
+      _imtEl.innerHTML = '';
+      _vs30El.innerHTML = '';
+
+      _graphView.model.set({
+        xAxisLabel: '',
+        yAxisLabel: ''
+      });
+      _curvesCollection.reset([]);
     }
   };
 
