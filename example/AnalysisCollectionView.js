@@ -2,32 +2,40 @@
 
 var Analysis = require('Analysis'),
     AnalysisCollectionView = require('AnalysisCollectionView'),
-    AnalysisCollection = require('mvc/Collection'),
     Meta = require('Meta'),
     Region = require('Region'),
+
+    Collection = require('mvc/Collection'),
+
     Xhr = require('util/Xhr');
 
 Xhr.ajax({
   url: 'data.json',
   success: function (data) {
-    var analysisCollection = new AnalysisCollection(),
-        analysis,
-        index = Date.now();
-    for (var i = 0, len = data.response.length; i < len; i++) {
-      analysis = new Analysis();
-      analysis.set({'id': index++,
-          'latitude': data.response[i].metadata.latitude,
-          'longitude': data.response[i].metadata.longitude,
-          'edition': Meta(data.response[i].metadata.edition),
-          'region': Region(data.response[i].metadata.region),
-          'imt': Meta(data.response[i].metadata.imt),
-          'vs30': Meta(data.response[i].metadata.site)
-          });
-      analysisCollection.add(analysis);
-    }
+    var analyses;
+
+    analyses = data.response.map(function (response, index) {
+      var metadata;
+
+      metadata = response.metadata;
+
+      return Analysis({
+        'id': index,
+
+        'edition': Meta(metadata.edition),
+        'region': Region(metadata.region),
+
+        'latitude': metadata.latitude,
+        'longitude': metadata.longitude,
+
+        'imt': Meta(metadata.imt),
+        'vs30': Meta(metadata.vs30)
+      });
+    });
+
     AnalysisCollectionView({
       el: document.querySelector('#example'),
-      analysisCollection: analysisCollection
+      collection: Collection(analyses)
     });
   }
 });
