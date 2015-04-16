@@ -50,6 +50,7 @@ addExports(config.src + '/htdocs/js', [
   'ApplicationView',
   'Calculator',
   'HazardCurve',
+  'HazardCurveDataView',
   'HazardCurveGraphView',
   'HazardResponse',
   'HazardUtil',

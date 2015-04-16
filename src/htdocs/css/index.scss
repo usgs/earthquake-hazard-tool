@@ -5,14 +5,16 @@
 @import 'css/_text.scss';
 @import 'css/_typography.scss';
 @import 'css/_form.scss';
+@import 'css/responsive-table.scss';
 @import 'tablist/hazdev-tablist.scss';
 
 @import '_ApplicationView';
 @import '_AnalysisCollectionView';
 @import '_AnalysisView';
+@import '_HazardCurveGraphView';
+@import '_HazardCurveDataView';
 @import '_MapView';
 @import '_StaticCurveInputView';
-@import '_HazardCurveGraphView';
 
 
 html,

@@ -90,6 +90,7 @@ $transition-time: 250ms;
 .application-content {
 
   > .offcanvas-content {
+    background: #fcfcfc;
     left: -100%;
     padding: 0 1em;
     transition: left $transition-time;
@@ -107,6 +108,9 @@ $transition-time: 250ms;
   > .offcanvas-content {
     left: 0;
     transition: left $transition-time, width $transition-time;
+  }
+  > .main-content {
+    box-shadow: inset 1px 1px 0px #ddd;
   }
 }
 
