@@ -95,7 +95,12 @@ var StaticCurveInputView = function (params) {
         {
           text: 'Calculate',
           callback: _onCalculateClick,
-          classes: [SERVICE_NAME + '-calculate']
+          classes: [SERVICE_NAME + '-calculate', 'green']
+        },
+        {
+          text: 'Cancel',
+          callback: _this.hide,
+          classes: [SERVICE_NAME + '-cancel']
         }
       ],
       classes: [SERVICE_NAME + '-modal'],
