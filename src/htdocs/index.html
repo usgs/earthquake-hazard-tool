@@ -23,11 +23,19 @@
 </head>
 <body>
   <article id="application" class="loading">
-    <noscript>
-      <p>
-        Javascript must be enabled to view this application.
-       </p>
-    </noscript>
+    <header class="application-header">
+      <a href="/" class="site-logo">USGS</a>
+      <button class="offcanvas-toggle">Menu</button>
+    </header>
+    <section class="application-content">
+      <section class="offcanvas-content">
+      </section>
+      <section class="main-content">
+        <noscript>
+          Javascript must be enabled to view this application.
+        </noscript>
+      </section>
+    </section>
   </article>
 
   <script src="lib/leaflet/leaflet.js"></script>
