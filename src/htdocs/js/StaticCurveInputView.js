@@ -52,6 +52,7 @@ var StaticCurveInputView = function (params) {
       _collections,
       _destroyCalculator,
       _doRender,
+      _isVisible,
       _latitudeInput,
       _location,
       _locationButton,
@@ -101,6 +102,7 @@ var StaticCurveInputView = function (params) {
       closable: false,
       title: 'Hazard Curve Parameters'
     });
+    _isVisible = false;
 
     _location = LocationView({
       callback: _onLocation
@@ -392,6 +394,7 @@ var StaticCurveInputView = function (params) {
   _this.hide = function () {
     _analysis = null;
     _modal.hide();
+    _isVisible = false;
   };
 
   /**
@@ -403,20 +406,48 @@ var StaticCurveInputView = function (params) {
    *
    */
   _this.render = function () {
+    var edition,
+        imt,
+        latitude,
+        longitude,
+        region,
+        vs30;
+
     if (!_viewReady) {
       _doRender = true;
       return;
     }
 
     if (_analysis) {
-      _collections.edition.selectById(_analysis.get('edition').id);
-      _collections.region.selectById(_analysis.get('region').id);
+      edition = _analysis.get('edition');
+      if (edition) {
+        _collections.edition.selectById(edition.id);
+      }
 
-      _longitudeInput.value = _analysis.get('longitude');
-      _latitudeInput.value = _analysis.get('latitude');
+      region = _analysis.get('region');
+      if (region) {
+        _collections.region.selectById(region.id);
+      }
 
-      _collections.imt.selectById(_analysis.get('imt').id);
-      _collections.vs30.selectById(_analysis.get('vs30').id);
+      longitude = _analysis.get('longitude');
+      if (longitude !== null) {
+        _longitudeInput.value = longitude;
+      }
+
+      latitude = _analysis.get('latitude');
+      if (latitude !== null) {
+        _latitudeInput.value = latitude;
+      }
+
+      imt = _analysis.get('imt');
+      if (imt) {
+        _collections.imt.selectById(imt.id);
+      }
+
+      vs30 = _analysis.get('vs30');
+      if (vs30) {
+        _collections.vs30.selectById(vs30.id);
+      }
     }
   };
 
@@ -431,7 +462,11 @@ var StaticCurveInputView = function (params) {
     _analysis = analysis || Analysis();
 
     _this.render();
-    _modal.show();
+
+    if (!_isVisible) {
+      _modal.show();
+      _isVisible = true;
+    }
   };
 
 
