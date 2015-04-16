@@ -7,11 +7,11 @@ var HazardCurveDataView = require('HazardCurveDataView'),
 Xhr.ajax({
   url: 'data.json',
   success: function (data) {
-    var response = data.response[0];
+    var curves = HazardResponse(data.response[0]).get('curves');
 
     HazardCurveDataView({
       el: document.querySelector('#example'),
-      response: HazardResponse(response)
+      collection: curves
     });
   }
 });

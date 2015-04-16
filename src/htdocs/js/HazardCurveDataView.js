@@ -24,7 +24,7 @@ var HazardCurveDataView = function (options) {
 
     options = Util.extend({}, options);
 
-    _curves = options.response.get('curves');
+    _curves = options.collection;
 
     _this.render();
 
@@ -47,13 +47,11 @@ var HazardCurveDataView = function (options) {
   };
 
   _onClick = function (e) {
-    var el = e.target,
-        id = null;
+    var el = e.target;
 
     // select the curve in the collection
     if (el.nodeName === 'TD') {
-      id = el.getAttribute('data-id');
-      _curves.selectById(id);
+      _curves.selectById(el.getAttribute('data-id'));
     }
   };
 

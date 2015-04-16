@@ -7,7 +7,8 @@ var expect = chai.expect,
     Xhr = require('util/Xhr');
 
 var hazardCurveDataViewElement = document.createElement('div'),
-    hazardCurveDataView;
+    hazardCurveDataView,
+    curves;
 
 describe('Unit tests for "HazardCurveDataView"', function () {
 
@@ -15,11 +16,10 @@ describe('Unit tests for "HazardCurveDataView"', function () {
     Xhr.ajax({
       url: 'data.json',
       success: function (data) {
-        var response = data.response[0];
-
-         hazardCurveDataView = HazardCurveDataView({
+        curves = HazardResponse(data.response[0]).get('curves');
+        hazardCurveDataView = HazardCurveDataView({
           el: hazardCurveDataViewElement,
-          response: HazardResponse(response)
+          collection: curves
         });
         done();
       }
@@ -41,20 +41,10 @@ describe('Unit tests for "HazardCurveDataView"', function () {
   describe('Render', function () {
     it('Can create a table', function () {
       var table = hazardCurveDataViewElement.querySelector('table');
-
+      /* jshint -W030 */
       expect(table).not.to.be.null;
+      /* jshint +W030 */
     });
   });
-
-  // describe('Collection', function () {
-  //   it('Can select an object within the collection', function () {
-  //     var tableCell = hazardCurveDataViewElement.querySelector('td');
-
-  //     // trigger a click event
-  //     tableCell.click();
-
-  //     expect(tableCell.classList.contains('selected')).to.be.equal(true);
-  //   });
-  // });
 
 });
