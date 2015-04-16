@@ -29,7 +29,6 @@ var HazardCurveDataView = function (options) {
     _this.render();
 
     _table = _this.el.querySelector('.hazard-curve-data-view');
-
     _table.addEventListener('click', _onClick);
     _curves.on('add', _this.render);
     _curves.on('remove', _this.render);
