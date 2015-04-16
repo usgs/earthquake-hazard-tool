@@ -3,10 +3,6 @@
 var View = require('mvc/View'),
     Util = require('util/Util');
 
-var DEFAULTS = {
-
-};
-
 var HazardCurveDataView = function (options) {
   var _this,
       _initialize,
@@ -26,7 +22,7 @@ var HazardCurveDataView = function (options) {
 
   _initialize = function (options) {
 
-    options = Util.extend({}, DEFAULTS, options);
+    options = Util.extend({}, options);
 
     _curves = options.response.get('curves');
 
