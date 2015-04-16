@@ -1,5 +1,8 @@
 'use strict';
 
+var Layers = require('map/Layers'),
+    LayerControl = require('map/LayerControl');
+
 require('map/MousePosition');
 
 var L = require('leaflet'),
@@ -16,69 +19,16 @@ var MapView = function (options) {
   _this = View(options);
 
   _initialize = function () {
-    var layerControl,
-        terrainLayer,
-        grayscaleLayer,
-        streetLayer,
-        satelliteLayer;
-
     _this.el.className = 'map-view';
     _this.el.setAttribute('style', 'height:100%;');
 
     _map = L.map(_this.el, {
-      center: [0.0, 0.0],
-      zoom: 2,
+      scrollWheelZoom: false,
       zoomAnimation: true
     });
 
-    // Add layer control
-    layerControl = L.control.layers();
-
-    // Terrain layer
-    terrainLayer = L.tileLayer(
-        'http://{s}.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}.jpg',
-        {
-          'subdomains': ['server', 'services'],
-          'attribution': 'Content may not reflect National Geographic\'s ' +
-              'current map policy. Sources: National Geographic, Esri, ' +
-              'DeLorme, HERE, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, ' +
-              'GEBCO, NOAA, increment P Corp.'
-        });
-    layerControl.addBaseLayer(terrainLayer, 'Terrain');
-
-    // Grayscale layer
-    grayscaleLayer = L.tileLayer(
-        'http://{s}.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}.jpg',
-        {
-          'subdomains': ['server', 'services'],
-          'attribution': 'Sources: Esri, DeLorme, HERE, MapmyIndia,  &copy; ' +
-              'OpenStreetMap contributors, and the GIS community'
-        });
-    layerControl.addBaseLayer(grayscaleLayer, 'Grayscale');
-
-    // Street Layer
-    streetLayer = L.tileLayer(
-        'http://otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.jpg',
-        {
-          'subdomains': '1234',
-          'attribution': 'Portions Courtesy NASA/JPL-Caltech and U.S. ' +
-              'Depart. of Agriculture, Farm Service Agency'
-        });
-    layerControl.addBaseLayer(streetLayer, 'Street');
-
-    //Satellite Layer
-    satelliteLayer = L.tileLayer(
-        'http://otile{s}.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg',
-        {
-          'subdomains': '1234',
-          'attribution': '<a href="http://www.openstreetmap.org/copyright">' +
-              '&copy; OpenStreetMap contributors</a>'
-        });
-    layerControl.addBaseLayer(satelliteLayer, 'Satellite');
-
-    // Add to the map
-    _map.addControl(layerControl);
-    _map.addLayer(terrainLayer);
+    // Add layers/control to the map
+    _map.addControl(new LayerControl(Layers));
 
     // Add Map Controls
     if (!Util.isMobile()) {
@@ -86,8 +36,7 @@ var MapView = function (options) {
       _map.addControl(L.control.scale({'position':'bottomleft'}));
     }
 
-    // disable mouse wheel zoom
-    _map.scrollWheelZoom.disable();
+    _map.fitBounds([[24.6, -125.0], [50.0, -65.0]]);
   };
 
   /**
@@ -95,6 +44,10 @@ var MapView = function (options) {
    */
   _this.onSelect = function () {
     _map.invalidateSize();
+
+    if (!_map.getZoom()) {
+      _map.fitBounds([[24.6, -125.0], [50.0, -65.0]]);
+    }
   };
 
   /**
