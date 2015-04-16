@@ -9,7 +9,10 @@ var compass = {
       cssDir: config.build + '/' + config.src,
       environment: 'development',
       importPath: [
-        'node_modules'
+        'node_modules/hazdev-location-view/src',
+        'node_modules/hazdev-tablist/src',
+        'node_modules/hazdev-template/src/htdocs',
+        'node_modules/hazdev-webutils/src'
       ]
     }
   }

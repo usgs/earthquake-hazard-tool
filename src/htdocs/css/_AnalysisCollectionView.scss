@@ -1,0 +1,27 @@
+.analysis-collection-list {
+  > li {
+    cursor: pointer;
+    margin-bottom: .5em;
+    padding: .25em;
+    position: relative;
+
+    &:hover {
+      background-color: #f0f0f0;
+    }
+
+    &.selected {
+      background-color: #ECF9FF;
+    }
+
+    > .delete {
+      color: red;
+      cursor: pointer;
+      font-family: arial;
+      font-weight: bold;
+      position: absolute;
+      right: .25em;
+      text-decoration: none;
+      top: 0;
+    }
+  }
+};

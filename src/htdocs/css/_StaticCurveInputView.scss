@@ -1,12 +1,12 @@
-@import 'hazdev-webutils/src/mvc/ModalView.scss';
+@import 'mvc/ModalView.scss';
 
-@import 'hazdev-location-view/src/locationview/CoordinateControl';
-@import 'hazdev-location-view/src/locationview/GeocodeControl';
-@import 'hazdev-location-view/src/locationview/GeolocationControl';
-@import 'hazdev-location-view/src/locationview/LeafletControls';
-@import 'hazdev-location-view/src/locationview/LocationControl';
-@import 'hazdev-location-view/src/locationview/LocationView';
-@import 'hazdev-location-view/src/locationview/PointControl';
+@import 'locationview/CoordinateControl';
+@import 'locationview/GeocodeControl';
+@import 'locationview/GeolocationControl';
+@import 'locationview/LeafletControls';
+@import 'locationview/LocationControl';
+@import 'locationview/LocationView';
+@import 'locationview/PointControl';
 
 .staticcurve-modal {
   .location-button {

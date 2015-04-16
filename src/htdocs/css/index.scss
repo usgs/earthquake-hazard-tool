@@ -1,19 +1,20 @@
-@import 'hazdev-template/src/htdocs/css/_variables.scss';
-@import 'hazdev-template/src/htdocs/css/_button.scss';
-@import 'hazdev-template/src/htdocs/css/_page.scss';
-@import 'hazdev-template/src/htdocs/css/_text.scss';
-@import 'hazdev-template/src/htdocs/css/_typography.scss';
-@import 'hazdev-template/src/htdocs/css/_form.scss';
-@import 'hazdev-tablist/src/tablist/hazdev-tablist.scss';
+@import 'css/_variables.scss';
+@import 'css/_button.scss';
+@import 'css/_list.scss';
+@import 'css/_page.scss';
+@import 'css/_text.scss';
+@import 'css/_typography.scss';
+@import 'css/_form.scss';
+@import 'tablist/hazdev-tablist.scss';
 
+@import '_ApplicationView';
+@import '_AnalysisCollectionView';
+@import '_AnalysisView';
 @import '_MapView';
 @import '_StaticCurveInputView';
 @import '_HazardCurveGraphView';
 
-/* Variables */
-$transition-time: 800ms;
 
-/* Application Scaffolding */
 html,
 body {
   width: 100%;
@@ -21,132 +22,3 @@ body {
   margin: 0;
   padding: 0;
 }
-
-.application-container {
-  display:block;
-  width:100%;
-  height:100%;
-  padding-top:57px;
-}
-
-.application-header {
-  background-color: #000;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  padding: 1em;
-  z-index: 2;
-
-  .site-logo {
-    vertical-align: middle;
-    display: inline-block;
-    line-height: 0;
-
-    & img {
-      width: 95px;
-      height: 25px;
-    }
-  }
-}
-
-.application-content {
-  position: relative;
-  height: 100%;
-  width: 100%;
-  bottom: 0;
-  z-index: 1;
-
-  .offcanvas-content,
-  .main-content {
-    background: #fff;
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  .offcanvas-content {
-    z-index: 3;
-  }
-
-  .main-content {
-    z-index: 2;
-  }
-
-  .tablist > .tablist-panel{
-    border: none;
-    border-top: 1px solid #ddd;
-  }
-}
-
-
-/* OffCanvas */
-
-.offcanvas-toggle {
-  margin:0;
-  height: 2em;
-  line-height: 2em;
-  position:absolute;
-  top:12px;
-  right:$spacing;
-  box-shadow: none;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-}
-
-.application-content {
-
-  > .offcanvas-content {
-    width: 100%;
-    left: -100%;
-    padding: 0 1em;
-    transition: left $transition-time;
-  }
-
-  > .main-content {
-    // undo tablist margin
-    margin: 0;
-    transition: left $transition-time, width $transition-time;
-  }
-}
-
-.offcanvas-enabled {
-
-  > .offcanvas-content {
-    left: 0;
-    transition: left $transition-time, width $transition-time;
-  }
-}
-
-@media screen and (min-width: 641px) {
-
-  .offcanvas-toggle {
-    top: 16px;
-  }
-
-  .application-content > .offcanvas-content {
-    width: 320px;
-    left: -320px;
-  }
-
-  .offcanvas-enabled {
-
-    > .offcanvas-content {
-      width: 320px;
-      left: 0;
-    }
-
-    > .main-content {
-      left: 320px;
-    }
-  }
-}
-
-
-@import 'HazardCurveGraphView';
