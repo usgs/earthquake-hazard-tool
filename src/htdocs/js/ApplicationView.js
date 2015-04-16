@@ -1,6 +1,8 @@
 'use strict';
 
-var MapView = require('MapView'),
+var Analysis = require('Analysis'),
+    AnalysisCollectionView = require('AnalysisCollectionView'),
+    MapView = require('MapView'),
     StaticCurveOutputView = require('StaticCurveOutputView'),
 
     Collection = require('mvc/Collection'),
@@ -8,114 +10,126 @@ var MapView = require('MapView'),
 
     TabList = require('tablist/TabList');
 
-var RETINA_USGS_LOGO = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAL4AAAAyCAYAAADiBmE+AAAHHklEQVR42u2d6bGkIBCAJ4QJwRAmBEMwBEIwBDIwBEMwBEIwBEMghN4/+IbnevQFwsyjamq3tlZsm4++QHw8Ho8HALSV/l6Pi0bo6/kgNAB4Yvsm9tsBwAAADgA8nLcZACYA6AGgeSi18GxYOXz4PxYzHgw5DFEfY7jmiblBrc0pPhsV0BbbMaKvJgyYl+qD+hwJ5FgAwAiBb8OElrbx1CD8gX8f+MGaabeBAZtVlmGheoBg4acE+jB/4BcCfhjkOaFuRgJsLqEcBinHK0yWVG34A78M8OcM+hkQz5FDDoOYfD6DHN0ngL9gYC0R/ARhxVlrModZR+11IofLJIP/lfRWCP2ArcKUBn5IIHO2USq/UpsLkaOvEfyFAWhp4A+MZx5Cic5wqi5KVnYtWbbhT071p9uRg5rMzuH+XSjjjuwJ+GlWvnDwKQnccJIIeu6zhevFMTqjCjPtXK8hB9VrPGsA/9DKA2LRpiTwiWHOpHV/ALACr9MjEtOFDN17sY71DMK8qS0d/F0rH5Q91FbVIcKKWZXGAjcwr1uQujAcPRNhfSIW32iTOcRNDnDLwndb+TYauNrAt9RrLmTAhhlOBIhuSGmja7Dx+YyUYRZ5j6CcPlONl2rldwf0S8G3DPCNpteRQEdIsB1SBicCf2eAXUFW/ivAxyTyTPCx13iiPrCMTIxrFmUPaE93M27+vU8YBlGs/LeAb5CxtUP8hlRWdpMwp5IFNT4EfZgVLnviqta6aRPKYHMmK3+1d2NGJoAlgd8T5PGc8q2iZR4fiRuxuuS0b94SLXOjFPoc1uURltESnq/Wqs46uZ/K44312jYD+D1RH2MO8JeNe5ijf38xVsywVn6WWvnCF7CAAb/mSyZQEPgvhj5GFWOwM4DjEVzwfiNmCkJ31JXIHFa+cPA5BsOD8OWOEsFnrGRfGk/OALI7i5KKIyGHI6slsfJQ4e5MkG3KctIB10yulcA3An1MbG8YwBvO3EcYrC5YZXOmfCC8x8q18lGeUeV+fEGYGHvlhjHWz1T6EMIvLZhYtVwoTIgJMeNayt6ZCBqule+iBK1W8J+g87bRQBlworfJCT51091ROGilgliGC26ikMdsJ0GUHzimld/bCVjzG1gag70OeF8z+Aohzza07jgzb0ZAbqPfGG7mgzXmDijWyn8E+MrwoypeGuAD4ViVg1+TAf41GnlKrby/iqOCxbdhMK9WXFEWC673e081g08wNirVHyXwpW9MWYRevaI+Wm5y4biZcwC3D30sG+s0XgxSd6EAVHxbOvjICU5OfmsFf1O80GqGCoe9sFRrqOOiEAh3ihUfAk+BtAbwCZNdBH8t4CfaH2YwcFzF25iKxE/JLVyDsc7m4kEnoB/1Vw340cQflAbb1gx+ZP21vGF3BodVdsc2imPHdR0g9PcKfx8uJpMnZ+qVgr/xqBru/qVZx88N/ua+0hKwh53jRThVFdIKG3MgD608ZjLUCj7Dwx7maEx9dCWBrxj+jL8qOhmSrhnep/BiqhgOrjezuU8HPxoHySFUrdZenbvBV+LymSvR+gV/BG+/SY5HuDjyejPjvwJ8hdLnqAj+UR2/zwW+AqN9jtLaIfyMJMd90gKWwNpRQ8ZFC3wFfVhlfTQMYzDlsPJnYY+5Ai5y8x+3cpt5Y9fqaf0ngc/c+7TksvJH8LfR4tYa5qyu0yJkqmblFpT3yQD9hOE2XIf1Fi4l+NqGg5p7rK7Cwz3NRwthSZKkhOB3d4If+hwqBr/XBJ/4bHDHabV78LeA/wzNCIQtFAljWlsA+C0DfKsNHBN8mwB8WxP4/4EXhTrxD7X6u6MMrDcbif2OlHiSqOcuIfiUF7ybhOBTzs18fTL4P3G/cuLjKIAS+sUmU46xamq1wy14bx+hjLcpIcYnGIJqwY8XrzpEGatXjoOxCjYciCkGQNnrcE96cIWAj/2e14x+rkLBj+P/aSfscYRyJsUqLnD9njC1dPZiliBbxMT3HICJFbw2BfjECeivwi4ix0Pp4KtYJGLVagb+iRCn4RPQXjL3cPJdAKIcg8BjecCdWGcY4M9K40J9eaX7FvA55dKtp5kZfRiB94kHPJZjYvTRCNcA1mraurM2XmsZiX3ZzfYTThgsGRevtemoBvBzfU7yMk6HtN9yResI8n558Qj85rb7fwP4AmsryU1eComxhhyNUq6iDj6j+CBt7xzuW8DPbOU6pRKrtBnEbk9/M/ipv/C+b4y+CfwMFtcDfp/NfCf0N8Jvb5Dhfw/8beAL97VfJV2UlU7Nd2u37py67yjnJkWruN2aPy7fCP7G+kuVPYFgtTnoXwO6GYQHvQZZxlTJPpycxL0ZEw2jdD4u8H6pucbfoPgyw/rVcHfidpf1viA8RkUgwwpRLEfzUG7wPiTYEUBc9bOWgg3wT+BeP0A4IYyTi8qcqD1d/wAO22SQ7bmhfQAAAABJRU5ErkJggg==';
 
-
-var ApplicationView = function (options) {
+var ApplicationView = function (params) {
   var _this,
       _initialize,
 
       // variables
       _analysisCollection,
-      _el,
+      _collectionView,
+      _collectionViewEl,
+      _contentEl,
       _mapView,
+      _newAnalysisBtn,
+      _offCanvasEl,
       _staticCurveView,
       _tabList,
+      _tabListEl,
       _toggleButton,
 
       // methods
-      _toggleOffCanvas;
+      _initViewContainer,
+      _onNewAnalysisClick,
+      _onOffCanvasClick;
 
-  _this = View(options);
 
-  _initialize = function () {
+  _this = View(params);
+
+  _initialize = function (/*params*/) {
+    _initViewContainer();
+
     _analysisCollection = Collection([]);
 
-    _el = _this.el;
-    _el.className = 'application-container';
-    _el.innerHTML = '<header class="application-header">' +
-          '<a href="/" class="site-logo">' +
-            '<img alt="USGS" src="' + RETINA_USGS_LOGO + '"/>' +
-          '</a>' +
-          '<button class="offcanvas-toggle">Menu</button>' +
-        '</header>' +
-        '<section class="application-content">' +
-          '<section class="offcanvas-content">' +
-            '<h3>offcanvas-content</h3>' +
-            '<p>This is where the offcanvas content should live.</p>' +
-          '</section>' +
-          '<section class="main-content"></section>' +
-        '</section>';
-
-    _toggleButton = _el.querySelector('.offcanvas-toggle');
-    _toggleButton.addEventListener('click', _toggleOffCanvas);
-
-    // create tablist as part of section.main-content
-    _tabList = TabList({
-      el: _el.querySelector('.main-content')
-    });
-
-    _mapView = MapView({
-      el: document.createElement('div')
-    });
-
-    _tabList.addTab({
-      'title': 'Map',
-      'content': _mapView.el,
-      'onSelect': _mapView.onSelect,
-      'onDeselect': _mapView.onDeselect
-    });
-    // style the map tab
-    _tabList.el.lastChild.setAttribute('style',
-      'position:absolute;top:40px;right:0;bottom:0;left:0;margin:0;padding:0;');
+    _mapView = MapView();
 
     _staticCurveView = StaticCurveOutputView({
       collection: _analysisCollection
     });
 
-    _tabList.addTab({
-      title: 'Static Curves',
-      content: _staticCurveView.el,
-      onSelect: _staticCurveView.onTabSelect,
-      onDeselect: _staticCurveView.onTabDeselect
+    _collectionView = AnalysisCollectionView({
+      el: _offCanvasEl.appendChild(document.createElement('ol')),
+      collection: _analysisCollection
     });
 
-    // invalidate the map size
-    _mapView.getMap().invalidateSize();
 
-    options = null;
+    // create tablist as part of section.main-content
+    _tabList = TabList({
+      el: _tabListEl,
+      tabs: [
+        {
+          'title': 'Map',
+          'content': _mapView.el,
+          'onSelect': _mapView.onSelect,
+          'onDeselect': _mapView.onDeselect
+        },
+        {
+          title: 'Static Curves',
+          content: _staticCurveView.el,
+          onSelect: _staticCurveView.onTabSelect,
+          onDeselect: _staticCurveView.onTabDeselect
+        }
+      ]
+    });
   };
 
-  _toggleOffCanvas = function () {
-    var container = _el.querySelector('.application-content');
 
-    if (!container) {
-      return;
-    }
+  _initViewContainer = function () {
+    _this.el.className = 'application-container';
 
-    if (container.classList.contains('offcanvas-enabled')) {
-      container.classList.remove('offcanvas-enabled');
-    } else {
-      container.classList.add('offcanvas-enabled');
-    }
+    _contentEl = _this.el.querySelector('.application-content') ||
+        document.createElement('section');
+    _toggleButton = _this.el.querySelector('.offcanvas-toggle') ||
+        document.createElement('button');
+    _tabListEl = _this.el.querySelector('.main-content') ||
+        document.createElement('section');
+    _offCanvasEl = _this.el.querySelector('.offcanvas-content') ||
+        document.createElement('section');
+
+    _offCanvasEl.innerHTML = [
+      '<button class="green analysis-create">Create New Calculation</button>',
+      '<ol></ol>'
+    ].join('');
+
+    _collectionViewEl = _offCanvasEl.querySelector('ol');
+    _newAnalysisBtn = _offCanvasEl.querySelector('button');
+
+    _toggleButton.addEventListener('click', _onOffCanvasClick);
+    _newAnalysisBtn.addEventListener('click', _onNewAnalysisClick);
   };
+
+  _onNewAnalysisClick = function () {
+    var analysis = Analysis();
+
+    _analysisCollection.add(analysis);
+    _analysisCollection.select(analysis);
+  };
+
+  _onOffCanvasClick = function () {
+    _contentEl.classList.toggle('offcanvas-enabled');
+  };
+
 
   _this.destroy = function () {
     // events
-    _toggleButton.removeEventListener('click', _toggleOffCanvas);
+    _toggleButton.removeEventListener('click', _onOffCanvasClick);
 
     _staticCurveView.destroy();
     _staticCurveView = null;
 
+    _collectionView.destroy();
+    _collectionView = null;
+
     // variables
-    _el = null;
     _toggleButton = null;
 
     // methods
-    _toggleOffCanvas = null;
+    _onOffCanvasClick = null;
   };
 
-  _initialize();
+
+  _initialize(params);
+  params = null;
   return _this;
 };
 
