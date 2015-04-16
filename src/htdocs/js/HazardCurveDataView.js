@@ -47,11 +47,17 @@ var HazardCurveDataView = function (options) {
   };
 
   _onClick = function (e) {
-    var el = e.target;
+    var el = e.target,
+        id;
 
-    // select the curve in the collection
-    if (el.nodeName === 'TD') {
-      _curves.selectById(el.getAttribute('data-id'));
+    if (el.nodeName !== 'TD') {
+      return;
+    }
+
+    // get curve id, and select the curve in the collection
+    id = el.getAttribute('data-id');
+    if (_curves.get(id) !== _selected) {
+      _curves.selectById(id);
     }
   };
 
