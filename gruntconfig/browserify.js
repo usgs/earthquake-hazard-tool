@@ -58,7 +58,10 @@ addExports(config.src + '/htdocs/js', [
   'Meta',
   'Region',
   'StaticCurveInputView',
-  'StaticCurveOutputView'
+  'StaticCurveOutputView',
+
+  'map/Layers',
+  'map/LayerControl'
 ]);
 
 // Subsequent source files can then require "Class" with:
