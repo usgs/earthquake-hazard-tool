@@ -1,0 +1,23 @@
+.analysis-view-title {
+  display: block;
+}
+
+.analysis-view-metadata {
+  color: #666;
+  display: block;
+  font-size: .85em;
+}
+
+.analysis-view-location {
+  display: inline-block;
+  margin-right: .5em;
+
+  &:after {
+    content: ':';
+    display: inline-block;
+  }
+}
+
+.analysis-view-params {
+  font-style: italic;
+}
