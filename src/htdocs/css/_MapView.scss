@@ -9,17 +9,17 @@
     margin: 0;
     padding: 0;
     position: absolute;
-    top: 40px;
     right: 0;
+    top: 40px;
   }
 }
 
 .map-view {
   display: block;
-  position: relative;
   height: 100%;
-  width: 100%;
+  position: relative;
   top: -1px;
+  width: 100%;
   z-index: 10;
 }
 
@@ -58,15 +58,14 @@
 }
 
 .leaflet-control-attribution {
+  border-radius: 0;
+  bottom: 0;
+  left: 0;
   overflow: hidden;
+  position: absolute;
+  right: 0;
+  text-align: center;
   text-overflow: ellipsis;
   white-space: nowrap;
   width: 100%;
-  border-radius: 0;
-  text-align: center;
-
-  position: absolute;
-  right: 0;
-  left: 0;
-  bottom: 0;
 }
