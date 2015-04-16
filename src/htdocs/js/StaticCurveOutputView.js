@@ -2,6 +2,7 @@
 
 var Analysis = require('Analysis'),
     HazardCurveGraphView = require('HazardCurveGraphView'),
+    StaticCurveInputView = require('StaticCurveInputView'),
 
     Collection = require('mvc/Collection'),
     View = require('mvc/View'),
@@ -16,6 +17,7 @@ var StaticCurveOutputView = function (params) {
       _curvesCollection,
       _destroyCollection,
       _editionEl,
+      _editButton,
       _graphView,
       _graphViewEl,
       _imtEl,
@@ -27,6 +29,7 @@ var StaticCurveOutputView = function (params) {
       _vs30El,
 
       _createViewSkeleton,
+      _onEditClick,
       _onAnalysisDeselect,
       _onAnalysisSelect,
       _updateMetadata;
@@ -57,12 +60,7 @@ var StaticCurveOutputView = function (params) {
       curves: _curvesCollection
     });
 
-    // TODO :: make a real input view, no need to stub 'show' method
-    _inputView = View({
-    });
-    _inputView.show = function () {
-      console.log('Input view show!');
-    };
+    _inputView = StaticCurveInputView();
   };
 
 
@@ -70,6 +68,7 @@ var StaticCurveOutputView = function (params) {
 
     _this.el.innerHTML = [
       '<h2>Metadata</h2>',
+      '<button class="staticcurve-edit">Edit</button>',
       '<dl class="staticcurve-output-metadata">',
         '<dt class="edition label">Edition</dt>',
         '<dd class="edition value"></dd>',
@@ -96,6 +95,9 @@ var StaticCurveOutputView = function (params) {
 
     _graphViewEl = _this.el.querySelector('.graph-wrapper');
     _tableViewEl = _this.el.querySelector('.table-wrapper');
+
+    _editButton = _this.el.querySelector('.staticcurve-edit');
+    _editButton.addEventListener('click', _onEditClick);
   };
 
   _onAnalysisDeselect = function (analysis) {
@@ -105,6 +107,10 @@ var StaticCurveOutputView = function (params) {
   _onAnalysisSelect = function (analysis) {
     analysis.on('change', _this.render);
     _this.render();
+  };
+
+  _onEditClick = function () {
+    _inputView.show(_analysisCollection.getSelected());
   };
 
   _updateMetadata = function (analysis) {
@@ -144,12 +150,13 @@ var StaticCurveOutputView = function (params) {
 
 
   _this.destroy = Util.compose(_this.destroy, function () {
+    _editButton.removeEventListener('click', _onEditClick);
+
     _tableView.destroy();
     _inputView.destroy();
     _graphView.destroy();
 
-    _analysisCollection.off('select', _onAnalysisSelect);
-    _analysisCollection.off('deselect', _onAnalysisDeselect);
+    _this.onTabDeselect();
     if (_destroyCollection) {
       _analysisCollection.destroy();
     }
@@ -161,6 +168,7 @@ var StaticCurveOutputView = function (params) {
     _curvesCollection = null;
     _destroyCollection = null;
     _editionEl = null;
+    _editButton = null;
     _graphView = null;
     _graphViewEl = null;
     _imtEl = null;
@@ -183,8 +191,13 @@ var StaticCurveOutputView = function (params) {
   });
 
   _this.onTabDeselect = function () {
-    _analysisCollection.off('select', _onAnalysisSelect);
-    _analysisCollection.off('deselect', _onAnalysisDeselect);
+    try {
+      _analysisCollection.off('select', _onAnalysisSelect);
+    } catch (e) { /* ignore */ }
+
+    try {
+      _analysisCollection.off('deselect', _onAnalysisDeselect);
+    } catch (e) { /* ignore */ }
   };
 
   _this.onTabSelect = function () {
