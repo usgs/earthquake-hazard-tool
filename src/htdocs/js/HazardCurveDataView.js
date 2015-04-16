@@ -36,7 +36,16 @@ var HazardCurveDataView = function (options) {
     _curves.on('deselect', _onDeselect);
   };
 
-  /** accepts and array of points and returns an array of x-values */
+  /**
+   * Accepts an array of points and returns an array of x-values.
+   * Used by render() while building a tbody > th column of x-values.
+   *
+   * @param  points {Array}
+   *         an array of data points in a curve model.
+   *
+   * @return xPoints {Array}
+   *         an array of x-values from the curve model.
+   */
   _getXValues = function (points) {
     var xPoints = [];
     for (var i = 0; i < points.length; i++) {
@@ -45,6 +54,14 @@ var HazardCurveDataView = function (options) {
     return xPoints;
   };
 
+  /**
+   * Responds to click event on the HazardCurveDataView.
+   * Selects/deselects a curve in the collection when a
+   * table column is clicked.
+   *
+   * @param  e {object}
+   *         the click event.
+   */
   _onClick = function (e) {
     var el = e.target,
         id,
@@ -54,15 +71,24 @@ var HazardCurveDataView = function (options) {
       return;
     }
 
+    // get curve id, and the selected curve in the collection
+    id = el.getAttribute('data-id');
     selected = _curves.getSelected();
 
-    // get curve id, and select the curve in the collection
-    id = el.getAttribute('data-id');
+    // if not selected, select the curve
     if (selected === null || id !== selected.id) {
       _curves.selectById(id);
     }
   };
 
+  /**
+   * Responds to a "deselect" event on the curve collection.
+   * Removes the "selected" class from all of the selected cells
+   * in the table column.
+   *
+   * @param  curve {object}
+   *         the deselected curve.
+   */
   _onDeselect = function (curve) {
     var tableCells,
         i;
@@ -74,6 +100,14 @@ var HazardCurveDataView = function (options) {
     }
   };
 
+  /**
+   * Responds to a "select" event on the curve collection.
+   * Adds the "selected" class to all of the selected cells
+   * in the table column.
+   *
+   * @param  curve {object}
+   *         the selected curve.
+   */
   _onSelect = function (curve) {
     var tableCells,
         i;
@@ -131,7 +165,9 @@ var HazardCurveDataView = function (options) {
     _this.el.innerHTML = markup.join('');
   };
 
-
+  /**
+   * Clean up event bindings, variables, and methods
+   */
   _this.destroy = Util.compose(function () {
     // bindings
     _this.el.removeEventListener('click', _onClick);
