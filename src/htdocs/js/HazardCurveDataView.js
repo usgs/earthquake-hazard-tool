@@ -16,6 +16,7 @@ var HazardCurveDataView = function (options) {
       _getColumns,
       _getXValues,
       _onClick,
+      _onDeselect,
       _onSelect;
 
   _this = View(options);
@@ -34,7 +35,7 @@ var HazardCurveDataView = function (options) {
     _curves.on('remove', _this.render);
     _curves.on('reset', _this.render);
     _curves.on('select', _onSelect);
-    _curves.on('deselect', _onSelect);
+    _curves.on('deselect', _onDeselect);
   };
 
   /** accepts and array of points and returns an array of x-values */
@@ -48,43 +49,47 @@ var HazardCurveDataView = function (options) {
 
   _onClick = function (e) {
     var el = e.target,
-        id;
+        id,
+        selected;
 
     if (el.nodeName !== 'TD') {
       return;
     }
 
+    selected = _curves.getSelected();
+
     // get curve id, and select the curve in the collection
     id = el.getAttribute('data-id');
-    if (_curves.get(id) !== _selected) {
+    if (selected === null || id !== selected.id) {
       _curves.selectById(id);
+    }
+  };
+
+  _onDeselect = function (curve) {
+    var tableCells,
+        i;
+
+    console.log('ondeselect');
+
+    // remove selected class
+    tableCells = _this.el.querySelectorAll('[data-id="' + curve.id + '"]');
+    for (i = 0; i < tableCells.length; i++) {
+      tableCells[i].classList.remove('selected');
     }
   };
 
   _onSelect = function (curve) {
     var tableCells,
-        tableCellClass,
         i;
 
-    if (curve === _selected) {
-      return;
-    }
+    console.log('onselect');
 
-    // set the previously selected object in the collection
-    _selected = _curves.getSelected();
-    tableCellClass = curve.get('label').replace(/ /g, '-');
-
-    // highlight the cells in the column if they are not already highlighted
-    tableCells = document.querySelectorAll('.selected');
-    for (i = 0; i < tableCells.length; i++) {
-      tableCells[i].classList.remove('selected');
-    }
-    tableCells = document.querySelectorAll('.' + tableCellClass);
+    // add selected class
+    tableCells = _this.el.querySelectorAll('[data-id="' + curve.id + '"]');
     for (i = 0; i < tableCells.length; i++) {
       tableCells[i].classList.add('selected');
     }
   };
-
 
   /**
    * Render the view.
@@ -150,6 +155,7 @@ var HazardCurveDataView = function (options) {
     _getColumns = null;
     _getXValues = null;
     _onClick = null;
+    _onDeselect = null;
     _onSelect = null;
   }, _this.destroy);
 
