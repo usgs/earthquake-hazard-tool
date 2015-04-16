@@ -219,7 +219,7 @@ var HazardCurveLineView = function (options) {
     _y = null;
 
     // remove container
-    Util.detach(_el.node);
+    Util.detach(_el.node());
     _el = null;
   }, _this.destroy);
 
