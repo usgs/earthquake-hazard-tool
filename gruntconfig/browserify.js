@@ -38,16 +38,22 @@ addExports('node_modules/hazdev-webutils/src', [
   'util/Xhr'
 ]);
 
+addExports('node_modules/hazdev-tablist/src', [
+  'tablist/TabList'
+]);
+
 // project exports
 addExports(config.src + '/htdocs/js', [
   'Analysis',
+  'AnalysisCollectionView',
+  'AnalysisView',
+  'ApplicationView',
   'Calculator',
+  'HazardCurve',
   'HazardCurveGraphView',
   'HazardResponse',
+  'HazardUtil',
   'MapView',
-  'AnalysisView',
-  'AnalysisCollectionView',
-  'HazardCurve',
   'Meta',
   'Region',
   'StaticCurveInputView',
