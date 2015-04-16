@@ -77,14 +77,14 @@ $transition-time: 250ms;
   box-shadow: none;
   height: 2em;
   line-height: 2em;
-  position:absolute;
-  margin:0;
-  right:$spacing;
-  top:12px;
+  margin: 0;
+  position: absolute;
+  right: $spacing;
+  top: 12px;
 
   -moz-user-select: none;
-  -webkit-user-select: none;
   -ms-user-select: none;
+  -webkit-user-select: none;
 }
 
 .application-content {
@@ -117,15 +117,15 @@ $transition-time: 250ms;
   }
 
   .application-content > .offcanvas-content {
-    width: 320px;
     left: -320px;
+    width: 320px;
   }
 
   .offcanvas-enabled {
 
     > .offcanvas-content {
-      width: 320px;
       left: 0;
+      width: 320px;
     }
 
     > .main-content {
