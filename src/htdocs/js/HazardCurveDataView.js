@@ -69,8 +69,6 @@ var HazardCurveDataView = function (options) {
     var tableCells,
         i;
 
-    console.log('ondeselect');
-
     // remove selected class
     tableCells = _this.el.querySelectorAll('[data-id="' + curve.id + '"]');
     for (i = 0; i < tableCells.length; i++) {
@@ -81,8 +79,6 @@ var HazardCurveDataView = function (options) {
   _onSelect = function (curve) {
     var tableCells,
         i;
-
-    console.log('onselect');
 
     // add selected class
     tableCells = _this.el.querySelectorAll('[data-id="' + curve.id + '"]');
