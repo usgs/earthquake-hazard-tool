@@ -114,6 +114,7 @@ var HazardCurveDataView = function (options) {
     // isolate the x-values from the curve data
     xValues = _getXValues(curves[0].get('data'));
 
+    // Build table
     markup.push('<table class="tabular hazard-curve-data-view"><thead>');
     markup.push('<th class="x-values blank"></th>');
     for (c = 0; c < curves.length; c++) {
@@ -121,16 +122,14 @@ var HazardCurveDataView = function (options) {
       id = curves[c].get('id');
       markup.push('<th>' + label + '</th>');
     }
-
     markup.push('</thead><tbody>');
     for (i = 0; i < xValues.length; i++) {
       // set x-value as row header
       markup.push('<tr><th>' + xValues[i] + '</th>');
       for (c = 0; c < curves.length; c++) {
+        // set y-value as the table cell data
         point = curves[c].get('data')[i][1];
-        label = curves[c].get('label');
-        markup.push('<td data-id="' + id + '" class="' +
-            label.replace(/ /g, '-') + '">' + point.toExponential(5) + '</td>');
+        markup.push('<td data-id="' + id + '">' + point.toExponential(5) + '</td>');
       }
       markup.push('</tr>');
     }
