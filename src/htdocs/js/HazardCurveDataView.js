@@ -9,7 +9,6 @@ var HazardCurveDataView = function (options) {
 
       // variables
       _curves,
-      _table,
       _selected,
 
       // methods
@@ -29,8 +28,7 @@ var HazardCurveDataView = function (options) {
 
     _this.render();
 
-    _table = _this.el.querySelector('.hazard-curve-data-view');
-    _table.addEventListener('click', _onClick);
+    _this.el.addEventListener('click', _onClick);
     _curves.on('add', _this.render);
     _curves.on('remove', _this.render);
     _curves.on('reset', _this.render);
@@ -136,7 +134,7 @@ var HazardCurveDataView = function (options) {
 
   _this.destroy = Util.compose(function () {
     // bindings
-    _table.removeEventListener('click', _onClick);
+    _this.el.removeEventListener('click', _onClick);
     _curves.off('add', _this.render);
     _curves.off('remove', _this.render);
     _curves.off('reset', _this.render);
@@ -144,7 +142,6 @@ var HazardCurveDataView = function (options) {
     _curves.off('deselect', _onSelect);
     // variables
     _curves = null;
-    _table = null;
     _selected = null;
     // methods
     _getColumns = null;
