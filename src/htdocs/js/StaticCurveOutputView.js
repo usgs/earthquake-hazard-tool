@@ -1,6 +1,7 @@
 'use strict';
 
 var Analysis = require('Analysis'),
+    HazardCurveDataView = require('HazardCurveDataView'),
     HazardCurveGraphView = require('HazardCurveGraphView'),
     StaticCurveInputView = require('StaticCurveInputView'),
 
@@ -50,9 +51,9 @@ var StaticCurveOutputView = function (params) {
 
     _createViewSkeleton();
 
-    // TODO :: make a real table view
-    _tableView = View({
+    _tableView = HazardCurveDataView({
       el: _tableViewEl,
+      collection: _curvesCollection
     });
 
     _graphView = HazardCurveGraphView({
