@@ -6,7 +6,8 @@ var HazardUtil = {};
 
 var _coallesce,
     _interpolate,
-    _interpolateCurve;
+    _interpolateCurve,
+    _interpolateLogLog;
 
 
 _coallesce = function (xvals, yvals) {
@@ -31,6 +32,28 @@ _coallesce = function (xvals, yvals) {
   }
 
   return xy;
+};
+
+/**
+ * Logs x and y values.
+ * Interpolates the logged values.
+ * Return exponential of interpolated values.
+ *
+ * @params variables {int, int, int, int, int}
+ */
+
+_interpolateLogLog = function (x0, y0, x1, y1, x) {
+  var interpolateLog;
+
+  x0 = Math.log(x0);
+  y0 = Math.log(y0);
+  x1 = Math.log(x1);
+  y1 = Math.log(y1);
+  x = Math.log(x);
+
+  interpolateLog = _interpolate(x0, y0, x1, y1, x);
+
+  return Math.exp(interpolateLog);
 };
 
 _interpolate = function (x0, y0, x1, y1, x) {
