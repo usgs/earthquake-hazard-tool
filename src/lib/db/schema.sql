@@ -1,4 +1,5 @@
 DROP VIEW IF EXISTS dataset_vw;
+DROP VIEW IF EXISTS dataset_vals_vw;
 DROP TABLE IF EXISTS curve;
 DROP TABLE IF EXISTS dataset;
 DROP TABLE IF EXISTS region;
