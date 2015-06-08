@@ -52,8 +52,11 @@ describe('HazardUtil', function () {
         ' are not 0', function () {
       var result;
 
-      result = HazardUtil.interpolateLogLog(1, 2, 3, 4, 5);
-      expect(result).to.be.closeTo(5.52116807, 0.0001);
+      result = HazardUtil.interpolateLogLog(Math.exp(2), Math.exp(4),
+          Math.exp(6), Math.exp(8), Math.exp(3));
+
+      expect(result).to.be.closeTo(Math.exp(5), 0.0001);
+
     });
 
     it('Throws an error when interpolateLogLog is passed any x or y values' +
