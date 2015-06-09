@@ -47,6 +47,28 @@ describe('HazardUtil', function () {
       result = HazardUtil.interpolate(0, 0, 1, 1, 0.5);
       expect(result).to.be.closeTo(0.5, EPSILON);
     });
+
+    it('interpolateLogLog method returns correct values if x and y values' +
+        ' are not 0', function () {
+      var result;
+
+      result = HazardUtil.interpolateLogLog(Math.exp(2), Math.exp(6),
+          Math.exp(4), Math.exp(8), Math.exp(3));
+
+      expect(result).to.equal(Math.exp(7));
+
+    });
+
+    it('Throws an error when interpolateLogLog is passed any x or y values' +
+        ' equal to 0', function () {
+      var throwError;
+
+      throwError = function () {
+        HazardUtil.interpolateLogLog(0, 1, 2, 3, 4);
+      };
+
+      expect(throwError).to.throw(Error);
+    });
   });
 
   describe('interpolateCurve', function () {
