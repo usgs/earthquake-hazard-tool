@@ -52,10 +52,10 @@ describe('HazardUtil', function () {
         ' are not 0', function () {
       var result;
 
-      result = HazardUtil.interpolateLogLog(Math.exp(2), Math.exp(4),
-          Math.exp(6), Math.exp(8), Math.exp(3));
+      result = HazardUtil.interpolateLogLog(Math.exp(2), Math.exp(6),
+          Math.exp(4), Math.exp(8), Math.exp(3));
 
-      expect(result).to.be.closeTo(Math.exp(5), 0.0001);
+      expect(result).to.equal(Math.exp(7));
 
     });
 
