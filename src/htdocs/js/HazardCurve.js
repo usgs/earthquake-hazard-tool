@@ -3,14 +3,14 @@
 var Model = require('mvc/Model'),
     Util = require('util/Util'),
 
-    HazardUtil = require('HazardCurve');
+    hazardUtil = require('HazardUtil');
 
 var CURVE_ID = 0;
 
 var HazardCurve = function (params) {
   var _this,
+      _initialize,
 
-      _getBounds,
       _hazardUtil;
 
   _this = Model(Util.extend({
@@ -19,14 +19,16 @@ var HazardCurve = function (params) {
     data: []
   }, params));
 
-  _hazardUtil = HazardUtil();
+  _initialize = function () {
+    _hazardUtil = hazardUtil();
+  };
 
   _this.getX = function (y) {
     var data;
 
     data = _this.get('data');
 
-    return _getBounds(data, y, 0);
+    return _this.getBounds(data, y, 0);
   };
 
   _this.getY = function (x) {
@@ -34,11 +36,10 @@ var HazardCurve = function (params) {
 
     data = _this.get('data');
 
-    return _getBounds(data, x, 1);
-
+    return _this.getBounds(data, x, 1);
   };
 
-  _getBounds = function (data, target, index) {
+  _this.getBounds = function (data, target, index) {
     var lower,
         upper,
         x,
@@ -75,6 +76,7 @@ var HazardCurve = function (params) {
     return _hazardUtil.interpolate(x0, y0, x1, y1, x);
   };
 
+  _initialize();
   params = null;
   return _this;
 };
