@@ -48,7 +48,7 @@ var EditionView = function (params) {
     });
 
     // bind to select on the Edition collection
-    _editionCollection.on('select', _updateEdition);
+    _editionCollection.on('select', _updateEdition, _this);
 
     // select the edition in the currently selected Analysis
     _this.render();
@@ -69,7 +69,7 @@ var EditionView = function (params) {
    */
   _this.destroy = Util.compose(function () {
     // unbind
-    _editionCollection.off('select', _updateEdition);
+    _editionCollection.off('select', _updateEdition, _this);
     // methods
     _updateEdition = null;
     // variables
@@ -82,7 +82,7 @@ var EditionView = function (params) {
    * unset the event bindings for the collection
    */
   _this.onCollectionDeselect = function () {
-    _this.model.off('change', '_updateEdition', _this);
+    _this.model.off('change', _updateEdition, _this);
     _this.model = null;
     _this.render();
   };
@@ -92,7 +92,7 @@ var EditionView = function (params) {
    */
   _this.onCollectionSelect = function () {
     _this.model = _this.collection.getSelected();
-    _this.model.on('change', '_updateEdition', _this);
+    _this.model.on('change', _updateEdition, _this);
     _this.render();
   };
 
