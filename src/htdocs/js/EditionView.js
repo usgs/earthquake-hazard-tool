@@ -27,7 +27,7 @@ var EditionView = function (params) {
 
       _editionCollection,
 
-      _updateCalculation;
+      _updateEdition;
 
   _this = SelectedCollectionView(params);
 
@@ -50,7 +50,7 @@ var EditionView = function (params) {
   };
 
     // update Calculation Model with selected edition
-  _updateCalculation = function () {
+  _updateEdition = function () {
     if (_this.model) {
       _this.model.set({'edition': _editionCollection.getSelected()});
     }
@@ -58,7 +58,7 @@ var EditionView = function (params) {
 
   _this.destroy = Util.compose(function () {
 
-    _updateCalculation = null;
+    _updateEdition = null;
 
     _editionCollection = null;
 
@@ -70,7 +70,7 @@ var EditionView = function (params) {
    * unset the event bindings for the collection
    */
   _this.onCollectionDeselect = function () {
-    _this.model.off('change', 'updateCalculation', _this);
+    _this.model.off('change', '_updateEdition', _this);
     _this.model = null;
     _this.render();
   };
@@ -80,7 +80,7 @@ var EditionView = function (params) {
    */
   _this.onCollectionSelect = function () {
     _this.model = _this.collection.getSelected();
-    _this.model.on('change', 'updateCalculation', _this);
+    _this.model.on('change', '_updateEdition', _this);
     _this.render();
   };
 
