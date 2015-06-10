@@ -41,7 +41,7 @@ var EditionView = function (params) {
       el: _this.el,
       includeBlankOption: true,
       format: function (model) {
-        return model.get('name');
+        return model.get('display');
       }
     });
 
@@ -90,7 +90,7 @@ var EditionView = function (params) {
 
     // Update selected edition when collection changes
     if (_this.model) {
-      edition = _this.model.get(edition);
+      edition = _this.model.get('edition');
       _editionCollection.select(edition);
     } else {
       _editionCollection.deselect();
