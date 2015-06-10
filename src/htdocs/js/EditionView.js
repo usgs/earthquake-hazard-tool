@@ -49,6 +49,7 @@ var EditionView = function (params) {
 
     // bind to select on the Edition collection
     _editionCollection.on('select', _updateEdition, _this);
+    _editionCollection.on('deselect', _updateEdition, _this);
 
     // select the edition in the currently selected Analysis
     _this.render();
