@@ -58,6 +58,7 @@ addExports(config.src + '/htdocs/js', [
   'MapView',
   'Meta',
   'Region',
+  'SiteClassView',
   'StaticCurveInputView',
   'StaticCurveOutputView',
   'TimeHorizonInputView',
