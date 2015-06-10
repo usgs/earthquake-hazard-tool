@@ -97,15 +97,22 @@ var EditionView = function (params) {
     _this.render();
   };
 
-  // render the selected edition, or the blank option
+  /**
+   * render the selected edition, or the blank option
+   */
   _this.render = function () {
     var edition;
 
     // Update selected edition when collection changes
     if (_this.model) {
       edition = _this.model.get('edition');
-      _editionCollection.select(edition);
+      if (edition === null) {
+        _editionCollection.deselect();
+      } else {
+        _editionCollection.select(edition);
+      }
     } else {
+      // no item in the collection has been selected
       _editionCollection.deselect();
     }
   };
