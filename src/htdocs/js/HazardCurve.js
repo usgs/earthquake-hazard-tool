@@ -3,7 +3,7 @@
 var Model = require('mvc/Model'),
     Util = require('util/Util'),
 
-    hazardUtil = require('HazardUtil');
+    HazardUtil = require('HazardUtil');
 
 var CURVE_ID = 0;
 
@@ -20,7 +20,7 @@ var HazardCurve = function (params) {
   }, params));
 
   _initialize = function () {
-    _hazardUtil = hazardUtil();
+    _hazardUtil = HazardUtil;
   };
 
   _this.getX = function (y) {
@@ -73,7 +73,7 @@ var HazardCurve = function (params) {
       y1 = x1;
     }
 
-    return _hazardUtil.interpolate(x0, y0, x1, y1, x);
+    return _hazardUtil.interpolateLogLog(x0, y0, x1, y1, x);
   };
 
   _initialize();
