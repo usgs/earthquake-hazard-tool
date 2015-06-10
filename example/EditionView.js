@@ -10,26 +10,37 @@ var Analysis = require('Analysis'),
 var metadata = require('etc/metadata');
 
 var analyses = [],
-    button,
+    buttonChange,
+    buttonDeselect,
     collection,
     editions = [],
     imt,
     region,
     vs30;
 
+
 var toggleSelectedCalculation = function () {
-  if (collection.getSelected() === analyses[0]) {
-    collection.select(analyses[1]);
+  if (collection.getSelected() === collection.data()[0]) {
+    collection.select(collection.data()[1]);
   } else {
-    collection.select(analyses[0]);
+    collection.select(collection.data()[0]);
   }
 };
 
+var deselectAnalysis = function () {
+  if (collection.getSelected()) {
+    collection.deselect();
+  }
+};
 
-button = document.querySelector('.change-selected');
-button.addEventListener('click', toggleSelectedCalculation);
+// Button bindings
+buttonChange = document.querySelector('.change-selected');
+buttonChange.addEventListener('click', toggleSelectedCalculation);
 
-// build array of edition models
+buttonDeselect = document.querySelector('.remove-selected');
+buttonDeselect.addEventListener('click', deselectAnalysis);
+
+// Build array of edition models
 metadata.parameters.edition.values.map(function(edition) {
   editions.push(Meta(edition));
 });
