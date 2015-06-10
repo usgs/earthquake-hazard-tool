@@ -71,5 +71,3 @@ EditionView({
   editions: Collection(editions),
   collection: collection
 });
-
-
