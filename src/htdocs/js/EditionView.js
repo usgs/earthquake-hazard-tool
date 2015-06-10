@@ -47,6 +47,9 @@ var EditionView = function (params) {
       }
     });
 
+    // bind to select on the Edition collection
+    _editionCollection.on('select', _updateEdition);
+
     // select the edition in the currently selected Analysis
     _this.render();
   };
@@ -65,7 +68,11 @@ var EditionView = function (params) {
    * Calls CollectionSelectBox.destroy() and cleans up local variables
    */
   _this.destroy = Util.compose(function () {
+    // unbind
+    _editionCollection.off('select', _updateEdition);
+    // methods
     _updateEdition = null;
+    // variables
     _editionCollection = null;
     _this = null;
     _initialize = null;
