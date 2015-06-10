@@ -11,11 +11,10 @@ var Collection = require('mvc/Collection'),
  * The collection of editions updates when the selected calculation
  * in the collection of calculations changes.
  *
- *
  * EditionView({
  *   el: document.createElement('div'),
- *   editions: Collection(Edition),
- *   collection: Collection(Calculation)
+ *   editions: Collection([Edition]),
+ *   collection: Collection([Analysis])
  * });
  *
  * @param {[type]} params [description]
@@ -31,6 +30,9 @@ var EditionView = function (params) {
 
   _this = SelectedCollectionView(params);
 
+  /**
+   * @constructor
+   */
   _initialize = function (params) {
 
     // editions CollectionSelectBox
@@ -45,23 +47,26 @@ var EditionView = function (params) {
       }
     });
 
-    // set the selected edition (render)
+    // select the edition in the currently selected Analysis
     _this.render();
   };
 
-    // update Calculation Model with selected edition
+    /**
+     * update the currently selected Analysis model  with
+     * the currently selected Edition in the CollectionSelectBox.
+     */
   _updateEdition = function () {
     if (_this.model) {
       _this.model.set({'edition': _editionCollection.getSelected()});
     }
   };
 
+  /**
+   * Calls CollectionSelectBox.destroy() and cleans up local variables
+   */
   _this.destroy = Util.compose(function () {
-
     _updateEdition = null;
-
     _editionCollection = null;
-
     _this = null;
     _initialize = null;
   }, _this.destroy);
