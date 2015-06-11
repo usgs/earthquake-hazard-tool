@@ -34,7 +34,7 @@ describe('HazardCurveTest', function () {
       HazardUtil.interpolateLogLog.restore();
     });
 
-    it('getX passes the correct values', function () {
+    it('getX passes the correct values uses data', function () {
       var args;
 
       hazardCurve.getX(2.25);
@@ -67,8 +67,53 @@ describe('HazardCurveTest', function () {
     it('getY does not interpolate when a value exists', function () {
       expect(hazardCurve.getY(3)).to.equal(3.5);
     });
+  });
 
+  describe('Checks decending point', function () {
+    var data2 = [
+      [1,5.5],
+      [2,4.5],
+      [3,3.5],
+      [4,2.5],
+      [5,1.5]
+    ];
 
+    var hazardCurve = HazardCurve({
+      data: data2
+    });
 
+    beforeEach(function () {
+      sinon.spy(HazardUtil, 'interpolateLogLog');
+    });
+
+    afterEach(function () {
+      HazardUtil.interpolateLogLog.restore();
+    });
+
+    it('getX passes the correct values uses data1', function () {
+      var args;
+
+      hazardCurve.getX(2.25);
+      expect(HazardUtil.interpolateLogLog.calledOnce).to.equal(true);
+      args = HazardUtil.interpolateLogLog.getCall(0).args;
+      expect(args[0]).to.equal(1.5);
+      expect(args[1]).to.equal(5);
+      expect(args[2]).to.equal(2.5);
+      expect(args[3]).to.equal(4);
+      expect(args[4]).to.equal(2.25);
+    });
+
+    it('getY passes the correct values uses data1', function () {
+      var args;
+
+      hazardCurve.getY(2.25);
+      expect(HazardUtil.interpolateLogLog.calledOnce).to.equal(true);
+      args = HazardUtil.interpolateLogLog.getCall(0).args;
+      expect(args[0]).to.equal(2);
+      expect(args[1]).to.equal(4.5);
+      expect(args[2]).to.equal(3);
+      expect(args[3]).to.equal(3.5);
+      expect(args[4]).to.equal(2.25);
+    });
   });
 });
