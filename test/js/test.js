@@ -33,6 +33,7 @@ require('./spec/ApplicationViewTest');
 require('./spec/CalculatorTest');
 require('./spec/DependencyFactoryTest');
 require('./spec/MapViewTest');
+require('./spec/HazardCurveTest');
 require('./spec/HazardCurveDataViewTest');
 require('./spec/HazardCurveGraphViewTest');
 require('./spec/HazardUtilTest');
