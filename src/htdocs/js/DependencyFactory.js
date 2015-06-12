@@ -29,19 +29,34 @@ var DependencyFacotry = function (params) {
       _regions,
       _siteClasses,
       _spectralPeriods,
+      _timeHorizons,
       _url,
 
       _buildCollection,
+      _getSupported,
       _onSuccess,
       _onError;
 
   _this = {
+    getEdition: null,
     getEditions: null,
+    getAllEditions: null,
+    getSiteClass: null,
     getSiteClasses: null,
-    getSupportedSiteClasses: null,
+    getAllSiteClasses: null,
+    getFilteredSiteClasses: null,
+    getSpectralPeriod: null,
     getSpectralPeriods: null,
+    getAllSpectralPeriods: null,
+    getFilteredSpectralPeriods: null,
+    getTimeHorizon: null,
     getTimeHorizons: null,
-    getCountourTypes: null,
+    getAllTimeHorizons: null,
+    getFilteredTimeHorizons: null,
+    getContourType: null,
+    getContourTypes: null,
+    getAllContourTypes: null,
+    getFilteredContourTypes: null,
     getInstance: null
   };
 
@@ -54,6 +69,7 @@ var DependencyFacotry = function (params) {
     _regions = Collection([]);
     _siteClasses = Collection([]);
     _spectralPeriods = Collection([]);
+    _timeHorizons = Collection([]);
 
     _callbacks = [];
 
@@ -72,9 +88,10 @@ var DependencyFacotry = function (params) {
 
     _editions.reset(_data.parameters.edition.values.map(Meta));
     _regions.reset(_data.parameters.region.values.map(Region));
-    _contourTypes.reset(_data.parameters.imt.values.map(Meta));
+    _contourTypes.reset(_data.parameters.contourType.values.map(Meta));
     _siteClasses.reset(_data.parameters.vs30.values.map(Meta));
     _spectralPeriods.reset(_data.parameters.imt.values.map(Meta));
+    _timeHorizons.reset(_data.parameters.timeHorizon.values.map(Meta));
 
     _isReady = true;
 
@@ -113,9 +130,17 @@ var DependencyFacotry = function (params) {
     return false;
   };
 
+  _getSupported = function (collection, ids) {
+    return collection.data().filter(function (model) {
+      if (ids.indexOf(model.get('id')) !== -1) {
+        return true;
+      }
+    });
+  };
 
   _this.destroy = function () {
     _buildCollection = null;
+    _getSupported = null;
     _onError = null;
     _onSuccess = null;
 
@@ -128,6 +153,7 @@ var DependencyFacotry = function (params) {
     _regions = null;
     _siteClasses = null;
     _spectralPeriods = null;
+    _timeHorizons = null;
     _url = null;
 
     _this = null;
@@ -143,14 +169,29 @@ var DependencyFacotry = function (params) {
    *
    * @return {Collection} Collection of Contour Type models.
    */
-  _this.getContourTypes = function (editionId) {
+  _this.getContourType = function(id) {
+    return _contourTypes.get(id);
+  };
 
-    // get all Contour Types
-    if (editionId) {
-      // TODO, update contour typee based on selected editionId
-    } else {
-      return _contourTypes;
-    }
+  _this.getContourTypes = function (ids) {
+    return _getSupported(_contourTypes, ids);
+  };
+
+  _this.getAllContourTypes = function () {
+    return _contourTypes;
+  };
+
+  _this.getFilteredContourTypes = function (editionId) {
+    var edition,
+        ids;
+
+    // get edition
+    edition = _this.getEdition(editionId);
+
+    // get spectral period ids
+    ids = edition.get('supports').contourType;
+
+    return _this.getContourTypes(ids);
   };
 
   /**
@@ -158,23 +199,34 @@ var DependencyFacotry = function (params) {
    *
    * @return {Collection} Collection of Edition models.
    */
-  _this.getEditions = function () {
-    // get all Editions 
-    return _editions;
-  };
-
   _this.getEdition = function(id) {
     return _editions.get(id);
   };
 
-
-  _this.getRegions = function () {
-    return _regions;
+  _this.getEditions = function (ids) {
+    return _getSupported(_editions, ids);
   };
 
+  _this.getAllEditions = function () {
+    return _editions;
+  };
+
+
+  /** 
+   * Get regions
+   */
   _this.getRegion = function (id) {
     return _regions.get(id);
   };
+
+  _this.getRegions = function (ids) {
+    return _getSupported(_regions, ids);
+  };
+
+  _this.getAllRegions = function () {
+    return _regions;
+  };
+
 
   /**
    * Get all Site Classes.
@@ -182,13 +234,16 @@ var DependencyFacotry = function (params) {
    *
    * @return {Collection} Collection of Site Class models.
    */
-  _this.getSiteClasses = function () {
-    // get all Site Classes
-    return _siteClasses;
-  };
-
   _this.getSiteClass = function (id) {
     return _siteClasses.get(id);
+  };
+
+  _this.getSiteClasses = function (ids) {
+    return _getSupported(_siteClasses, ids);
+  };
+
+  _this.getAllSiteClasses = function () {
+    return _siteClasses;
   };
 
   /**
@@ -205,29 +260,27 @@ var DependencyFacotry = function (params) {
    *
    * @return {Collection} Collection of Site Class models.
    */
-  _this.getSupportedSiteClasses = function (editionId, latitude, longitude) {
+  _this.getFilteredSiteClasses = function (editionId, latitude, longitude) {
     var edition,
-        regionIds = [],
         regions,
-        siteClassIds = [];
+        ids = [];
 
     // get edtion
     edition = _this.getEdition(editionId);
 
     // find supported regions
-    regionIds = edition.get('supports').region;
-    regions = regionIds.map(_this.getRegion);
+    regions = _this.getRegions(edition.get('supports').region);
 
     // check that latitude/longitude is valid for region
     regions.forEach(function (region) {
+      // add to siteClassId array for each vaid region
       if (_inRegion(region, latitude, longitude)) {
-        // add to siteClassId array for each vaid region
-        siteClassIds = siteClassIds.concat(region.get('supports').vs30);
+        ids = ids.concat(region.get('supports').vs30);
       }
     });
 
     // return all supported site classes
-    return siteClassIds.map(_this.getSiteClass);
+    return _this.getSiteClasses(ids);
   };
 
 
@@ -241,29 +294,63 @@ var DependencyFacotry = function (params) {
    *
    * @return {Collection} Collection of Spectral Period models.
    */
-  _this.getSpectralPeriods = function (editionId) {
-    // get all Spectral Periods
-    if (editionId) {
-      // TODO, update url and search based on editionId
-      return;
-    } else {
-      return _spectralPeriods;
-    }
+  _this.getSpectralPeriod = function (id) {
+    return _spectralPeriods.get(id);
   };
 
-  // /**
-  //  * Get all Time Horizons, based on the provided Edition.
-  //  * If no parameters are specified return all Time Horizons.
-  //  *
-  //  * @param  editionId {Integer}
-  //  *         Edition model.id
-  //  *
-  //  * @return {Collection} Collection of Time Horizon models.
-  //  */
-  // _this.getTimeHorizons = function (editionId) {
-  //   // TODO, get all Time Horizons
-  //   return Collection([Meta()]);
-  // };
+  _this.getSpectralPeriods = function (ids) {
+    return _getSupported(_spectralPeriods, ids);
+  };
+
+  _this.getAllSpectralPeriods = function () {
+    return _spectralPeriods;
+  };
+
+  _this.getFilteredSpectralPeriods = function (editionId) {
+    var edition,
+        ids;
+
+    // get edition
+    edition = _this.getEdition(editionId);
+
+    // get spectral period ids
+    ids = edition.get('supports').imt;
+
+    return _this.getSpectralPeriods(ids);
+  };
+
+  /**
+   * Get all Time Horizons, based on the provided Edition.
+   * If no parameters are specified return all Time Horizons.
+   *
+   * @param  editionId {Integer}
+   *         Edition model.id
+   *
+   * @return {Collection} Collection of Time Horizon models.
+   */
+  _this.getTimeHorizon = function (id) {
+    return _timeHorizons.get(id);
+  };
+
+  _this.getTimeHorizons = function (ids) {
+    return _getSupported(_timeHorizons, ids);
+  };
+
+  _this.getAllTimeHorizons = function () {
+    return _timeHorizons;
+  };
+
+  _this.getFilteredTimeHorizons = function (editionId) {
+    var edition,
+        ids;
+
+    // get spectral period ids, for the provided edition
+    edition = _this.getEdition(editionId);
+    ids = edition.get('supports').timeHorizon;
+
+    return _this.getTimeHorizons(ids);
+  };
+
 
   /**
    * [whenReady description]

@@ -16,6 +16,7 @@
   </style>
 </head>
 <body>
+
   <p><a href="example.html">Examples Index</a></p>
   <h1>Dependency Data Factory</h1>
 
@@ -34,10 +35,24 @@
   <h2>Spectral Periods</h2>
   <pre class="spectral-periods"></pre>
 
-<!--
-   <h2>Time Horizons</h2>
+  <h2>Time Horizons</h2>
   <pre class="time-horizons"></pre>
--->
+
+
+  <h1>Filtered on Dependencies</h1>
+
+  <h2>Contour Types</h2>
+  <pre class="contour-types-filtered"></pre>
+
+  <h2>Site Classes</h2>
+  <pre class="site-classes-filtered"></pre>
+
+  <h2>Spectral Periods</h2>
+  <pre class="spectral-periods-filtered"></pre>
+
+  <h2>Time Horizons</h2>
+  <pre class="time-horizons-filtered"></pre>
+
 
   <script src="js/bundle.js"></script>
   <script>
@@ -48,7 +63,7 @@
         domRegions,
         domSiteClasses,
         domSpectralPeriods,
-        //domTimeHorizon,
+        domTimeHorizon,
         factory;
 
     factory = DependencyFactory.getInstance();
@@ -57,16 +72,35 @@
     domRegions = document.querySelector('.regions');
     domSiteClasses = document.querySelector('.site-classes');
     domSpectralPeriods = document.querySelector('.spectral-periods');
-    //domTimeHorizon = document.querySelector('.time-horizons');
+    domTimeHorizon = document.querySelector('.time-horizons');
 
     factory.whenReady(function () {
-      domEditions.innerHTML = JSON.stringify(factory.getEditions(), null, 2);
-      domContourTypes.innerHTML = JSON.stringify(factory.getContourTypes(), null, 2);
-      domRegions.innerHTML = JSON.stringify(factory.getRegions(), null, 2);
+      domEditions.innerHTML = JSON.stringify(
+          factory.getAllEditions(), null, 2);
+      domContourTypes.innerHTML = JSON.stringify(
+          factory.getAllContourTypes(), null, 2);
+      domRegions.innerHTML = JSON.stringify(
+          factory.getAllRegions(), null, 2);
       domSiteClasses.innerHTML = JSON.stringify(
-          factory.getSupportedSiteClasses(3, 40, -105), null, 2);
-      domSpectralPeriods.innerHTML = JSON.stringify(factory.getSpectralPeriods(), null, 2);
-      //domTimeHorizon.innerHTML = JSON.stringify(factory.getTimeHorizons(), null, 2);
+          factory.getAllSiteClasses(3, 40, -105), null, 2);
+      domSpectralPeriods.innerHTML = JSON.stringify(
+          factory.getAllSpectralPeriods(3), null, 2);
+      domTimeHorizon.innerHTML = JSON.stringify(
+          factory.getAllTimeHorizons(), null, 2);
+
+    domContourTypes = document.querySelector('.contour-types-filtered');
+    domSiteClasses = document.querySelector('.site-classes-filtered');
+    domSpectralPeriods = document.querySelector('.spectral-periods-filtered');
+    domTimeHorizon = document.querySelector('.time-horizons-filtered');
+
+      domContourTypes.innerHTML = JSON.stringify(
+          factory.getFilteredContourTypes(3), null, 2);
+      domSiteClasses.innerHTML = JSON.stringify(
+          factory.getFilteredSiteClasses(3, 40, -105), null, 2);
+      domSpectralPeriods.innerHTML = JSON.stringify(
+          factory.getFilteredSpectralPeriods(3), null, 2);
+      domTimeHorizon.innerHTML = JSON.stringify(
+          factory.getFilteredTimeHorizons(3), null, 2);
     });
   </script>
 </body>
