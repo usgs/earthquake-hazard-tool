@@ -11,7 +11,8 @@ var Meta = function (options) {
     id: null,
     value: null,
     display: null,
-    displayorder: null
+    displayorder: null,
+    supports: null
   }, options));
 
   options = null;
