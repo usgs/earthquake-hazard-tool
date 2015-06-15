@@ -55,13 +55,13 @@ var EditionView = function (params) {
     _this.render();
   };
 
-    /**
-     * update the currently selected Analysis model  with
-     * the currently selected Edition in the CollectionSelectBox.
-     */
+  /**
+   * update the currently selected Analysis model with
+   * the currently selected Edition in the CollectionSelectBox.
+   */
   _updateEdition = function () {
     if (_this.model) {
-      _this.model.set({'edition': _editionCollection.getSelected()});
+      _this.model.set({'edition': _editionCollection.getSelected()}, {'silent': true});
     }
   };
 
@@ -71,6 +71,7 @@ var EditionView = function (params) {
   _this.destroy = Util.compose(function () {
     // unbind
     _editionCollection.off('select', _updateEdition, _this);
+    _editionCollection.off('deselect', _updateEdition, _this);
     // methods
     _updateEdition = null;
     // variables
@@ -79,23 +80,6 @@ var EditionView = function (params) {
     _initialize = null;
   }, _this.destroy);
 
-  /**
-   * unset the event bindings for the collection
-   */
-  _this.onCollectionDeselect = function () {
-    _this.model.off('change', _updateEdition, _this);
-    _this.model = null;
-    _this.render();
-  };
-
-  /**
-   * set event bindings for the collection
-   */
-  _this.onCollectionSelect = function () {
-    _this.model = _this.collection.getSelected();
-    _this.model.on('change', _updateEdition, _this);
-    _this.render();
-  };
 
   /**
    * render the selected edition, or the blank option
