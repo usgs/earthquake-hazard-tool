@@ -14,7 +14,18 @@ module.exports = {
           "displayorder": 3,
           "supports": {
             "region": [
-              "COUS0P05"
+              0,
+              1,
+              2
+            ],
+            "imt": [
+              8
+            ],
+            "timeHorizon": [
+              1
+            ],
+            "contourType": [
+              0
             ]
           }
         },
@@ -25,7 +36,21 @@ module.exports = {
           "displayorder": 4,
           "supports": {
             "region": [
-              "COUS0P05"
+              0,
+              1,
+              2
+            ],
+            "imt": [
+              1,
+              4,
+              8
+            ],
+            "timeHorizon": [
+              0,
+              1
+            ],
+            "contourType": [
+              0
             ]
           }
         }
@@ -36,23 +61,54 @@ module.exports = {
       "type": "string",
       "values": [
         {
-          "id": 1,
-          "value": "COUS0P05",
-          "display": "Conterminous U.S. w/ 0.05 Grid",
-          "displayorder": 1,
+          "id": 0,
+          "value": "COUS",
+          "display": "Conterminous US",
+          "displayorder": 0,
           "minlatitude": 24.6,
           "maxlatitude": 50,
           "minlongitude": -118,
           "maxlongitude": -65,
           "gridspacing": 0.05,
           "supports": {
-            "imt": [
-              "PGA",
-              "SA0P2",
-              "SA1P0"
-            ],
             "vs30": [
-              "760"
+              2
+            ]
+          }
+        },
+        {
+          "id": 1,
+          "value": "WUS",
+          "display": "Western US",
+          "displayorder": 1,
+          "minlatitude": 24.6,
+          "maxlatitude": 50,
+          "minlongitude": -118,
+          "maxlongitude": -115,
+          "gridspacing": 0.05,
+          "supports": {
+            "vs30": [
+              1,
+              3,
+              4,
+              5,
+              6
+            ]
+          }
+        },
+        {
+          "id": 2,
+          "value": "CEUS",
+          "display": "Central & Eastern US",
+          "displayorder": 2,
+          "minlatitude": 24.6,
+          "maxlatitude": 50,
+          "minlongitude": -100,
+          "maxlongitude": -65,
+          "gridspacing": 0.05,
+          "supports": {
+            "vs30": [
+              0
             ]
           }
         }
@@ -106,11 +162,76 @@ module.exports = {
       "type": "string",
       "values": [
         {
-          "id": 3,
+          "id": 0,
+          "value": "2000",
+          "display": "2000 m/s (Site class A)",
+          "displayorder": 0
+        },
+        {
+          "id": 1,
+          "value": "1150",
+          "display": "1150 m/s (Site class B)",
+          "displayorder": 1
+        },
+        {
+          "id": 2,
           "value": "760",
-          "display": "760 m/s - B/C Boundary",
-          "displayorder": 3,
-          "supports": {}
+          "display": "760 m/s (B/C boundary)",
+          "displayorder": 2
+        },
+        {
+          "id": 3,
+          "value": "537",
+          "display": "537 m/s (Site class C)",
+          "displayorder": 3
+        },
+        {
+          "id": 4,
+          "value": "360",
+          "display": "360 m/s (C/D boundary)",
+          "displayorder": 4
+        },
+        {
+          "id": 5,
+          "value": "259",
+          "display": "259 m/s (Site class D)",
+          "displayorder": 5
+        },
+        {
+          "id": 6,
+          "value": "180",
+          "display": "180 m/s (D/E boundary)",
+          "displayorder": 6
+        }
+      ]
+    },
+    "timeHorizon": {
+      "label": "Time Horizon (years)",
+      "type": "integer",
+      "values": [
+        {
+          "id": 0,
+          "value": 2475,
+          "display": "2% in 50 years",
+          "displayorder": 0
+        },
+        {
+          "id": 1,
+          "value": 475,
+          "display": "10% in 50 years",
+          "displayorder": 1
+        }
+      ]
+    },
+    "contourType": {
+      "label": "Contour Types",
+      "type": "string",
+      "values": [
+        {
+          "id": 0,
+          "value": "Hazard Contours",
+          "display": "Hazard Contours",
+          "displayorder": 0
         }
       ]
     }
