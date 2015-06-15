@@ -80,10 +80,16 @@ var DependencyFacotry = function (params) {
     });
   };
 
+  /**
+   * Sets the dependency collections with the default values
+   * returned by the Xhr request.
+   *
+   * @param  data {Object}
+   *         Data returned from the Xhr request.
+   */
   _onSuccess = function (data/*, xhr*/) {
 
     _data = data;
-
     _editions.reset(_data.parameters.edition.values.map(Meta));
     _regions.reset(_data.parameters.region.values.map(Region));
     _contourTypes.reset(_data.parameters.contourType.values.map(Meta));
@@ -104,11 +110,28 @@ var DependencyFacotry = function (params) {
     });
   };
 
+  /** 
+   * Error callback for the Xhr request
+   */
   _onError = function (/*status, xhr*/) {
     throw new Error('Error retreiving dependancy data.');
   };
 
-  // Determines if the location (lat/lon) is in the provided region
+  /**
+   * Determines if the location (lat/lon) is in the provided region
+   *
+   * @param  region {Object}
+   *         [description]
+   *
+   * @param  latitude {Number}
+   *         [description]
+   *
+   * @param  longitude {Number}
+   *         [description]
+   *
+   * @return {boolean},
+   *         Whether the point is in the region.
+   */
   _inRegion = function (region, latitude, longitude) {
     var minlatitude,
         minlongitude,
@@ -128,6 +151,18 @@ var DependencyFacotry = function (params) {
     return false;
   };
 
+  /**
+   * Filter a collection based on an array of ids
+   *
+   * @param  collection {Collection}
+   *         The collection to be filtered.
+   *
+   * @param  ids {Array}
+   *         The ids to look for in the collection.
+   *         
+   * @return {Collection}
+   *         The filtered collection.
+   */
   _getSupported = function (collection, ids) {
     return collection.data().filter(function (model) {
       if (ids.indexOf(model.get('id')) !== -1) {
@@ -136,6 +171,9 @@ var DependencyFacotry = function (params) {
     });
   };
 
+  /**
+   * Clean up variables and methods
+   */
   _this.destroy = function () {
     _buildCollection = null;
     _getSupported = null;
@@ -159,11 +197,7 @@ var DependencyFacotry = function (params) {
   };
 
   /**
-   * Get all Countour Types, based on the provided Edition.
-   * If no parameters are specified return all Countour Types.
-   *
-   * @param  editionId {Integer}
-   *         Edition model.id
+   * Get all Countour Types
    *
    * @return {Collection} Collection of Contour Type models.
    */
@@ -179,21 +213,8 @@ var DependencyFacotry = function (params) {
     return _contourTypes;
   };
 
-  _this.getFilteredContourTypes = function (editionId) {
-    var edition,
-        ids;
-
-    // get edition
-    edition = _this.getEdition(editionId);
-
-    // get spectral period ids
-    ids = edition.get('supports').contourType;
-
-    return Collection(_this.getContourTypes(ids));
-  };
-
   /**
-   * Get all editions.
+   * Get all Editions
    *
    * @return {Collection} Collection of Edition models.
    */
@@ -209,9 +230,10 @@ var DependencyFacotry = function (params) {
     return _editions;
   };
 
-
   /** 
-   * Get regions
+   * Get all Regions
+   *
+   * @return {Collection} Collection of Site Class models.
    */
   _this.getRegion = function (id) {
     return _regions.get(id);
@@ -225,10 +247,8 @@ var DependencyFacotry = function (params) {
     return _regions;
   };
 
-
   /**
-   * Get all Site Classes.
-   * If no parameters are specified return 'B/C Boundary'
+   * Get all Site Classes
    *
    * @return {Collection} Collection of Site Class models.
    */
@@ -244,8 +264,63 @@ var DependencyFacotry = function (params) {
     return _siteClasses;
   };
 
+
   /**
-   * Get site classes that are supported for the selected edition/location
+   * Get all Spectral Periods.
+   *
+   * @return {Collection} Collection of Spectral Period models.
+   */
+  _this.getSpectralPeriod = function (id) {
+    return _spectralPeriods.get(id);
+  };
+
+  _this.getSpectralPeriods = function (ids) {
+    return _getSupported(_spectralPeriods, ids);
+  };
+
+  _this.getAllSpectralPeriods = function () {
+    return _spectralPeriods;
+  };
+
+
+  /**
+   * Get all Time Horizons.
+   *
+   * @return {Collection} Collection of Time Horizon models.
+   */
+  _this.getTimeHorizon = function (id) {
+    return _timeHorizons.get(id);
+  };
+
+  _this.getTimeHorizons = function (ids) {
+    return _getSupported(_timeHorizons, ids);
+  };
+
+  _this.getAllTimeHorizons = function () {
+    return _timeHorizons;
+  };
+
+  /**
+   * Get all Contour Types for the provided Edition
+   *
+   * @param  editionId {Integer}
+   *         Edition model.id
+   *
+   * @return {Collection} Collection of Contour Type models.
+   */
+  _this.getFilteredContourTypes = function (editionId) {
+    var edition,
+        ids;
+
+    // get supported countour types
+    edition = _this.getEdition(editionId);
+    ids = edition.get('supports').contourType;
+
+    return Collection(_this.getContourTypes(ids));
+  };
+
+  /**
+   * Get all Site Classes that are supported for the selected edition/location
    *
    * @param  editionId {Integer}
    *         Edition model.id
@@ -282,28 +357,14 @@ var DependencyFacotry = function (params) {
   };
 
 
-
   /**
-   * Get all Spectral Periods, based on the provided Edition.
-   * If no parameters are specified return all Spectral Periods.
+   * Get all Spectral Periods for the provided Edition
    *
    * @param  editionId {Integer}
    *         Edition model.id
    *
    * @return {Collection} Collection of Spectral Period models.
    */
-  _this.getSpectralPeriod = function (id) {
-    return _spectralPeriods.get(id);
-  };
-
-  _this.getSpectralPeriods = function (ids) {
-    return _getSupported(_spectralPeriods, ids);
-  };
-
-  _this.getAllSpectralPeriods = function () {
-    return _spectralPeriods;
-  };
-
   _this.getFilteredSpectralPeriods = function (editionId) {
     var edition,
         ids;
@@ -318,26 +379,13 @@ var DependencyFacotry = function (params) {
   };
 
   /**
-   * Get all Time Horizons, based on the provided Edition.
-   * If no parameters are specified return all Time Horizons.
+   * Get all Time Horizons for the provided Edition
    *
    * @param  editionId {Integer}
    *         Edition model.id
    *
    * @return {Collection} Collection of Time Horizon models.
    */
-  _this.getTimeHorizon = function (id) {
-    return _timeHorizons.get(id);
-  };
-
-  _this.getTimeHorizons = function (ids) {
-    return _getSupported(_timeHorizons, ids);
-  };
-
-  _this.getAllTimeHorizons = function () {
-    return _timeHorizons;
-  };
-
   _this.getFilteredTimeHorizons = function (editionId) {
     var edition,
         ids;
@@ -351,7 +399,11 @@ var DependencyFacotry = function (params) {
 
 
   /**
-   * [whenReady description]
+   * Build an array of callbacks to be executed when the
+   * Xhr request is returned.
+   *
+   * @param  callback {Function}
+   *         a callback to be called by the Xhr success callback
    */
   _this.whenReady = function (callback) {
     if (_isReady) {
