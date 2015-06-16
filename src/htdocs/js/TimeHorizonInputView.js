@@ -1,14 +1,58 @@
 'use strict';
 
-var Collection = require('mvc/Collection'),
-    selectedCollectionView = require('mvc/SelectionCollectionView');
+var SelectedCollectionView = require('mvc/SelectedCollectionView');
 
+var TimeHorizonInputView = function (params) {
+  var _this,
+      _initialize,
 
+      _timeHorizonInput,
+      _updateTimeHorizon;
 
-var TimeHorizonImputView = function () {
-  var _this;
+  _this = SelectedCollectionView(params);
 
-  _this = selectedCollectionView(extend
+  _initialize = function () {
+    _this.el.innerHTML =
+      '<form>' +
+        '<label for="timeHorizonInput">Time Horizon: </label>' +
+        '<input type="text" id="timeHorizonInput"/>';
+    _timeHorizonInput = _this.el.querySelector('#timeHorizonInput');
+    _timeHorizonInput.addEventListener('blur', _updateTimeHorizon);
+    _this.render();
+  };
+
+  // Updates timeHorizon on the model
+  _updateTimeHorizon = function () {
+    if (_this.model) {
+      _this.model.set({
+        'timeHorizon': _this.collection.getSelected()
+      },
+      {
+        'silent': true
+      });
+    }
+  };
+
+  _this.render = function () {
+    var timeHorizon;
+
+    if (_this.model) {
+      timeHorizon = _this.model.get('timeHorizon');
+      _timeHorizonInput.value = timeHorizon;
+    }
+  };
+
+  // Destroy all the things
+  _this.destroy = function () {
+    _initialize = null;
+    _this = null;
+    _timeHorizonInput = null;
+    _timeHorizonInput.removeEventListener('blur', _updateTimeHorizon);
+  };
+
+  _initialize();
+  params = null;
+  return _this;
 };
 
-module.exports = TimeHorizonImputView;
+module.exports = TimeHorizonInputView;
