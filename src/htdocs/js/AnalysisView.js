@@ -31,7 +31,6 @@ var AnalysisView = function (params) {
     _this.el.setAttribute('data-analysis-id', _model.id);
     _createViewSkeleton();
 
-    _model.on('change', _onModelChange);
     _this.render();
   };
 
@@ -49,11 +48,6 @@ var AnalysisView = function (params) {
     _locationEl = _this.el.querySelector('.analysis-view-location');
     _paramsEl = _this.el.querySelector('.analysis-view-params');
   };
-
-  _onModelChange = function () {
-    _this.render();
-  };
-
 
   _this.destroy = Util.compose(_this.destroy, function () {
     _model.off('change', _onModelChange);
