@@ -2,6 +2,7 @@
 
 var Collection = require('mvc/Collection'),
     CollectionSelectBox = require('mvc/CollectionSelectBox'),
+    DependencyFactory = require('mvc/DependencyFactory'),
     SelectedCollectionView = require('mvc/SelectedCollectionView'),
 
     Util = require('util/Util');
@@ -24,6 +25,7 @@ var SiteClassView = function (params) {
   var _this,
       _initialize,
 
+      _dependencyFactory,
       _selectSiteClass,
       _siteClassCollection,
       _siteClassCollectionSelectBox,
@@ -40,6 +42,7 @@ var SiteClassView = function (params) {
 
     // editions CollectionSelectBox
     _siteClassCollection = params.vs30 || Collection();
+    _dependencyFactory = params.dependencyFactory || DependencyFactory.getInstance();
 
     _siteClassCollectionSelectBox = CollectionSelectBox({
       collection: _siteClassCollection,
@@ -64,7 +67,10 @@ var SiteClassView = function (params) {
    */
   _updateSiteClass = function () {
     if (_this.model) {
-      _this.model.set({'vs30': _siteClassCollection.getSelected()});
+      _this.model.set(
+        {'vs30': _siteClassCollection.getSelected()},
+        {'silent': true}
+      );
     }
   };
 
@@ -73,10 +79,24 @@ var SiteClassView = function (params) {
    * the location and edition.
    */
   _updateSiteClassCollectionSelectBox = function () {
-    // TODO, get site class and reset _siteClassCollection
-    var siteClasses = [];
-    // siteClasses = FACTORY.getSiteClasses(lat,lon,edition); // or something
-    _siteClassCollection.reset(siteClasses);
+    var edition,
+        latitude,
+        longitude,
+        siteClasses = [];
+
+    if (_this.model) {
+      edition = _this.model.get('edition');
+      latitude = _this.model.get('latitude');
+      longitude = _this.model.get('longitude');
+    }
+
+    // check on requisite params for filtering
+    if (edition !== null && latitude !== null && longitude !== null) {
+      siteClasses = _dependencyFactory.getFilteredSiteClasses(
+          edition, latitude, longitude);
+      _siteClassCollection.reset(siteClasses);
+    }
+
     // if selected model has vs30 set, update the CollectionSelectBox selected value
     if (_this.model) {
       _siteClassCollection.select(_this.model.get('vs30'));
