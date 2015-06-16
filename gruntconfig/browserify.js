@@ -60,6 +60,7 @@ addExports(config.src + '/htdocs/js', [
   'Region',
   'StaticCurveInputView',
   'StaticCurveOutputView',
+  'TimeHorizonInputView',
 
   'map/Layers',
   'map/LayerControl'
