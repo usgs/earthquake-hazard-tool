@@ -39,6 +39,7 @@ require('./spec/HazardCurveGraphViewTest');
 require('./spec/HazardUtilTest');
 require('./spec/StaticCurveInputViewTest');
 require('./spec/StaticCurveOutputViewTest');
+require('./spec/TimeHorizonInputViewTest');
 
 if (window.mochaPhantomJS) {
     window.mochaPhantomJS.run();
