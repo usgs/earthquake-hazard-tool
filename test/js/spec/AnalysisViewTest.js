@@ -42,7 +42,7 @@ describe('AnalysisView test suite.', function () {
 
     it('should render when analysis changes', function () {
       analysis.trigger('change');
-      expect(renderSpy.callCount).to.equal(1);
+      expect(renderSpy.callCount).to.equal(2);
     });
   });
 });
