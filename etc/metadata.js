@@ -18,9 +18,6 @@ module.exports = {
               1,
               2
             ],
-            "imt": [
-              8
-            ],
             "timeHorizon": [
               1
             ],
@@ -39,11 +36,6 @@ module.exports = {
               0,
               1,
               2
-            ],
-            "imt": [
-              1,
-              4,
-              8
             ],
             "timeHorizon": [
               0,
@@ -71,6 +63,11 @@ module.exports = {
           "maxlongitude": -65,
           "gridspacing": 0.05,
           "supports": {
+            "imt": [
+              1,
+              4,
+              8
+            ],
             "vs30": [
               2
             ]
@@ -87,8 +84,14 @@ module.exports = {
           "maxlongitude": -115,
           "gridspacing": 0.05,
           "supports": {
+            "imt": [
+              1,
+              4,
+              8
+            ],
             "vs30": [
               1,
+              2,
               3,
               4,
               5,
@@ -107,8 +110,14 @@ module.exports = {
           "maxlongitude": -65,
           "gridspacing": 0.05,
           "supports": {
+            "imt": [
+              1,
+              4,
+              8
+            ],
             "vs30": [
-              0
+              0,
+              2
             ]
           }
         }
