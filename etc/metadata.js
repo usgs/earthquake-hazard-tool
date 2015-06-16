@@ -64,9 +64,7 @@ module.exports = {
           "gridspacing": 0.05,
           "supports": {
             "imt": [
-              1,
-              4,
-              8
+              1
             ],
             "vs30": [
               2

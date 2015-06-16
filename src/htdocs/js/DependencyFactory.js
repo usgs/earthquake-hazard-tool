@@ -363,17 +363,32 @@ var DependencyFacotry = function (params) {
    * @param  editionId {Integer}
    *         Edition model.id
    *
+   * @param  latitude {Number}
+   *         The latitude of the selected location
+   *
+   * @param  longitude {Number}
+   *         The longitude of the selected location
+   *
    * @return {Collection} Collection of Spectral Period models.
    */
-  _this.getFilteredSpectralPeriods = function (editionId) {
+  _this.getFilteredSpectralPeriods = function (editionId, latitude, longitude) {
     var edition,
-        ids;
+        regions,
+        ids = [];
 
     // get edition
     edition = _this.getEdition(editionId);
 
-    // get spectral period ids
-    ids = edition.get('supports').imt;
+    // find supported regions
+    regions = _this.getRegions(edition.get('supports').region);
+
+    // check that latitude/longitude is valid for region
+    regions.forEach(function (region) {
+      // get spectral period ids
+      if (_inRegion(region, latitude, longitude)) {
+        ids = ids.concat(region.get('supports').imt);
+      }
+    });
 
     return Collection(_this.getSpectralPeriods(ids));
   };
