@@ -112,15 +112,16 @@ describe('DependencyFactory test suite.', function () {
 
     it('can get filtered Spectral Periods', function () {
       factory.whenReady(function () {
-        filteredSpectralPeriods = factory.getFilteredSpectralPeriods(edition);
+        filteredSpectralPeriods = factory.getFilteredSpectralPeriods(
+            edition, latitude, longitude);
         expect(filteredSpectralPeriods.data().length).to.equal(1);
       });
     });
 
-    factory.whenReady(function () {
-      it('can get filtered Time Horizons', function () {
+    it('can get filtered Time Horizons', function () {
+      factory.whenReady(function () {
         filteredTimeHorizons = factory.getFilteredTimeHorizons(edition);
-        expect(filteredTimeHorizons.data().length).to.equal(2);
+        expect(filteredTimeHorizons.data().length).to.equal(1);
       });
     });
   });
