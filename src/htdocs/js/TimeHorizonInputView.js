@@ -25,8 +25,13 @@ var TimeHorizonInputView = function (params) {
   // Updates timeHorizon on the model
   _updateTimeHorizon = function () {
     if (_this.model) {
+      if (_timeHorizonInput === '') {
+        _timeHorizonInput = null;
+      } else {
+        _timeHorizonInput = parseInt(_timeHorizonInput.value, 10);
+      }
       _this.model.set({
-        'timeHorizon': _this.collection.getSelected()
+        'timeHorizon': _timeHorizonInput
       });
     }
   };
