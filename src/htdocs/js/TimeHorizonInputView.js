@@ -27,9 +27,6 @@ var TimeHorizonInputView = function (params) {
     if (_this.model) {
       _this.model.set({
         'timeHorizon': _this.collection.getSelected()
-      },
-      {
-        'silent': true
       });
     }
   };
