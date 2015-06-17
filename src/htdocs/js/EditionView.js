@@ -61,7 +61,7 @@ var EditionView = function (params) {
    */
   _updateEdition = function () {
     if (_this.model) {
-      _this.model.set({'edition': _editionCollection.getSelected()}, {'silent': true});
+      _this.model.set({'edition': _editionCollection.getSelected()});
     }
   };
 
@@ -82,24 +82,31 @@ var EditionView = function (params) {
 
 
   /**
-   * render the selected edition, or the blank option
+   * Render the selected edition, unless it is already selected.
+   * If no edition is selected then deselect.
    */
   _this.render = function () {
     var edition;
 
     // Update selected edition when collection changes
     if (_this.model) {
-      edition = _this.model.get('edition');
-      if (edition === null) {
-        _editionCollection.deselect();
-      } else {
-        _editionCollection.select(edition);
+
+      edition = this.model.get('edition');
+
+      // if edition is already selected, do nothing
+      if (edition === _editionCollection.getSelected()) {
+        return;
       }
-    } else {
-      // no item in the collection has been selected
-      _editionCollection.deselect();
+
+      // else select or deslect
+      if (edition !== null) {
+        _editionCollection.select(edition);
+      } else {
+        _editionCollection.deselect(edition);
+      }
     }
   };
+
 
   _initialize(params);
   params = null;
