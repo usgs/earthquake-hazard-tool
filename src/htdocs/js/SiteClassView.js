@@ -1,8 +1,9 @@
 'use strict';
 
-var Collection = require('mvc/Collection'),
+var DependencyFactory = require('DependencyFactory'),
+
+    Collection = require('mvc/Collection'),
     CollectionSelectBox = require('mvc/CollectionSelectBox'),
-    DependencyFactory = require('mvc/DependencyFactory'),
     SelectedCollectionView = require('mvc/SelectedCollectionView'),
 
     Util = require('util/Util');
@@ -40,7 +41,7 @@ var SiteClassView = function (params) {
    */
   _initialize = function (params) {
 
-    // editions CollectionSelectBox
+    // site classes CollectionSelectBox
     _siteClassCollection = params.vs30 || Collection();
     _dependencyFactory = params.dependencyFactory || DependencyFactory.getInstance();
 
@@ -57,13 +58,15 @@ var SiteClassView = function (params) {
     _siteClassCollection.on('select', _updateSiteClass);
     _siteClassCollection.on('deselect', _updateSiteClass);
 
-    // select the edition in the currently selected Analysis
-    _this.render();
+    // update/select the site class in the currently selected Analysis
+    _dependencyFactory.whenReady(function () {
+      _this.render();
+    });
   };
 
   /**
    * update the currently selected Analysis model with
-   * the currently selected Site Class  in the CollectionSelectBox.
+   * the currently selected Site Class in the CollectionSelectBox.
    */
   _updateSiteClass = function () {
     if (_this.model) {
@@ -88,33 +91,13 @@ var SiteClassView = function (params) {
       edition = _this.model.get('edition');
       latitude = _this.model.get('latitude');
       longitude = _this.model.get('longitude');
-    }
 
-    // check on requisite params for filtering
-    if (edition !== null && latitude !== null && longitude !== null) {
-      siteClasses = _dependencyFactory.getFilteredSiteClasses(
-          edition, latitude, longitude);
-      _siteClassCollection.reset(siteClasses);
-    }
-
-    // if selected model has vs30 set, update the CollectionSelectBox selected value
-    if (_this.model) {
-      _siteClassCollection.select(_this.model.get('vs30'));
-    }
-  };
-
-  /**
-   * set the selected site class after updating the values
-   * in the siteClassCollectionSelectBox
-   *
-   * @return {[type]} [description]
-   */
-  _selectSiteClass = function () {
-    // TODO, select site class in select box if defined
-    if (_this.model) {
-      _siteClassCollection.select(_this.model.get('vs30'));
-    } else {
-      // TODO, select B/C Boundary
+      // check on requisite params for filtering
+      if (edition && latitude && longitude) {
+        siteClasses = _dependencyFactory.getFilteredSiteClasses(
+            edition.get('id'), latitude, longitude);
+        _siteClassCollection.reset(siteClasses);
+      }
     }
   };
 
@@ -124,6 +107,7 @@ var SiteClassView = function (params) {
   _this.destroy = Util.compose(function () {
     // unbind
     _siteClassCollection.off('select', _updateSiteClass);
+    _siteClassCollection.off('deselect', _updateSiteClass);
     // methods
     _updateSiteClass = null;
     // variables
@@ -138,12 +122,7 @@ var SiteClassView = function (params) {
    * unset the event bindings for the collection
    */
   _this.onCollectionDeselect = function () {
-    // unbind to change on the model:latitude
-    _this.model.off('change:latitude', _updateSiteClassCollectionSelectBox);
-    // unbind to change on the model:longitude
-    _this.model.off('change:longitude', _updateSiteClassCollectionSelectBox);
-    // unbind to change on the model:edition
-    _this.model.off('change:edition', _updateSiteClassCollectionSelectBox);
+    _this.model.off('change', _updateSiteClassCollectionSelectBox);
     _this.model = null;
     _this.render();
   };
@@ -153,12 +132,7 @@ var SiteClassView = function (params) {
    */
   _this.onCollectionSelect = function () {
     _this.model = _this.collection.getSelected();
-    // bind to change on the model:latitude
-    _this.model.on('change:latitude', _updateSiteClassCollectionSelectBox);
-    // bind to change on the model:longitude
-    _this.model.on('change:longitude', _updateSiteClassCollectionSelectBox);
-    // bind to change on the model:edition
-    _this.model.on('change:edition', _updateSiteClassCollectionSelectBox);
+    _this.model.on('change', _updateSiteClassCollectionSelectBox);
     _this.render();
   };
 
@@ -168,13 +142,16 @@ var SiteClassView = function (params) {
   _this.render = function () {
     var siteClass;
 
-    // Update selected edition when collection changes
+    // update the site class collection before selecting
+    _updateSiteClassCollectionSelectBox();
+
+    // Update selected site class when collection changes
     if (_this.model) {
       siteClass = _this.model.get('vs30');
       if (siteClass === null) {
         _siteClassCollection.deselect();
       } else {
-        _siteClassCollection.select(siteClass);
+        _siteClassCollection.selectById(siteClass.id);
       }
     } else {
       // no item in the collection has been selected
