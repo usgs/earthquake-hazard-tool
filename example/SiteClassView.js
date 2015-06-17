@@ -55,11 +55,11 @@ analyses.push(Analysis({
   edition: edition,
   region: region,
 
-  longitude: -120,
+  longitude: -116,
   latitude: 35,
 
   imt: imt,
-  vs30: vs30[0]
+  vs30: vs30[1]
 }));
 
 analyses.push(Analysis({
@@ -70,7 +70,7 @@ analyses.push(Analysis({
   latitude: 40,
 
   imt: imt,
-  vs30: vs30[1]
+  vs30: vs30[2]
 }));
 
 // select the first item in the collection 
