@@ -1,6 +1,7 @@
 'use strict';
 
-var SelectedCollectionView = require('mvc/SelectedCollectionView');
+var SelectedCollectionView = require('mvc/SelectedCollectionView'),
+    Util = require('util/Util');
 
 var TimeHorizonInputView = function (params) {
   var _this,
@@ -43,12 +44,12 @@ var TimeHorizonInputView = function (params) {
   };
 
   // Destroy all the things
-  _this.destroy = function () {
+  _this.destroy = Util.compose(function () {
+    _timeHorizonInput.removeEventListener('blur', _updateTimeHorizon);
     _initialize = null;
     _this = null;
     _timeHorizonInput = null;
-    _timeHorizonInput.removeEventListener('blur', _updateTimeHorizon);
-  };
+  }, _this.destroy);
 
   _initialize();
   params = null;
