@@ -214,6 +214,12 @@ module.exports = {
           "value": "Hazard Contours",
           "display": "Hazard Contours",
           "displayorder": 0
+        },
+        {
+          "id": 1,
+          "value": "Gridded Hazard",
+          "display": "Gridded Hazard",
+          "displayorder": 1
         }
       ]
     }
