@@ -1,6 +1,7 @@
 'use strict';
 var CollectionSelectBox = require('mvc/CollectionSelectBox'),
     SelectedCollectionView = require('mvc/SelectedCollectionView'),
+
     Util = require('util/Util');
 
 var ContourTypeView = function (params) {
