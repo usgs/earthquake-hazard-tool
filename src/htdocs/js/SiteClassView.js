@@ -69,10 +69,19 @@ var SiteClassView = function (params) {
    * the currently selected Site Class in the CollectionSelectBox.
    */
   _updateSiteClass = function () {
+    var existingSiteClass,
+        newSiteClass;
+
+    newSiteClass = _siteClassCollection.getSelected();
+
     if (_this.model) {
+      existingSiteClass = _this.model.get('vs30');
+    }
+
+    if (existingSiteClass && newSiteClass &&
+        existingSiteClass.get('id') !== newSiteClass.get('id')) {
       _this.model.set(
-        {'vs30': _siteClassCollection.getSelected()},
-        {'silent': true}
+        {'vs30': _siteClassCollection.getSelected()}
       );
     }
   };
