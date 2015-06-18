@@ -104,6 +104,8 @@ var EditionView = function (params) {
       } else {
         _editionCollection.deselect(edition);
       }
+    } else {
+      _editionCollection.deselect();
     }
   };
 
