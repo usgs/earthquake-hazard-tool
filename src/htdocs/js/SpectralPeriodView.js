@@ -41,7 +41,6 @@ var SpectralPeriodView = function (params) {
    */
   _initialize = function (params) {
 
-    // spectral periods CollectionSelectBox
     _spectralPeriodCollection = params.imt || Collection();
     _dependencyFactory = params.dependencyFactory || DependencyFactory.getInstance();
 
@@ -60,6 +59,7 @@ var SpectralPeriodView = function (params) {
 
     // update/select the spectral period in the currently selected Analysis
     _dependencyFactory.whenReady(function () {
+      _updateSpectralPeriodsCollectionSelectBox();
       _this.render();
     });
   };
@@ -69,17 +69,7 @@ var SpectralPeriodView = function (params) {
    * the currently selected Site Class in the CollectionSelectBox.
    */
   _updateSpectralPeriods = function () {
-    var existingSpectralPeriods,
-        newSpectralPeriods;
-
-    newSpectralPeriods = _spectralPeriodCollection.getSelected();
-
     if (_this.model) {
-      existingSpectralPeriods = _this.model.get('imt');
-    }
-
-    if (existingSpectralPeriods && newSpectralPeriods &&
-        existingSpectralPeriods.get('id') !== newSpectralPeriods.get('id')) {
       _this.model.set(
         {'imt': _spectralPeriodCollection.getSelected()}
       );
@@ -96,6 +86,8 @@ var SpectralPeriodView = function (params) {
         longitude,
         spectralPeriods = [];
 
+    spectralPeriods = _dependencyFactory.getAllSpectralPeriods();
+
     if (_this.model) {
       edition = _this.model.get('edition');
       latitude = _this.model.get('latitude');
@@ -105,9 +97,10 @@ var SpectralPeriodView = function (params) {
       if (edition && latitude && longitude) {
         spectralPeriods = _dependencyFactory.getFilteredSpectralPeriods(
             edition.get('id'), latitude, longitude);
-        _spectralPeriodCollection.reset(spectralPeriods);
       }
     }
+    // reset spectral period collection with new spectral periods
+    _spectralPeriodCollection.reset(spectralPeriods.data());
   };
 
   /**
@@ -131,8 +124,9 @@ var SpectralPeriodView = function (params) {
    * unset the event bindings for the collection
    */
   _this.onCollectionDeselect = function () {
-    _this.model.off('change', _updateSpectralPeriodsCollectionSelectBox);
+    _this.model.off('change', 'render', _this);
     _this.model = null;
+    _updateSpectralPeriodsCollectionSelectBox();
     _this.render();
   };
 
@@ -141,30 +135,36 @@ var SpectralPeriodView = function (params) {
    */
   _this.onCollectionSelect = function () {
     _this.model = _this.collection.getSelected();
-    _this.model.on('change', _updateSpectralPeriodsCollectionSelectBox);
+    _updateSpectralPeriodsCollectionSelectBox();
+    _this.model.on('change', 'render', _this);
     _this.render();
   };
 
   /**
    * render the selected spectral period, or the blank option
    */
-  _this.render = function () {
+  _this.render = function (changes) {
     var spectralPeriod;
 
     // update the spectral period collection before selecting
-    _updateSpectralPeriodsCollectionSelectBox();
-
-    // Update selected spectral period when collection changes
-    if (_this.model) {
-      spectralPeriod = _this.model.get('imt');
-      if (spectralPeriod === null) {
-        _spectralPeriodCollection.deselect();
-      } else {
-        _spectralPeriodCollection.selectById(spectralPeriod.id);
-      }
+    if (typeof changes !== 'undefined' && (
+        changes.hasOwnProperty('latitude') ||
+        changes.hasOwnProperty('longitude') ||
+        changes.hasOwnProperty('edition'))) {
+      _updateSpectralPeriodsCollectionSelectBox();
     } else {
-      // no item in the collection has been selected
-      _spectralPeriodCollection.deselect();
+      // Update selected spectral period when collection changes
+      if (_this.model) {
+        spectralPeriod = _this.model.get('imt');
+        if (spectralPeriod === null) {
+          _spectralPeriodCollection.deselect();
+        } else {
+          _spectralPeriodCollection.selectById(spectralPeriod.id);
+        }
+      } else {
+        // no item in the collection has been selected
+        _spectralPeriodCollection.deselect();
+      }
     }
   };
 
