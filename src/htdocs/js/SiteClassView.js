@@ -127,23 +127,6 @@ var SiteClassView = function (params) {
     _initialize = null;
   }, _this.destroy);
 
-  /**
-   * unset the event bindings for the collection
-   */
-  _this.onCollectionDeselect = function () {
-    _this.model.off('change', _updateSiteClassCollectionSelectBox);
-    _this.model = null;
-    _this.render();
-  };
-
-  /**
-   * set event bindings for the collection
-   */
-  _this.onCollectionSelect = function () {
-    _this.model = _this.collection.getSelected();
-    _this.model.on('change', _updateSiteClassCollectionSelectBox);
-    _this.render();
-  };
 
   /**
    * render the selected site class, or the blank option
