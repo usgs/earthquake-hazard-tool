@@ -1,7 +1,6 @@
 'use strict';
 var CollectionSelectBox = require('mvc/CollectionSelectBox'),
     SelectedCollectionView = require('mvc/SelectedCollectionView'),
-
     Util = require('util/Util');
 
 var ContourTypeView = function (params) {
@@ -14,17 +13,22 @@ var ContourTypeView = function (params) {
 
   _this = SelectedCollectionView(params);
 
-  _initialize = function () {
+  _initialize = function (params) {
     _contourType = params.contourType;
+
+    _this.el.innerHTML = '<div class="selectBox"></div>' +
+      '<div class="message"></div>';
 
     CollectionSelectBox({
       collection: _contourType,
-      el: _this.el,
+      el: _this.el.querySelector('.selectBox'),
       includeBlankOption: true,
       format: function (model) {
         return model.get('display');
       }
     });
+
+
 
     // bind to select on contour type change
     _contourType.on('select', _updateContourType, _this);
@@ -39,8 +43,7 @@ var ContourTypeView = function (params) {
    */
   _updateContourType = function () {
     if (_this.model) {
-      _this.model.set({'contourType': _contourType.getSelected()},
-          {'silent': true});
+      _this.model.set({'contourType': _contourType.getSelected()});
     }
   };
 
@@ -61,15 +64,15 @@ var ContourTypeView = function (params) {
 
     if (_this.model) {
       contourType = _this.model.get('contourType');
-      _contourType.value = contourType;
       if (contourType === 'Gridded Hazard')  {
-        _this.el.innerHTML =
+        _this.el.querySelector('.message').innerHTML =
             '<p> This data is always for the B//C Boundry </p>';
       }
     }
   };
 
   _initialize(params);
+  params = null;
   return _this;
 };
 
