@@ -28,8 +28,6 @@ var ContourTypeView = function (params) {
       }
     });
 
-
-
     // bind to select on contour type change
     _contourType.on('select', _updateContourType, _this);
     _contourType.on('deselect', _updateContourType, _this);
@@ -62,11 +60,15 @@ var ContourTypeView = function (params) {
   _this.render = function () {
     var contourType;
 
-    if (_this.model) {
-      contourType = _this.model.get('contourType');
+    _updateContourType();
+
+    if (_this.model && _this.model.get('contourType')) {
+      contourType = _this.model.get('contourType').get('display');
       if (contourType === 'Gridded Hazard')  {
         _this.el.querySelector('.message').innerHTML =
-            '<p> This data is always for the B//C Boundry </p>';
+            '<p><small>This data is always for the B/C Boundry.</small></p>';
+      } else {
+        _this.el.querySelector('.message').innerHTML = null;
       }
     }
   };
