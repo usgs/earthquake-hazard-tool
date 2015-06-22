@@ -12,6 +12,7 @@ var metadata = require('etc/metadata');
 var analyses = [],
     buttonChange,
     buttonDeselect,
+    buttonLocation,
     collection,
     edition,
     region,
@@ -33,12 +34,30 @@ var deselectAnalysis = function () {
   }
 };
 
+var updateLocation = function () {
+  var longitude,
+      model = collection.getSelected();
+
+  longitude = model.get('longitude');
+
+  if (longitude > -115) {
+    longitude = -116;
+  } else {
+    longitude = -114;
+  }
+
+  model.set({'longitude': longitude});
+};
+
 // Button bindings
 buttonChange = document.querySelector('.change-selected');
 buttonChange.addEventListener('click', toggleSelectedCalculation);
 
 buttonDeselect = document.querySelector('.remove-selected');
 buttonDeselect.addEventListener('click', deselectAnalysis);
+
+buttonLocation = document.querySelector('.change-location');
+buttonLocation.addEventListener('click', updateLocation);
 
 // Build array of siteClass models
 metadata.parameters.imt.values.map(function(spectralPeriod) {
