@@ -60,6 +60,7 @@ var SiteClassView = function (params) {
 
     // update/select the site class in the currently selected Analysis
     _dependencyFactory.whenReady(function () {
+      _updateSiteClassCollectionSelectBox();
       _this.render();
     });
   };
@@ -69,17 +70,7 @@ var SiteClassView = function (params) {
    * the currently selected Site Class in the CollectionSelectBox.
    */
   _updateSiteClass = function () {
-    var existingSiteClass,
-        newSiteClass;
-
-    newSiteClass = _siteClassCollection.getSelected();
-
     if (_this.model) {
-      existingSiteClass = _this.model.get('vs30');
-    }
-
-    if (existingSiteClass && newSiteClass &&
-        existingSiteClass.get('id') !== newSiteClass.get('id')) {
       _this.model.set(
         {'vs30': _siteClassCollection.getSelected()}
       );
@@ -105,9 +96,33 @@ var SiteClassView = function (params) {
       if (edition && latitude && longitude) {
         siteClasses = _dependencyFactory.getFilteredSiteClasses(
             edition.get('id'), latitude, longitude);
-        _siteClassCollection.reset(siteClasses);
+      } else {
+        siteClasses = _dependencyFactory.getAllSiteClasses();
       }
+
+      // reset site class collection with site classes
+      _siteClassCollection.reset(siteClasses);
     }
+  };
+
+  /**
+   * unset the event bindings for the collection
+   */
+  _this.onCollectionDeselect = function () {
+    _this.model.off('change', 'render', _this);
+    _this.model = null;
+    _updateSiteClassCollectionSelectBox();
+    _this.render();
+  };
+
+  /**
+   * set event bindings for the collection
+   */
+  _this.onCollectionSelect = function () {
+    _this.model = _this.collection.getSelected();
+    _updateSiteClassCollectionSelectBox();
+    _this.model.on('change', 'render', _this);
+    _this.render();
   };
 
   /**
@@ -131,23 +146,28 @@ var SiteClassView = function (params) {
   /**
    * render the selected site class, or the blank option
    */
-  _this.render = function () {
+  _this.render = function (changes) {
     var siteClass;
 
     // update the site class collection before selecting
-    _updateSiteClassCollectionSelectBox();
-
-    // Update selected site class when collection changes
-    if (_this.model) {
-      siteClass = _this.model.get('vs30');
-      if (siteClass === null) {
-        _siteClassCollection.deselect();
-      } else {
-        _siteClassCollection.selectById(siteClass.id);
-      }
+    if (typeof changes !== 'undefined' && (
+        changes.hasOwnProperty('latitude') ||
+        changes.hasOwnProperty('longitude') ||
+        changes.hasOwnProperty('edition'))) {
+      _updateSiteClassCollectionSelectBox();
     } else {
-      // no item in the collection has been selected
-      _siteClassCollection.deselect();
+      // Update selected site class when collection changes
+      if (_this.model) {
+        siteClass = _this.model.get('vs30');
+        if (siteClass === null) {
+          _siteClassCollection.deselect();
+        } else {
+          _siteClassCollection.selectById(siteClass.id);
+        }
+      } else {
+        // no item in the collection has been selected
+        _siteClassCollection.deselect();
+      }
     }
   };
 
