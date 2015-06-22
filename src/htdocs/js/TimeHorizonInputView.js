@@ -14,10 +14,9 @@ var TimeHorizonInputView = function (params) {
 
   _initialize = function () {
     _this.el.innerHTML =
-      '<form>' +
         '<label for="timeHorizonInput">Time Horizon: </label>' +
-        '<input type="text" id="timeHorizonInput"/>';
-    _timeHorizonInput = _this.el.querySelector('#timeHorizonInput');
+        '<input type="text" class="timeHorizonInput"/>';
+    _timeHorizonInput = _this.el.querySelector('.timeHorizonInput');
     _timeHorizonInput.addEventListener('blur', _updateTimeHorizon);
     _this.render();
   };
@@ -38,11 +37,8 @@ var TimeHorizonInputView = function (params) {
   };
 
   _this.render = function () {
-    var timeHorizon;
-
     if (_this.model) {
-      timeHorizon = _this.model.get('timeHorizon');
-      _timeHorizonInput.value = timeHorizon;
+      _timeHorizonInput.value = _this.model.get('timeHorizon');
     }
   };
 
