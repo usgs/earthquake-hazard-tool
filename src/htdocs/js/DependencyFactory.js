@@ -316,7 +316,7 @@ var DependencyFacotry = function (params) {
     edition = _this.getEdition(editionId);
     ids = edition.get('supports').contourType;
 
-    return _this.getContourTypes(ids);
+    return Collection(_this.getContourTypes(ids));
   };
 
   /**
@@ -353,7 +353,7 @@ var DependencyFacotry = function (params) {
     });
 
     // return all supported site classes
-    return _this.getSiteClasses(ids);
+    return Collection(_this.getSiteClasses(ids));
   };
 
 
@@ -390,7 +390,7 @@ var DependencyFacotry = function (params) {
       }
     });
 
-    return _this.getSpectralPeriods(ids);
+    return Collection(_this.getSpectralPeriods(ids));
   };
 
   /**
@@ -409,7 +409,7 @@ var DependencyFacotry = function (params) {
     edition = _this.getEdition(editionId);
     ids = edition.get('supports').timeHorizon;
 
-    return _this.getTimeHorizons(ids);
+    return Collection(_this.getTimeHorizons(ids));
   };
 
 

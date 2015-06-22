@@ -87,6 +87,8 @@ var SiteClassView = function (params) {
         longitude,
         siteClasses = [];
 
+    siteClasses = _dependencyFactory.getAllSiteClasses();
+
     if (_this.model) {
       edition = _this.model.get('edition');
       latitude = _this.model.get('latitude');
@@ -96,13 +98,11 @@ var SiteClassView = function (params) {
       if (edition && latitude && longitude) {
         siteClasses = _dependencyFactory.getFilteredSiteClasses(
             edition.get('id'), latitude, longitude);
-      } else {
-        siteClasses = _dependencyFactory.getAllSiteClasses();
       }
-
-      // reset site class collection with site classes
-      _siteClassCollection.reset(siteClasses);
     }
+
+    // reset site class collection with site classes
+    _siteClassCollection.reset(siteClasses.data());
   };
 
   /**
