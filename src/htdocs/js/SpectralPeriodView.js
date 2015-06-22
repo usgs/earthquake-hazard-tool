@@ -103,7 +103,7 @@ var SpectralPeriodView = function (params) {
 
       // check on requisite params for filtering
       if (edition && latitude && longitude) {
-        spectralPeriods = _dependencyFactory.getFilteredSpectralPeriodses(
+        spectralPeriods = _dependencyFactory.getFilteredSpectralPeriods(
             edition.get('id'), latitude, longitude);
         _spectralPeriodCollection.reset(spectralPeriods);
       }

@@ -57,7 +57,7 @@ analyses.push(Analysis({
   longitude: -116,
   latitude: 35,
 
-  imt: imt,
+  imt: imt[0],
   vs30: vs30
 }));
 
@@ -68,7 +68,7 @@ analyses.push(Analysis({
   longitude: -105,
   latitude: 40,
 
-  imt: imt,
+  imt: imt[1],
   vs30: vs30
 }));
 
