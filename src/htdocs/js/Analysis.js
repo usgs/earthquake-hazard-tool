@@ -21,7 +21,9 @@ var Analysis = function (options) {
     longitude: null,
 
     imt: null,
-    vs30: null
+    vs30: null,
+
+    timeHorizon: null
   }, options));
 
   _initialize = function (/*options*/) {
