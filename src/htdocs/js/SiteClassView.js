@@ -67,7 +67,7 @@ var SiteClassView = function (params) {
     _siteClassCollection.on('deselect', _updateSiteClass);
 
     // get an instance of the dependency factory
-    if (params.dependencyFactory) {
+    if (params.factory) {
       _dependencyFactory = params.factory;
       _destroyDependencyFactory = false;
     } else {
