@@ -206,7 +206,7 @@
           "displayorder": 6
         }
       ]
-    }
+    },
     "contourType": {
       "label": "Contour Types",
       "type": "string",
