@@ -19,7 +19,7 @@ describe('DependencyFactory test suite.', function () {
     });
   });
 
-  describe('DependencyFactory dependency filtering.', function () {
+  describe('DependencyFactory dependency get all.', function () {
     var factory,
         allEditions,
         allContourTypes,
