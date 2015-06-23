@@ -66,6 +66,7 @@ addExports(config.src + '/htdocs/js', [
   'TimeHorizonInputView',
   'TimeHorizonSelectView',
 
+  'map/Fullscreen',
   'map/Layers',
   'map/LayerControl'
 ]);
