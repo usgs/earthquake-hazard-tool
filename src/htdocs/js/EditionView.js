@@ -92,6 +92,9 @@ var EditionView = function (params) {
    * Calls CollectionSelectBox.destroy() and cleans up local variables
    */
   _this.destroy = Util.compose(function () {
+    // unbind
+    _editionCollection.off('select', _updateEdition);
+    _editionCollection.off('deselect', _updateEdition);
     // destroy
     if (_destroyEditionCollection) {
       _editionCollection.destroy();
@@ -100,9 +103,6 @@ var EditionView = function (params) {
       _dependencyFactory.destroy();
     }
     _editionCollectionSelectBox.destroy();
-    // unbind
-    _editionCollection.off('select', _updateEdition);
-    _editionCollection.off('deselect', _updateEdition);
     // methods
     _updateEdition = null;
     // variables
