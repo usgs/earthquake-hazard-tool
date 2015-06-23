@@ -102,7 +102,7 @@ var EditionView = function (params) {
       if (edition !== null) {
         _editionCollection.select(edition);
       } else {
-        _editionCollection.deselect(edition);
+        _editionCollection.deselect();
       }
     } else {
       _editionCollection.deselect();
