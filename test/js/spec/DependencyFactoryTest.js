@@ -98,7 +98,7 @@ describe('DependencyFactory test suite.', function () {
     it('can get filtered Spectral Periods', function () {
       filteredSpectralPeriods = factory.getFilteredSpectralPeriods(
           edition, latitude, longitude);
-      expect(filteredSpectralPeriods.length).to.equal(1);
+      expect(filteredSpectralPeriods.length).to.equal(3);
     });
 
   });
