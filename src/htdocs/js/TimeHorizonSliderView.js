@@ -36,7 +36,7 @@ var timeHorizonSelectView = function (params) {
   var _this,
       _initialize,
 
-      _timeHorizonSlider,
+      _buttonGroup,
 
       _setSliderValue,
       _updateTimeHorizon;
@@ -47,52 +47,37 @@ var timeHorizonSelectView = function (params) {
    * @constructor
    */
   _initialize = function () {
-    var options,
-        optionEls = [],
+    var buttons = [],
+        options,
         i;
 
     options = TIME_HORIZONS;
 
     for(i = 0; i < options.length; i++) {
-      optionEls.push('<option>' + options[i].value + '</option>');
+      buttons.push('<button value="' + options[i].value + '"">' +
+          options[i].display + '</button>');
     }
 
-    _this.el.innerHTML =
-      '<label for="slider" class="time-horizon-slider-label">' +
-          'Time Horizon</label>' +
-      '<input type="range" id="slider" class="time-horizon-slider"' +
-          'min="0" max="5000" value="2475" step="100" orient="vertical list="years">' +
-      '<datalist id="years">' +
-        optionEls.join('') +
-      '</datalist>';
+    _buttonGroup = document.createElement('div');
+    _buttonGroup.className = 'button-group';
+    _buttonGroup.innerHTML = buttons.join('');
 
-    _timeHorizonSlider = _this.el.querySelector('#slider');
+    // bind to click on the button group
+    _buttonGroup.addEventListener('click', _updateTimeHorizon);
 
-    // bind to select on the Site Class collection
-    _timeHorizonSlider.addEventListener('blur', _updateTimeHorizon);
-
-    _this.render();
+    _this.el.appendChild(_buttonGroup);
   };
 
   /**
    * update the currently selected Analysis model with
-   * the currently selected Site Class in the CollectionSelectBox.
+   * the time horizon value from the button that was clicked
    */
-  _updateTimeHorizon = function () {
-    if (_this.model) {
-      // set the value of the selected item in _timeHorizonCollection
-      _this.model.set({'timeHorizon': _timeHorizonSlider.value});
-    }
-  };
+  _updateTimeHorizon = function (e) {
+    var timeHorizon = e.target.value;
 
-  /**
-   * Set the value for the range input
-   *
-   * @param timeHorizon {Number}
-   *        The time horizon value to set on the slider
-   */
-  _setSliderValue = function (timeHorizon) {
-    _timeHorizonSlider.value = timeHorizon;
+    if (_this.model) {
+      _this.model.set({'timeHorizon': parseInt(timeHorizon, 10)});
+    }
   };
 
   /**
@@ -100,36 +85,16 @@ var timeHorizonSelectView = function (params) {
    */
   _this.destroy = Util.compose(function () {
     // unbind
-    _timeHorizonSlider.removeEventListener('blur', _updateTimeHorizon);
+    _buttonGroup.removeEventListener('click', _updateTimeHorizon);
     // methods
     _setSliderValue = null;
     _updateTimeHorizon = null;
     // variables
-    _timeHorizonSlider = null;
+    _buttonGroup = null;
     _this = null;
     _initialize = null;
   }, _this.destroy);
 
-  /**
-   * render the selected time horizon, or the blank option
-   */
-  _this.render = function () {
-    var timeHorizon;
-
-    // Update selected time horizon when collection changes
-    if (_this.model) {
-      timeHorizon = _this.model.get('timeHorizon');
-      // this shouldn't happen, but use the default
-      if (timeHorizon === null) {
-        _setSliderValue(2475);
-      } else {
-        _setSliderValue(timeHorizon);
-      }
-    } else {
-      // no item in the collection has been selected
-      _setSliderValue(2475);
-    }
-  };
 
   _initialize(params);
   params = null;
