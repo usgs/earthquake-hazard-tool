@@ -55,7 +55,7 @@ var EditionView = function (params) {
         _editionCollection = params.editions;
         _destroyEditionCollection = false;
       } else {
-        _editionCollection = _dependencyFactory.getAllEditions();
+        _editionCollection = Collection(_dependencyFactory.getAllEditions());
         _destroyEditionCollection = true;
       }
 
