@@ -110,7 +110,7 @@ var DependencyFacotry = function (params) {
     });
   };
 
-  /** 
+  /**
    * Error callback for the Xhr request
    */
   _onError = function (/*status, xhr*/) {
@@ -159,7 +159,7 @@ var DependencyFacotry = function (params) {
    *
    * @param  ids {Array}
    *         The ids to look for in the collection.
-   *         
+   *
    * @return {Collection}
    *         The filtered collection.
    */
@@ -210,7 +210,7 @@ var DependencyFacotry = function (params) {
   };
 
   _this.getAllContourTypes = function () {
-    return _contourTypes;
+    return _contourTypes.data();
   };
 
   /**
@@ -227,10 +227,10 @@ var DependencyFacotry = function (params) {
   };
 
   _this.getAllEditions = function () {
-    return _editions;
+    return _editions.data();
   };
 
-  /** 
+  /**
    * Get all Regions
    *
    * @return {Collection} Collection of Site Class models.
@@ -244,7 +244,7 @@ var DependencyFacotry = function (params) {
   };
 
   _this.getAllRegions = function () {
-    return _regions;
+    return _regions.data();
   };
 
   /**
@@ -261,7 +261,7 @@ var DependencyFacotry = function (params) {
   };
 
   _this.getAllSiteClasses = function () {
-    return _siteClasses;
+    return _siteClasses.data();
   };
 
 
@@ -279,7 +279,7 @@ var DependencyFacotry = function (params) {
   };
 
   _this.getAllSpectralPeriods = function () {
-    return _spectralPeriods;
+    return _spectralPeriods.data();
   };
 
 
@@ -297,7 +297,7 @@ var DependencyFacotry = function (params) {
   };
 
   _this.getAllTimeHorizons = function () {
-    return _timeHorizons;
+    return _timeHorizons.data();
   };
 
   /**
