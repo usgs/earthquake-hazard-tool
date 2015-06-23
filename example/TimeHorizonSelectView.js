@@ -40,7 +40,7 @@ analyses.push(Analysis({
   timeHorizon: 2475
 }));
 
-// select the first item in the collection 
+// select the first item in the collection
 collection = Collection(analyses);
 collection.select(analyses[0]);
 

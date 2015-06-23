@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+  <title>SpectralPeriodView Example Page</title>
+  <link rel="stylesheet" href="css/index.css"/>
+  <style>
+    body {
+      padding: 1em;
+    }
+    .button-group,
+    .collection-selectbox {
+      margin: 1em 0 0;
+    }
+  </style>
+</head>
+<body>
+  <p><a href="example.html">Examples Index</a></p>
+  <h1>Spectral Period View</h1>
+  <div id="example"></div>
+  <p>
+    Clicking the button below will update the selected analysis in the
+    the collection. Each item in the collection has a selected spectral period,
+    so the spectral period selection will update with the selected analysis in
+    the collection.
+  </p>
+  <div class="button-group">
+    <button class="change-location">Change Location on Analysis</button>
+    <button class="change-selected">Change Selected Analysis in Collection
+        </button>
+    <button class="remove-selected">Deselect Analysis in Collection</button>
+  </div>
+  <script src="js/bundle.js"></script>
+  <script src="SpectralPeriodView.js"></script>
+</body>
+</html>
