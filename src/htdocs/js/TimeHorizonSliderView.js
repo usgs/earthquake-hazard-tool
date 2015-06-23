@@ -1,10 +1,6 @@
 'use strict';
 
-var Meta = require('Meta'),
-
-    Collection = require('mvc/Collection'),
-    CollectionSelectBox = require('mvc/CollectionSelectBox'),
-    SelectedCollectionView = require('mvc/SelectedCollectionView'),
+var SelectedCollectionView = require('mvc/SelectedCollectionView'),
 
     Util = require('util/Util');
 
@@ -40,10 +36,9 @@ var timeHorizonSelectView = function (params) {
   var _this,
       _initialize,
 
-      _selectTimeHorizon,
-      _timeHorizonCollection,
-      _timeHorizonCollectionSelectBox,
+      _timeHorizonSlider,
 
+      _setSliderValue,
       _updateTimeHorizon;
 
   _this = SelectedCollectionView(params);
@@ -52,23 +47,29 @@ var timeHorizonSelectView = function (params) {
    * @constructor
    */
   _initialize = function () {
+    var options,
+        optionEls = [],
+        i;
 
-    // time horizon Collection
-    _timeHorizonCollection = Collection(TIME_HORIZONS.map(Meta));
+    options = TIME_HORIZONS;
 
-    // time horizon CollectionSelectBox
-    _timeHorizonCollectionSelectBox = CollectionSelectBox({
-      collection: _timeHorizonCollection,
-      el: _this.el,
-      includeBlankOption: true,
-      format: function (model) {
-        return model.get('display');
-      }
-    });
+    for(i = 0; i < options.length; i++) {
+      optionEls.push('<option>' + options[i].value + '</option>');
+    }
+
+    _this.el.innerHTML =
+      '<label for="slider" class="time-horizon-slider-label">' +
+          'Time Horizon</label>' +
+      '<input type="range" id="slider" class="time-horizon-slider"' +
+          'min="0" max="5000" value="2475" step="100" orient="vertical list="years">' +
+      '<datalist id="years">' +
+        optionEls.join('') +
+      '</datalist>';
+
+    _timeHorizonSlider = _this.el.querySelector('#slider');
 
     // bind to select on the Site Class collection
-    _timeHorizonCollection.on('select', _updateTimeHorizon);
-    _timeHorizonCollection.on('deselect', _updateTimeHorizon);
+    _timeHorizonSlider.addEventListener('blur', _updateTimeHorizon);
 
     _this.render();
   };
@@ -78,17 +79,20 @@ var timeHorizonSelectView = function (params) {
    * the currently selected Site Class in the CollectionSelectBox.
    */
   _updateTimeHorizon = function () {
-    var timeHorizon;
-
     if (_this.model) {
-      if (_timeHorizonCollection.getSelected()) {
-        timeHorizon = _timeHorizonCollection.getSelected().get('value');
-      } else {
-        timeHorizon = null;
-      }
       // set the value of the selected item in _timeHorizonCollection
-      _this.model.set({'timeHorizon': timeHorizon});
+      _this.model.set({'timeHorizon': _timeHorizonSlider.value});
     }
+  };
+
+  /**
+   * Set the value for the range input
+   *
+   * @param timeHorizon {Number}
+   *        The time horizon value to set on the slider
+   */
+  _setSliderValue = function (timeHorizon) {
+    _timeHorizonSlider.value = timeHorizon;
   };
 
   /**
@@ -96,17 +100,12 @@ var timeHorizonSelectView = function (params) {
    */
   _this.destroy = Util.compose(function () {
     // unbind
-    _timeHorizonCollection.off('select', _updateTimeHorizon);
-    _timeHorizonCollection.off('deselect', _updateTimeHorizon);
-    // destroy
-    _timeHorizonCollection.destroy();
-    _timeHorizonCollectionSelectBox.destroy();
+    _timeHorizonSlider.removeEventListener('blur', _updateTimeHorizon);
     // methods
+    _setSliderValue = null;
     _updateTimeHorizon = null;
     // variables
-    _selectTimeHorizon = null;
-    _timeHorizonCollection = null;
-    _timeHorizonCollectionSelectBox = null;
+    _timeHorizonSlider = null;
     _this = null;
     _initialize = null;
   }, _this.destroy);
@@ -120,14 +119,15 @@ var timeHorizonSelectView = function (params) {
     // Update selected time horizon when collection changes
     if (_this.model) {
       timeHorizon = _this.model.get('timeHorizon');
+      // this shouldn't happen, but use the default
       if (timeHorizon === null) {
-        _timeHorizonCollection.deselect();
+        _setSliderValue(2475);
       } else {
-        _timeHorizonCollection.selectById(timeHorizon);
+        _setSliderValue(timeHorizon);
       }
     } else {
       // no item in the collection has been selected
-      _timeHorizonCollection.deselect();
+      _setSliderValue(2475);
     }
   };
 
