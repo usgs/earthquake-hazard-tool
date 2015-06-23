@@ -30,6 +30,7 @@ var EditionView = function (params) {
       _editionCollectionSelectBox,
       _dependencyFactory,
       _destroyEditionCollection,
+      _destroyDependencyFactory,
 
       _updateEdition;
 
@@ -40,7 +41,13 @@ var EditionView = function (params) {
    */
   _initialize = function (params) {
 
-    _dependencyFactory = params.factory || DependencyFactory.getInstance();
+    if (params.factory) {
+      _dependencyFactory = params.factory;
+      _destroyDependencyFactory = false;
+    } else {
+      _dependencyFactory = DependencyFactory.getInstance();
+      _destroyDependencyFactory = true;
+    }
 
     _dependencyFactory.whenReady(function () {
       // editions CollectionSelectBox
@@ -89,7 +96,9 @@ var EditionView = function (params) {
     if (_destroyEditionCollection) {
       _editionCollection.destroy();
     }
-    _dependencyFactory.destroy();
+    if (_destroyDependencyFactory) {
+      _dependencyFactory.destroy();
+    }
     _editionCollectionSelectBox.destroy();
     // unbind
     _editionCollection.off('select', _updateEdition);
@@ -100,6 +109,7 @@ var EditionView = function (params) {
     _editionCollection = null;
     _editionCollectionSelectBox = null;
     _dependencyFactory = null;
+    _destroyDependencyFactory = null;
     _this = null;
     _initialize = null;
   }, _this.destroy);
