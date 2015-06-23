@@ -93,11 +93,6 @@ var EditionView = function (params) {
 
       edition = this.model.get('edition');
 
-      // if edition is already selected, do nothing
-      if (edition === _editionCollection.getSelected()) {
-        return;
-      }
-
       // else select or deslect
       if (edition !== null) {
         _editionCollection.select(edition);
