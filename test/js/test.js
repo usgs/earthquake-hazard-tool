@@ -42,6 +42,7 @@ require('./spec/SiteClassViewTest');
 require('./spec/StaticCurveInputViewTest');
 require('./spec/StaticCurveOutputViewTest');
 require('./spec/TimeHorizonInputViewTest');
+require('./spec/TimeHorizonSelectViewTest');
 
 if (window.mochaPhantomJS) {
     window.mochaPhantomJS.run();

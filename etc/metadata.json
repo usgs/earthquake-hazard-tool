@@ -18,9 +18,6 @@
               1,
               2
             ],
-            "timeHorizon": [
-              1
-            ],
             "contourType": [
               0
             ]
@@ -36,10 +33,6 @@
               0,
               1,
               2
-            ],
-            "timeHorizon": [
-              0,
-              1
             ],
             "contourType": [
               0
@@ -209,24 +202,6 @@
           "value": "180",
           "display": "180 m/s (D/E boundary)",
           "displayorder": 6
-        }
-      ]
-    },
-    "timeHorizon": {
-      "label": "Time Horizon (years)",
-      "type": "integer",
-      "values": [
-        {
-          "id": 0,
-          "value": 2475,
-          "display": "2% in 50 years",
-          "displayorder": 0
-        },
-        {
-          "id": 1,
-          "value": 475,
-          "display": "10% in 50 years",
-          "displayorder": 1
         }
       ]
     },
