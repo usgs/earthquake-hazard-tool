@@ -14,11 +14,13 @@ var data = require('etc/data'),
     metadata = require('etc/metadata');
 
 var analysis,
+    contourType,
     edition,
     imt,
     latitude,
     longitude,
     region,
+    timeHorizon,
     vs30;
 
 
@@ -31,6 +33,9 @@ latitude = 35.005;
 imt = Meta(metadata.parameters.imt.values[0]);
 vs30 = Meta(metadata.parameters.vs30.values[0]);
 
+contourType = Meta(metadata.parameters.contourType.values[0]);
+timeHorizon = Meta(metadata.parameters.timeHorizon.values[0]);
+
 analysis = Analysis({
   edition: edition,
   region: region,
@@ -39,7 +44,10 @@ analysis = Analysis({
   latitude: latitude,
 
   imt: imt,
-  vs30: vs30
+  vs30: vs30,
+
+  contourType: contourType,
+  timeHorizon: timeHorizon
 });
 
 describe('Calculator', function () {
