@@ -117,7 +117,7 @@ var SpectralPeriodView = function (params) {
       }
     }
     // reset spectral period collection with new spectral periods
-    _spectralPeriodCollection.reset(spectralPeriods.data());
+    _spectralPeriodCollection.reset(spectralPeriods);
   };
 
   /**
