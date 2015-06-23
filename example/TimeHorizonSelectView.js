@@ -44,7 +44,7 @@ analyses.push(Analysis({
 collection = Collection(analyses);
 collection.select(analyses[0]);
 
-// build the siteClass view
+// build the TimeHorizonSelectView
 TimeHorizonSelectView({
   el: document.getElementById('example'),
   collection: collection
