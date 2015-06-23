@@ -129,6 +129,8 @@ var SiteClassView = function (params) {
    * Calls CollectionSelectBox.destroy() and cleans up local variables
    */
   _this.destroy = Util.compose(function () {
+    // destroy
+    _siteClassCollectionSelectBox.destroy();
     // unbind
     _siteClassCollection.off('select', _updateSiteClass);
     _siteClassCollection.off('deselect', _updateSiteClass);
