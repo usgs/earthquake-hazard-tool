@@ -25,8 +25,7 @@ describe('DependencyFactory test suite.', function () {
         allContourTypes,
         allRegions,
         allSiteClasses,
-        allSpectralPeriods,
-        allTimeHorizons;
+        allSpectralPeriods;
 
     factory = DependencyFactory.getInstance();
 
@@ -64,11 +63,6 @@ describe('DependencyFactory test suite.', function () {
           allSpectralPeriods.length);
     });
 
-    it('can get all Time Horizons', function () {
-      allTimeHorizons = factory.getAllTimeHorizons();
-      expect(metadata.parameters.timeHorizon.values.length).to.equal(
-          allTimeHorizons.length);
-    });
   });
 
 
@@ -77,7 +71,6 @@ describe('DependencyFactory test suite.', function () {
         filteredContourTypes,
         filteredSiteClasses,
         filteredSpectralPeriods,
-        filteredTimeHorizons,
         edition,
         latitude,
         longitude;
@@ -108,10 +101,6 @@ describe('DependencyFactory test suite.', function () {
       expect(filteredSpectralPeriods.length).to.equal(1);
     });
 
-    it('can get filtered Time Horizons', function () {
-      filteredTimeHorizons = factory.getFilteredTimeHorizons(edition);
-      expect(filteredTimeHorizons.length).to.equal(1);
-    });
   });
 
 });
