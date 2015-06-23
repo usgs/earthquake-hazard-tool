@@ -8,7 +8,18 @@ var Analysis = require('Analysis'),
 var analyses = [],
     buttonChange,
     buttonDeselect,
-    collection;
+    collection,
+    model;
+
+var updateInfo = function () {
+  var el = document.querySelector('.selected-model');
+
+  if (model) {
+    el.innerHTML = JSON.stringify(model.toJSON(), null, '  ');
+  } else {
+    el.innerHTML = '[no model selected]';
+  }
+};
 
 var toggleSelectedCalculation = function () {
   if (collection.getSelected() === collection.data()[0]) {
@@ -22,6 +33,18 @@ var deselectAnalysis = function () {
   if (collection.getSelected()) {
     collection.deselect();
   }
+};
+
+var onCollectionDeselect = function () {
+  model.off('change', updateInfo);
+  model = null;
+  updateInfo();
+};
+
+var onCollectionSelect = function () {
+  model = collection.getSelected();
+  model.on('change', updateInfo);
+  updateInfo();
 };
 
 // Button bindings
@@ -42,6 +65,10 @@ analyses.push(Analysis({
 
 // select the first item in the collection 
 collection = Collection(analyses);
+
+collection.on('deselect', onCollectionDeselect);
+collection.on('select', onCollectionSelect);
+
 collection.select(analyses[1]);
 
 // build the TimeHorizonSliderView
