@@ -4,6 +4,7 @@ var d3 = require('d3'),
     Collection = require('mvc/Collection'),
     D3GraphView = require('./D3GraphView'),
     HazardCurveLineView = require('./HazardCurveLineView'),
+    TimeHorizonLineView = require('./TimeHorizonLineView'),
     Util = require('util/Util');
 
 
@@ -30,13 +31,14 @@ var HazardCurveGraphView = function (options) {
       _initialize,
       // variables
       _curves,
+      _legend,
       _line,
+      _timeHorizon,
       _views,
       _x,
       _xExtent,
       _y,
       _yExtent,
-      _yLines,
       // methods
       _getTicks,
       _getX,
@@ -52,6 +54,7 @@ var HazardCurveGraphView = function (options) {
 
   _initialize = function (options) {
     _this.model.set({
+      timeHorizon: 2475,
       xAxisScale: d3.scale.log(),
       xAxisTicks: _getTicks,
       yAxisScale: d3.scale.log(),
@@ -63,20 +66,6 @@ var HazardCurveGraphView = function (options) {
     // parse options
     _curves = options.curves || Collection();
     _views = Collection();
-    _yLines = options.yLines || [
-      {
-        anchor: 'right',
-        classes: ['rate', 'rate-2p50'],
-        label: '2% in 50 years',
-        value: -Math.log(0.98) / 50
-      },
-      {
-        anchor: 'right',
-        classes: ['rate', 'rate-10p50'],
-        label: '10% in 50 years',
-        value: -Math.log(0.90) / 50
-      }
-    ];
     _xExtent = null;
     _yExtent = null;
     _this.el.classList.add('HazardCurveGraph');
@@ -92,19 +81,13 @@ var HazardCurveGraphView = function (options) {
     _line.x(_getX);
     _line.y(_getY);
 
-    _yLines.forEach(function (y) {
-      var el = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-      if (y.classes) {
-        el.setAttribute('class', y.classes.join(' '));
-      }
-      y.el = d3.select(el);
-      y.textEl = y.el.append('text')
-          .attr('text-anchor', y.anchor || 'left')
-          .attr('x', 0)
-          .attr('y', 0)
-          .attr('dy', '1em')
-          .text(y.label);
-      y.pathEl = y.el.append('path');
+    _legend = d3.select(_this.legendEl)
+        .append('g')
+        .attr('class', 'legend');
+
+    _timeHorizon = new TimeHorizonLineView({
+      el: document.createElementNS('http://www.w3.org/2000/svg', 'g'),
+      graph: _this
     });
   };
 
@@ -166,7 +149,8 @@ var HazardCurveGraphView = function (options) {
     view = HazardCurveLineView({
       model: curve,
       el: el,
-      graph: _this
+      graph: _this,
+      showPoints: true
     });
     // add to collection
     view.id = curve.id;
@@ -177,10 +161,12 @@ var HazardCurveGraphView = function (options) {
       _curves.select(curve);
     };
     el.addEventListener('click', view._onClick);
+    view.legend.addEventListener('click', view._onClick);
 
     // augment destroy method
     view.destroy = Util.compose(function () {
       el.removeEventListener('click', view._onClick);
+      view.legend.removeEventListener('click', view._onClick);
       view._onClick = null;
     }, view.destroy);
 
@@ -199,7 +185,9 @@ var HazardCurveGraphView = function (options) {
    *        curve that is no longer selected.
    */
   _onDeselect = function (curve) {
-    _views.get(curve.id).el.classList.remove('selected');
+    var view = _views.get(curve.id);
+    view.el.classList.remove('selected');
+    view.legend.classList.remove('selected');
   };
 
   /**
@@ -243,7 +231,9 @@ var HazardCurveGraphView = function (options) {
    *        curve that was selected.
    */
   _onSelect = function (curve) {
-    _views.get(curve.id).el.classList.add('selected');
+    var view = _views.get(curve.id);
+    view.el.classList.add('selected');
+    view.legend.classList.add('selected');
   };
 
   /**
@@ -274,6 +264,8 @@ var HazardCurveGraphView = function (options) {
    * Unbind event listeners and free references.
    */
   _this.destroy = Util.compose(function () {
+    _timeHorizon.destroy();
+    _timeHorizon = null;
 
     _curves.off('add', _onAdd);
     _curves.off('deselect', _onDeselect);
@@ -324,11 +316,15 @@ var HazardCurveGraphView = function (options) {
    * Draw/update the graph.
    */
   _this.plot = function () {
-    var dataEl = _this.dataEl,
-        views = _views.data();
+    var bbox,
+        dataEl = _this.dataEl,
+        legendEl = _legend.node(),
+        views = _views.data(),
+        y;
 
     // clear the plot
     Util.empty(dataEl);
+    Util.empty(legendEl);
 
     if (views.length === 0) {
       // no scale information available
@@ -339,37 +335,43 @@ var HazardCurveGraphView = function (options) {
     _x = _this.model.get('xAxisScale');
     _y = _this.model.get('yAxisScale');
 
-    _yLines.forEach(function (y) {
-      var x;
-
-      // getBBox doesn't work until attached
-      el.appendChild(y.el.node());
-
-      // plot line at top
-      y.pathEl.attr('d', _line([
-        [_xExtent[0], y.value],
-        [_xExtent[1], y.value]
-      ]));
-
-      if (y.anchor && y.anchor !== 'left') {
-        x = _x(_xExtent[1]);
-        if (y.anchor === 'middle') {
-          x = x / 2;
-        } else {
-          // right, position at right edge
-          x = x - y.textEl.node().getBBox().width;
-        }
-        y.textEl.attr('x', x);
-      }
-      // position text and line at y value
-      y.textEl.attr('y', _y(y.value));
+    _timeHorizon.model.set({
+      timeHorizon: _this.model.get('timeHorizon'),
+      xExtent: _xExtent
     });
 
     // add curves
-    views.forEach(function (v) {
-      el.appendChild(v.el);
+    y = 0;
+    [_timeHorizon].concat(views).forEach(function (v, i) {
+      var bbox,
+          className;
+
+      // add sequence classes for color/styles
+      if (v.hasOwnProperty('_index')) {
+        className = 'line-' + v._index;
+        v.el.classList.remove(className);
+        v.legend.classList.remove(className);
+      }
+      v._index = i;
+      className = 'line-' + v._index;
+      v.el.classList.add(className);
+      v.legend.classList.add(className);
+
+
+      dataEl.appendChild(v.el);
+      legendEl.appendChild(v.legend);
       v.render();
+
+      // position legend items
+      bbox = v.legend.getBBox();
+      y += bbox.height;
+      v.legend.setAttribute('transform',
+          'translate(0,' + y + ')');
     });
+
+    bbox = _legend.node().getBBox();
+    _legend.attr('transform',
+        'translate(10,-' + (bbox.height + 10) + ')');
   };
 
 
