@@ -1,7 +1,6 @@
 'use strict';
 
 var Meta = require('Meta'),
-    DependencyFactory = require('DependencyFactory'),
 
     Collection = require('mvc/Collection'),
     CollectionSelectBox = require('mvc/CollectionSelectBox'),
@@ -42,21 +41,18 @@ var TimeHorizonSelectView = function (params) {
   var _this,
       _initialize,
 
-      _dependencyFactory,
-      _destroyDependencyFactory,
       _selectTimeHorizon,
       _timeHorizonCollection,
       _timeHorizonCollectionSelectBox,
 
-      _updateTimeHorizon,
-      _updateTimeHorizonCollectionSelectBox;
+      _updateTimeHorizon;
 
   _this = SelectedCollectionView(params);
 
   /**
    * @constructor
    */
-  _initialize = function (params) {
+  _initialize = function () {
 
     // time horizon Collection
     _timeHorizonCollection = Collection(TIME_HORIZONS.map(Meta));
@@ -75,20 +71,8 @@ var TimeHorizonSelectView = function (params) {
     _timeHorizonCollection.on('select', _updateTimeHorizon);
     _timeHorizonCollection.on('deselect', _updateTimeHorizon);
 
-    // get an instance of the dependency factory
-    if (params.factory) {
-      _dependencyFactory = params.factory;
-      _destroyDependencyFactory = false;
-    } else {
-      _dependencyFactory = DependencyFactory.getInstance();
-      _destroyDependencyFactory = true;
-    }
-
     // update/select the time horizon in the currently selected Analysis
-    _dependencyFactory.whenReady(function () {
-      _updateTimeHorizonCollectionSelectBox();
-      _this.render();
-    });
+    _this.render();
   };
 
   /**
@@ -116,9 +100,6 @@ var TimeHorizonSelectView = function (params) {
    */
   _this.destroy = Util.compose(function () {
     // destroy
-    if (_destroyDependencyFactory) {
-      _dependencyFactory.destroy();
-    }
     _timeHorizonCollection.destroy();
     _timeHorizonCollectionSelectBox.destroy();
     // unbind
@@ -127,15 +108,12 @@ var TimeHorizonSelectView = function (params) {
     // methods
     _updateTimeHorizon = null;
     // variables
-    _dependencyFactory = null;
-    _destroyDependencyFactory = null;
     _selectTimeHorizon = null;
     _timeHorizonCollection = null;
     _timeHorizonCollectionSelectBox = null;
     _this = null;
     _initialize = null;
   }, _this.destroy);
-
 
   /**
    * render the selected time horizon, or the blank option
@@ -149,7 +127,7 @@ var TimeHorizonSelectView = function (params) {
       if (timeHorizon === null) {
         _timeHorizonCollection.deselect();
       } else {
-        _timeHorizonCollection.selectById(timeHorizon.id);
+        _timeHorizonCollection.selectById(timeHorizon);
       }
     } else {
       // no item in the collection has been selected
