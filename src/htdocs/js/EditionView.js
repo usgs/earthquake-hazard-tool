@@ -1,6 +1,8 @@
 'use strict';
 
-var Collection = require('mvc/Collection'),
+var DependencyFactory = require('DependencyFactory'),
+
+    Collection = require('mvc/Collection'),
     CollectionSelectBox = require('mvc/CollectionSelectBox'),
     SelectedCollectionView = require('mvc/SelectedCollectionView'),
 
@@ -26,6 +28,7 @@ var EditionView = function (params) {
 
       _editionCollection,
       _editionCollectionSelectBox,
+      _dependencyFactory,
       _destroyEditionCollection,
 
       _updateEdition;
@@ -37,30 +40,35 @@ var EditionView = function (params) {
    */
   _initialize = function (params) {
 
-    // editions CollectionSelectBox
-    if (params.edition) {
-      _editionCollection = params.editions;
-      _destroyEditionCollection = false;
-    } else {
-      _editionCollection = Collection();
-      _destroyEditionCollection = true;
-    }
+    _dependencyFactory = params.factory || DependencyFactory.getInstance();
 
-    _editionCollectionSelectBox = CollectionSelectBox({
-      collection: _editionCollection,
-      el: _this.el,
-      includeBlankOption: true,
-      format: function (model) {
-        return model.get('display');
+    _dependencyFactory.whenReady(function () {
+      // editions CollectionSelectBox
+      if (params.editions) {
+        _editionCollection = params.editions;
+        _destroyEditionCollection = false;
+      } else {
+        _editionCollection = _dependencyFactory.getAllEditions();
+        _destroyEditionCollection = true;
       }
+
+      _editionCollectionSelectBox = CollectionSelectBox({
+        collection: _editionCollection,
+        el: _this.el,
+        includeBlankOption: true,
+        format: function (model) {
+          return model.get('display');
+        }
+      });
+
+      // bind to select on the Edition collection
+      _editionCollection.on('select', _updateEdition);
+      _editionCollection.on('deselect', _updateEdition);
+
+      // select the edition in the currently selected Analysis
+      _this.render();
     });
 
-    // bind to select on the Edition collection
-    _editionCollection.on('select', _updateEdition);
-    _editionCollection.on('deselect', _updateEdition);
-
-    // select the edition in the currently selected Analysis
-    _this.render();
   };
 
   /**
@@ -81,6 +89,7 @@ var EditionView = function (params) {
     if (_destroyEditionCollection) {
       _editionCollection.destroy();
     }
+    _dependencyFactory.destroy();
     _editionCollectionSelectBox.destroy();
     // unbind
     _editionCollection.off('select', _updateEdition);
@@ -90,6 +99,7 @@ var EditionView = function (params) {
     // variables
     _editionCollection = null;
     _editionCollectionSelectBox = null;
+    _dependencyFactory = null;
     _this = null;
     _initialize = null;
   }, _this.destroy);
@@ -109,7 +119,7 @@ var EditionView = function (params) {
 
       // else select or deslect
       if (edition !== null) {
-        _editionCollection.select(edition);
+        _editionCollection.selectById(edition.id);
       } else {
         _editionCollection.deselect();
       }
