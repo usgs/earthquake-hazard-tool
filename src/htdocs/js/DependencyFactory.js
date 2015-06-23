@@ -20,7 +20,7 @@ var DependencyFactory = function (params) {
       _initialize,
 
       _callbacks,
-      _contourTypes,
+      // _contourTypes,
       _data,
       _editions,
       _inRegion,
@@ -59,7 +59,7 @@ var DependencyFactory = function (params) {
 
     _url = params.url;
     _editions = Collection([]);
-    _contourTypes = Collection([]);
+    // _contourTypes = Collection([]);
     _regions = Collection([]);
     _siteClasses = Collection([]);
     _spectralPeriods = Collection([]);
@@ -86,7 +86,7 @@ var DependencyFactory = function (params) {
     _data = data;
     _editions.reset(_data.parameters.edition.values.map(Meta));
     _regions.reset(_data.parameters.region.values.map(Region));
-    _contourTypes.reset(_data.parameters.contourType.values.map(Meta));
+    // _contourTypes.reset(_data.parameters.contourType.values.map(Meta));
     _siteClasses.reset(_data.parameters.vs30.values.map(Meta));
     _spectralPeriods.reset(_data.parameters.imt.values.map(Meta));
 
@@ -174,7 +174,7 @@ var DependencyFactory = function (params) {
     _onSuccess = null;
 
     _callbacks = null;
-    _contourTypes = null;
+    // _contourTypes = null;
     _data = null;
     _editions = null;
     _isReady = null;
@@ -193,17 +193,17 @@ var DependencyFactory = function (params) {
    *
    * @return {Collection} Collection of Contour Type models.
    */
-  _this.getContourType = function(id) {
-    return _contourTypes.get(id);
-  };
+  // _this.getContourType = function(id) {
+  //   return _contourTypes.get(id);
+  // };
 
-  _this.getContourTypes = function (ids) {
-    return _getSupported(_contourTypes, ids);
-  };
+  // _this.getContourTypes = function (ids) {
+  //   return _getSupported(_contourTypes, ids);
+  // };
 
-  _this.getAllContourTypes = function () {
-    return _contourTypes.data();
-  };
+  // _this.getAllContourTypes = function () {
+  //   return _contourTypes.data();
+  // };
 
   /**
    * Get all Editions

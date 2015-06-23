@@ -22,7 +22,7 @@ describe('DependencyFactory test suite.', function () {
   describe('DependencyFactory dependency get all.', function () {
     var factory,
         allEditions,
-        allContourTypes,
+        // allContourTypes,
         allRegions,
         allSiteClasses,
         allSpectralPeriods;
@@ -39,11 +39,11 @@ describe('DependencyFactory test suite.', function () {
           allEditions.length);
     });
 
-    it('can get all Contour Types', function () {
-      allContourTypes = factory.getAllContourTypes();
-      expect(metadata.parameters.contourType.values.length).to.equal(
-          allContourTypes.length);
-    });
+    // it('can get all Contour Types', function () {
+    //   allContourTypes = factory.getAllContourTypes();
+    //   expect(metadata.parameters.contourType.values.length).to.equal(
+    //       allContourTypes.length);
+    // });
 
     it('can get all Regions', function () {
       allRegions = factory.getAllRegions();
@@ -68,7 +68,7 @@ describe('DependencyFactory test suite.', function () {
 
   describe('DependencyFactory dependency filtering.', function () {
     var factory,
-        filteredContourTypes,
+        // filteredContourTypes,
         filteredSiteClasses,
         filteredSpectralPeriods,
         edition,
@@ -84,10 +84,10 @@ describe('DependencyFactory test suite.', function () {
       factory.whenReady(done);
     });
 
-    it('can get filtered Contour Types', function () {
-      filteredContourTypes = factory.getFilteredContourTypes(edition);
-      expect(filteredContourTypes.length).to.equal(1);
-    });
+    // it('can get filtered Contour Types', function () {
+    //   filteredContourTypes = factory.getFilteredContourTypes(edition);
+    //   expect(filteredContourTypes.length).to.equal(1);
+    // });
 
     it('can get filtered Site Classes', function () {
       filteredSiteClasses = factory.getFilteredSiteClasses(
