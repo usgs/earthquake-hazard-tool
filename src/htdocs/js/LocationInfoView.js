@@ -7,12 +7,10 @@ var LocationInfoView = function (params) {
   var _this,
       _initialize,
 
-      _formatter,
       _locationInfo,
       _noLocationInfo;
 
   _this = SelectedCollectionView(params);
-  _formatter = Formatter();
 
   _initialize = function () {
 
