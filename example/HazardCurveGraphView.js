@@ -51,13 +51,18 @@ view.curves.on('select', function (curve) {
 Xhr.ajax({
   url: 'data.json',
   success: function (data) {
-    var response = HazardResponse(data.response[0]);
-    // update labels, suppress render; curves reset will render
-    view.model.set({
-      xAxisLabel: response.get('xlabel'),
-      yAxisLabel: response.get('ylabel')
-    }, {silent: true});
-    // show curves
-    view.curves.reset(response.get('curves').data());
+    var curves = [];
+    data.response.forEach(function (r) {
+      var response = HazardResponse(r);
+      // update labels, suppress render; curves reset will render
+      view.model.set({
+        xAxisLabel: response.get('xlabel'),
+        yAxisLabel: response.get('ylabel')
+      }, {silent: true});
+      response.get('curves').data().forEach(function (c) {
+        curves.push(c);
+      });
+    });
+    view.curves.reset(curves);
   }
 });
