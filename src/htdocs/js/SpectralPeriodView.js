@@ -27,6 +27,8 @@ var SpectralPeriodView = function (params) {
       _initialize,
 
       _dependencyFactory,
+      _destroyDependencyFactory,
+      _destroySpectralPeriodCollection,
       _selectSpectralPeriod,
       _spectralPeriodCollection,
       _spectralPeriodCollectionSelectBox,
@@ -41,8 +43,14 @@ var SpectralPeriodView = function (params) {
    */
   _initialize = function (params) {
 
-    _spectralPeriodCollection = params.imt || Collection();
-    _dependencyFactory = params.dependencyFactory || DependencyFactory.getInstance();
+    // spectral period collection
+    if (params.imt) {
+      _spectralPeriodCollection = params.imt;
+      _destroySpectralPeriodCollection = false;
+    } else {
+      _spectralPeriodCollection = Collection();
+      _destroySpectralPeriodCollection = true;
+    }
 
     _spectralPeriodCollectionSelectBox = CollectionSelectBox({
       collection: _spectralPeriodCollection,
@@ -56,6 +64,15 @@ var SpectralPeriodView = function (params) {
     // bind to select on the Site Class collection
     _spectralPeriodCollection.on('select', _updateSpectralPeriods);
     _spectralPeriodCollection.on('deselect', _updateSpectralPeriods);
+
+    // get an instance of the dependency factory
+    if (params.factory) {
+      _dependencyFactory = params.factory;
+      _destroyDependencyFactory = false;
+    } else {
+      _dependencyFactory = DependencyFactory.getInstance();
+      _destroyDependencyFactory = true;
+    }
 
     // update/select the spectral period in the currently selected Analysis
     _dependencyFactory.whenReady(function () {
@@ -107,12 +124,22 @@ var SpectralPeriodView = function (params) {
    * Calls CollectionSelectBox.destroy() and cleans up local variables
    */
   _this.destroy = Util.compose(function () {
+    // destroy
+    _spectralPeriodCollectionSelectBox.destroy();
+    if (_destroyDependencyFactory) {
+      _dependencyFactory.destroy();
+    }
+    if (_destroySpectralPeriodCollection) {
+      _spectralPeriodCollection.destroy();
+    }
     // unbind
     _spectralPeriodCollection.off('select', _updateSpectralPeriods);
     _spectralPeriodCollection.off('deselect', _updateSpectralPeriods);
     // methods
     _updateSpectralPeriods = null;
     // variables
+    _destroyDependencyFactory = null;
+    _destroySpectralPeriodCollection = null;
     _selectSpectralPeriod = null;
     _spectralPeriodCollection = null;
     _spectralPeriodCollectionSelectBox = null;
