@@ -30,7 +30,6 @@ var TIME_HORIZONS = [
  *
  * TimeHorizonSelectView({
  *   el: document.createElement('div'),
- *   editions: Collection([TimeHorizon]),
  *   collection: Collection([Analysis])
  * });
  *
@@ -71,7 +70,6 @@ var TimeHorizonSelectView = function (params) {
     _timeHorizonCollection.on('select', _updateTimeHorizon);
     _timeHorizonCollection.on('deselect', _updateTimeHorizon);
 
-    // update/select the time horizon in the currently selected Analysis
     _this.render();
   };
 
@@ -83,14 +81,12 @@ var TimeHorizonSelectView = function (params) {
     var timeHorizon;
 
     if (_this.model) {
-
-      // get the value off of the selected item in _timeHorizonCollection
       if (_timeHorizonCollection.getSelected()) {
         timeHorizon = _timeHorizonCollection.getSelected().get('value');
       } else {
         timeHorizon = null;
       }
-
+      // set the value of the selected item in _timeHorizonCollection
       _this.model.set({'timeHorizon': timeHorizon});
     }
   };
@@ -99,12 +95,12 @@ var TimeHorizonSelectView = function (params) {
    * Calls CollectionSelectBox.destroy() and cleans up local variables
    */
   _this.destroy = Util.compose(function () {
-    // destroy
-    _timeHorizonCollection.destroy();
-    _timeHorizonCollectionSelectBox.destroy();
     // unbind
     _timeHorizonCollection.off('select', _updateTimeHorizon);
     _timeHorizonCollection.off('deselect', _updateTimeHorizon);
+    // destroy
+    _timeHorizonCollection.destroy();
+    _timeHorizonCollectionSelectBox.destroy();
     // methods
     _updateTimeHorizon = null;
     // variables
