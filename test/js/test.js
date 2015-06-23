@@ -46,6 +46,8 @@ require('./spec/TimeHorizonInputViewTest');
 require('./spec/TimeHorizonSelectViewTest');
 require('./spec/TimeHorizonSliderViewTest');
 
+require('./spec/map/FullscreenTest');
+
 if (window.mochaPhantomJS) {
     window.mochaPhantomJS.run();
 } else {
