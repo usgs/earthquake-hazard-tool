@@ -33,26 +33,30 @@ var HazardCurveGraphView = function (options) {
       _line,
       _views,
       _x,
-      _xAxisLog,
       _xExtent,
       _y,
-      _yAxisLog,
       _yExtent,
       _yLines,
       // methods
+      _getTicks,
       _getX,
       _getY,
       _onAdd,
-      _onChange,
       _onDeselect,
       _onRemove,
       _onReset,
-      _onSelect;
+      _onSelect,
+      _padExtent;
 
   _this = D3GraphView(options);
 
   _initialize = function (options) {
-    var controls;
+    _this.model.set({
+      xAxisScale: d3.scale.log(),
+      xAxisTicks: _getTicks,
+      yAxisScale: d3.scale.log(),
+      yAxisTicks: _getTicks
+    }, {silent: true});
 
     // set defaults
     options = options || {};
@@ -76,22 +80,6 @@ var HazardCurveGraphView = function (options) {
     _xExtent = null;
     _yExtent = null;
     _this.el.classList.add('HazardCurveGraph');
-
-    // show controls to toggle axis scale
-    controls = _this.el.querySelector('.controls');
-    controls.innerHTML = '<form>' +
-        '<label for="xAxisLog">' +
-          '<input type="checkbox" id="xAxisLog" checked="checked"/>' +
-          'X-axis log' +
-        '</label>' +
-        '<label for="yAxisLog">' +
-          '<input type="checkbox" id="yAxisLog" checked="checked"/>' +
-          'Y-axis log' +
-        '</label>';
-    _xAxisLog = controls.querySelector('#xAxisLog');
-    _xAxisLog.addEventListener('change', _onChange);
-    _yAxisLog = controls.querySelector('#yAxisLog');
-    _yAxisLog.addEventListener('change', _onChange);
 
     _curves.on('add', _onAdd);
     _curves.on('deselect', _onDeselect);
@@ -120,6 +108,38 @@ var HazardCurveGraphView = function (options) {
     });
   };
 
+  /**
+   * Get axis ticks for log based scales.
+   *
+   * @param extent {Array<Number>}
+   *        axis extents.
+   * @return {Array<Number}
+   *         padded extent.
+   */
+  _getTicks = function (extent) {
+    var base,
+        baseLog,
+        end,
+        i,
+        start,
+        ticks,
+        value;
+
+    // convert min/max to base 10
+    base = 10;
+    baseLog = Math.log(base);
+    start = parseInt(Math.log(extent[0])/baseLog, 10) - 1;
+    end = parseInt(Math.log(extent[1])/baseLog, 10) + 1;
+    ticks = [];
+    for (i = start; i < end; i++) {
+      value = Math.pow(base, i);
+      if (value > extent[0] && value < extent[1]) {
+        ticks.push(value);
+      }
+    }
+    return ticks;
+  };
+
   _getX = function (d) {
     return _x(d[0]);
   };
@@ -144,7 +164,7 @@ var HazardCurveGraphView = function (options) {
 
     el = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     view = HazardCurveLineView({
-      curve: curve,
+      model: curve,
       el: el,
       graph: _this
     });
@@ -170,16 +190,6 @@ var HazardCurveGraphView = function (options) {
     if (!dontrender) {
       _this.render();
     }
-  };
-
-  /**
-   * Event handler for axis check boxes.
-   */
-  _onChange = function () {
-    _this.model.set({
-      xAxisScale: _xAxisLog.checked ? d3.scale.log() : d3.scale.linear(),
-      yAxisScale: _yAxisLog.checked ? d3.scale.log() : d3.scale.linear()
-    });
   };
 
   /**
@@ -237,11 +247,33 @@ var HazardCurveGraphView = function (options) {
   };
 
   /**
+   * Pad a log based extent.
+   *
+   * @param extent {Array<Number>}
+   *        axis extents.
+   * @return {Array<Number}
+   *         padded extent.
+   */
+  _padExtent = function (extent) {
+    var base,
+        baseLog,
+        end,
+        pad,
+        start;
+
+    // convert min/max to base 10
+    base = 10;
+    baseLog = Math.log(base);
+    start = Math.log(extent[0]) / baseLog;
+    end = Math.log(extent[1]) / baseLog;
+    pad = (end - start) * 0.05;
+    return [Math.pow(base, start - pad), Math.pow(base, end + pad)];
+  };
+
+  /**
    * Unbind event listeners and free references.
    */
   _this.destroy = Util.compose(function () {
-    _xAxisLog.removeEventListener('change', _onChange);
-    _yAxisLog.removeEventListener('change', _onChange);
 
     _curves.off('add', _onAdd);
     _curves.off('deselect', _onDeselect);
@@ -251,6 +283,11 @@ var HazardCurveGraphView = function (options) {
     _curves = null;
   }, _this.destroy);
 
+  /**
+   * Get the X extent.
+   *
+   * @return {Array<Number>} the X extent for all curves.
+   */
   _this.getXExtent = function () {
     if (_xExtent !== null) {
       return _xExtent;
@@ -260,9 +297,15 @@ var HazardCurveGraphView = function (options) {
       _xExtent = _xExtent.concat(v.xExtent);
     });
     _xExtent = d3.extent(_xExtent);
+    _xExtent = _padExtent(_xExtent);
     return _xExtent;
   };
 
+  /**
+   * Get the Y extent.
+   *
+   * @return {Array<Number>} the Y extent for all curves.
+   */
   _this.getYExtent = function () {
     if (_yExtent !== null) {
       return _yExtent;
@@ -273,19 +316,22 @@ var HazardCurveGraphView = function (options) {
     });
     _yExtent = d3.extent(_yExtent);
     _yExtent[0] = Math.max(_yExtent[0], 1e-13);
+    _yExtent = _padExtent(_yExtent);
     return _yExtent;
   };
 
   /**
    * Draw/update the graph.
    */
-  _this.plot = function (el) {
-    var views = _views.data();
+  _this.plot = function () {
+    var dataEl = _this.dataEl,
+        views = _views.data();
 
-    // add data lines
+    // clear the plot
+    Util.empty(dataEl);
+
     if (views.length === 0) {
-      // no scale information available, clear plot
-      d3.select(el).selectAll('*').remove();
+      // no scale information available
       return;
     }
 

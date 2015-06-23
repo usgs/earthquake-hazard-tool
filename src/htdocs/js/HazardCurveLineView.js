@@ -47,12 +47,20 @@ var HazardCurveLineView = function (options) {
 
   _this = View(options);
 
+  /**
+   * Initialize the view.
+   */
   _initialize = function (options) {
     _el = d3.select(_this.el);
     _el.attr('class', 'HazardCurveLine');
 
-    _curve = options.curve;
+    _curve = _this.model;
     _graph = options.graph;
+
+    _this.model.set({
+      showPoints: options.showPoints
+    }, {silent: true});
+    _this.model.on('change:data', _initData);
 
     _lineFormat = options.lineFormat || d3.svg.line();
     _lineFormat.x(_getScaleX);
@@ -160,15 +168,15 @@ var HazardCurveLineView = function (options) {
 
     model = _graph.model;
     _graph.showTooltip(coords, [
-      _curve.get('label'),
-      {
-        'label': model.get('xAxisLabel') + ': ',
-        'value': coords[0]
-      },
-      {
-        'label': model.get('yAxisLabel') + ': ',
-        'value': coords[1].toExponential(5)
-      }
+      {text:_curve.get('label')},
+      [
+        {class: 'label', text: model.get('xAxisLabel') + ': '},
+        {class: 'value', text: coords[0]}
+      ],
+      [
+        {class: 'label', text: model.get('yAxisLabel') + ': '},
+        {class: 'value', text: coords[1].toExponential(5)}
+      ]
     ]);
   };
 
@@ -181,6 +189,8 @@ var HazardCurveLineView = function (options) {
     // update scales
     _x = _graph.model.get('xAxisScale');
     _y = _graph.model.get('yAxisScale');
+
+    _line.attr('d', _lineFormat(_data));
 
     points = _el.selectAll('.point')
         .data(_data);
@@ -209,6 +219,9 @@ var HazardCurveLineView = function (options) {
 
     _el.on('mouseout', null);
     _el.on('mouseover', null);
+    _legend.on('mouseout', null);
+    _legend.on('mouseover', null);
+    _this.model.off('change:data', _initData);
 
     // cleanup events
     points = _el.selectAll('.point')
@@ -221,6 +234,7 @@ var HazardCurveLineView = function (options) {
     // remove container
     Util.detach(_el.node());
     _el = null;
+    _this = null;
   }, _this.destroy);
 
 
