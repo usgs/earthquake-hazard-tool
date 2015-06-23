@@ -8,8 +8,26 @@ var Fullscreen = L.Control.extend({
     position: 'topright'
   },
 
+  _onKeyUp: function (evt) {
+    if (evt.keyCode === 27) {
+      this._onControlClick();
+    }
+  },
+
   _onControlClick: function () {
-    this._mapdiv.classList.toggle('leaflet-map-fullscreen');
+    var classList;
+
+    classList = this._mapdiv.classList;
+
+    if (classList.contains('leaflet-map-fullscreen')) {
+      // Currently in fullscreen mode, exiting, so remove ESC handler
+      L.DomEvent.off(document, 'keyup', this._onKeyUp, this);
+    } else {
+      // Currently in in-line mode, entering fullscreen, so add ESC handler
+      L.DomEvent.on(document, 'keyup', this._onKeyUp, this);
+    }
+
+    classList.toggle('leaflet-map-fullscreen');
     this._map.invalidateSize();
   },
 
