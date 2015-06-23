@@ -1,14 +1,14 @@
 'use strict';
 
 var Analysis = require('Analysis'),
-    AnalysisCollectionView = require('AnalysisCollectionView'),
+    BasicInputsView = require('mvc/SelectedCollectionView'), // TODO
+    HazardCurveView = require('mvc/SelectedCollectionView'), // TODO
+    HazardSpectrumView = require('mvc/SelectedCollectionView'), // TODO
     MapView = require('MapView'),
-    StaticCurveOutputView = require('StaticCurveOutputView'),
+    TimeHorizonView = require('mvc/SelectedCollectionView'), // TODO
 
     Collection = require('mvc/Collection'),
-    View = require('mvc/View'),
-
-    TabList = require('tablist/TabList');
+    View = require('mvc/View');
 
 
 var ApplicationView = function (params) {
@@ -17,21 +17,19 @@ var ApplicationView = function (params) {
 
       // variables
       _analysisCollection,
-      _collectionView,
-      _collectionViewEl,
-      _contentEl,
+      _basicInputsEl,
+      _basicInputsView,
+      _hazardCurveEl,
+      _hazardCurveView,
+      _hazardSpectrumEl,
+      _hazardSpectrumView,
+      _mapEl,
       _mapView,
-      _newAnalysisBtn,
-      _offCanvasEl,
-      _staticCurveView,
-      _tabList,
-      _tabListEl,
-      _toggleButton,
+      _timeHorizonEl,
+      _timeHorizonView,
 
       // methods
-      _initViewContainer,
-      _onNewAnalysisClick,
-      _onOffCanvasClick;
+      _initViewContainer;
 
 
   _this = View(params);
@@ -39,92 +37,98 @@ var ApplicationView = function (params) {
   _initialize = function (/*params*/) {
     _initViewContainer();
 
-    _analysisCollection = Collection([]);
+    _analysisCollection = Collection([Analysis()]);
+    _analysisCollection.select(_analysisCollection.data()[0]);
 
-    _mapView = MapView();
-
-    _staticCurveView = StaticCurveOutputView({
-      collection: _analysisCollection
+    _basicInputsView = BasicInputsView({
+      collection: _analysisCollection,
+      el: _basicInputsEl
     });
 
-    _collectionView = AnalysisCollectionView({
-      el: _offCanvasEl.appendChild(document.createElement('ol')),
-      collection: _analysisCollection
+    _mapView = MapView({
+      collection: _analysisCollection,
+      el: _mapEl
     });
 
+    _timeHorizonView = TimeHorizonView({
+      collection: _analysisCollection,
+      el: _timeHorizonEl
+    });
 
-    // create tablist as part of section.main-content
-    _tabList = TabList({
-      el: _tabListEl,
-      tabs: [
-        {
-          'title': 'Map',
-          'content': _mapView.el,
-          'onSelect': _mapView.onSelect,
-          'onDeselect': _mapView.onDeselect
-        },
-        {
-          title: 'Static Curves',
-          content: _staticCurveView.el,
-          onSelect: _staticCurveView.onTabSelect,
-          onDeselect: _staticCurveView.onTabDeselect
-        }
-      ]
+    _hazardCurveView = HazardCurveView({
+      collection: _analysisCollection,
+      el: _hazardCurveEl
+    });
+
+    _hazardSpectrumView = HazardSpectrumView({
+      collection: _analysisCollection,
+      el: _hazardCurveEl
     });
   };
 
 
   _initViewContainer = function () {
-    _this.el.className = 'application-container';
+    var el;
 
-    _contentEl = _this.el.querySelector('.application-content') ||
-        document.createElement('section');
-    _toggleButton = _this.el.querySelector('.offcanvas-toggle') ||
-        document.createElement('button');
-    _tabListEl = _this.el.querySelector('.main-content') ||
-        document.createElement('section');
-    _offCanvasEl = _this.el.querySelector('.offcanvas-content') ||
-        document.createElement('section');
+    el = _this.el;
 
-    _offCanvasEl.innerHTML = [
-      '<button class="green analysis-create">Create New Calculation</button>',
-      '<ol></ol>'
+    el.className = 'application-container';
+
+    el.innerHTML = [
+      '<div class="row">',
+        '<section class="application-basic-inputs column one-of-two">',
+        '</section>',
+        '<section class="application-map column one-of-two">',
+        '</section>',
+      '</div>',
+      '<div class="row">',
+        '<section class="application-time-horizon-input column one-of-one">',
+        '</section>',
+      '</div>',
+      '<div class="row">',
+        '<section class="application-hazard-curve column one-of-two">',
+        '</section>',
+        '<section class="application-hazard-spectrum column one-of-two">',
+        '</section>',
+      '</div>',
     ].join('');
 
-    _collectionViewEl = _offCanvasEl.querySelector('ol');
-    _newAnalysisBtn = _offCanvasEl.querySelector('button');
-
-    _toggleButton.addEventListener('click', _onOffCanvasClick);
-    _newAnalysisBtn.addEventListener('click', _onNewAnalysisClick);
-  };
-
-  _onNewAnalysisClick = function () {
-    var analysis = Analysis();
-
-    _analysisCollection.add(analysis);
-    _analysisCollection.select(analysis);
-  };
-
-  _onOffCanvasClick = function () {
-    _contentEl.classList.toggle('offcanvas-enabled');
+    _basicInputsEl = el.querySelector('.application-basic-inputs');
+    _mapEl = el.querySelector('.application-map');
+    _timeHorizonEl = el.querySelector('.application-time-horizon-input');
+    _hazardCurveEl = el.querySelector('.application-hazard-curve');
+    _hazardSpectrumEl = el.querySelector('.application-hazard-spectrum');
   };
 
 
   _this.destroy = function () {
-    // events
-    _toggleButton.removeEventListener('click', _onOffCanvasClick);
+    _analysisCollection.destroy();
 
-    _staticCurveView.destroy();
-    _staticCurveView = null;
-
-    _collectionView.destroy();
-    _collectionView = null;
+    // sub-views
+    _basicInputsView.destroy();
+    _hazardCurveView.destroy();
+    _hazardSpectrumView.destroy();
+    _mapView.destroy();
+    _timeHorizonView.destroy();
 
     // variables
-    _toggleButton = null;
+    _analysisCollection = null;
+    _basicInputsEl = null;
+    _basicInputsView = null;
+    _hazardCurveEl = null;
+    _hazardCurveView = null;
+    _hazardSpectrumEl = null;
+    _hazardSpectrumView = null;
+    _mapEl = null;
+    _mapView = null;
+    _timeHorizonEl = null;
+    _timeHorizonView = null;
 
     // methods
-    _onOffCanvasClick = null;
+    _initViewContainer = null;
+
+    _initialize = null;
+    _this = null;
   };
 
 

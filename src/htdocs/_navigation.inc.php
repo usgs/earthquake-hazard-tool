@@ -2,4 +2,4 @@
 
 include_once '../conf/config.inc.php';
 
-print navItem($MOUNT_PATH . '/index.php', 'Page Title');
+print navItem($MOUNT_PATH . '/index.php', 'Hazard Tool');
