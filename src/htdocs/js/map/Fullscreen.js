@@ -38,6 +38,20 @@ var Fullscreen = L.Control.extend({
   },
 
   onRemove: function (/*map*/) {
+    var button,
+        stop;
+
+    button = this._container;
+    stop = L.DomEvent.stopPropagation;
+
+    L.DomEvent
+        .off(button, 'click', stop)
+        .off(button, 'mousedown', stop)
+        .off(button, 'dblclick', stop)
+        .off(button, 'click', L.DomEvent.preventDefault)
+        .off(button, 'click', this._onControlClick, this)
+        .off(button, 'click', this._refocusOnMap, this);
+
     this._map = null;
     this._mapdiv = null;
     this._container = null;
@@ -46,7 +60,7 @@ var Fullscreen = L.Control.extend({
 
 L.Control.Fullscreen = Fullscreen;
 
-L.Control.fullscreen = function (options) {
+L.control.fullscreen = function (options) {
   return new Fullscreen(options);
 };
 
