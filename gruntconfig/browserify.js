@@ -57,6 +57,7 @@ addExports(config.src + '/htdocs/js', [
   'HazardCurveGraphView',
   'HazardResponse',
   'HazardUtil',
+  'LocationInfoView',
   'MapView',
   'Meta',
   'Region',
@@ -70,7 +71,9 @@ addExports(config.src + '/htdocs/js', [
 
   'map/Fullscreen',
   'map/Layers',
-  'map/LayerControl'
+  'map/LayerControl',
+
+  'util/Formatter'
 ]);
 
 // Subsequent source files can then require "Class" with:
