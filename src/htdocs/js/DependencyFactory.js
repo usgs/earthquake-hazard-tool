@@ -15,7 +15,7 @@ var _DEFAULTS = {
 
 var _INSTANCE = null;
 
-var DependencyFacotry = function (params) {
+var DependencyFactory = function (params) {
   var _this,
       _initialize,
 
@@ -28,7 +28,6 @@ var DependencyFacotry = function (params) {
       _regions,
       _siteClasses,
       _spectralPeriods,
-      _timeHorizons,
       _url,
 
       _buildCollection,
@@ -48,10 +47,6 @@ var DependencyFacotry = function (params) {
     getSpectralPeriods: null,
     getAllSpectralPeriods: null,
     getFilteredSpectralPeriods: null,
-    getTimeHorizon: null,
-    getTimeHorizons: null,
-    getAllTimeHorizons: null,
-    getFilteredTimeHorizons: null,
     getContourType: null,
     getContourTypes: null,
     getAllContourTypes: null,
@@ -68,7 +63,6 @@ var DependencyFacotry = function (params) {
     _regions = Collection([]);
     _siteClasses = Collection([]);
     _spectralPeriods = Collection([]);
-    _timeHorizons = Collection([]);
 
     _callbacks = [];
     _isReady = false;
@@ -95,7 +89,6 @@ var DependencyFacotry = function (params) {
     _contourTypes.reset(_data.parameters.contourType.values.map(Meta));
     _siteClasses.reset(_data.parameters.vs30.values.map(Meta));
     _spectralPeriods.reset(_data.parameters.imt.values.map(Meta));
-    _timeHorizons.reset(_data.parameters.timeHorizon.values.map(Meta));
 
     _isReady = true;
 
@@ -189,7 +182,6 @@ var DependencyFacotry = function (params) {
     _regions = null;
     _siteClasses = null;
     _spectralPeriods = null;
-    _timeHorizons = null;
     _url = null;
 
     _this = null;
@@ -264,7 +256,6 @@ var DependencyFacotry = function (params) {
     return _siteClasses.data();
   };
 
-
   /**
    * Get all Spectral Periods.
    *
@@ -280,24 +271,6 @@ var DependencyFacotry = function (params) {
 
   _this.getAllSpectralPeriods = function () {
     return _spectralPeriods.data();
-  };
-
-
-  /**
-   * Get all Time Horizons.
-   *
-   * @return {Collection} Collection of Time Horizon models.
-   */
-  _this.getTimeHorizon = function (id) {
-    return _timeHorizons.get(id);
-  };
-
-  _this.getTimeHorizons = function (ids) {
-    return _getSupported(_timeHorizons, ids);
-  };
-
-  _this.getAllTimeHorizons = function () {
-    return _timeHorizons.data();
   };
 
   /**
@@ -356,7 +329,6 @@ var DependencyFacotry = function (params) {
     return _this.getSiteClasses(ids);
   };
 
-
   /**
    * Get all Spectral Periods for the provided Edition
    *
@@ -394,26 +366,6 @@ var DependencyFacotry = function (params) {
   };
 
   /**
-   * Get all Time Horizons for the provided Edition
-   *
-   * @param  editionId {Integer}
-   *         Edition model.id
-   *
-   * @return {Collection} Collection of Time Horizon models.
-   */
-  _this.getFilteredTimeHorizons = function (editionId) {
-    var edition,
-        ids;
-
-    // get spectral period ids, for the provided edition
-    edition = _this.getEdition(editionId);
-    ids = edition.get('supports').timeHorizon;
-
-    return _this.getTimeHorizons(ids);
-  };
-
-
-  /**
    * Build an array of callbacks to be executed when the
    * Xhr request is returned.
    *
@@ -438,7 +390,7 @@ var DependencyFacotry = function (params) {
  * Creates an instance of the DependencyFactory
  */
 var _createInstance = function (params) {
-  _INSTANCE = DependencyFacotry(params);
+  _INSTANCE = DependencyFactory(params);
 };
 
 /**
