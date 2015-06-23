@@ -8,10 +8,12 @@ var ContourTypeView = function (params) {
       _initialize,
 
       _contourType,
+      _collectionSelectBox,
 
       _updateContourType;
 
   _this = SelectedCollectionView(params);
+  _collectionSelectBox = CollectionSelectBox;
 
   _initialize = function (params) {
     _contourType = params.contourType;
@@ -19,7 +21,7 @@ var ContourTypeView = function (params) {
     _this.el.innerHTML = '<div class="selectBox"></div>' +
       '<div class="message"></div>';
 
-    CollectionSelectBox({
+    _collectionSelectBox({
       collection: _contourType,
       el: _this.el.querySelector('.selectBox'),
       includeBlankOption: true,
@@ -53,6 +55,7 @@ var ContourTypeView = function (params) {
     _contourType.off('deselect', _updateContourType, _this);
     _updateContourType = null;
     _contourType = null;
+    _collectionSelectBox = null;
     _this = null;
     _initialize = null;
   }, _this.destroy);
