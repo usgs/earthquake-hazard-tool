@@ -40,7 +40,6 @@ var TimeHorizonSelectView = function (params) {
   var _this,
       _initialize,
 
-      _selectTimeHorizon,
       _timeHorizonCollection,
       _timeHorizonCollectionSelectBox,
 
@@ -104,7 +103,6 @@ var TimeHorizonSelectView = function (params) {
     // methods
     _updateTimeHorizon = null;
     // variables
-    _selectTimeHorizon = null;
     _timeHorizonCollection = null;
     _timeHorizonCollectionSelectBox = null;
     _this = null;
