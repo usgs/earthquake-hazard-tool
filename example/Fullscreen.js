@@ -26,7 +26,7 @@ initialize = function () {
     ]
   });
 
-  L.Control.fullscreen().addTo(map);
+  L.control.fullscreen().addTo(map);
 };
 
 
