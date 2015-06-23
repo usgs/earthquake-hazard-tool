@@ -124,6 +124,9 @@ var SpectralPeriodView = function (params) {
    * Calls CollectionSelectBox.destroy() and cleans up local variables
    */
   _this.destroy = Util.compose(function () {
+    // unbind
+    _spectralPeriodCollection.off('select', _updateSpectralPeriods);
+    _spectralPeriodCollection.off('deselect', _updateSpectralPeriods);
     // destroy
     _spectralPeriodCollectionSelectBox.destroy();
     if (_destroyDependencyFactory) {
@@ -132,9 +135,6 @@ var SpectralPeriodView = function (params) {
     if (_destroySpectralPeriodCollection) {
       _spectralPeriodCollection.destroy();
     }
-    // unbind
-    _spectralPeriodCollection.off('select', _updateSpectralPeriods);
-    _spectralPeriodCollection.off('deselect', _updateSpectralPeriods);
     // methods
     _updateSpectralPeriods = null;
     // variables
