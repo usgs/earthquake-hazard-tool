@@ -27,6 +27,8 @@ var SiteClassView = function (params) {
       _initialize,
 
       _dependencyFactory,
+      _destroyDependencyFactory,
+      _destroySiteClassCollection,
       _selectSiteClass,
       _siteClassCollection,
       _siteClassCollectionSelectBox,
@@ -41,10 +43,16 @@ var SiteClassView = function (params) {
    */
   _initialize = function (params) {
 
-    // site classes CollectionSelectBox
-    _siteClassCollection = params.vs30 || Collection();
-    _dependencyFactory = params.dependencyFactory || DependencyFactory.getInstance();
+    // site class collection
+    if (params.vs30) {
+      _siteClassCollection = params.vs30;
+      _destroySiteClassCollection = false;
+    } else {
+      _siteClassCollection = Collection();
+      _destroySiteClassCollection = true;
+    }
 
+    // site class CollectionSelectBox
     _siteClassCollectionSelectBox = CollectionSelectBox({
       collection: _siteClassCollection,
       el: _this.el,
@@ -57,6 +65,15 @@ var SiteClassView = function (params) {
     // bind to select on the Site Class collection
     _siteClassCollection.on('select', _updateSiteClass);
     _siteClassCollection.on('deselect', _updateSiteClass);
+
+    // get an instance of the dependency factory
+    if (params.dependencyFactory) {
+      _dependencyFactory = params.factory;
+      _destroyDependencyFactory = false;
+    } else {
+      _dependencyFactory = DependencyFactory.getInstance();
+      _destroyDependencyFactory = true;
+    }
 
     // update/select the site class in the currently selected Analysis
     _dependencyFactory.whenReady(function () {
@@ -130,6 +147,12 @@ var SiteClassView = function (params) {
    */
   _this.destroy = Util.compose(function () {
     // destroy
+    if (_destroySiteClassCollection) {
+      _siteClassCollection.destroy();
+    }
+    if (_destroyDependencyFactory) {
+      _dependencyFactory.destroy();
+    }
     _siteClassCollectionSelectBox.destroy();
     // unbind
     _siteClassCollection.off('select', _updateSiteClass);
@@ -137,6 +160,9 @@ var SiteClassView = function (params) {
     // methods
     _updateSiteClass = null;
     // variables
+    _dependencyFactory = null;
+    _destroyDependencyFactory = null;
+    _destroySiteClassCollection = null;
     _selectSiteClass = null;
     _siteClassCollection = null;
     _siteClassCollectionSelectBox = null;
