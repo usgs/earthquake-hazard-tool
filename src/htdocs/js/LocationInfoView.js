@@ -1,46 +1,49 @@
 'use strict';
 
-var SelectedCollectionView = require('mvc/SelectedCollectionView');
+var Formatter = require('util/Formatter'),
+    SelectedCollectionView = require('mvc/SelectedCollectionView');
 
 var LocationInfoView = function (params) {
   var _this,
       _initialize,
 
-      locationInfo,
-      noLocationInfo;
+      _formatter,
+      _locationInfo,
+      _noLocationInfo;
 
   _this = SelectedCollectionView(params);
+  _formatter = Formatter();
 
   _initialize = function () {
 
     _this.el.innerHTML = '<div class="locationInfo"></div>' +
         '<div class="noLocationInfo"></div>';
 
-    locationInfo = _this.el.querySelector('.locationInfo').innerHTML;
-    noLocationInfo = _this.el.querySelector('.noLocationInfo').innerHTML;
+    _locationInfo = _this.el.querySelector('.locationInfo').innerHTML;
+    _noLocationInfo = _this.el.querySelector('.noLocationInfo').innerHTML;
 
     _this.render();
   };
 
   _this.render = function () {
-    var latitude,
-        longitude;
+    var lat,
+        lng;
 
-    latitude = _this.model.get('latitude');
-    longitude = _this.model.get('longitude');
+    lat = Formatter.latitude(_this.model.get('latitude'));
+    lng = Formatter.longitude(_this.model.get('longitude'));
 
     if (_this.model) {
-      if (latitude !== null && longitude !== null) {
-        locationInfo = '<ul class="no-style">' +
-            '<li>Latitude: '+ latitude +'</li>' +
-            '<li>Longitude: '+ longitude +'</li>' +
+      if (lat !== null && lng !== null) {
+        _locationInfo = '<ul class="no-style">' +
+            '<li>Latitude: '+ lat +'</li>' +
+            '<li>Longitude: '+ lng +'</li>' +
             '</ul>';
       } else {
-        noLocationInfo = '<p>Use the map to select a location.</p>';
+        _noLocationInfo = '<p>Use the map to select a location.</p>';
       }
     } else {
-       locationInfo = '';
-       noLocationInfo = '';
+       _locationInfo = '';
+       _noLocationInfo = '';
     }
   };
 
