@@ -118,7 +118,7 @@ var browerify = {
     src: [config.test + '/js/test.js'],
     dest: config.build + '/' + config.test + '/js/test.js',
     options: {
-      external: EXPORTS
+      external: EXPORTS.concat(['leaflet'])
     }
   },
 

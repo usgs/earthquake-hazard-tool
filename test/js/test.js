@@ -45,6 +45,8 @@ require('./spec/StaticCurveOutputViewTest');
 require('./spec/TimeHorizonInputViewTest');
 require('./spec/TimeHorizonSelectViewTest');
 
+require('./spec/map/FullscreenTest');
+
 if (window.mochaPhantomJS) {
     window.mochaPhantomJS.run();
 } else {
