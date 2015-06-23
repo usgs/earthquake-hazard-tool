@@ -119,7 +119,7 @@ var SiteClassView = function (params) {
     }
 
     // reset site class collection with site classes
-    _siteClassCollection.reset(siteClasses.data());
+    _siteClassCollection.reset(siteClasses);
   };
 
   /**
