@@ -25,6 +25,8 @@ var EditionView = function (params) {
       _initialize,
 
       _editionCollection,
+      _editionCollectionSelectBox,
+      _destroyEditionCollection,
 
       _updateEdition;
 
@@ -36,9 +38,15 @@ var EditionView = function (params) {
   _initialize = function (params) {
 
     // editions CollectionSelectBox
-    _editionCollection = params.editions || Collection();
+    if (params.edition) {
+      _editionCollection = params.editions;
+      _destroyEditionCollection = false;
+    } else {
+      _editionCollection = Collection();
+      _destroyEditionCollection = true;
+    }
 
-    CollectionSelectBox({
+    _editionCollectionSelectBox = CollectionSelectBox({
       collection: _editionCollection,
       el: _this.el,
       includeBlankOption: true,
@@ -69,6 +77,11 @@ var EditionView = function (params) {
    * Calls CollectionSelectBox.destroy() and cleans up local variables
    */
   _this.destroy = Util.compose(function () {
+    // destroy
+    if (_destroyEditionCollection) {
+      _editionCollection.destroy();
+    }
+    _editionCollectionSelectBox.destroy();
     // unbind
     _editionCollection.off('select', _updateEdition);
     _editionCollection.off('deselect', _updateEdition);
@@ -76,6 +89,7 @@ var EditionView = function (params) {
     _updateEdition = null;
     // variables
     _editionCollection = null;
+    _editionCollectionSelectBox = null;
     _this = null;
     _initialize = null;
   }, _this.destroy);
