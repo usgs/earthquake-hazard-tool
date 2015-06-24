@@ -186,6 +186,8 @@ var DependencyFactory = function (params) {
 
     _this = null;
     _initialize = null;
+
+    _INSTANCE = null;
   };
 
   /**
