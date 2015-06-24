@@ -21,7 +21,10 @@ var MapView = function (options) {
 
       // variables
       _locationControl,
-      _map;
+      _map,
+
+      // methods
+      _onLocationChange;
 
   _this = SelectedCollectionView(options);
 
@@ -56,6 +59,7 @@ var MapView = function (options) {
       includeCoordinateControl: true,
       includePointControl: true
     });
+    _locationControl.on('location', _onLocationChange);
     _map.addControl(_locationControl);
 
     _map.fitBounds([[24.6, -125.0], [50.0, -65.0]]);
@@ -75,6 +79,24 @@ var MapView = function (options) {
     }
   };
 
+
+  _onLocationChange = function (changes) {
+    var location;
+
+    if (_this.model) {
+      // TODO :: Use model.update once it's implemented
+      //_this.model.update({'location': changes.location});
+
+      location = _this.model.get('location');
+
+      if (!location ||
+          location.latitude !== changes.location.latitude ||
+          location.longitude !== changes.location.longitude) {
+        _this.model.set({location: changes.location});
+      }
+    }
+  };
+
   /**
    * Return the Leaflet map
    */
@@ -83,15 +105,37 @@ var MapView = function (options) {
   };
 
   _this.destroy = Util.compose(function () {
-      _map.removeControl(_locationControl);
+    _locationControl.off('location', _onLocationChange);
+    _map.removeControl(_locationControl);
 
-      // variables
-      _locationControl = null;
-      _map = null;
+    // variables
+    _locationControl = null;
+    _map = null;
 
-      _initialize = null;
-      _this = null;
+    // methods
+    _onLocationChange = null;
+
+    _initialize = null;
+    _this = null;
   }, _this.destroy);
+
+  _this.render = function () {
+    var modelLocation,
+        controlLocation;
+
+    if (_this.model) {
+      modelLocation = _this.model.get('locatin');
+      controlLocation = _locationControl.getLocation();
+
+      if (modelLocation && (
+          !controlLocation ||
+          modelLocation.latitude !== controlLocation.latitude ||
+          modelLocation.longutde !== controlLocation.longtiude)) {
+        _locationControl.setLocation(_this.model.get('location'));
+      }
+    }
+  };
+
 
   _initialize(options);
   options = null;
