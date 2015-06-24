@@ -19,10 +19,10 @@ var EditionView = function (params) {
       _calculator,
       _collectionView,
       _errorReportEl,
-      _saveButton,
+      _newButton,
 
       _onCalculateClick,
-      _onSaveClick,
+      _onNewClick,
       _removeErrorReporting,
       _validateCalculation;
 
@@ -39,7 +39,7 @@ var EditionView = function (params) {
 
     toggleText = [
       '<button class="actions-view-calculate">Calculate</button>',
-      '<button class="actions-view-save">Save</button>'
+      '<button class="actions-view-new">New</button>'
     ].join('');
 
     _collectionView = AnalysisCollectionView({
@@ -64,8 +64,8 @@ var EditionView = function (params) {
     _calculateButton = _this.el.querySelector('.actions-view-calculate');
     _calculateButton.addEventListener('click', _onCalculateClick);
 
-    _saveButton = _this.el.querySelector('.actions-view-save');
-    _saveButton.addEventListener('click', _onSaveClick);
+    _newButton = _this.el.querySelector('.actions-view-new');
+    _newButton.addEventListener('click', _onNewClick);
 
     // Clear error reporting when the current model in deselected
     _this.collection.on('deselect', _removeErrorReporting);
@@ -78,8 +78,8 @@ var EditionView = function (params) {
   };
 
     // check if current model is valid
-  _onSaveClick = function () {
-    if (_validateCalculation('saving')) {
+  _onNewClick = function () {
+    if (_validateCalculation('creating a new analysis')) {
       var analysis = Analysis();
       _this.collection.add(analysis);
       _this.collection.select(analysis);
@@ -145,7 +145,7 @@ var EditionView = function (params) {
     _this.collection.off('deselect', _removeErrorReporting);
 
     _onCalculateClick = null;
-    _onSaveClick = null;
+    _onNewClick = null;
     _removeErrorReporting = null;
     _validateCalculation = null;
 
@@ -154,7 +154,7 @@ var EditionView = function (params) {
     _calculator = null;
     _collectionView = null;
     _errorReportEl = null;
-    _saveButton = null;
+    _newButton = null;
     _this = null;
     _initialize = null;
 
