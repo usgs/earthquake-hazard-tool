@@ -8,15 +8,23 @@
 @import 'css/responsive-table.scss';
 @import 'tablist/hazdev-tablist.scss';
 
+@import 'locationview/CoordinateControl';
+@import 'locationview/GeocodeControl';
+@import 'locationview/GeolocationControl';
+@import 'locationview/LeafletControls';
+@import 'locationview/LocationControl';
+@import 'locationview/LocationView';
+@import 'locationview/PointControl';
+
 @import '_ApplicationView';
 @import '_AnalysisCollectionView';
 @import '_AnalysisView';
 @import '_Fullscreen';
+@import '_BasicInputsView';
 @import '_HazardCurveGraphView';
 @import '_HazardCurveDataView';
 @import '_LayerControl';
 @import '_MapView';
-@import '_StaticCurveInputView';
 @import '_TimeHorizonSliderView';
 
 

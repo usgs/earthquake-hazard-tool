@@ -1,0 +1,36 @@
+.basic-inputs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  > li {
+    margin-top: .5em;
+    padding: .25em;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:hover, &:focus {
+      background-color: #fafafa;
+    }
+
+    > label {
+      color: #444;
+      display: block;
+      font-weight: bold;
+      margin-left: 4px;
+    }
+
+    > select {
+      width: 98%;
+    }
+
+    > .help {
+      color: #666;
+      display: block;
+      font-size: .8em;
+      margin-left: 4px;
+    }
+  }
+}
