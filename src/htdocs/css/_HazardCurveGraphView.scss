@@ -42,6 +42,10 @@
     }
   }
 
+  .padding > .legend {
+    font-size: .7em;
+  }
+
   .controls {
     text-align: center;
   }
@@ -61,7 +65,47 @@
     fill: none;
     shape-rendering: geometricPrecision;
     stroke: #999;
-    stroke-width: 1;
+    stroke-width: 2;
+  }
+
+
+  // .line-0 is the time horizon line.
+
+  &.line-1 > .line {
+    stroke: #AD2323; // red
+  }
+  &.line-2 > .line {
+    stroke: #2A4BD7; // blue
+  }
+  &.line-3 > .line {
+    stroke: #1D6914; // green
+  }
+  &.line-4 > .line {
+    stroke: #814A19; // brown
+  }
+  &.line-5 > .line {
+    stroke: #8126C0; //purple
+  }
+  &.line-6 > .line {
+    stroke: #81C57A; // light green
+  }
+  &.line-7 > .line {
+    stroke: #9DAFFF; // light blue
+  }
+  &.line-8 > .line {
+    stroke: #29D0D0; // cyan
+  }
+  &.line-9 > .line {
+    stroke: #FF9233; // orange
+  }
+  &.line-10 > .line {
+    stroke: #FFEE33; // yellow
+  }
+  &.line-11 > .line {
+    stroke: #E9DEBB; // tan
+  }
+  &.line-12 > .line {
+    stroke: #FFCDF3; // pink
   }
 
   > .point {
@@ -73,7 +117,8 @@
   &.mouseover {
     // currently hovered hazard curve
     > .line {
-      stroke-width: 3;
+      stroke: #999;
+      stroke-width: 4;
     }
     > .point {
       &.mouseover {
@@ -81,15 +126,23 @@
         fill: #999;
       }
     }
+    > text {
+      fill: #999;
+      font-weight: bold;
+    }
   }
 
   &.selected {
     // currently selected hazard curve
     > .line {
       stroke: #333;
-      stroke-width: 3;
+      stroke-width: 4;
     }
     > .point {
+    }
+    > text {
+      fill: #333;
+      font-weight: bold;
     }
   }
 

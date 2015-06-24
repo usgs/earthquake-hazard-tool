@@ -30,6 +30,9 @@ var HazardCurveLineView = function (options) {
       _data,
       _el,
       _graph,
+      _legend,
+      _legendLine,
+      _legendText,
       _line,
       _lineFormat,
       _x,
@@ -47,12 +50,20 @@ var HazardCurveLineView = function (options) {
 
   _this = View(options);
 
+  /**
+   * Initialize the view.
+   */
   _initialize = function (options) {
     _el = d3.select(_this.el);
     _el.attr('class', 'HazardCurveLine');
 
-    _curve = options.curve;
+    _curve = _this.model;
     _graph = options.graph;
+
+    _this.model.set({
+      showPoints: options.showPoints
+    }, {silent: true});
+    _this.model.on('change:data', _initData);
 
     _lineFormat = options.lineFormat || d3.svg.line();
     _lineFormat.x(_getScaleX);
@@ -64,6 +75,17 @@ var HazardCurveLineView = function (options) {
 
     _el.on('mouseout', _onMouseOut);
     _el.on('mouseover', _onMouseOver);
+
+    _this.legend = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    _legend = d3.select(_this.legend)
+        .attr('class', 'HazardCurveLine')
+        .on('mouseout', _onMouseOut)
+        .on('mouseover', _onMouseOver);
+    _legendLine = _legend.append('path')
+        .attr('class', 'line')
+        .attr('d', 'M0,0L25,0');
+    _legendText = _legend.append('text')
+        .attr('dx', 30);
 
     _initData();
   };
@@ -126,6 +148,7 @@ var HazardCurveLineView = function (options) {
    */
   _onMouseOut = function () {
     _el.node().classList.remove('mouseover');
+    _this.legend.classList.remove('mouseover');
   };
 
   /**
@@ -133,6 +156,7 @@ var HazardCurveLineView = function (options) {
    */
   _onMouseOver = function () {
     _el.node().classList.add('mouseover');
+    _this.legend.classList.add('mouseover');
   };
 
   /**
@@ -160,15 +184,15 @@ var HazardCurveLineView = function (options) {
 
     model = _graph.model;
     _graph.showTooltip(coords, [
-      _curve.get('label'),
-      {
-        'label': model.get('xAxisLabel') + ': ',
-        'value': coords[0]
-      },
-      {
-        'label': model.get('yAxisLabel') + ': ',
-        'value': coords[1].toExponential(5)
-      }
+      {text:_curve.get('label')},
+      [
+        {class: 'label', text: model.get('xAxisLabel') + ': '},
+        {class: 'value', text: coords[0]}
+      ],
+      [
+        {class: 'label', text: model.get('yAxisLabel') + ': '},
+        {class: 'value', text: coords[1].toExponential(5)}
+      ]
     ]);
   };
 
@@ -182,23 +206,29 @@ var HazardCurveLineView = function (options) {
     _x = _graph.model.get('xAxisScale');
     _y = _graph.model.get('yAxisScale');
 
+    _line.attr('d', _lineFormat(_data));
+    _legendText.text(_curve.get('label'));
+    _legendLine.attr('d', 'M0,0L25,0');
+
     points = _el.selectAll('.point')
         .data(_data);
-    points.enter()
-        .append('svg:circle')
-        .attr('class', 'point')
-        .attr('r', _graph.model.get('pointRadius'))
-        .on('mouseout', _onPointOut)
-        .on('mouseover', _onPointOver);
-    // set x,y coordinates
-    points.attr('cx', _getScaleX)
-        .attr('cy', _getScaleY);
-    points.exit()
-        .on('mouseout', _onPointOut)
-        .on('mouseover', _onPointOver)
-        .remove();
-
-    _line.attr('d', _lineFormat(_data));
+    if (!_this.model.get('showPoints')) {
+      points.remove();
+    } else {
+      points.enter()
+          .append('svg:circle')
+          .attr('class', 'point')
+          .attr('r', _graph.model.get('pointRadius'))
+          .on('mouseout', _onPointOut)
+          .on('mouseover', _onPointOver);
+      // set x,y coordinates
+      points.attr('cx', _getScaleX)
+          .attr('cy', _getScaleY);
+      points.exit()
+          .on('mouseout', _onPointOut)
+          .on('mouseover', _onPointOver)
+          .remove();
+    }
   };
 
   /**
@@ -209,6 +239,9 @@ var HazardCurveLineView = function (options) {
 
     _el.on('mouseout', null);
     _el.on('mouseover', null);
+    _legend.on('mouseout', null);
+    _legend.on('mouseover', null);
+    _this.model.off('change:data', _initData);
 
     // cleanup events
     points = _el.selectAll('.point')
@@ -221,6 +254,10 @@ var HazardCurveLineView = function (options) {
     // remove container
     Util.detach(_el.node());
     _el = null;
+    _legend = null;
+    _legendLine = null;
+    _legendText = null;
+    _this = null;
   }, _this.destroy);
 
 

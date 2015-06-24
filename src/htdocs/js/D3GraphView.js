@@ -1,7 +1,6 @@
 'use strict';
 
 var d3 = require('d3'),
-    Model = require('mvc/Model'),
     Util = require('util/Util'),
     View = require('mvc/View');
 
@@ -26,6 +25,8 @@ var d3 = require('d3'),
  *
  * @param options {Object}
  *        all options are passed to View.
+ * @param options.data {?}
+ *        data to plot, for use by subclasses.
  * @param options.height {Number}
  *        default 500.
  *        height of svg viewBox.
@@ -38,79 +39,105 @@ var d3 = require('d3'),
  * @param options.marginTop {Number}
  *        default 0.
  * @param options.paddingBottom {Number}
- *        default 50.
+ *        default 75.
  * @param options.paddingLeft {Number}
  *        default 100.
  * @param options.paddingRight {Number}
- *        default 100.
+ *        default 5.
  * @param options.paddingTop {Number}
  *        default 50.
  * @param options.title {String}
  *        title for plot.
+ * @param options.tooltipOffset {Number}
+ *        default 10.
+ *        x/y distance from tooltip coordinate.
+ * @param options.tooltipPadding {Number}
+ *        default 5.
+ *        padding around tooltip content.
  * @param options.width {Number}
  *        default 960.
  *        width of svg viewBox.
+ * @param options.xAxisFormat {Function|String}
+ *        default null.
+ *        x axis tickFormat.
  * @param options.xAxisLabel {String}
  *        label for x axis.
  * @param options.xAxisScale {d3.scale}
  *        default d3.scale.linear().
+ * @param options.xAxisTicks {Function(extent)|Array<Number>}
+ *        default null.
+ *        x axis tick values.
+ * @param options.yAxisFormat {Function|String}
+ *        default null.
+ *        y axis tickFormat.
  * @param options.yAxisLabel {String}
  *        label for y axis.
  * @param options.yAxisScale {d3.scale}
  *        default d3.scale.linear().
+ * @param options.yAxisTicks {Function(extent)|Array<Number>}
+ *        default null.
+ *        y axis tick values.
  */
 var D3GraphView = function (options) {
   var _this,
       _initialize,
       // variables
-      _dataEl,
+      _firstRender,
       _innerFrame,
       _margin,
       _outerFrame,
       _padding,
-      _plotArea,
       _plotAreaClip,
       _plotTitle,
       _svg,
       _tooltip,
-      _xEl,
+      _xAxis,
       _xAxisEl,
       _xAxisLabel,
-      _yEl,
+      _xEl,
+      _yAxis,
       _yAxisEl,
       _yAxisLabel,
-      // methods
-      _formatAxis;
+      _yEl;
 
   _this = View(options);
 
   _initialize = function (options) {
     var el;
 
-    _this.model = Model(Util.extend({
-      height: 500,
+    _firstRender = true;
+
+    _this.model.set(Util.extend({
+      data: null,
+      height: 480,
       marginBottom: 0,
       marginLeft: 0,
       marginRight: 0,
       marginTop: 0,
-      paddingBottom: 50,
-      paddingLeft: 100,
-      paddingRight: 100,
+      paddingBottom: 80,
+      paddingLeft: 80,
+      paddingRight: 20,
       paddingTop: 50,
-      pointRadius: 5,
+      pointRadius: 3,
       title: '',
-      width: 960,
+      tooltipOffset: 10,
+      tooltipPadding: 5,
+      width: 640,
+      xAxisFormat: null,
       xAxisLabel: '',
-      xAxisScale: d3.scale.log(),
+      xAxisScale: d3.scale.linear(),
+      xAxisTicks: null,
+      xExtent: null,
+      yAxisFormat: null,
       yAxisLabel: '',
-      yAxisScale: d3.scale.log()
-    }, options));
-
-    options = _this.model.get();
+      yAxisScale: d3.scale.linear(),
+      yAxisTicks: null,
+      yExtent: null
+    }, options), {silent: true});
 
     el = _this.el;
     el.innerHTML = '<div class="graph">' +
-          '<svg xmlns="http://www.w3.org/2000/svg">' +
+          '<svg xmlns="http://www.w3.org/2000/svg" class="D3GraphView">' +
             '<defs>' +
               '<clipPath id="plotAreaClip">' +
                 '<rect x="0" y="0"></rect>' +
@@ -121,18 +148,18 @@ var D3GraphView = function (options) {
               '<text class="plot-title" text-anchor="middle"></text>' +
               '<g class="padding">' +
                 '<rect class="inner-frame"></rect>' +
-                '<g class="plot-area">' +
-                  '<g class="x">' +
-                    '<g class="axis"></g>' +
-                    '<text class="label" text-anchor="middle"></text>' +
-                  '</g>' +
-                  '<g class="y">' +
-                    '<g class="axis"></g>' +
-                    '<text class="label" text-anchor="middle" transform="rotate(-90)"></text>' +
-                  '</g>' +
-                  '<g class="data"></g>' +
-                  '<g class="tooltip"></g>' +
+                '<g class="legend"></g>' +
+                '<g class="x">' +
+                  '<g class="axis"></g>' +
+                  '<text class="label" text-anchor="middle"></text>' +
                 '</g>' +
+                '<g class="y">' +
+                  '<g class="axis"></g>' +
+                  '<text class="label" text-anchor="middle"' +
+                      ' transform="rotate(-90)"></text>' +
+                '</g>' +
+                '<g class="data"></g>' +
+                '<g class="tooltip"></g>' +
               '</g>' +
             '</g>' +
           '</svg>' +
@@ -141,73 +168,57 @@ var D3GraphView = function (options) {
 
     _svg = el.querySelector('svg');
     _plotAreaClip = _svg.querySelector('#plotAreaClip > rect');
+    _outerFrame = _svg.querySelector('.outer-frame');
+    _innerFrame = _svg.querySelector('.inner-frame');
     _margin = _svg.querySelector('.margin');
-    _outerFrame = _margin.querySelector('.outer-frame');
     _plotTitle = _margin.querySelector('.plot-title');
     _padding = _margin.querySelector('.padding');
-    _innerFrame = _padding.querySelector('.inner-frame');
-    _plotArea = _padding.querySelector('.plot-area');
-    _xEl = _plotArea.querySelector('.x');
+    _xEl = _padding.querySelector('.x');
     _xAxisEl = _xEl.querySelector('.axis');
     _xAxisLabel = _xEl.querySelector('.label');
-    _yEl = _plotArea.querySelector('.y');
+    _yEl = _padding.querySelector('.y');
     _yAxisEl = _yEl.querySelector('.axis');
     _yAxisLabel = _yEl.querySelector('.label');
-    _dataEl = _plotArea.querySelector('.data');
-    _tooltip = _plotArea.querySelector('.tooltip');
+    _tooltip = _padding.querySelector('.tooltip');
 
-    _this.xAxis = d3.svg.axis()
-        .orient('bottom');
-    _this.yAxis = d3.svg.axis()
-        .orient('left');
+    _this.dataEl = _padding.querySelector('.data');
+    _this.legendEl = _padding.querySelector('.legend');
 
-    _this.model.on('change', _this.render);
+    _xAxis = d3.svg.axis().orient('bottom').outerTickSize(0);
+    _yAxis = d3.svg.axis().orient('left').outerTickSize(0);
   };
 
   /**
-   * Set axis ticks for log based scales.
-   * Clears axis ticks (for default formatting) for other scales.
-   *
-   * @param axis {d3.axis}
-   *        axis to format.
-   * @param scale {d3.scale}
-   *        axis scale.
+   * Destroy this view.
    */
-  _formatAxis = function (axis) {
-    var base,
-        baseLog,
-        end,
-        extent,
-        i,
-        scale,
-        start,
-        ticks,
-        value;
+  _this.destroy = Util.compose(function () {
+    _svg = null;
+    _plotAreaClip = null;
+    _outerFrame = null;
+    _innerFrame = null;
+    _margin = null;
+    _plotTitle = null;
+    _padding = null;
+    _xAxis = null;
+    _xAxisEl = null;
+    _xAxisLabel = null;
+    _xEl = null;
+    _yAxis = null;
+    _yAxisEl = null;
+    _yAxisLabel = null;
+    _yEl = null;
+    _tooltip = null;
+    _this = null;
+  }, _this.destroy);
 
-    scale = axis.scale();
-    if (typeof scale.base !== 'function') {
-      // this is not a log scale
-      axis.tickValues(null);
-      return;
-    }
-
-    // convert min/max to base 10
-    extent = scale.domain();
-    base = 10;
-    baseLog = Math.log(base);
-    start = parseInt(Math.log(extent[0])/baseLog, 10) - 1;
-    end = parseInt(Math.log(extent[1])/baseLog, 10) + 1;
-    ticks = [];
-    for (i = start; i < end; i++) {
-      value = Math.pow(base, i);
-      if (value > extent[0] && value < extent[1]) {
-        ticks.push(value);
-      }
-    }
-    axis.tickValues(ticks);
-  };
-
-  _this.render = function () {
+  /**
+   * Render the graph.
+   *
+   * @param changed {Object}
+   *        default is _this.model.get.
+   *        list of properties that have changed.
+   */
+  _this.render = function (changed) {
     var height,
         innerWidth,
         innerHeight,
@@ -216,89 +227,128 @@ var D3GraphView = function (options) {
         marginRight,
         marginTop,
         options,
+        originalChanged = changed,
         outerHeight,
         outerWidth,
         paddingBottom,
         paddingLeft,
         paddingRight,
         paddingTop,
-        title,
         width,
-        xAxis,
-        xAxisLabel,
         xAxisScale,
+        xAxisTicks,
         xExtent,
-        yAxis,
-        yAxisLabel,
         yAxisScale,
+        yAxisTicks,
         yExtent;
 
-    xAxis = _this.xAxis;
-    yAxis = _this.yAxis;
-    xExtent = _this.getXExtent();
-    yExtent = _this.getYExtent();
 
-    // get current settings
     options = _this.model.get();
-    width = options.width;
-    height = options.height;
-    marginBottom = options.marginBottom;
-    marginLeft = options.marginLeft;
-    marginRight = options.marginRight;
-    marginTop = options.marginTop;
+
+    if (_firstRender || !changed) {
+      changed = options;
+      _firstRender = false;
+    }
+
+    // all options
+    xAxisScale = options.xAxisScale;
+    yAxisScale = options.yAxisScale;
+    // these are used for label positioning
     paddingBottom = options.paddingBottom;
     paddingLeft = options.paddingLeft;
-    paddingRight = options.paddingRight;
-    paddingTop = options.paddingTop;
-    title = options.title;
-    xAxisLabel = options.xAxisLabel;
-    xAxisScale = options.xAxisScale;
-    yAxisLabel = options.yAxisLabel;
-    yAxisScale = options.yAxisScale;
-    // adjust based on margin/padding
-    outerWidth = width - marginLeft - marginRight;
-    outerHeight = height - marginTop - marginBottom;
-    innerWidth = outerWidth - paddingLeft - paddingRight;
-    innerHeight = outerHeight - paddingTop - paddingBottom;
-    // set widths/heights
-    _svg.setAttribute('viewBox', '0 0 ' + width + ' ' + height);
-    _plotAreaClip.setAttribute('width', innerWidth);
-    _plotAreaClip.setAttribute('height', innerHeight);
-    _margin.setAttribute('transform',
-        'translate(' + marginLeft + ',' + marginTop + ')');
-    _outerFrame.setAttribute('height', outerHeight);
-    _outerFrame.setAttribute('width', outerWidth);
-    _plotTitle.setAttribute('x', outerWidth / 2);
-    _plotTitle.setAttribute('y', paddingTop);
-    _padding.setAttribute('transform',
-        'translate(' + paddingLeft + ',' + paddingTop + ')');
-    _innerFrame.setAttribute('width', innerWidth);
-    _innerFrame.setAttribute('height', innerHeight);
-    _xEl.setAttribute('transform',
-        'translate(0,' + innerHeight + ')');
-    // update axes
-    xAxisScale.range([0, innerWidth]);
-    xAxisScale.domain(xExtent);
-    xAxis.scale(xAxisScale);
-    _formatAxis(xAxis);
-    d3.select(_xAxisEl).call(xAxis);
-    yAxisScale.range([innerHeight, 0]);
-    yAxisScale.domain(yExtent);
-    yAxis.scale(yAxisScale);
-    _formatAxis(yAxis);
-    d3.select(_yAxisEl).call(yAxis);
-    // update labels
-    _plotTitle.textContent = title;
-    _xAxisLabel.textContent = xAxisLabel;
-    _xAxisLabel.setAttribute('x', innerWidth / 2);
-    _xAxisLabel.setAttribute('y',
-        _xAxisEl.getBBox().height + _xAxisLabel.getBBox().height);
-    _yAxisLabel.textContent = yAxisLabel;
-    _yAxisLabel.setAttribute('x', -innerHeight / 2);
-    _yAxisLabel.setAttribute('y', -_yAxisEl.getBBox().width - 10);
 
-    // ask subclass to render
-    _this.plot(_dataEl);
+    if (changed.hasOwnProperty('title')) {
+      _plotTitle.textContent = options.title;
+      _plotTitle.setAttribute('y', _plotTitle.getBBox().height);
+    }
+    if (changed.hasOwnProperty('xAxisLabel')) {
+      _xAxisLabel.textContent = options.xAxisLabel;
+    }
+    if (changed.hasOwnProperty('yAxisLabel')) {
+      _yAxisLabel.textContent = options.yAxisLabel;
+    }
+
+    if (changed.hasOwnProperty('width') ||
+        changed.hasOwnProperty('height') ||
+        changed.hasOwnProperty('marginBottom') ||
+        changed.hasOwnProperty('marginLeft') ||
+        changed.hasOwnProperty('marginRight') ||
+        changed.hasOwnProperty('marginTop') ||
+        changed.hasOwnProperty('paddingBottom') ||
+        changed.hasOwnProperty('paddingLeft') ||
+        changed.hasOwnProperty('paddingRight') ||
+        changed.hasOwnProperty('paddingTop')) {
+      width = options.width;
+      height = options.height;
+      marginBottom = options.marginBottom;
+      marginLeft = options.marginLeft;
+      marginRight = options.marginRight;
+      marginTop = options.marginTop;
+      paddingRight = options.paddingRight;
+      paddingTop = options.paddingTop;
+      // adjust based on margin/padding
+      outerWidth = width - marginLeft - marginRight;
+      outerHeight = height - marginTop - marginBottom;
+      innerWidth = outerWidth - paddingLeft - paddingRight;
+      innerHeight = outerHeight - paddingTop - paddingBottom;
+      // update elements
+      _svg.setAttribute('viewBox', '0 0 ' + width + ' ' + height);
+      _plotAreaClip.setAttribute('width', innerWidth);
+      _plotAreaClip.setAttribute('height', innerHeight);
+      _margin.setAttribute('transform',
+          'translate(' + marginLeft + ',' + marginTop + ')');
+      _outerFrame.setAttribute('height', outerHeight);
+      _outerFrame.setAttribute('width', outerWidth);
+      _plotTitle.setAttribute('x', outerWidth / 2);
+      _padding.setAttribute('transform',
+          'translate(' + paddingLeft + ',' + paddingTop + ')');
+      _this.legendEl.setAttribute('transform',
+          'translate(0,' + innerHeight + ')');
+      _innerFrame.setAttribute('width', innerWidth);
+      _innerFrame.setAttribute('height', innerHeight);
+      _xEl.setAttribute('transform',
+          'translate(0,' + innerHeight + ')');
+      // update axes range and position
+      xAxisScale.range([0, innerWidth]);
+      yAxisScale.range([innerHeight, 0]);
+      _xAxisLabel.setAttribute('x', innerWidth / 2);
+      _yAxisLabel.setAttribute('x', -innerHeight / 2);
+    }
+
+    // update axes extent
+    xExtent = _this.getXExtent();
+    xAxisScale.domain(xExtent);
+    yExtent = _this.getYExtent(xExtent);
+    yAxisScale.domain(yExtent);
+
+    // redraw axes
+    _xAxis.scale(xAxisScale);
+    _xAxis.tickFormat(options.xAxisFormat);
+    xAxisTicks = options.xAxisTicks;
+    if (typeof xAxisTicks === 'function') {
+      xAxisTicks = xAxisTicks(xExtent);
+    }
+    _xAxis.tickValues(xAxisTicks);
+
+    _yAxis.scale(yAxisScale);
+    _yAxis.tickFormat(options.yAxisFormat);
+    yAxisTicks = options.yAxisTicks;
+    if (typeof yAxisTicks === 'function') {
+      yAxisTicks = yAxisTicks(yExtent);
+    }
+    _yAxis.tickValues(yAxisTicks);
+
+    d3.select(_xAxisEl).call(_xAxis);
+    d3.select(_yAxisEl).call(_yAxis);
+
+    // update label positions based on axes size
+    _xAxisLabel.setAttribute('y', paddingBottom - _xAxisLabel.getBBox().height);
+    _yAxisLabel.setAttribute('y', _yAxisLabel.getBBox().height - paddingLeft);
+
+    // ask subclass to (re)render
+    _this.plot(originalChanged);
+
+    // now position legend
   };
 
   /**
@@ -309,7 +359,7 @@ var D3GraphView = function (options) {
    * @see d3.extent
    */
   _this.getXExtent = function () {
-    return [0, 1];
+    return _this.model.get('xExtent');
   };
 
   /**
@@ -320,7 +370,7 @@ var D3GraphView = function (options) {
    * @see d3.extent
    */
   _this.getYExtent = function () {
-    return [0, 1];
+    return _this.model.get('yExtent');
   };
 
   /**
@@ -330,86 +380,106 @@ var D3GraphView = function (options) {
     // plot lines
   };
 
-  _this.showTooltip = function (coords, lines) {
-    var bbox,
-        content,
-        options,
-        outline,
-        padding = 5,
-        tooltip,
-        tooltipBbox,
-        width,
-        x,
-        y;
+  /**
+   * Format tooltip content.
+   *
+   * @param el {D3Element}
+   *        tooltip container element.
+   * @param data {Array<Object|Array>}
+   *        data passed to showTooltip.
+   *        this implementation expects objects (or arrays of objects):
+   *        obj.class {String} class attribute for text|tspan.
+   *        obj.text {String} content for text|tspan.
+   */
+  _this.formatTooltip = function (el, data) {
+    var y;
 
-    tooltip = d3.select(_tooltip);
-    // hide tooltip
-    tooltip.selectAll('*').remove();
-    if (!coords || !lines) {
-      return;
-    }
-
-    options = _this.model.get();
-    // create tooltip content
-    content = tooltip.append('g')
-        .attr('class', 'tooltip-content');
-    outline = content.append('rect')
-        .attr('class', 'tooltip-outline');
     // add content to tooltip
-    lines = lines.map(function (line) {
-      var text = content.append('text');
-      if (typeof line === 'string') {
-        text.text(line);
+    data = data.map(function (line) {
+      var text = el.append('text');
+      if (typeof line.forEach === 'function') {
+        // array of components:
+        line.forEach(function (l) {
+          text.append('tspan').attr('class', l.class || '').text(l.text);
+        });
       } else {
-        if (line.label) {
-          text.append('tspan')
-              .attr('class', 'label')
-              .text(line.label);
-        }
-        if (line.value) {
-          text.append('tspan')
-              .attr('class', 'value')
-              .text(line.value);
-        }
+        text.attr('class', line.class || '').text(line.text);
       }
       return text;
     });
     // position lines in tooltip
-    width = 0;
-    y = padding;
-    lines.forEach(function (line) {
+    y = 0;
+    data.forEach(function (line) {
       var bbox = line.node().getBBox();
-      width = Math.max(width, bbox.width);
       y += bbox.height;
-      line.attr('x', padding).attr('y', y);
+      line.attr('y', y);
     });
-    // set size of outline
-    outline.attr('width', width + 2 * padding)
-        .attr('height', y + padding);
+  };
+
+  /**
+   * Show a tooltip on the graph.
+   *
+   * @param coords {Array<x, y>}
+   *        coordinate for origin of tooltip.
+   * @param data {Array<Object|Array>}
+   *        tooltip content, passed to formatTooltip.
+   */
+  _this.showTooltip = function (coords, data) {
+    var bbox,
+        content,
+        offset,
+        options,
+        outline,
+        padding,
+        tooltip,
+        tooltipBbox,
+        x,
+        y;
+
+    tooltip = d3.select(_tooltip);
+    // clear tooltip
+    tooltip.selectAll('*').remove();
+    if (!coords || !data) {
+      return;
+    }
+
+    options = _this.model.get();
+    offset = options.tooltipOffset;
+    padding = options.tooltipPadding;
+    // create tooltip content
+    outline = tooltip.append('rect').attr('class', 'tooltip-outline');
+    content = tooltip.append('g').attr('class', 'tooltip-content');
+    _this.formatTooltip(content, data);
+    // position tooltip outline
+    bbox = tooltip.node().getBBox();
+    outline.attr('width', bbox.width + 2 * padding)
+        .attr('height', bbox.height + 2 * padding);
+    content.attr('transform', 'translate(' + padding + ',0)');
 
     // position tooltip on graph
     // center of point
     x = options.xAxisScale(coords[0]);
     y = options.yAxisScale(coords[1]);
     // box rendering inside
-    bbox = _dataEl.getBBox();
+    bbox = _innerFrame.getBBox();
     // box being rendered
     tooltipBbox = _tooltip.getBBox();
     // keep tooltip in graph area
     if (x + tooltipBbox.width > bbox.width) {
-      x = x - tooltipBbox.width - 10;
+      x = x - tooltipBbox.width - offset;
     } else {
-      x = x + 10;
+      x = x + offset;
     }
     if (y + tooltipBbox.height > bbox.height) {
-      y = y - tooltipBbox.height - 10;
+      y = y - tooltipBbox.height - offset;
     } else {
-      y = y + 10;
+      y = y + offset;
     }
     // set position
     _tooltip.setAttribute('transform',
         'translate(' + x + ',' + y + ')');
   };
+
 
   _initialize(options);
   options = null;
