@@ -100,21 +100,19 @@ var SiteClassView = function (params) {
    */
   _updateSiteClassCollectionSelectBox = function () {
     var edition,
-        latitude,
-        longitude,
-        siteClasses = [];
+        location,
+        siteClasses;
 
     siteClasses = _dependencyFactory.getAllSiteClasses();
 
     if (_this.model) {
       edition = _this.model.get('edition');
-      latitude = _this.model.get('latitude');
-      longitude = _this.model.get('longitude');
+      location = _this.model.get('location');
 
       // check on requisite params for filtering
-      if (edition && latitude && longitude) {
+      if (edition && location) {
         siteClasses = _dependencyFactory.getFilteredSiteClasses(
-            edition.get('id'), latitude, longitude);
+            edition.get('id'), location.latitude, location.longitude);
       }
     }
 
@@ -179,8 +177,7 @@ var SiteClassView = function (params) {
 
     // update the site class collection before selecting
     if (typeof changes !== 'undefined' && (
-        changes.hasOwnProperty('latitude') ||
-        changes.hasOwnProperty('longitude') ||
+        changes.hasOwnProperty('location') ||
         changes.hasOwnProperty('edition'))) {
       _updateSiteClassCollectionSelectBox();
     } else {
