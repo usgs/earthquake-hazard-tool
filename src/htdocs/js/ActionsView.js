@@ -23,6 +23,7 @@ var EditionView = function (params) {
 
       _onCalculateClick,
       _onSaveClick,
+      _removeErrorReporting,
       _validateCalculation;
 
   _this = SelectedCollectionView(params);
@@ -66,6 +67,8 @@ var EditionView = function (params) {
     _saveButton = _this.el.querySelector('.actions-view-save');
     _saveButton.addEventListener('click', _onSaveClick);
 
+    // Clear error reporting when the current model in deselected
+    _this.collection.on('deselect', _removeErrorReporting);
   };
 
 
@@ -81,6 +84,10 @@ var EditionView = function (params) {
       _this.collection.add(analysis);
       _this.collection.select(analysis);
     }
+  };
+
+  _removeErrorReporting = function () {
+    _errorReportEl.innerHTML = '';
   };
 
   _validateCalculation = function (action) {
@@ -114,7 +121,9 @@ var EditionView = function (params) {
       }
     }
 
-    if (errors.length !== 0) {
+    if (errors.length === 0) {
+      _errorReportEl.innerHTML = '';
+    } else {
       _errorReportEl.classList.add('alert');
       _errorReportEl.classList.add('error');
       _errorReportEl.innerHTML = '<p>The following parameters must be ' +
@@ -131,8 +140,11 @@ var EditionView = function (params) {
    */
   _this.destroy = Util.compose(function () {
 
+    _this.collection.off('deselect', _removeErrorReporting);
+
     _onCalculateClick = null;
     _onSaveClick = null;
+    _removeErrorReporting = null;
     _validateCalculation = null;
 
     _accordion = null;
