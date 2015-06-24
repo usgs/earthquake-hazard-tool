@@ -14,7 +14,8 @@ var TimeHorizonInputView = function (params) {
 
   _initialize = function () {
     _this.el.innerHTML =
-        '<label for="timeHorizonInput">Time Horizon: </label>' +
+        '<label for="timeHorizonInput">Time Horizon</label>' +
+        '<small class="help">Return period in years</small>' +
         '<input type="text" class="timeHorizonInput"/>';
     _timeHorizonInput = _this.el.querySelector('.timeHorizonInput');
     _timeHorizonInput.addEventListener('blur', _updateTimeHorizon);
