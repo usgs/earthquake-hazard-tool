@@ -5,6 +5,7 @@ var EditionView = require('EditionView'),
     LocationInfoView = require('mvc/SelectedCollectionView'), // TODO
     SiteClassView = require('SiteClassView'),
     TimeHorizonInputView = require('TimeHorizonInputView'),
+    TimeHorizonSliderView = require('TimeHorizonSliderView'),
 
     Collection = require('mvc/Collection'),
     View = require('mvc/View'),
@@ -37,6 +38,7 @@ var BasicInputView = function (params) {
       _siteClassView,
       _timeHorizonEl,
       _timeHorizonInputView,
+      _timeHorizonSliderView,
 
       _createView;
 
@@ -74,6 +76,11 @@ var BasicInputView = function (params) {
     });
 
     _timeHorizonInputView = TimeHorizonInputView({
+      collection: _this.collection,
+      el: _timeHorizonEl
+    });
+
+    _timeHorizonSliderView = TimeHorizonSliderView({
       collection: _this.collection,
       el: _timeHorizonEl
     });
@@ -115,6 +122,7 @@ var BasicInputView = function (params) {
     _locationInfoView.destroy();
     _siteClassView.destroy();
     _timeHorizonInputView.destroy();
+    _timeHorizonSliderView.destroy();
 
     if (_destroyCollection) {
       _this.collection.destroy();
@@ -130,6 +138,7 @@ var BasicInputView = function (params) {
     _siteClassView = null;
     _timeHorizonEl = null;
     _timeHorizonInputView = null;
+    _timeHorizonSliderView = null;
 
     // methods
     _createView = null;
