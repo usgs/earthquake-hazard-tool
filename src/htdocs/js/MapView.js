@@ -1,30 +1,39 @@
 'use strict';
 
 var Layers = require('map/Layers'),
-    LayerControl = require('map/LayerControl');
+    LayerControl = require('map/LayerControl'),
+
+    L = require('leaflet'),
+
+    LocationControl = require('locationview/LocationControl'),
+
+    SelectedCollectionView = require('mvc/SelectedCollectionView'),
+
+    Util = require('util/Util');
 
 require('map/MousePosition');
 
-var L = require('leaflet'),
-    Util = require('util/Util'),
-    View = require('mvc/View');
 
 var MapView = function (options) {
   var _this,
       _initialize,
 
       // variables
+      _locationControl,
       _map;
 
-  _this = View(options);
+  _this = SelectedCollectionView(options);
 
   _initialize = function () {
-    _this.el.className = 'map-view';
-    _this.el.setAttribute('style', 'height:100%;');
+    var el;
 
-    _map = L.map(_this.el, {
+    el = _this.el.appendChild(document.createElement('div'));
+    el.classList.add('map-view');
+
+    _map = L.map(el, {
       scrollWheelZoom: false,
-      zoomAnimation: true
+      zoomAnimation: true,
+      attributionControl: false // This is added later, but order matters
     });
 
     // Add layers/control to the map
@@ -32,11 +41,36 @@ var MapView = function (options) {
 
     // Add Map Controls
     if (!Util.isMobile()) {
+      _map.addControl(L.control.scale({position: 'bottomright'}));
       _map.addControl(L.control.mousePosition());
-      _map.addControl(L.control.scale({'position':'bottomleft'}));
+      _map.addControl(L.control.attribution());
     }
 
+    // Add location control
+    _locationControl = new LocationControl({
+      el: el,
+      includeGeolocationControl: true,
+      includeGeocodeControl: true,
+      includeCoordinateControl: true,
+      includePointControl: true
+    });
+    _map.addControl(_locationControl);
+
     _map.fitBounds([[24.6, -125.0], [50.0, -65.0]]);
+
+    if (_this.model) {
+      var location;
+
+      location = _this.model.get('location');
+
+      if (location) {
+        _locationControl.setLocation(location);
+      } else {
+        _locationControl.enable();
+      }
+    } else {
+      _locationControl.enable();
+    }
   };
 
   /**
@@ -63,8 +97,14 @@ var MapView = function (options) {
   };
 
   _this.destroy = Util.compose(function () {
+      _map.removeControl(_locationControl);
+
       // variables
+      _locationControl = null;
       _map = null;
+
+      _initialize = null;
+      _this = null;
   }, _this.destroy);
 
   _initialize(options);
