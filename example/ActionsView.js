@@ -1,0 +1,55 @@
+'use strict';
+
+var Analysis = require('Analysis'),
+    ActionsView = require('ActionsView'),
+    Meta = require('Meta'),
+    Region = require('Region'),
+
+    Collection = require('mvc/Collection');
+
+var metadata = require('etc/metadata');
+
+var analyses = [],
+    collection,
+    edition,
+    region,
+    imt,
+    vs30;
+
+edition = Meta(metadata.parameters.edition.values[0]);
+region = Region(metadata.parameters.region.values[0]);
+vs30 = Meta(metadata.parameters.vs30.values[0]);
+imt = Meta(metadata.parameters.imt.values[0]);
+
+// build array of analysis models for the collection
+analyses.push(Analysis({
+  edition: edition,
+  region: region,
+
+  longitude: -116,
+  latitude: 35,
+
+  imt: imt,
+  vs30: vs30
+}));
+
+analyses.push(Analysis({
+  edition: edition,
+  region: region,
+
+  longitude: -105,
+  latitude: 40,
+
+  imt: imt,
+  vs30: vs30
+}));
+
+// select the first item in the collection 
+collection = Collection(analyses);
+collection.select(analyses[0]);
+
+// build the actions view
+ActionsView({
+  el: document.getElementById('example'),
+  collection: collection
+});
