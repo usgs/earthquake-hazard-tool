@@ -12,6 +12,7 @@ var Layers = require('map/Layers'),
     Util = require('util/Util');
 
 require('map/MousePosition');
+require('map/Fullscreen');
 
 
 var MapView = function (options) {
@@ -41,6 +42,7 @@ var MapView = function (options) {
 
     // Add Map Controls
     if (!Util.isMobile()) {
+      _map.addControl(L.control.fullscreen());
       _map.addControl(L.control.scale({position: 'bottomright'}));
       _map.addControl(L.control.mousePosition());
       _map.addControl(L.control.attribution());
@@ -72,22 +74,6 @@ var MapView = function (options) {
       _locationControl.enable();
     }
   };
-
-  /**
-   * Called when tab is selected.
-   */
-  _this.onSelect = function () {
-    _map.invalidateSize();
-
-    if (!_map.getZoom()) {
-      _map.fitBounds([[24.6, -125.0], [50.0, -65.0]]);
-    }
-  };
-
-  /**
-   * Called when tab is deselected.
-   */
-  _this.onDeselect = function () {};
 
   /**
    * Return the Leaflet map
