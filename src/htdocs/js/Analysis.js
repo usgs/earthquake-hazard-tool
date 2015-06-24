@@ -17,8 +17,7 @@ var Analysis = function (options) {
     edition: null,
     region: null,
 
-    latitude: null,
-    longitude: null,
+    location: null,
 
     imt: null,
     vs30: null,
