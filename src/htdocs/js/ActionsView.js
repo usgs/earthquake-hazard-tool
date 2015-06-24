@@ -31,13 +31,16 @@ var EditionView = function (params) {
    * @constructor
    */
   _initialize = function () {
+
+    _this.el.className = 'actions-view';
+
     _accordion = Accordion({
       el: _this.el,
       accordions: [
         {
           toggleElement: 'div',
           toggleText: 'ActionsView',
-          content: 'TODO, CollectionView',
+          content: '<p>TODO, add a CollectionView</p>',
           classes: 'accordion-closed'
         }
       ]
