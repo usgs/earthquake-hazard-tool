@@ -1,0 +1,34 @@
+.leaflet-control-fullscreen {
+  border-radius: 4px;
+  cursor: pointer;
+  display: block;
+  position: relative;
+  text-align: center;
+
+  &:after {
+    color: #000;
+    // Can also consider '\2921' or '\2922' (arrows)
+    content: '\2750';
+    display: block;
+    font-family: 'Lucida Console', Monaco, monospace;
+    font-size: 18px;
+    height: 26px;
+    line-height: 26px;
+    width: 26px;
+  }
+}
+
+.leaflet-container.leaflet-map-fullscreen {
+  bottom: 0;
+  height: auto;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  right: 0;
+  top: 0;
+  width: auto;
+  z-index: 999;
+
+  position: fixed !important;
+
+}
