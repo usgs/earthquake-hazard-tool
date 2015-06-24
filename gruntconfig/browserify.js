@@ -65,6 +65,7 @@ addExports(config.src + '/htdocs/js', [
   'StaticCurveOutputView',
   'TimeHorizonInputView',
   'TimeHorizonSelectView',
+  'TimeHorizonSliderView',
 
   'map/Fullscreen',
   'map/Layers',
