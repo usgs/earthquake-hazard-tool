@@ -23,7 +23,7 @@ imt = Meta(metadata.parameters.imt.values[0]);
 
 // build array of analysis models for the collection
 analyses.push(Analysis({
-  edition: edition,
+  edition: Meta(metadata.parameters.edition.values[0]),
   region: region,
 
   longitude: -116,
@@ -34,7 +34,7 @@ analyses.push(Analysis({
 }));
 
 analyses.push(Analysis({
-  edition: edition,
+  edition: Meta(metadata.parameters.edition.values[1]),
   region: region,
 
   longitude: -105,
