@@ -19,7 +19,6 @@ var ContourTypeView = function (params) {
       _updateContourType;
 
   _this = SelectedCollectionView(params);
-  _collectionSelectBox = CollectionSelectBox;
 
   _initialize = function (params) {
     _contourTypes = params.contourType;
@@ -36,7 +35,7 @@ var ContourTypeView = function (params) {
     _selectBox = _this.el.querySelector('.selectBox');
     _message = _this.el.querySelector('.message');
 
-    _collectionSelectBox({
+    _collectionSelectBox = CollectionSelectBox({
       collection: _contourTypes,
       el: _selectBox,
       includeBlankOption: true,
