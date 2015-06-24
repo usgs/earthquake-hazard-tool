@@ -1,14 +1,13 @@
 'use strict';
 
-var Analysis = require('Analysis'),
-    BasicInputsView = require('BasicInputsView'),
+var BasicInputsView = require('BasicInputsView'),
+    Calculator = require('Calculator'),
     DependencyFactory = require('DependencyFactory'),
     HazardCurveView = require('mvc/SelectedCollectionView'), // TODO
     HazardSpectrumView = require('mvc/SelectedCollectionView'), // TODO
     MapView = require('MapView'),
 
-    Collection = require('mvc/Collection'),
-    View = require('mvc/View');
+    SelectedCollectionView = require('mvc/SelectedCollectionView');
 
 
 var ApplicationView = function (params) {
@@ -16,11 +15,11 @@ var ApplicationView = function (params) {
       _initialize,
 
       // variables
-      _analysisCollection,
       _basicInputsEl,
       _basicInputsView,
+      _calculator,
       _dependencyFactory,
-      _destroyDependencyFactory,
+      _destroyCalculator,
       _hazardCurveEl,
       _hazardCurveView,
       _hazardSpectrumEl,
@@ -32,42 +31,38 @@ var ApplicationView = function (params) {
       _initViewContainer;
 
 
-  _this = View(params);
+  _this = SelectedCollectionView(params);
 
   _initialize = function (params) {
     _initViewContainer();
 
-    _dependencyFactory = params.dependencyFactory;
-    if (!_dependencyFactory) {
-      _dependencyFactory = DependencyFactory.getInstance();
-      _destroyDependencyFactory = true;
-    }
+    _dependencyFactory = params.dependencyFactory ||
+        DependencyFactory.getInstance();
 
-    _analysisCollection = Collection([Analysis({
-      edition: _dependencyFactory.getEdition('E2008R3'),
-      vs30: _dependencyFactory.getSiteClass('760'),
-      timeHorizon: 2475,
-    })]);
-    _analysisCollection.select(_analysisCollection.data()[0]);
+    _calculator = params.calculator;
+    if (!_calculator) {
+      _calculator = Calculator();
+      _destroyCalculator = true;
+    }
 
 
     _basicInputsView = BasicInputsView({
-      collection: _analysisCollection,
+      collection: _this.collection,
       el: _basicInputsEl
     });
 
     _mapView = MapView({
-      collection: _analysisCollection,
+      collection: _this.collection,
       el: _mapEl
     });
 
     _hazardCurveView = HazardCurveView({
-      collection: _analysisCollection,
+      collection: _this.collection,
       el: _hazardCurveEl
     });
 
     _hazardSpectrumView = HazardSpectrumView({
-      collection: _analysisCollection,
+      collection: _this.collection,
       el: _hazardCurveEl
     });
   };
@@ -101,7 +96,9 @@ var ApplicationView = function (params) {
 
 
   _this.destroy = function () {
-    _analysisCollection.destroy();
+    if (_destroyCalculator) {
+      _calculator.destroy();
+    }
 
     // sub-views
     _basicInputsView.destroy();
@@ -109,16 +106,12 @@ var ApplicationView = function (params) {
     _hazardSpectrumView.destroy();
     _mapView.destroy();
 
-    if (_destroyDependencyFactory) {
-      _dependencyFactory.destroy();
-    }
-
     // variables
-    _analysisCollection = null;
     _basicInputsEl = null;
     _basicInputsView = null;
+    _calculator = null;
     _dependencyFactory = null;
-    _destroyDependencyFactory = null;
+    _destroyCalculator = null;
     _hazardCurveEl = null;
     _hazardCurveView = null;
     _hazardSpectrumEl = null;
@@ -131,6 +124,24 @@ var ApplicationView = function (params) {
 
     _initialize = null;
     _this = null;
+  };
+
+  _this.render = function () {
+    // TODO :: Use generalized method to check if analysis is ready
+    var analysisReady;
+
+    analysisReady = function (a) {
+      return (
+        a.get('edition') !== null &&
+        a.get('region') !== null &&
+        a.get('location') !== null &&
+        a.get('vs30') !== null
+      );
+    };
+
+    if (_this.model && analysisReady(_this.model)) {
+      _calculator.getResult('staticcurve', _this.model);
+    }
   };
 
 
