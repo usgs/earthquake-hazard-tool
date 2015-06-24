@@ -69,8 +69,6 @@ var ContourTypeView = function (params) {
   _this.render = function () {
     var contourType;
 
-    _updateContourType();
-
     if (_this.model) {
       contourType = _this.model.get('contourType');
       if (contourType) {
