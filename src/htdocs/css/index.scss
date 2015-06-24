@@ -1,13 +1,3 @@
-@import 'css/_variables.scss';
-@import 'css/_button.scss';
-@import 'css/_list.scss';
-@import 'css/_page.scss';
-@import 'css/_text.scss';
-@import 'css/_typography.scss';
-@import 'css/_form.scss';
-@import 'css/responsive-table.scss';
-@import 'tablist/hazdev-tablist.scss';
-
 @import 'locationview/CoordinateControl';
 @import 'locationview/GeocodeControl';
 @import 'locationview/GeolocationControl';
@@ -26,12 +16,3 @@
 @import '_LayerControl';
 @import '_MapView';
 @import '_TimeHorizonSliderView';
-
-
-html,
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-}
