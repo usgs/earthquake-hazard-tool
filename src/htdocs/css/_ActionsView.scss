@@ -1,9 +1,15 @@
 .actions-view > .accordion {
-  margin: 1em 0 0;
+
 }
 
 .actions-view {
+  .error-reporting {
+    margin: 1em 0 0;
+  }
+
   > .accordion {
+    margin: 1em 0 0;
+
     .accordion-toggle {
       padding: .6em 2em .6em 1em;
 

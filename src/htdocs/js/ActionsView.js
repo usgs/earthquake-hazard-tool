@@ -88,6 +88,8 @@ var EditionView = function (params) {
 
   _removeErrorReporting = function () {
     _errorReportEl.innerHTML = '';
+    _errorReportEl.classList.remove('error');
+    _errorReportEl.classList.remove('alert');
   };
 
   _validateCalculation = function (action) {
@@ -122,13 +124,13 @@ var EditionView = function (params) {
     }
 
     if (errors.length === 0) {
-      _errorReportEl.innerHTML = '';
+      _removeErrorReporting();
     } else {
       _errorReportEl.classList.add('alert');
       _errorReportEl.classList.add('error');
-      _errorReportEl.innerHTML = '<p>The following parameters must be ' +
-          'selected before ' + action + ':</p>' +
-          '<ul class="alert error">' + errors.join('') + '</ul>';
+      _errorReportEl.innerHTML = '<b>The following parameters must be ' +
+          'selected before ' + action + ':</b>' +
+          '<ul>' + errors.join('') + '</ul>';
       isValid = false;
     }
 
