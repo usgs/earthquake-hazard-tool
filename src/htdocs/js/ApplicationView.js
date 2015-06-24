@@ -44,12 +44,12 @@ var ApplicationView = function (params) {
     }
 
     _analysisCollection = Collection([Analysis({
-      edition: _dependencyFactory.getAllEditions()[0],
-      vs30: _dependencyFactory.getSiteClass(3),
+      edition: _dependencyFactory.getEdition('E2008R3'),
+      vs30: _dependencyFactory.getSiteClass('760'),
       timeHorizon: 2475,
     })]);
     _analysisCollection.select(_analysisCollection.data()[0]);
-    console.log(_analysisCollection.getSelected().toJSON());
+
 
     _basicInputsView = BasicInputsView({
       collection: _analysisCollection,
