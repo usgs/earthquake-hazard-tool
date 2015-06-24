@@ -9,6 +9,8 @@ var ContourTypeView = function (params) {
 
       _contourType,
       _collectionSelectBox,
+      _message,
+      _selectBox,
 
       _updateContourType;
 
@@ -16,14 +18,18 @@ var ContourTypeView = function (params) {
   _collectionSelectBox = CollectionSelectBox;
 
   _initialize = function (params) {
+
     _contourType = params.contourType;
 
     _this.el.innerHTML = '<div class="selectBox"></div>' +
       '<div class="message"></div>';
 
+    _selectBox = _this.el.querySelector('.selectBox');
+    _message = _this.el.querySelector('.message');
+
     _collectionSelectBox({
       collection: _contourType,
-      el: _this.el.querySelector('.selectBox'),
+      el: _selectBox,
       includeBlankOption: true,
       format: function (model) {
         return model.get('display');
@@ -65,13 +71,15 @@ var ContourTypeView = function (params) {
 
     _updateContourType();
 
-    if (_this.model && _this.model.get('contourType')) {
-      contourType = _this.model.get('contourType').get('display');
-      if (contourType === 'Gridded Hazard')  {
-        _this.el.querySelector('.message').innerHTML =
-            '<p><small>This data is always for the B/C Boundry.</small></p>';
-      } else {
-        _this.el.querySelector('.message').innerHTML = null;
+    if (_this.model) {
+      contourType = _this.model.get('contourType');
+      if (contourType) {
+        if (contourType.get('display') === 'Hazard Contours') {
+          _message.innerHTML =
+              '<small>This data is always for the B/C boundry.</small>';
+        } else {
+          _message.innerHTML = '';
+        }
       }
     }
   };
