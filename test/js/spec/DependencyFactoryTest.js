@@ -9,13 +9,25 @@ var expect = chai.expect;
 
 describe('DependencyFactory test suite.', function () {
   describe('Constructor', function () {
-    it('can be created and destroyed', function () {
-      var createDestroy = function () {
-        var view = DependencyFactory();
-        view.destroy();
+    it('can be created and destroyed', function (done) {
+      var create,
+          destroy,
+          factory;
+
+      create = function () {
+        factory = DependencyFactory.getInstance();
       };
 
-      expect(createDestroy).to.not.throw('Error');
+      destroy = function () {
+        factory.destroy();
+      };
+
+      expect(create).to.not.throw('Error');
+
+      factory.whenReady(function () {
+        expect(destroy).to.not.throw('Error');
+        done();
+      });
     });
   });
 
@@ -27,9 +39,9 @@ describe('DependencyFactory test suite.', function () {
         allSiteClasses,
         allSpectralPeriods;
 
-    factory = DependencyFactory.getInstance();
 
     before(function (done) {
+      factory = DependencyFactory.getInstance();
       factory.whenReady(done);
     });
 
@@ -75,12 +87,12 @@ describe('DependencyFactory test suite.', function () {
         latitude,
         longitude;
 
-    factory = DependencyFactory.getInstance();
     edition = 3;
     latitude = 40;
     longitude = -105;
 
     before(function (done) {
+      factory = DependencyFactory.getInstance();
       factory.whenReady(done);
     });
 
