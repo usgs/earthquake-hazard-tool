@@ -20,18 +20,14 @@ var TIME_HORIZONS = [
 ];
 
 /**
- * Displays a collection of Time Horizons in a collection select box,
- * The collection of time horizons updates when the selected analysis
- * in the collection of analyses changes.
- *
- * timeHorizonSelectView({
+ * TimeHorizonSliderView({
  *   el: document.createElement('div'),
  *   collection: Collection([Analysis])
  * });
  *
  * @param {[type]} params [description]
  */
-var timeHorizonSelectView = function (params) {
+var TimeHorizonSliderView = function (params) {
 
   var _this,
       _initialize,
@@ -54,7 +50,7 @@ var timeHorizonSelectView = function (params) {
     options = TIME_HORIZONS;
 
     for(i = 0; i < options.length; i++) {
-      buttons.push('<button value="' + options[i].value + '"">' +
+      buttons.push('<button value="' + options[i].value + '">' +
           options[i].display + '</button>');
     }
 
@@ -102,4 +98,4 @@ var timeHorizonSelectView = function (params) {
 
 };
 
-module.exports = timeHorizonSelectView;
+module.exports = TimeHorizonSliderView;
