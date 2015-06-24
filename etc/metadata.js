@@ -217,8 +217,8 @@ module.exports = {
         },
         {
           "id": 1,
-          "value": "Gridded Hazard",
-          "display": "Gridded Hazard",
+          "value": "Earthquake Probability",
+          "display": "Earthquake Probability",
           "displayorder": 1
         }
       ]
