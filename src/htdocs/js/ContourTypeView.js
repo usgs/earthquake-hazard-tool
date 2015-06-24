@@ -1,14 +1,18 @@
 'use strict';
-var CollectionSelectBox = require('mvc/CollectionSelectBox'),
+
+var Collection = require('mvc/Collection'),
+    CollectionSelectBox = require('mvc/CollectionSelectBox'),
     SelectedCollectionView = require('mvc/SelectedCollectionView'),
+
     Util = require('util/Util');
 
 var ContourTypeView = function (params) {
   var _this,
       _initialize,
 
-      _contourType,
+      _contourTypes,
       _collectionSelectBox,
+      _destroyContourTypes,
       _message,
       _selectBox,
 
@@ -18,8 +22,13 @@ var ContourTypeView = function (params) {
   _collectionSelectBox = CollectionSelectBox;
 
   _initialize = function (params) {
+    _contourTypes = params.contourType;
+    _destroyContourTypes = false;
 
-    _contourType = params.contourType;
+    if (!_contourTypes) {
+      _contourTypes = Collection();
+      _destroyContourTypes = true;
+    }
 
     _this.el.innerHTML = '<div class="selectBox"></div>' +
       '<div class="message"></div>';
@@ -28,7 +37,7 @@ var ContourTypeView = function (params) {
     _message = _this.el.querySelector('.message');
 
     _collectionSelectBox({
-      collection: _contourType,
+      collection: _contourTypes,
       el: _selectBox,
       includeBlankOption: true,
       format: function (model) {
@@ -37,8 +46,8 @@ var ContourTypeView = function (params) {
     });
 
     // bind to select on contour type change
-    _contourType.on('select', _updateContourType, _this);
-    _contourType.on('deselect', _updateContourType, _this);
+    _contourTypes.on('select', _updateContourType, _this);
+    _contourTypes.on('deselect', _updateContourType, _this);
 
     _this.render();
   };
@@ -49,7 +58,7 @@ var ContourTypeView = function (params) {
    */
   _updateContourType = function () {
     if (_this.model) {
-      _this.model.set({'contourType': _contourType.getSelected()});
+      _this.model.set({'contourType': _contourTypes.getSelected()});
     }
   };
 
@@ -57,13 +66,17 @@ var ContourTypeView = function (params) {
    * Calls CollectionSelectionBox.destroy() and cleans up local variables
    */
   _this.destroy = Util.compose(function () {
-    _contourType.off('select', _updateContourType, _this);
-    _contourType.off('deselect', _updateContourType, _this);
+    if (_destroyContourTypes === true) {
+      _contourTypes = null;
+    }
+
+    _contourTypes.off('select', _updateContourType, _this);
+    _contourTypes.off('deselect', _updateContourType, _this);
     _updateContourType = null;
-    _contourType = null;
     _collectionSelectBox = null;
     _this = null;
     _initialize = null;
+
   }, _this.destroy);
 
   _this.render = function () {
