@@ -66,15 +66,19 @@ var ContourTypeView = function (params) {
    */
   _this.destroy = Util.compose(function () {
     if (_destroyContourTypes === true) {
-      _contourTypes = null;
+      _contourTypes.destroy();
     }
 
     _contourTypes.off('select', _updateContourType, _this);
     _contourTypes.off('deselect', _updateContourType, _this);
-    _updateContourType = null;
+
     _collectionSelectBox = null;
-    _this = null;
+    _contourTypes = null;
+    _destroyContourTypes = null;
     _initialize = null;
+    _message = null;
+    _this = null;
+    _updateContourType = null;
 
   }, _this.destroy);
 
