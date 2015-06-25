@@ -23,7 +23,9 @@ var Analysis = function (options) {
     imt: null,
     vs30: null,
 
-    timeHorizon: null
+    timeHorizon: null,
+    contourType: null
+
   }, options));
 
   _initialize = function (/*options*/) {

@@ -49,6 +49,7 @@ addExports(config.src + '/htdocs/js', [
   'AnalysisView',
   'ApplicationView',
   'Calculator',
+  'ContourTypeView',
   'DependencyFactory',
   'EditionView',
   'HazardCurve',
