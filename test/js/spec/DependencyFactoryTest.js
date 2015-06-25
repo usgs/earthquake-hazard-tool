@@ -87,7 +87,7 @@ describe('DependencyFactory test suite.', function () {
         latitude,
         longitude;
 
-    edition = 3;
+    edition = 'E2008R3';
     latitude = 40;
     longitude = -105;
 

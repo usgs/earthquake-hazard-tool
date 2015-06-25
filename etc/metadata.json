@@ -14,9 +14,9 @@
           "displayorder": 3,
           "supports": {
             "region": [
-              0,
-              1,
-              2
+              "COUS0P05",
+              "WUS0P05",
+              "CEUS0P05"
             ],
             "contourType": [
               0
@@ -30,9 +30,9 @@
           "displayorder": 4,
           "supports": {
             "region": [
-              0,
-              1,
-              2
+              "COUS0P05",
+              "WUS0P05",
+              "CEUS0P05"
             ],
             "contourType": [
               0
@@ -47,7 +47,7 @@
       "values": [
         {
           "id": 0,
-          "value": "COUS",
+          "value": "COUS0P05",
           "display": "Conterminous US",
           "displayorder": 0,
           "minlatitude": 24.6,
@@ -57,18 +57,18 @@
           "gridspacing": 0.05,
           "supports": {
             "imt": [
-              1,
-              4,
-              8
+              "PGA",
+              "SA0P2",
+              "SA1P0"
             ],
             "vs30": [
-              2
+              "760"
             ]
           }
         },
         {
           "id": 1,
-          "value": "WUS",
+          "value": "WUS0P05",
           "display": "Western US",
           "displayorder": 1,
           "minlatitude": 24.6,
@@ -78,23 +78,23 @@
           "gridspacing": 0.05,
           "supports": {
             "imt": [
-              1,
-              4,
-              8
+              "PGA",
+              "SA0P2",
+              "SA1P0"
             ],
             "vs30": [
-              1,
-              2,
-              3,
-              4,
-              5,
-              6
+              "1150",
+              "760",
+              "537",
+              "360",
+              "259",
+              "180"
             ]
           }
         },
         {
           "id": 2,
-          "value": "CEUS",
+          "value": "CEUS0P05",
           "display": "Central & Eastern US",
           "displayorder": 2,
           "minlatitude": 24.6,
@@ -104,13 +104,13 @@
           "gridspacing": 0.05,
           "supports": {
             "imt": [
-              1,
-              4,
-              8
+              "PGA",
+              "SA0P2",
+              "SA1P0"
             ],
             "vs30": [
-              0,
-              2
+              "2000",
+              "760"
             ]
           }
         }
