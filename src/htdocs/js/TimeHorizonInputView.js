@@ -2,6 +2,7 @@
 
 var ModalView = require('mvc/ModalView'),
     SelectedCollectionView = require('mvc/SelectedCollectionView'),
+    TimeHorizonSliderView = require('TimeHorizonSliderView'),
     Util = require('util/Util');
 
 var TimeHorizonInputView = function (params) {
@@ -9,20 +10,46 @@ var TimeHorizonInputView = function (params) {
       _initialize,
 
       _modal,
+      _sliderView,
       _timeHorizonInput,
+
       _updateTimeHorizon;
 
   _this = SelectedCollectionView(params);
 
   _initialize = function () {
+    var div;
+
     _this.el.innerHTML =
         '<label for="timeHorizonInput">Time Horizon</label>' +
         '<small class="help">Return period in years</small>' +
         '<input type="text" class="timeHorizonInput"/>';
     _timeHorizonInput = _this.el.querySelector('.timeHorizonInput');
-    _timeHorizonInput.addEventListener('blur', _updateTimeHorizon);
+    _timeHorizonInput.addEventListener('change', _updateTimeHorizon);
+    div = document.createElement('div');
+
+    div.innerHTML = 'Time Horizon value must be between 0 and 5,000.';
+    _sliderView = TimeHorizonSliderView({
+      el: div,
+      collection: _this.collection
+    });
+
+    _modal = ModalView(div, {
+      title: 'Validation error',
+      classes: ['modal-error'],
+      buttons: [
+        {
+          callback: function () {
+            _modal.hide();
+          },
+          classes: ['okButton'],
+          text: 'ok'
+        }
+      ]
+    });
     _this.render();
   };
+
 
   // Updates timeHorizon on the model
   _updateTimeHorizon = function () {
@@ -35,48 +62,36 @@ var TimeHorizonInputView = function (params) {
           _this.model.set({
             'timeHorizon': timeHorizonInputValue
           });
-        } else {
-         _this.show();
+          return;
         }
       }
+      _timeHorizonInput.classList.add('error');
+      _timeHorizonInput.focus();
+      _modal.show();
     }
-  };
-
-  _this.hide = function () {
-    _modal.hide();
-  };
-
-  _this.show = function () {
-
-
-    _modal = ModalView(_this.el, {
-      title: 'Validation error',
-      message: 'Time Horizon value must be between 0 and 5,000',
-      buttons: [
-        {
-          callback: function () {
-            _modal.hide();
-          },
-          text: 'ok'
-        }
-      ]
-    });
-
-    //_modal.show();
   };
 
   _this.render = function () {
     if (_this.model) {
       _timeHorizonInput.value = _this.model.get('timeHorizon');
+      _timeHorizonInput.classList.remove('error');
+    }
+
+    if (_modal) {
+      _modal.hide();
     }
   };
 
   // Destroy all the things
   _this.destroy = Util.compose(function () {
-    _timeHorizonInput.removeEventListener('blur', _updateTimeHorizon);
+    _timeHorizonInput.removeEventListener('change', _updateTimeHorizon);
+
+    _modal = null;
+    _sliderView = null;
     _initialize = null;
     _this = null;
     _timeHorizonInput = null;
+    _updateTimeHorizon = null;
   }, _this.destroy);
 
   _initialize();
