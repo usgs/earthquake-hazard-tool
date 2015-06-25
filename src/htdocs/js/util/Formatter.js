@@ -66,4 +66,4 @@ var Formatter = {
   value: _value
 };
 
-module.export = Formatter;
+module.exports = Formatter;
