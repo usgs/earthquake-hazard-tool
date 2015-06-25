@@ -42,8 +42,13 @@ addExports('node_modules/hazdev-tablist/src', [
   'tablist/TabList'
 ]);
 
+addExports('node_modules/hazdev-accordion/src', [
+  'accordion/Accordion'
+]);
+
 // project exports
 addExports(config.src + '/htdocs/js', [
+  'ActionsView',
   'Analysis',
   'AnalysisCollectionView',
   'AnalysisView',
@@ -85,6 +90,7 @@ var browerify = {
       paths: [
         CWD + '/' + config.src + '/htdocs/js',
         NODE_MODULES,
+        NODE_MODULES + '/hazdev-accordion/src',
         NODE_MODULES + '/hazdev-tablist/src',
         NODE_MODULES + '/hazdev-webutils/src',
         NODE_MODULES + '/hazdev-location-view/src'
