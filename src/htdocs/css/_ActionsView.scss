@@ -1,0 +1,36 @@
+.actions-view > .accordion {
+
+}
+
+.actions-view {
+  .error-reporting {
+    margin: 1em 0 0;
+  }
+
+  > .accordion {
+    margin: 1em 0 0;
+
+    .accordion-toggle {
+      padding: .6em 2em .6em 1em;
+
+      &:before {
+        font-size: 1.5em;
+        left: auto;
+        right: 0;
+      }
+    }
+
+    > .accordion-content {
+      padding: 0;
+
+      > .analysis-collection-list {
+        margin: 0;
+
+        > li {
+          margin: 0;
+          padding: 1em;
+        }
+      }
+    }
+  }
+}

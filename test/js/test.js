@@ -27,9 +27,11 @@ if (!Function.prototype.bind) {
 mocha.ui('bdd');
 
 // Add each test class here as they are implemented
+require('./spec/ActionsViewTest');
 require('./spec/AnalysisViewTest');
 require('./spec/AnalysisCollectionViewTest');
 require('./spec/ApplicationViewTest');
+require('./spec/ContourTypeViewTest');
 require('./spec/CalculatorTest');
 require('./spec/DependencyFactoryTest');
 require('./spec/EditionViewTest');
