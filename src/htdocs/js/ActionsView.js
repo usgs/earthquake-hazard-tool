@@ -8,7 +8,20 @@ var Analysis = require('Analysis'),
     SelectedCollectionView = require('mvc/SelectedCollectionView'),
     Util = require('util/Util');
 
-
+/**
+ * Displays an accordion with actions that can be taken on collection items.
+ * The ActionsView allows you to create a new analysis in the colleciton, and
+ * also validates the current selected analysis model before calculating
+ * curve data.
+ *
+ * ActionsView({
+ *   el: document.createElement('div'),
+ *   collection: Collection([Analysis])
+ * });
+ *
+ * @param params {Object}
+ *        an object with all optional parameters listed above
+ */
 var ActionsView = function (params) {
 
   var _this,
@@ -72,12 +85,17 @@ var ActionsView = function (params) {
   };
 
 
-  // check if current model is valid
+  /**
+   * Called when the "calculate button" is clicked
+   */
   _onCalculateClick = function () {
     _validateCalculation('calculating');
   };
 
-    // check if current model is valid
+  /**
+   * Called when the "new" button is clicked, if the current analysis model
+   * passes validation then a new analysis model is generated
+   */
   _onNewClick = function () {
     if (_validateCalculation('creating a new analysis')) {
       var analysis = Analysis();
@@ -86,12 +104,27 @@ var ActionsView = function (params) {
     }
   };
 
+  /**
+   * Removes all of the error output from the view
+   */
   _removeErrorReporting = function () {
     _errorReportEl.innerHTML = '';
     _errorReportEl.classList.remove('error');
     _errorReportEl.classList.remove('alert');
   };
 
+  /**
+   * Validates the currently selected Analysis model.
+   * Checks if all of the required parameters are set
+   * to perform a calculation.
+   *
+   * @param  action {String}
+   *         Text that is added to the error output to
+   *         provide context for the error.
+   *
+   * @return {Boolean} returns true if the Analysis model
+   *         validates, and false if it doesn't
+   */
   _validateCalculation = function (action) {
     var errors,
         isValid,
@@ -103,6 +136,7 @@ var ActionsView = function (params) {
     if (_this.model) {
       model = _this.model.get();
 
+      // validate Edition
       if (!model.edition) {
         errors.push('<li>Please select an Edition.</li>');
       }
@@ -112,12 +146,12 @@ var ActionsView = function (params) {
       //   errors.push('<li>Please select a Location.</li>');
       // }
 
-      // Location & Region
+      // validate Location & Region
       if (!model.latitude || !model.longitude || !model.region) {
         errors.push('<li>Please select a Location.</li>');
       }
 
-      // Site Class
+      // validate Site Class
       if (!model.vs30) {
         errors.push('<li>Please select a Site Class.</li>');
       }
@@ -163,7 +197,6 @@ var ActionsView = function (params) {
   _this.render = function () {
 
   };
-
 
   _initialize();
   params = null;
