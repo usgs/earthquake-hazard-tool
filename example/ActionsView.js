@@ -11,12 +11,10 @@ var metadata = require('etc/metadata');
 
 var analyses = [],
     collection,
-    edition,
     region,
     imt,
     vs30;
 
-edition = Meta(metadata.parameters.edition.values[0]);
 region = Region(metadata.parameters.region.values[0]);
 vs30 = Meta(metadata.parameters.vs30.values[0]);
 imt = Meta(metadata.parameters.imt.values[0]);
