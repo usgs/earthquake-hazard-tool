@@ -1,9 +1,7 @@
 /* global chai, describe, it */
 'use strict';
 
-
 var ActionsView = require('ActionsView');
-
 
 var expect = chai.expect;
 

@@ -9,7 +9,7 @@ var Analysis = require('Analysis'),
     Util = require('util/Util');
 
 
-var EditionView = function (params) {
+var ActionsView = function (params) {
 
   var _this,
       _initialize,
@@ -171,4 +171,4 @@ var EditionView = function (params) {
 
 };
 
-module.exports = EditionView;
+module.exports = ActionsView;
