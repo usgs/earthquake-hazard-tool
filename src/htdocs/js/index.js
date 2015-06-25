@@ -20,16 +20,29 @@ dependencyFactory = DependencyFactory.getInstance({
 
 dependencyFactory.whenReady(function () {
   analysis = Analysis({
-    edition: dependencyFactory.getEdition('E2008R3'),
-    vs30: dependencyFactory.getSiteClass('760'),
+    edition: 'E2008R3',
+    vs30: '760',
     timeHorizon: 2475,
+  });
+  window.model = analysis; // TODO :: remove this
+
+  analysis.on('change:staticcurves', function () {
+    console.log(analysis.get('staticcurves').toJSON());
   });
 
   analyses = Collection([analysis]);
-  analyses.select(analysis);
 
   ApplicationView({
     collection: analyses,
+    dependencyFactory: dependencyFactory,
     el: document.querySelector('.application')
+  });
+
+  analyses.select(analysis);
+
+  // TODO :: remove this ...
+  analysis.on('change:staticcurve', function () {
+    document.querySelector('.tmp-output').innerHTML =
+        JSON.stringify(analysis.toJSON(), null, 2);
   });
 });

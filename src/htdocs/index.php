@@ -27,3 +27,6 @@ if (!isset($TEMPLATE)) {
     Javascript is required to use this application.
   </noscript>
 </div>
+
+<!-- TODO :: remove this -->
+<pre class="tmp-output">Developer Output (remove for production)</pre>
