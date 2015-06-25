@@ -71,9 +71,7 @@ addExports(config.src + '/htdocs/js', [
 
   'map/Fullscreen',
   'map/Layers',
-  'map/LayerControl',
-
-  'util/Formatter'
+  'map/LayerControl'
 ]);
 
 // Subsequent source files can then require "Class" with:
