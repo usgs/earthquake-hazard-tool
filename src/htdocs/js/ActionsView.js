@@ -89,7 +89,12 @@ var ActionsView = function (params) {
    * Called when the "calculate button" is clicked
    */
   _onCalculateClick = function () {
-    _validateCalculation('calculating');
+    var text;
+
+    text = 'The following parameters must be selected before ' +
+        'performing a calculation:';
+
+    _validateCalculation(text);
   };
 
   /**
@@ -97,7 +102,12 @@ var ActionsView = function (params) {
    * passes validation then a new analysis model is generated
    */
   _onNewClick = function () {
-    if (_validateCalculation('creating a new analysis')) {
+    var text;
+
+    text = 'The following parameters must be selected on the current ' +
+        'calculation before performing a new calculation:';
+
+    if (_validateCalculation(text)) {
       var analysis = Analysis();
       _this.collection.add(analysis);
       _this.collection.select(analysis);
@@ -125,7 +135,7 @@ var ActionsView = function (params) {
    * @return {Boolean} returns true if the Analysis model
    *         validates, and false if it doesn't
    */
-  _validateCalculation = function (action) {
+  _validateCalculation = function (helpText) {
     var errors,
         isValid,
         model;
@@ -162,8 +172,7 @@ var ActionsView = function (params) {
     } else {
       _errorReportEl.classList.add('alert');
       _errorReportEl.classList.add('error');
-      _errorReportEl.innerHTML = '<b>The following parameters must be ' +
-          'selected before ' + action + ':</b>' +
+      _errorReportEl.innerHTML = '<b>' + helpText + '</b>' +
           '<ul>' + errors.join('') + '</ul>';
       isValid = false;
     }
