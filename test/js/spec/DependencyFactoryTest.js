@@ -101,12 +101,6 @@ describe('DependencyFactory test suite.', function () {
     //   expect(filteredContourTypes.length).to.equal(1);
     // });
 
-    it('can get filtered Site Classes', function () {
-      filteredSiteClasses = factory.getFilteredSiteClasses(
-          edition, latitude, longitude);
-      expect(filteredSiteClasses.length).to.equal(1);
-    });
-
     it('can get filtered Spectral Periods', function () {
       filteredSpectralPeriods = factory.getFilteredSpectralPeriods(
           edition, latitude, longitude);

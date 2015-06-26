@@ -42,7 +42,6 @@ var DependencyFactory = function (params) {
     getSiteClass: null,
     getSiteClasses: null,
     getAllSiteClasses: null,
-    getFilteredSiteClasses: null,
     getSpectralPeriod: null,
     getSpectralPeriods: null,
     getAllSpectralPeriods: null,
@@ -93,13 +92,7 @@ var DependencyFactory = function (params) {
     _isReady = true;
 
     _callbacks.forEach(function (callback) {
-      try {
-        callback();
-      } catch (e) {
-        if (console && console.log) {
-          console.log(e);
-        }
-      }
+      callback();
     });
   };
 
@@ -108,40 +101,6 @@ var DependencyFactory = function (params) {
    */
   _onError = function (/*status, xhr*/) {
     throw new Error('Error retreiving dependancy data.');
-  };
-
-  /**
-   * Determines if the location (lat/lon) is in the provided region
-   *
-   * @param  region {Object}
-   *         [description]
-   *
-   * @param  latitude {Number}
-   *         [description]
-   *
-   * @param  longitude {Number}
-   *         [description]
-   *
-   * @return {boolean},
-   *         Whether the point is in the region.
-   */
-  _inRegion = function (region, latitude, longitude) {
-    var minlatitude,
-        minlongitude,
-        maxlatitude,
-        maxlongitude;
-
-    minlatitude = region.get('minlatitude');
-    minlongitude = region.get('minlongitude');
-    maxlatitude = region.get('maxlatitude');
-    maxlongitude = region.get('maxlongitude');
-
-    if (latitude > minlatitude && latitude < maxlatitude &&
-        longitude > minlongitude && longitude < maxlongitude) {
-      return true;
-    }
-
-    return false;
   };
 
   /**
@@ -295,43 +254,6 @@ var DependencyFactory = function (params) {
   };
 
   /**
-   * Get all Site Classes that are supported for the selected edition/location
-   *
-   * @param  editionId {Integer}
-   *         Edition model.id
-   *
-   * @param  latitude {Number}
-   *         The latitude of the selected location
-   *
-   * @param  longitude {Number}
-   *         The longitude of the selected location
-   *
-   * @return {Collection} Collection of Site Class models.
-   */
-  _this.getFilteredSiteClasses = function (editionId, latitude, longitude) {
-    var edition,
-        regions,
-        ids = [];
-
-    // get edtion
-    edition = _this.getEdition(editionId);
-
-    // find supported regions
-    regions = _this.getRegions(edition.get('supports').region);
-
-    // check that latitude/longitude is valid for region
-    regions.forEach(function (region) {
-      // add to siteClassId array for each vaid region
-      if (_inRegion(region, latitude, longitude)) {
-        ids = ids.concat(region.get('supports').vs30);
-      }
-    });
-
-    // return all supported site classes
-    return _this.getSiteClasses(ids);
-  };
-
-  /**
    * Get all Spectral Periods for the provided Edition
    *
    * @param  editionId {Integer}
@@ -365,6 +287,47 @@ var DependencyFactory = function (params) {
     });
 
     return _this.getSpectralPeriods(ids);
+  };
+
+  /**
+   * Get the first region supported by the given editionId that also contains
+   * the point indicated by the given latitude and longitude.
+   *
+   * @param editionId {String}
+   *      The id of the edition.
+   * @param latitude {Number}
+   *      Decimal degrees latitude for the point of interest.
+   * @param longitude {Number}
+   *      Decimal degrees longitude for the point of interest.
+   *
+   * @return {Region}
+   *      The first region match based on input parameters, or null if no
+   *      region is supported.
+   */
+  _this.getRegionByEdition = function (editionId, latitude, longitude) {
+    var edition,
+        region,
+        regions;
+
+    region = null;
+
+    try {
+      edition = _this.getEdition(editionId);
+      regions = _this.getRegions(edition.get('supports').region);
+
+      regions.every(function (r) {
+        if (_inRegion(r, latitude, longitude)) {
+          region = r;
+          // no return is falsey, essentially "break"
+        } else {
+          return true; // continue
+        }
+      });
+    } catch (e) {
+      region = null;
+    }
+
+    return region;
   };
 
   /**
