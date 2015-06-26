@@ -1,27 +1,59 @@
+
 .analysis-collection-list {
+  margin: 0;
+
   > li {
     cursor: pointer;
-    margin-bottom: .5em;
-    padding: .25em;
+    margin: 0;
+    padding: 1em;
     position: relative;
+    margin-top: 0px;
+    display: table;
+    border-top: 1px solid #ededed;
+    width: 100%;
+
+    &:first-child {
+      border:none;
+    }
 
     &:hover {
-      background-color: #f0f0f0;
+      background-color: #f8f8f8;
     }
 
     &.selected {
-      background-color: #ECF9FF;
+      background-color: #F2FBFF;
     }
 
     > .delete {
+      background: #f4f4f4;
       color: red;
       cursor: pointer;
       font-family: arial;
-      font-weight: bold;
-      position: absolute;
-      right: .25em;
+      font-weight: 300;
+      text-align: center;
       text-decoration: none;
-      top: 0;
+      width: 2em;
+      color: rgba(0, 0, 0, 0.4);
+      text-align: center;
+      display: table-cell;
+      vertical-align: middle;
+      box-shadow: inset 0 0 1px rgba(0,0,0,0.3);
+      border-radius: 2px;
     }
   }
 };
+
+.analysis-view-title,
+.analysis-view-metadata {
+  margin-right: 1em;
+}
+
+
+.analysis-view-metadata {
+  font-weight: 300;
+}
+
+.analysis-collection-list > li > .delete:hover {
+  background: #fcc;
+  color: rgb(224, 43, 43);
+}
