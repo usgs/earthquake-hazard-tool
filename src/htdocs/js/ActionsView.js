@@ -29,17 +29,16 @@ var ActionsView = function (params) {
 
       _accordion,
       _calculateButton,
-      _calculator,
       _collectionView,
       _errorReportEl,
       _newButton,
 
-      _hasIncompleteCalculation,
       _createNewAnalysis,
-      _onNewClick,
+      _hasIncompleteCalculation,
       _onAnalysisRemove,
-      _removeErrorReporting,
-      _validateCalculation;
+      _onCalculateClick,
+      _onNewClick,
+      _removeErrorReporting;
 
   _this = SelectedCollectionView(params);
 
@@ -77,7 +76,7 @@ var ActionsView = function (params) {
     _errorReportEl = _this.el.querySelector('.error-reporting');
 
     _calculateButton = _this.el.querySelector('.actions-view-calculate');
-    _calculateButton.addEventListener('click', _validateCalculation);
+    _calculateButton.addEventListener('click', _onCalculateClick);
 
     _newButton = _this.el.querySelector('.actions-view-new');
     _newButton.addEventListener('click', _onNewClick);
@@ -88,35 +87,12 @@ var ActionsView = function (params) {
   };
 
   /**
-   * Creates a new Analysis model and adds it to the collection, then
-   * disables the new button so no more Analysis models can be added.
-   *
-   * Triggered by a 'click' on the "new" button.
+   * Creates a new Analysis model and adds it to the collection.
    */
-  _onNewClick = function () {
-    _createNewAnalysis();
-    _newButton.setAttribute('disabled', true);
-  };
-
-  /**
-   * Checks if Analysis model was the last item in the collection, and
-   * if the Analysis is incomplete. Then adds a new Analysis model to the
-   * collection (if empty), and sets the "new" button disabled state.
-   *
-   * Triggered by a 'remove' event on the Collection.
-   */
-  _onAnalysisRemove = function () {
-
-    // if all analysis are complete, enable the "new" button
-    if (!_hasIncompleteCalculation()) {
-      _newButton.removeAttribute('disabled');
-    }
-
-    // if collection is empty, add Analysis model and disable "new" button
-    if (_this.collection.data().length === 0) {
-      _createNewAnalysis();
-      _newButton.setAttribute('disabled', true);
-    }
+  _createNewAnalysis = function () {
+    var analysis = Analysis();
+    _this.collection.add(analysis);
+    _this.collection.select(analysis);
   };
 
   /**
@@ -142,28 +118,31 @@ var ActionsView = function (params) {
   };
 
   /**
-   * Creates a new Analysis model and adds it to the collection.
+   * Checks if Analysis model was the last item in the collection, and
+   * if the Analysis is incomplete. Then adds a new Analysis model to the
+   * collection (if empty), and sets the "new" button disabled state.
+   *
+   * Triggered by a 'remove' event on the Collection.
    */
-  _createNewAnalysis = function () {
-    var analysis = Analysis();
-    _this.collection.add(analysis);
-    _this.collection.select(analysis);
-  };
+  _onAnalysisRemove = function () {
 
-  /**
-   * Removes all of the error output from the view
-   */
-  _removeErrorReporting = function () {
-    _errorReportEl.innerHTML = '';
-    _errorReportEl.classList.remove('error');
-    _errorReportEl.classList.remove('alert');
+    // if all analysis are complete, enable the "new" button
+    if (!_hasIncompleteCalculation()) {
+      _newButton.removeAttribute('disabled');
+    }
+
+    // if collection is empty, add Analysis model and disable "new" button
+    if (_this.collection.data().length === 0) {
+      _createNewAnalysis();
+      _newButton.setAttribute('disabled', true);
+    }
   };
 
   /**
    * Validates the currently selected Analysis model. Checks if all
    * of the required parameters are set to perform a calculation.
    */
-  _validateCalculation = function () {
+  _onCalculateClick = function () {
     var errors,
         model;
 
@@ -205,25 +184,48 @@ var ActionsView = function (params) {
   };
 
   /**
+   * Creates a new Analysis model and adds it to the collection, then
+   * disables the new button so no more Analysis models can be added.
+   *
+   * Triggered by a 'click' on the "new" button.
+   */
+  _onNewClick = function () {
+    _createNewAnalysis();
+    _newButton.setAttribute('disabled', true);
+  };
+
+  /**
+   * Removes all of the error output from the view
+   */
+  _removeErrorReporting = function () {
+    _errorReportEl.innerHTML = '';
+    _errorReportEl.classList.remove('error');
+    _errorReportEl.classList.remove('alert');
+  };
+  /**
    * Calls CollectionSelectBox.destroy() and cleans up local variables
    */
   _this.destroy = Util.compose(function () {
 
-    _this.collection.off('deselect', _removeErrorReporting);
+    _calculateButton.removeEventListener('click', _onCalculateClick);
+    _newButton.removeEventListener('click', _onNewClick);
 
-    _hasIncompleteCalculation = null;
+    _this.collection.off('deselect', _removeErrorReporting);
+    _this.collection.off('remove', _onAnalysisRemove);
+
     _createNewAnalysis = null;
-    _onNewClick = null;
+    _hasIncompleteCalculation = null;
     _onAnalysisRemove = null;
+    _onCalculateClick = null;
+    _onNewClick = null;
     _removeErrorReporting = null;
-    _validateCalculation = null;
 
     _accordion = null;
     _calculateButton = null;
-    _calculator = null;
     _collectionView = null;
     _errorReportEl = null;
     _newButton = null;
+
     _this = null;
     _initialize = null;
 
