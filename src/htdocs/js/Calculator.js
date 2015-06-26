@@ -150,7 +150,16 @@ var Calculator = function (params) {
       });
     } else {
       for (paramName in params) {
-        input = analysis.get(paramName);
+
+        if (paramName === 'latitude' || paramName === 'longitude') {
+          // these come off of the 'location'
+          input = analysis.get('location')[paramName];
+        } else if (paramName === 'imt') {
+          input = 'any';
+        } else {
+          input = analysis.get(paramName);
+        }
+
         if (typeof input === 'undefined' || input === null) {
           throw new Error('Invalid input parameters for given service name.');
         }
