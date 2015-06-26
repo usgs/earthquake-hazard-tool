@@ -82,25 +82,37 @@ var ActionsView = function (params) {
     _newButton = _this.el.querySelector('.actions-view-new');
     _newButton.addEventListener('click', _onNewClick);
 
-    // Clear error reporting when the current model in deselected
+    // Collection bindings
     _this.collection.on('deselect', _removeErrorReporting);
-
-    // Create a new calculation when the last is removed
     _this.collection.on('remove', _onAnalysisRemove);
   };
 
   /**
-   * Called when the "new" button is clicked, if the current analysis model
-   * passes validation then a new analysis model is generated
+   * Creates a new Analysis model and adds it to the collection, then
+   * disables the new button so no more Analysis models can be added.
+   *
+   * Triggered by a 'click' on the "new" button.
    */
   _onNewClick = function () {
     _createNewAnalysis();
     _newButton.setAttribute('disabled', true);
   };
 
+  /**
+   * Checks if Analysis model was the last item in the collection, and
+   * if the Analysis is incomplete. Then adds a new Analysis model to the
+   * collection (if empty), and sets the "new" button disabled state.
+   *
+   * Triggered by a 'remove' event on the Collection.
+   */
   _onAnalysisRemove = function () {
-    _hasIncompleteCalculation();
 
+    // if all analysis are complete, enable the "new" button
+    if (!_hasIncompleteCalculation()) {
+      _newButton.removeAttribute('disabled');
+    }
+
+    // if collection is empty, add Analysis model and disable "new" button
     if (_this.collection.data().length === 0) {
       _createNewAnalysis();
       _newButton.setAttribute('disabled', true);
@@ -108,9 +120,10 @@ var ActionsView = function (params) {
   };
 
   /**
-   * Checks for an incomplete calculation in the collection.
-   * If all calculations have been made, it enables the 'new' button,
-   * so that the user can create a new calculation.
+   * Checks for an Analysis model in the collection with no calculated data.
+   *
+   * If any of the Analysis models in the collection do not have a data
+   * property defined then they are considered incomplete.
    */
   _hasIncompleteCalculation = function () {
     var analyses = [],
@@ -118,17 +131,19 @@ var ActionsView = function (params) {
 
     analyses = _this.collection.data();
 
-    // check for an incomplete calculation in the collection
     for (i = 0; i < analyses.length; i++) {
+      // find an Analysis model with no calculated data
       if (!analyses[i].get('data')) {
-        return;
+        return true;
       }
     }
 
-    // enable the 'new' button
-    _newButton.removeAttribute('disabled');
+    return false;
   };
 
+  /**
+   * Creates a new Analysis model and adds it to the collection.
+   */
   _createNewAnalysis = function () {
     var analysis = Analysis();
     _this.collection.add(analysis);
@@ -215,16 +230,16 @@ var ActionsView = function (params) {
   }, _this.destroy);
 
   /**
-   * Called on model change, checks to see if all calculations are complete
-   * @param  {[type]} changes [description]
-   * @return {[type]}         [description]
+   * Checks if data property on the Analysis model was updated.
+   *
+   * Called on Analysis model change.
    */
   _this.render = function (changes) {
     // check if Analysis.get('data') was updated
     if (typeof changes !== 'undefined' && changes.hasOwnProperty('data')) {
-      // if data check all models in the collection
-      if(_this.model.get('data')) {
-        _hasIncompleteCalculation();
+      // if all analysis are complete, enable the "new" button
+      if (!_hasIncompleteCalculation()) {
+        _newButton.removeAttribute('disabled');
       }
     }
   };
