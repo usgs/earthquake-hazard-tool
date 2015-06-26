@@ -42,12 +42,14 @@ analyses.push(Analysis({
   vs30: vs30
 }));
 
-// select the first item in the collection
+// build a collection of analyses
 collection = Collection(analyses);
-collection.select(analyses[0]);
 
 // build the actions view
 ActionsView({
   el: document.getElementById('example'),
   collection: collection
 });
+
+// select the first item in the collection
+collection.select(analyses[0]);
