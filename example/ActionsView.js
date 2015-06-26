@@ -28,7 +28,9 @@ analyses.push(Analysis({
   latitude: 35,
 
   imt: imt,
-  vs30: vs30
+  vs30: vs30,
+
+  data: 'data'
 }));
 
 analyses.push(Analysis({
@@ -39,7 +41,9 @@ analyses.push(Analysis({
   latitude: 40,
 
   imt: imt,
-  vs30: vs30
+  vs30: vs30,
+
+  data: 'data'
 }));
 
 // build a collection of analyses
