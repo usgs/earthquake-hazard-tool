@@ -1,9 +1,6 @@
 'use strict';
 
-var DependencyFactory = require('DependencyFactory'),
-
-    Collection = require('mvc/Collection'),
-    CollectionSelectBox = require('mvc/CollectionSelectBox'),
+var CollectionSelectBox = require('mvc/CollectionSelectBox'),
     SelectedCollectionView = require('mvc/SelectedCollectionView'),
 
     Util = require('util/Util');
@@ -26,15 +23,11 @@ var SiteClassView = function (params) {
   var _this,
       _initialize,
 
-      _dependencyFactory,
-      _destroyDependencyFactory,
-      _destroySiteClassCollection,
-      _selectSiteClass,
       _siteClassCollection,
       _siteClassCollectionSelectBox,
 
-      _updateSiteClass,
-      _updateSiteClassCollectionSelectBox;
+      _updateSiteClass;
+
 
   _this = SelectedCollectionView(params);
 
@@ -42,15 +35,7 @@ var SiteClassView = function (params) {
    * @constructor
    */
   _initialize = function (params) {
-
-    // site class collection
-    if (params.vs30) {
-      _siteClassCollection = params.vs30;
-      _destroySiteClassCollection = false;
-    } else {
-      _siteClassCollection = Collection();
-      _destroySiteClassCollection = true;
-    }
+    _siteClassCollection = params.siteClasses;
 
     // site class CollectionSelectBox
     _siteClassCollectionSelectBox = CollectionSelectBox({
@@ -65,80 +50,27 @@ var SiteClassView = function (params) {
     // bind to select on the Site Class collection
     _siteClassCollection.on('select', _updateSiteClass);
     _siteClassCollection.on('deselect', _updateSiteClass);
-
-    // get an instance of the dependency factory
-    if (params.factory) {
-      _dependencyFactory = params.factory;
-      _destroyDependencyFactory = false;
-    } else {
-      _dependencyFactory = DependencyFactory.getInstance();
-      _destroyDependencyFactory = true;
-    }
-
-    // update/select the site class in the currently selected Analysis
-    _dependencyFactory.whenReady(function () {
-      _updateSiteClassCollectionSelectBox();
-      _this.render();
-    });
   };
+
 
   /**
    * update the currently selected Analysis model with
    * the currently selected Site Class in the CollectionSelectBox.
    */
   _updateSiteClass = function () {
-    if (_this.model) {
-      _this.model.set(
-        {'vs30': _siteClassCollection.getSelected()}
-      );
-    }
-  };
-
-  /**
-   * Update the site class options in the select box based on
-   * the location and edition.
-   */
-  _updateSiteClassCollectionSelectBox = function () {
-    var edition,
-        location,
-        siteClasses;
-
-    siteClasses = _dependencyFactory.getAllSiteClasses();
+    var selected;
 
     if (_this.model) {
-      edition = _this.model.get('edition');
-      location = _this.model.get('location');
+      selected = _siteClassCollection.getSelected();
 
-      // check on requisite params for filtering
-      if (edition && location) {
-        siteClasses = _dependencyFactory.getFilteredSiteClasses(
-            edition.get('id'), location.latitude, location.longitude);
+      if (selected) {
+        _this.model.set({'vs30': selected.get('id')});
+      } else {
+        _this.model.set({'vs30': null});
       }
     }
-
-    // reset site class collection with site classes
-    _siteClassCollection.reset(siteClasses);
   };
 
-  /**
-   * unset the event bindings for the collection
-   */
-  _this.onCollectionDeselect = function () {
-    _this.model.off('change', 'render', _this);
-    _this.model = null;
-    _updateSiteClassCollectionSelectBox();
-    _this.render();
-  };
-
-  /**
-   * set event bindings for the collection
-   */
-  _this.onCollectionSelect = function () {
-    _this.model = _this.collection.getSelected();
-    _updateSiteClassCollectionSelectBox();
-    _this.model.on('change', 'render', _this);
-    _this.render();
-  };
 
   /**
    * Calls CollectionSelectBox.destroy() and cleans up local variables
@@ -147,47 +79,47 @@ var SiteClassView = function (params) {
     // unbind
     _siteClassCollection.off('select', _updateSiteClass);
     _siteClassCollection.off('deselect', _updateSiteClass);
+
     // destroy
-    if (_destroySiteClassCollection) {
-      _siteClassCollection.destroy();
-    }
-    if (_destroyDependencyFactory) {
-      _dependencyFactory.destroy();
-    }
     _siteClassCollectionSelectBox.destroy();
+
     // methods
     _updateSiteClass = null;
+
     // variables
-    _dependencyFactory = null;
-    _destroyDependencyFactory = null;
-    _destroySiteClassCollection = null;
-    _selectSiteClass = null;
     _siteClassCollection = null;
     _siteClassCollectionSelectBox = null;
+
     _this = null;
     _initialize = null;
   }, _this.destroy);
 
-
   /**
-   * render the selected site class, or the blank option
+   * Uses the site class from the currently selected model to select a site
+   * class in the collection. This in-turn will update the CollectionSelectBox
+   * rendering.
+   *
+   * This only happens if the changes include either:
+   *  (a) vs30 : The site class changed or
+   *  (b) model: The selected model changed
+   *
+   * If the currently selected model is null, the site class collection is
+   * deselected.
+   *
+   * @param changes {Object}
+   *      An object containing the keys of what changed on the model
    */
   _this.render = function (changes) {
     var siteClass;
 
-    // update the site class collection before selecting
-    if (typeof changes !== 'undefined' && (
-        changes.hasOwnProperty('location') ||
-        changes.hasOwnProperty('edition'))) {
-      _updateSiteClassCollectionSelectBox();
-    } else {
-      // Update selected site class when collection changes
+    if (changes && (changes.vs30 || changes.model)) {
       if (_this.model) {
         siteClass = _this.model.get('vs30');
-        if (siteClass === null) {
-          _siteClassCollection.deselect();
+
+        if (siteClass !== null) {
+          _siteClassCollection.selectById(siteClass);
         } else {
-          _siteClassCollection.selectById(siteClass.id);
+          _siteClassCollection.deselect();
         }
       } else {
         // no item in the collection has been selected
@@ -195,6 +127,7 @@ var SiteClassView = function (params) {
       }
     }
   };
+
 
   _initialize(params);
   params = null;

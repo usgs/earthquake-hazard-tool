@@ -7,8 +7,7 @@ var EditionView = require('EditionView'),
     TimeHorizonInputView = require('TimeHorizonInputView'),
     TimeHorizonSliderView = require('TimeHorizonSliderView'),
 
-    Collection = require('mvc/Collection'),
-    View = require('mvc/View'),
+    SelectedCollectionView = require('mvc/SelectedCollectionView'),
 
     Util = require('util/Util');
 
@@ -29,11 +28,12 @@ var BasicInputView = function (params) {
   var _this,
       _initialize,
 
+      _editions,
       _editionEl,
       _editionView,
-      _destroyCollection,
       _locationInfoEl,
       _locationInfoView,
+      _siteClasses,
       _siteClassEl,
       _siteClassView,
       _timeHorizonEl,
@@ -45,7 +45,7 @@ var BasicInputView = function (params) {
 
   // Inherit from parent class
   params = Util.extend({}, _DEFAULTS, params);
-  _this = View(params);
+  _this = SelectedCollectionView(params);
 
   /**
    * @constructor
@@ -53,15 +53,15 @@ var BasicInputView = function (params) {
    */
   _initialize = function () {
     _this.collection = params.collection;
-    if (!_this.collection) {
-      _this.collection = Collection();
-      _destroyCollection = true;
-    }
+
+    _editions = params.editions;
+    _siteClasses = params.siteClasses;
 
     _createView();
 
     _editionView = EditionView({
       collection: _this.collection,
+      editions: _editions,
       el: _editionEl
     });
 
@@ -72,7 +72,8 @@ var BasicInputView = function (params) {
 
     _siteClassView = SiteClassView({
       collection: _this.collection,
-      el: _siteClassEl
+      el: _siteClassEl,
+      siteClasses: _siteClasses
     });
 
     _timeHorizonInputView = TimeHorizonInputView({
@@ -124,14 +125,10 @@ var BasicInputView = function (params) {
     _timeHorizonInputView.destroy();
     _timeHorizonSliderView.destroy();
 
-    if (_destroyCollection) {
-      _this.collection.destroy();
-    }
-
     // variables
+    _editions = null;
     _editionEl = null;
     _editionView = null;
-    _destroyCollection = null;
     _locationInfoEl = null;
     _locationInfoView = null;
     _siteClassEl = null;
