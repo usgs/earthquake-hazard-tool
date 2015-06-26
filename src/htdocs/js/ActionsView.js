@@ -34,8 +34,10 @@ var ActionsView = function (params) {
       _errorReportEl,
       _newButton,
 
+      _createNewAnalysis,
       _onCalculateClick,
       _onNewClick,
+      _onAnalysisRemove,
       _removeErrorReporting,
       _validateCalculation;
 
@@ -82,6 +84,9 @@ var ActionsView = function (params) {
 
     // Clear error reporting when the current model in deselected
     _this.collection.on('deselect', _removeErrorReporting);
+
+    // Create a new calculation when the last is removed
+    _this.collection.on('remove', _onAnalysisRemove);
   };
 
 
@@ -108,10 +113,20 @@ var ActionsView = function (params) {
         'calculation before performing a new calculation:';
 
     if (_validateCalculation(text)) {
-      var analysis = Analysis();
-      _this.collection.add(analysis);
-      _this.collection.select(analysis);
+      _createNewAnalysis();
     }
+  };
+
+  _onAnalysisRemove = function () {
+    if (_this.collection.data().length === 0) {
+      _createNewAnalysis();
+    }
+  };
+
+  _createNewAnalysis = function () {
+    var analysis = Analysis();
+    _this.collection.add(analysis);
+    _this.collection.select(analysis);
   };
 
   /**
@@ -187,8 +202,10 @@ var ActionsView = function (params) {
 
     _this.collection.off('deselect', _removeErrorReporting);
 
+    _createNewAnalysis = null;
     _onCalculateClick = null;
     _onNewClick = null;
+    _onAnalysisRemove = null;
     _removeErrorReporting = null;
     _validateCalculation = null;
 
