@@ -34,8 +34,8 @@ var ActionsView = function (params) {
       _errorReportEl,
       _newButton,
 
+      _hasIncompleteCalculation,
       _createNewAnalysis,
-      _onCalculateClick,
       _onNewClick,
       _onAnalysisRemove,
       _removeErrorReporting,
@@ -77,7 +77,7 @@ var ActionsView = function (params) {
     _errorReportEl = _this.el.querySelector('.error-reporting');
 
     _calculateButton = _this.el.querySelector('.actions-view-calculate');
-    _calculateButton.addEventListener('click', _onCalculateClick);
+    _calculateButton.addEventListener('click', _validateCalculation);
 
     _newButton = _this.el.querySelector('.actions-view-new');
     _newButton.addEventListener('click', _onNewClick);
@@ -89,38 +89,44 @@ var ActionsView = function (params) {
     _this.collection.on('remove', _onAnalysisRemove);
   };
 
-
-  /**
-   * Called when the "calculate button" is clicked
-   */
-  _onCalculateClick = function () {
-    var text;
-
-    text = 'The following parameters must be selected before ' +
-        'performing a calculation:';
-
-    _validateCalculation(text);
-  };
-
   /**
    * Called when the "new" button is clicked, if the current analysis model
    * passes validation then a new analysis model is generated
    */
   _onNewClick = function () {
-    var text;
-
-    text = 'The following parameters must be selected on the current ' +
-        'calculation before performing a new calculation:';
-
-    if (_validateCalculation(text)) {
-      _createNewAnalysis();
-    }
+    _createNewAnalysis();
+    _newButton.setAttribute('disabled', true);
   };
 
   _onAnalysisRemove = function () {
+    _hasIncompleteCalculation();
+
     if (_this.collection.data().length === 0) {
       _createNewAnalysis();
+      _newButton.setAttribute('disabled', true);
     }
+  };
+
+  /**
+   * Checks for an incomplete calculation in the collection.
+   * If all calculations have been made, it enables the 'new' button,
+   * so that the user can create a new calculation.
+   */
+  _hasIncompleteCalculation = function () {
+    var analyses = [],
+        i;
+
+    analyses = _this.collection.data();
+
+    // check for an incomplete calculation in the collection
+    for (i = 0; i < analyses.length; i++) {
+      if (!analyses[i].get('data')) {
+        return;
+      }
+    }
+
+    // enable the 'new' button
+    _newButton.removeAttribute('disabled');
   };
 
   _createNewAnalysis = function () {
@@ -139,24 +145,14 @@ var ActionsView = function (params) {
   };
 
   /**
-   * Validates the currently selected Analysis model.
-   * Checks if all of the required parameters are set
-   * to perform a calculation.
-   *
-   * @param  action {String}
-   *         Text that is added to the error output to
-   *         provide context for the error.
-   *
-   * @return {Boolean} returns true if the Analysis model
-   *         validates, and false if it doesn't
+   * Validates the currently selected Analysis model. Checks if all
+   * of the required parameters are set to perform a calculation.
    */
-  _validateCalculation = function (helpText) {
+  _validateCalculation = function () {
     var errors,
-        isValid,
         model;
 
     errors = [];
-    isValid = true;
 
     if (_this.model) {
       model = _this.model.get();
@@ -187,12 +183,10 @@ var ActionsView = function (params) {
     } else {
       _errorReportEl.classList.add('alert');
       _errorReportEl.classList.add('error');
-      _errorReportEl.innerHTML = '<b>' + helpText + '</b>' +
+      _errorReportEl.innerHTML = '<b>The following parameters must ' +
+          'be selected before performing a calculation:</b>' +
           '<ul>' + errors.join('') + '</ul>';
-      isValid = false;
     }
-
-    return isValid;
   };
 
   /**
@@ -202,8 +196,8 @@ var ActionsView = function (params) {
 
     _this.collection.off('deselect', _removeErrorReporting);
 
+    _hasIncompleteCalculation = null;
     _createNewAnalysis = null;
-    _onCalculateClick = null;
     _onNewClick = null;
     _onAnalysisRemove = null;
     _removeErrorReporting = null;
@@ -220,8 +214,19 @@ var ActionsView = function (params) {
 
   }, _this.destroy);
 
-  _this.render = function () {
-
+  /**
+   * Called on model change, checks to see if all calculations are complete
+   * @param  {[type]} changes [description]
+   * @return {[type]}         [description]
+   */
+  _this.render = function (changes) {
+    // check if Analysis.get('data') was updated
+    if (typeof changes !== 'undefined' && changes.hasOwnProperty('data')) {
+      // if data check all models in the collection
+      if(_this.model.get('data')) {
+        _hasIncompleteCalculation();
+      }
+    }
   };
 
   _initialize();
