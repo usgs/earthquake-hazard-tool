@@ -1,18 +1,28 @@
 'use strict';
 
-var Collection = require('mvc/Collection'),
+var Meta = require('Meta'),
+
+    Collection = require('mvc/Collection'),
     CollectionSelectBox = require('mvc/CollectionSelectBox'),
     SelectedCollectionView = require('mvc/SelectedCollectionView'),
 
     Util = require('util/Util');
 
+var CONTOUR_TYPES = [
+  {
+    'id': 0,
+    'value': 'hazard',
+    'display': 'Hazard Contours',
+    'displayorder': 0
+  }
+];
+
 var ContourTypeView = function (params) {
   var _this,
       _initialize,
 
-      _contourTypes,
+      _contourTypeCollection,
       _collectionSelectBox,
-      _destroyContourTypes,
       _message,
       _selectBox,
 
@@ -20,14 +30,9 @@ var ContourTypeView = function (params) {
 
   _this = SelectedCollectionView(params);
 
-  _initialize = function (params) {
-    _contourTypes = params.contourType;
-    _destroyContourTypes = false;
+  _initialize = function () {
 
-    if (!_contourTypes) {
-      _contourTypes = Collection();
-      _destroyContourTypes = true;
-    }
+    _contourTypeCollection = Collection(CONTOUR_TYPES.map(Meta));
 
     _this.el.innerHTML = '<div class="selectBox"></div>' +
       '<div class="message"></div>';
@@ -36,7 +41,7 @@ var ContourTypeView = function (params) {
     _message = _this.el.querySelector('.message');
 
     _collectionSelectBox = CollectionSelectBox({
-      collection: _contourTypes,
+      collection: _contourTypeCollection,
       el: _selectBox,
       includeBlankOption: true,
       format: function (model) {
@@ -45,8 +50,8 @@ var ContourTypeView = function (params) {
     });
 
     // bind to select on contour type change
-    _contourTypes.on('select', _updateContourType, _this);
-    _contourTypes.on('deselect', _updateContourType, _this);
+    _contourTypeCollection.on('select', _updateContourType, _this);
+    _contourTypeCollection.on('deselect', _updateContourType, _this);
 
     _this.render();
   };
@@ -56,8 +61,16 @@ var ContourTypeView = function (params) {
    * selected contour type.
    */
   _updateContourType = function () {
+    var contourType;
+
     if (_this.model) {
-      _this.model.set({'contourType': _contourTypes.getSelected()});
+      if (_contourTypeCollection.getSelected()) {
+        contourType = _contourTypeCollection.getSelected().get('id');
+      } else {
+        contourType = null;
+      }
+      // set the value of the selected item in _contourTypeCollection
+      _this.model.set({'contourType': contourType});
     }
   };
 
@@ -65,16 +78,13 @@ var ContourTypeView = function (params) {
    * Calls CollectionSelectionBox.destroy() and cleans up local variables
    */
   _this.destroy = Util.compose(function () {
-    if (_destroyContourTypes === true) {
-      _contourTypes.destroy();
-    }
 
-    _contourTypes.off('select', _updateContourType, _this);
-    _contourTypes.off('deselect', _updateContourType, _this);
+    _contourTypeCollection.destroy();
+    _contourTypeCollection.off('select', _updateContourType, _this);
+    _contourTypeCollection.off('deselect', _updateContourType, _this);
 
     _collectionSelectBox = null;
-    _contourTypes = null;
-    _destroyContourTypes = null;
+    _contourTypeCollection = null;
     _initialize = null;
     _message = null;
     _this = null;
@@ -87,18 +97,24 @@ var ContourTypeView = function (params) {
 
     if (_this.model) {
       contourType = _this.model.get('contourType');
-      if (contourType) {
-        if (contourType.get('display') === 'Hazard Contours') {
+      if (contourType === null) {
+        _contourTypeCollection.deselect();
+      } else {
+        _contourTypeCollection.selectById(contourType);
+
+        if (contourType === 0) {
           _message.innerHTML =
               '<small>This data is always for the B/C boundry.</small>';
         } else {
           _message.innerHTML = '';
         }
       }
+    } else {
+      _contourTypeCollection.deselect();
     }
   };
 
-  _initialize(params);
+  _initialize();
   params = null;
   return _this;
 };

@@ -16,25 +16,6 @@ var EditionView = require('EditionView'),
     Util = require('util/Util');
 
 
-// var PARAMETERS = {
-//   'edition': [
-//     Model({id: 'E2014R1', value: 'NSHMP 2014 Revision 1'}),
-//     Model({id: 'E2008R3', value: 'NSHMP 2008 Revision 3'})
-//   ],
-//   'type': [
-//     Model({id: 'hazard', value: 'Hazard Contours'})
-//   ],
-//   'imt': [
-//     Model({id: 'PGA', value: 'Peak Ground Acceleration'}),
-//     Model({id: 'SA0P2', value: '0.20 Second Spectral Acceleration'}),
-//     Model({id: 'SA1P0', value: '1.00 Second Spectral Acceleration'})
-//   ],
-//   'period': [
-//     Model({id: '2P50', value: '2% in 50 Years'}),
-//     Model({id: '10P50', value: '10% in 50 Years'})
-//   ]
-// };
-
 // --------------------------------------------------
 // Private inner class
 // --------------------------------------------------
@@ -235,7 +216,9 @@ var LayerChooser = function (params) {
     var edition;
 
     // read edition off selected item in the collection
-    edition = _this.collection.getSelected().get('edition');
+    if (_this.collection.getSelected()) {
+      edition = _this.collection.getSelected().get('edition');
+    }
 
     if (_map && edition) {
       edition = edition.get('id');
@@ -275,7 +258,7 @@ var LayerChooser = function (params) {
 
     selected = _this.collection.getSelected();
 
-    if (_map) {
+    if (_map && selected) {
       if (_selectedOverlay) {
         _map.removeLayer(_selectedOverlay.layer);
       }

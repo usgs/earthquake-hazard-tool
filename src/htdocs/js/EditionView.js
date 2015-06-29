@@ -23,6 +23,7 @@ var EditionView = function (params) {
   var _this,
       _initialize,
 
+      _isReady,
       _editionCollection,
       _editionCollectionSelectBox,
 
@@ -98,9 +99,18 @@ var EditionView = function (params) {
   _this.render = function (changes) {
     var edition;
 
+<<<<<<< HEAD
     if (changes && (changes.edition || changes.model)) {
       if (_this.model) {
         edition = this.model.get('edition');
+=======
+    if (!_isReady) {
+      return;
+    }
+
+    // Update selected edition when collection changes
+    if (_this.model) {
+>>>>>>> Update ContourTypeView to get contour types if they are not passed in
 
         // else select or deslect
         if (edition !== null) {

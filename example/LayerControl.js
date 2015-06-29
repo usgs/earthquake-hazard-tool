@@ -77,14 +77,17 @@ vs30 = Meta(metadata.parameters.vs30.values[0]);
 
 // build array of analysis models for the collection
 analyses.push(Analysis({
-  edition: edition,
+  edition: Meta(metadata.parameters.edition.values[1]),
   region: region,
 
   longitude: -116,
   latitude: 35,
 
   imt: imt[0],
-  vs30: vs30
+  vs30: vs30,
+
+  timeHorizon: 2475,
+  contourType: 0
 }));
 
 analyses.push(Analysis({
@@ -95,7 +98,10 @@ analyses.push(Analysis({
   latitude: 40,
 
   imt: imt[1],
-  vs30: vs30
+  vs30: vs30,
+
+  timeHorizon: 475,
+  contourType: 0
 }));
 
 // select the first item in the collection 
@@ -108,3 +114,5 @@ map = L.map(document.querySelector('.map-container'), {
 
 map.addControl(new LayerControl(Util.extend(Layers, {'collection': collection})));
 map.fitBounds([[24.6, -125.0], [50.0, -65.0]]);
+
+
