@@ -2,7 +2,6 @@
 
 var ModalView = require('mvc/ModalView'),
     SelectedCollectionView = require('mvc/SelectedCollectionView'),
-    TimeHorizonSliderView = require('TimeHorizonSliderView'),
     Util = require('util/Util');
 
 var TimeHorizonInputView = function (params) {
@@ -10,7 +9,6 @@ var TimeHorizonInputView = function (params) {
       _initialize,
 
       _modal,
-      _sliderView,
       _timeHorizonInput,
 
       _updateTimeHorizon;
@@ -30,13 +28,17 @@ var TimeHorizonInputView = function (params) {
 
     div.innerHTML =
         '<p class="error alert">' +
-          'Time Horizon value must be between 0 and 5,000.' +
+          'Time Horizon value must be between 1 and 5,000 inclusive. ' +
+          'Click 2% in 50 years or 10% in 50 years to add either ' +
+          'selected value to the Time Horizon Input Box.' +
         '</p>' +
         '<div class="slider-view"></div>';
-    _sliderView = TimeHorizonSliderView({
-      el: div.querySelector('.slider-view'),
-      collection: _this.collection
-    });
+
+
+    // _sliderView = TimeHorizonSliderView({
+    //   el: div.querySelector('.slider-view'),
+    //   collection: _this.collection
+    // });
 
     _modal = ModalView(div, {
       title: 'Validation error',
@@ -44,10 +46,21 @@ var TimeHorizonInputView = function (params) {
       buttons: [
         {
           callback: function () {
+            _this.model.set({'timeHorizon': 2475}, {'force': true});
+          },
+          text: '2% in 50 years'
+        },
+        {
+          callback: function () {
+            _this.model.set({'timeHorizon': 475}, {'force': true});
+          },
+          text: '10% in 50 years'
+        },
+        {
+          callback: function () {
             _modal.hide();
           },
-          classes: ['okButton'],
-          text: 'ok'
+          text: 'Cancel'
         }
       ]
     });
@@ -91,7 +104,7 @@ var TimeHorizonInputView = function (params) {
     _timeHorizonInput.removeEventListener('change', _updateTimeHorizon);
 
     _modal = null;
-    _sliderView = null;
+    // _sliderView = null;
     _initialize = null;
     _this = null;
     _timeHorizonInput = null;
