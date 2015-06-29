@@ -33,6 +33,7 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-mocha-phantomjs": "^0.6.0",
     "hazdev-accordion": "usgs/hazdev-accordion",
+    "hazdev-d3": "usgs/hazdev-d3",
     "hazdev-location-view": "usgs/hazdev-location-view",
     "hazdev-tablist": "usgs/hazdev-tablist",
     "hazdev-template": "usgs/hazdev-template",

@@ -1,149 +1,84 @@
 
-.HazardCurveGraph {
+@import 'd3/D3View';
+@import 'd3/D3LineView';
 
-  .outer-frame,
-  .inner-frame {
-    fill: none;
+
+.D3View {
+
+  [data-index='0'] {
+    > .line { stroke: #a6cee3; }
+    > .point { fill: #a6cee3; }
+  }
+  [data-index='1'] {
+    > .line { stroke: #1f78b4; }
+    > .point { fill: #1f78b4; }
+  }
+  [data-index='2'] {
+    > .line { stroke: #b2df8a; }
+    > .point { fill: #b2df8a; }
+  }
+  [data-index='3'] {
+    > .line { stroke: #33a02c; }
+    > .point { fill: #33a02c; }
+  }
+  [data-index='4'] {
+    > .line { stroke: #fb9a99; }
+    > .point { fill: #fb9a99; }
+  }
+  [data-index='5'] {
+    > .line { stroke: #e31a1c; }
+    > .point { fill: #e31a1c; }
+  }
+  [data-index='6'] {
+    > .line { stroke: #fdbf6f; }
+    > .point { fill: #fdbf6f; }
+  }
+  [data-index='7'] {
+    > .line { stroke: #ff7f00; }
+    > .point { fill: #ff7f00; }
+  }
+  [data-index='8'] {
+    > .line { stroke: #cab2d6; }
+    > .point { fill: #cab2d6; }
+  }
+  [data-index='9'] {
+    > .line { stroke: #6a3d9a; }
+    > .point { fill: #6a3d9a; }
+  }
+  [data-index='10'] {
+    > .line { stroke: #ffff99; } // tan
+    > .point { fill: #ffff99; } // tan
+  }
+  [data-index='11'] {
+    > .line { stroke: #b15928; } // pink
+    > .point { fill: #b15928; } // pink
   }
 
-  .axis {
-    font-size: .8em;
-
-    .domain,
-    .tick > line {
-      fill: none;
-      stroke: #000;
+  .mouseover {
+    cursor:pointer;
+    > .line {
+      stroke-width: 3;
+    }
+    > .point {
+      stroke-width: 2;
     }
   }
 
-  .tooltip-content {
-    .label {
-      font-size: .8em;
+  .selected {
+    cursor: default;
+    > .line {
+      stroke-width: 5;
     }
-    .value {
-      font-weight: bold;
+    > .point {
+      stroke-width: 3;
     }
-  }
-
-  .tooltip-outline {
-    fill: #fff;
-    stroke: #000;
-    stroke-width: 1;
-  }
-
-  .rate {
-    color: #999;
-    font-size: .7em;
-    font-weight: normal;
-
-    > path {
-      stroke: #999;
+    > .text {
       stroke-width: 1;
     }
   }
 
-  .padding > .legend {
-    font-size: .7em;
-  }
-
-  .controls {
-    text-align: center;
-  }
-
-  .controls label:first-child {
-    display: inline-block;
-    margin-right: 1em;
-  }
-}
-
-
-.HazardCurveLine {
-  cursor: pointer;
-
-  // hazard curve
-  > .line {
-    fill: none;
-    shape-rendering: geometricPrecision;
-    stroke: #999;
-    stroke-width: 2;
-  }
-
-
-  // .line-0 is the time horizon line.
-
-  &.line-1 > .line {
-    stroke: #AD2323; // red
-  }
-  &.line-2 > .line {
-    stroke: #2A4BD7; // blue
-  }
-  &.line-3 > .line {
-    stroke: #1D6914; // green
-  }
-  &.line-4 > .line {
-    stroke: #814A19; // brown
-  }
-  &.line-5 > .line {
-    stroke: #8126C0; //purple
-  }
-  &.line-6 > .line {
-    stroke: #81C57A; // light green
-  }
-  &.line-7 > .line {
-    stroke: #9DAFFF; // light blue
-  }
-  &.line-8 > .line {
-    stroke: #29D0D0; // cyan
-  }
-  &.line-9 > .line {
-    stroke: #FF9233; // orange
-  }
-  &.line-10 > .line {
-    stroke: #FFEE33; // yellow
-  }
-  &.line-11 > .line {
-    stroke: #E9DEBB; // tan
-  }
-  &.line-12 > .line {
-    stroke: #FFCDF3; // pink
-  }
-
-  > .point {
+  .point.mouseover {
     fill: #fff;
-    stroke: #666;
-    stroke-width: 1;
-  }
-
-  &.mouseover {
-    // currently hovered hazard curve
-    > .line {
-      stroke: #999;
-      stroke-width: 4;
-    }
-    > .point {
-      &.mouseover {
-        // currently hovered curve point
-        fill: #999;
-      }
-    }
-    > text {
-      fill: #999;
-      font-weight: bold;
-    }
-  }
-
-  &.selected {
-    // currently selected hazard curve
-    > .line {
-      stroke: #333;
-      stroke-width: 4;
-    }
-    > .point {
-    }
-    > text {
-      fill: #333;
-      font-weight: bold;
-    }
   }
 
 }

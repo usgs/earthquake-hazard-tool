@@ -1,8 +1,7 @@
 'use strict';
 
 
-var HazardCurveLineView = require('./HazardCurveLineView'),
-    Model = require('mvc/Model'),
+var D3LineView = require('d3/D3LineView'),
     Util = require('util/Util');
 
 
@@ -12,60 +11,49 @@ var HazardCurveLineView = require('./HazardCurveLineView'),
  * Expectes a "timeHorizon" model property that is a number > 0.
  */
 var TimeHorizonLineView = function (options) {
-  var _this,
-      _initialize,
-      _onChange;
+  var _this;
 
-  // extend HazardCurveLineView
-  _this = HazardCurveLineView(Util.extend(
-      {
-        model: Model({
-          data: [],
-          showPoints: false
-        })
-      },
-      options));
-
-  /**
-   * Initialize view.
-   */
-  _initialize = function () {
-    _this.model.on('change:timeHorizon', _onChange);
-    // this second binding is not really needed, because graph view
-    // currently sets both timeHorizon and xExtent at the same time
-    //_this.model.on('change:xExtent', _onChange);
-  };
-
-  /**
-   * Model change listener for timeHorizon.
-   *
-   * Updates label, and line data based on time horizon value.
-   */
-  _onChange = function () {
-    var timeHorizon = _this.model.get('timeHorizon'),
-        xExtent = _this.model.get('xExtent'),
-        afe = 1 / timeHorizon;
-
-    _this.model.set({
-      label: 'Time Horizon ' + timeHorizon + ' years',
-      data: [[xExtent[0], afe], [xExtent[1], afe]]
-    });
-  };
+  // extend D3LineView
+  _this = D3LineView(Util.extend({
+    showPoints: false
+  }, options));
 
   /**
    * Destroy this view.
    */
   _this.destroy = Util.compose(function () {
-    if (_this === null) {
-      return;
-    }
-
-    _this.model.off('change:timeHorizon', _onChange);
     _this = null;
   }, _this.destroy);
 
+  _this.getXExtent = function () {
+    return [];
+  };
 
-  _initialize(options);
+  _this.getYExtent = function () {
+    return [];
+  };
+
+  _this.render = Util.compose(function (changed) {
+    var timeHorizon = _this.view.model.get('timeHorizon'),
+        xExtent = _this.view.getXExtent(),
+        afe,
+        data;
+
+    if (isNaN(xExtent[0])) {
+      data = [];
+    } else {
+      afe = 1 / timeHorizon;
+      data = [[xExtent[0], afe], [xExtent[1], afe]];
+    }
+
+    _this.model.set({
+      label: 'Time Horizon ' + timeHorizon + ' years',
+      data: data
+    }, {silent: true});
+    return changed;
+  }, _this.render);
+
+
   options = null;
   return _this;
 };
