@@ -98,7 +98,7 @@ var EditionView = function (params) {
   _this.render = function (changes) {
     var edition;
 
-    if (changes && changes.edition || changes.model) {
+    if (changes && (changes.edition || changes.model)) {
       if (_this.model) {
         edition = this.model.get('edition');
 
