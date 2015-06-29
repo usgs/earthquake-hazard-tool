@@ -213,6 +213,9 @@ var ActionsView = function (params) {
     _this.collection.off('deselect', _removeErrorReporting);
     _this.collection.off('remove', _onAnalysisRemove);
 
+    _accordion.destroy();
+    _collectionView.destroy();
+
     _createNewAnalysis = null;
     _hasIncompleteCalculation = null;
     _onAnalysisRemove = null;
