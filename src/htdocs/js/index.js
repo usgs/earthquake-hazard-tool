@@ -24,7 +24,6 @@ dependencyFactory.whenReady(function () {
     vs30: '760',
     timeHorizon: 2475,
   });
-  window.model = analysis; // TODO :: remove this
 
   analysis.on('change:staticcurves', function () {
     console.log(analysis.get('staticcurves').toJSON());
@@ -41,7 +40,8 @@ dependencyFactory.whenReady(function () {
   analyses.select(analysis);
 
   // TODO :: remove this ...
-  analysis.on('change:staticcurve', function () {
+  window.model = analysis;
+  analysis.on('change:curves', function () {
     document.querySelector('.tmp-output').innerHTML =
         JSON.stringify(analysis.toJSON(), null, 2);
   });
