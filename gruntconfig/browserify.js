@@ -66,6 +66,7 @@ addExports(config.src + '/htdocs/js', [
   'MapView',
   'Meta',
   'Region',
+  'ResponseSpectrumGraphView',
   'SiteClassView',
   'SpectralPeriodView',
   'StaticCurveInputView',
@@ -91,6 +92,7 @@ var browerify = {
         CWD + '/' + config.src + '/htdocs/js',
         NODE_MODULES,
         NODE_MODULES + '/hazdev-accordion/src',
+        NODE_MODULES + '/hazdev-d3/src',
         NODE_MODULES + '/hazdev-tablist/src',
         NODE_MODULES + '/hazdev-webutils/src',
         NODE_MODULES + '/hazdev-location-view/src'

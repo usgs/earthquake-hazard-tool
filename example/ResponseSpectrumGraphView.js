@@ -1,9 +1,7 @@
 'use strict';
 
-var d3 = require('d3'),
-    HazardResponse = require('HazardResponse'),
-    HazardCurveGraphView = require('HazardCurveGraphView'),
-    Util = require('util/Util'),
+var HazardResponse = require('HazardResponse'),
+    ResponseSpectrumGraphView = require('ResponseSpectrumGraphView'),
     Xhr = require('util/Xhr');
 
 
@@ -15,16 +13,17 @@ el.innerHTML = '<div class="graph"></div>' +
     '<div class="controls"></div>';
 
 // create view
-view = HazardCurveGraphView({
+view = ResponseSpectrumGraphView({
   el: el.querySelector('.graph'),
-  title: 'Example HazardCurveGraphView',
-  xLabel: 'Ground Motion (g)',
-  yLabel: 'Annual Frequency of Exceedence',
+  title: 'Example ResponseSpectrumGraphView',
+  xAxisLabel: 'Period',
+  yAxisLabel: 'Ground Motion (g)',
   width: 640,
   height: 400,
   paddingLeft: 70,
   paddingRight: 16,
-  paddingTop: 30
+  paddingTop: 30,
+  timeHorizon: 2475
 });
 
 // example of selected curve
@@ -38,16 +37,22 @@ Xhr.ajax({
   url: 'data.json',
   success: function (data) {
     var curves = [];
+    var i = 0;
     data.response.forEach(function (r) {
       var response = HazardResponse(r);
+      // update labels, suppress render; curves reset will render
+      view.model.set({
+        xAxisLabel: response.get('xlabel'),
+        yAxisLabel: response.get('ylabel')
+      }, {silent: true});
       response.get('curves').data().forEach(function (c) {
+        c.set({'period': ++i});
         curves.push(c);
       });
     });
     view.curves.reset(curves);
   }
 });
-
 
 
 var div,
