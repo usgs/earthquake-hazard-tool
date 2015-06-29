@@ -67,22 +67,20 @@ var AnalysisView = function (params) {
   _this.render = function () {
     var edition,
         imt,
-        latitude,
-        longitude,
+        location,
         region,
         txtTitle,
         txtLocation,
         txtParams,
         vs30;
 
-    edition = _model.get('edition');
-    region = _model.get('region');
+    edition = _model.getEdition();
+    region = _model.getRegion();
 
-    longitude = _model.get('longitude');
-    latitude = _model.get('latitude');
+    location = _model.getLocation();
 
-    imt = _model.get('imt');
-    vs30 = _model.get('vs30');
+    imt = _model.getSpectralPeriod();
+    vs30 = _model.getVs30();
 
     if (edition) {
       txtTitle = edition.get('display');
@@ -90,9 +88,9 @@ var AnalysisView = function (params) {
       txtTitle = 'Unknown';
     }
 
-    if (latitude !== null && longitude !== null) {
-      txtLocation = '(' + latitude.toFixed(3) + ', ' +
-          longitude.toFixed(3) + ')';
+    if (location && location.latitude !== null && location.longitude !== null) {
+      txtLocation = '(' + location.latitude.toFixed(3) + ', ' +
+          location.longitude.toFixed(3) + ')';
     } else {
       txtLocation = '(&ndash;, &ndash;)';
     }

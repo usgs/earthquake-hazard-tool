@@ -1,6 +1,7 @@
 'use strict';
 
-var BasicInputsView = require('BasicInputsView'),
+var ActionsView = require('ActionsView'),
+    BasicInputsView = require('BasicInputsView'),
     Calculator = require('Calculator'),
     HazardCurveView = require('mvc/SelectedCollectionView'), // TODO
     HazardSpectrumView = require('mvc/SelectedCollectionView'), // TODO
@@ -17,6 +18,8 @@ var ApplicationView = function (params) {
       _initialize,
 
       // variables
+      _actionsEl,
+      _actionsView,
       _basicInputsEl,
       _basicInputsView,
       _calculator,
@@ -62,6 +65,11 @@ var ApplicationView = function (params) {
       el: _mapEl
     });
 
+    _actionsView = ActionsView({
+      collection: _this.collection,
+      el: _actionsEl,
+    });
+
     _hazardCurveView = HazardCurveView({
       collection: _this.collection,
       el: _hazardCurveEl
@@ -86,6 +94,7 @@ var ApplicationView = function (params) {
         '<section class="application-basic-inputs"></section>',
         '<section class="application-map"></section>',
       '</div>',
+      '<div class="application-actions"></div>',
       '<div class="row">',
         '<section class="application-hazard-curve column one-of-two">',
         '</section>',
@@ -96,6 +105,7 @@ var ApplicationView = function (params) {
 
     _basicInputsEl = el.querySelector('.application-basic-inputs');
     _mapEl = el.querySelector('.application-map');
+    _actionsEl = el.querySelector('.application-actions');
     _hazardCurveEl = el.querySelector('.application-hazard-curve');
     _hazardSpectrumEl = el.querySelector('.application-hazard-spectrum');
   };
@@ -208,6 +218,7 @@ var ApplicationView = function (params) {
     _calculator.destroy();
 
     // sub-views
+    _actionsView.destroy();
     _basicInputsView.destroy();
     _hazardCurveView.destroy();
     _hazardSpectrumView.destroy();
@@ -218,6 +229,8 @@ var ApplicationView = function (params) {
     _siteClasses.destroy();
 
     // variables
+    _actionsEl = null;
+    _actionsView = null;
     _basicInputsEl = null;
     _basicInputsView = null;
     _calculator = null;
