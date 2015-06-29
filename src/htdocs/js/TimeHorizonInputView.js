@@ -30,15 +30,10 @@ var TimeHorizonInputView = function (params) {
         '<p class="error alert">' +
           'Time Horizon value must be between 1 and 5,000 inclusive. ' +
           'Click 2% in 50 years or 10% in 50 years to add either ' +
-          'selected value to the Time Horizon Input Box.' +
+          'selected value to the Time Horizon Input Box. Cancel returns ' +
+          'without changing the time horizon value.' +
         '</p>' +
         '<div class="slider-view"></div>';
-
-
-    // _sliderView = TimeHorizonSliderView({
-    //   el: div.querySelector('.slider-view'),
-    //   collection: _this.collection
-    // });
 
     _modal = ModalView(div, {
       title: 'Validation error',
