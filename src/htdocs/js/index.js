@@ -19,11 +19,7 @@ dependencyFactory = DependencyFactory.getInstance({
 });
 
 dependencyFactory.whenReady(function () {
-  analysis = Analysis({
-    edition: 'E2008R3',
-    vs30: '760',
-    timeHorizon: 2475,
-  });
+  analysis = Analysis();
 
   analysis.on('change:staticcurves', function () {
     console.log(analysis.get('staticcurves').toJSON());

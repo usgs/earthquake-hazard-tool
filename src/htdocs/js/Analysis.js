@@ -19,15 +19,15 @@ var Analysis = function (options) {
 
 
   _this = Model(Util.extend({
-    edition: null,
+    edition: DependencyFactory.getInstance().getAllEditions()[0].get('id'),
     region: null,
 
     location: null,
 
-    imt: null,
-    vs30: null,
+    imt: DependencyFactory.getInstance().getAllSpectralPeriods()[0].get('id'),
+    vs30: DependencyFactory.getInstance().getAllSiteClasses()[0].get('id'),
 
-    timeHorizon: null,
+    timeHorizon: 2475,
     contourType: null,
 
     curves: null
