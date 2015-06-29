@@ -1,9 +1,7 @@
 'use strict';
 
-var d3 = require('d3'),
-    HazardResponse = require('HazardResponse'),
+var HazardResponse = require('HazardResponse'),
     ResponseSpectrumGraphView = require('ResponseSpectrumGraphView'),
-    Util = require('util/Util'),
     Xhr = require('util/Xhr');
 
 
