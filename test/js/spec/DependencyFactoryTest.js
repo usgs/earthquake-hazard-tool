@@ -77,37 +77,5 @@ describe('DependencyFactory test suite.', function () {
 
   });
 
-
-  describe('DependencyFactory dependency filtering.', function () {
-    var factory,
-        // filteredContourTypes,
-        filteredSiteClasses,
-        filteredSpectralPeriods,
-        edition,
-        latitude,
-        longitude;
-
-    edition = 'E2008R3';
-    latitude = 40;
-    longitude = -105;
-
-    before(function (done) {
-      factory = DependencyFactory.getInstance();
-      factory.whenReady(done);
-    });
-
-    // it('can get filtered Contour Types', function () {
-    //   filteredContourTypes = factory.getFilteredContourTypes(edition);
-    //   expect(filteredContourTypes.length).to.equal(1);
-    // });
-
-    it('can get filtered Spectral Periods', function () {
-      filteredSpectralPeriods = factory.getFilteredSpectralPeriods(
-          edition, latitude, longitude);
-      expect(filteredSpectralPeriods.length).to.equal(3);
-    });
-
-  });
-
 });
 

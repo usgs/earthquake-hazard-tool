@@ -38,8 +38,10 @@ analysis = Analysis({
   edition: edition,
   region: region,
 
-  longitude: longitude,
-  latitude: latitude,
+  location: {
+    latitude: latitude,
+    longitude: longitude
+  },
 
   imt: imt,
   vs30: vs30,

@@ -267,27 +267,27 @@ var DependencyFactory = function (params) {
    *
    * @return {Collection} Collection of Spectral Period models.
    */
-  _this.getFilteredSpectralPeriods = function (editionId, latitude, longitude) {
-    var edition,
-        regions,
-        ids = [];
+  // _this.getFilteredSpectralPeriods = function (editionId, latitude, longitude) {
+  //   var edition,
+  //       regions,
+  //       ids = [];
 
-    // get edition
-    edition = _this.getEdition(editionId);
+  //   // get edition
+  //   edition = _this.getEdition(editionId);
 
-    // find supported regions
-    regions = _this.getRegions(edition.get('supports').region);
+  //   // find supported regions
+  //   regions = _this.getRegions(edition.get('supports').region);
 
-    // check that latitude/longitude is valid for region
-    regions.forEach(function (region) {
-      // get spectral period ids
-      if (_inRegion(region, latitude, longitude)) {
-        ids = ids.concat(region.get('supports').imt);
-      }
-    });
+  //   // check that latitude/longitude is valid for region
+  //   regions.forEach(function (region) {
+  //     // get spectral period ids
+  //     if (_inRegion(region, latitude, longitude)) {
+  //       ids = ids.concat(region.get('supports').imt);
+  //     }
+  //   });
 
-    return _this.getSpectralPeriods(ids);
-  };
+  //   return _this.getSpectralPeriods(ids);
+  // };
 
   /**
    * Get the first region supported by the given editionId that also contains
