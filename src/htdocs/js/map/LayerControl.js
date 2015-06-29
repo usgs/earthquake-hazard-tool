@@ -1,6 +1,11 @@
 'use strict';
 
-var L = require('leaflet'),
+var EditionView = require('EditionView'),
+    ContourTypeView = require('ContourTypeView'),
+    SpectralPeriodView = require('SpectralPeriodView'),
+    TimeHorizonSelectView = require('TimeHorizonSelectView'),
+
+    L = require('leaflet'),
 
     Collection = require('mvc/Collection'),
     CollectionSelectBox = require('mvc/CollectionSelectBox'),
@@ -39,7 +44,9 @@ var LayerChooser = function (params) {
       _initialize,
 
       _baseLayers,
+      _baseLayerView,
       _baseLayerCollection,
+      _contourTypeView,
       _datasets,
       _editionCollection,
       _editionView,
@@ -176,7 +183,7 @@ var LayerChooser = function (params) {
     label.innerHTML = 'Base Layer';
 
     label = fragment.appendChild(document.createElement('label'));
-    _editionView = CollectionSelectBox({
+    _baseLayerView = CollectionSelectBox({
       el: fragment.appendChild(document.createElement('select')),
       collection: _baseLayerCollection,
       format: format
@@ -187,10 +194,8 @@ var LayerChooser = function (params) {
 
     label = fragment.appendChild(document.createElement('label'));
     label.innerHTML = 'Select data edition';
-    _editionView = CollectionSelectBox({
-      el: fragment.appendChild(document.createElement('select')),
-      collection: _editionCollection,
-      format: format
+    _editionView = EditionView({
+      el: fragment.appendChild(document.createElement('div'))
     });
 
     label = fragment.appendChild(document.createElement('label'));
@@ -203,18 +208,20 @@ var LayerChooser = function (params) {
 
     label = fragment.appendChild(document.createElement('label'));
     label.innerHTML = 'Select intensity measure type';
-    _imtView = CollectionSelectBox({
-      el: fragment.appendChild(document.createElement('select')),
-      collection: _imtCollection,
-      format: format
+    _imtView = SpectralPeriodView({
+      el: fragment.appendChild(document.createElement('div')),
     });
 
     label = fragment.appendChild(document.createElement('label'));
     label.innerHTML = 'Select return period';
-    _periodView = CollectionSelectBox({
-      el: fragment.appendChild(document.createElement('select')),
-      collection: _periodCollection,
-      format: format
+    _periodView = TimeHorizonSelectView({
+      el: fragment.appendChild(document.createElement('div')),
+    });
+
+    label = fragment.appendChild(document.createElement('label'));
+    label.innerHTML = 'Select Contour Type';
+    _contourTypeView = ContourTypeView({
+      el: fragment.appendChild(document.createElement('div')),
     });
 
     label = fragment.appendChild(document.createElement('h3'));
