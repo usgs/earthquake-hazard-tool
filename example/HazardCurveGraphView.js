@@ -24,21 +24,7 @@ view = HazardCurveGraphView({
   height: 400,
   paddingLeft: 70,
   paddingRight: 16,
-  paddingTop: 30,
-  yLines: [
-    {
-      anchor: 'right',
-      classes: ['rate', 'rate-5p50'],
-      label: '5% in 50 years',
-      value: -Math.log(.95) / 50
-    },
-    {
-      anchor: 'right',
-      classes: ['rate', 'rate-2p100'],
-      label: '2% in 100 years',
-      value: -Math.log(.98) / 100
-    }
-  ]
+  paddingTop: 30
 });
 
 // example of selected curve
@@ -60,4 +46,27 @@ Xhr.ajax({
     });
     view.curves.reset(curves);
   }
+});
+
+
+
+var div,
+    range,
+    value;
+
+div = document.createElement('div');
+div.innerHTML = '<label for="timeHorizon">Time Horizon</label>' +
+    '<input type="range" id="timeHorizon" ' +
+    ' value="' + view.model.get('timeHorizon') + '"' +
+    ' min="3" max="5000" step=".1"/>' +
+    '<span class="timeHorizonValue">' +
+      view.model.get('timeHorizon') + ' years' +
+    '</span>';
+document.querySelector('body').appendChild(div);
+
+range = div.querySelector('#timeHorizon');
+value = div.querySelector('.timeHorizonValue');
+range.addEventListener('input', function () {
+  view.model.set({timeHorizon: range.value});
+  value.innerHTML = range.value + ' years';
 });
