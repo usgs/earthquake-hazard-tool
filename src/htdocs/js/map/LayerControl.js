@@ -11,29 +11,29 @@ var EditionView = require('EditionView'),
     CollectionSelectBox = require('mvc/CollectionSelectBox'),
     ModalView = require('mvc/ModalView'),
     Model = require('mvc/Model'),
-    View = require('mvc/View'),
+    SelectedCollectionView = require('mvc/SelectedCollectionView'),
 
     Util = require('util/Util');
 
 
-var PARAMETERS = {
-  'edition': [
-    Model({id: 'E2014R1', value: 'NSHMP 2014 Revision 1'}),
-    Model({id: 'E2008R3', value: 'NSHMP 2008 Revision 3'})
-  ],
-  'type': [
-    Model({id: 'hazard', value: 'Hazard Contours'})
-  ],
-  'imt': [
-    Model({id: 'PGA', value: 'Peak Ground Acceleration'}),
-    Model({id: 'SA0P2', value: '0.20 Second Spectral Acceleration'}),
-    Model({id: 'SA1P0', value: '1.00 Second Spectral Acceleration'})
-  ],
-  'period': [
-    Model({id: '2P50', value: '2% in 50 Years'}),
-    Model({id: '10P50', value: '10% in 50 Years'})
-  ]
-};
+// var PARAMETERS = {
+//   'edition': [
+//     Model({id: 'E2014R1', value: 'NSHMP 2014 Revision 1'}),
+//     Model({id: 'E2008R3', value: 'NSHMP 2008 Revision 3'})
+//   ],
+//   'type': [
+//     Model({id: 'hazard', value: 'Hazard Contours'})
+//   ],
+//   'imt': [
+//     Model({id: 'PGA', value: 'Peak Ground Acceleration'}),
+//     Model({id: 'SA0P2', value: '0.20 Second Spectral Acceleration'}),
+//     Model({id: 'SA1P0', value: '1.00 Second Spectral Acceleration'})
+//   ],
+//   'period': [
+//     Model({id: '2P50', value: '2% in 50 Years'}),
+//     Model({id: '10P50', value: '10% in 50 Years'})
+//   ]
+// };
 
 // --------------------------------------------------
 // Private inner class
@@ -48,18 +48,13 @@ var LayerChooser = function (params) {
       _baseLayerCollection,
       _contourTypeView,
       _datasets,
-      _editionCollection,
       _editionView,
-      _imtCollection,
       _imtView,
       _map,
       _modal,
       _overlays,
-      _periodCollection,
       _periodView,
       _selectedOverlay,
-      _typeCollection,
-      _typeView,
 
       _getSelectedOverlay,
       _initCollections,
@@ -71,7 +66,7 @@ var LayerChooser = function (params) {
       _onOverlaySelect;
 
 
-  _this = View(params);
+  _this = SelectedCollectionView(params);
 
   _initialize = function (params) {
     params = Util.extend({
@@ -141,32 +136,12 @@ var LayerChooser = function (params) {
       return Model(layer);
     }));
 
-    _editionCollection = Collection(PARAMETERS.edition);
-    _typeCollection = Collection(PARAMETERS.type);
-    _imtCollection = Collection(PARAMETERS.imt);
-    _periodCollection = Collection(PARAMETERS.period);
-
-    // Select first option in each collection
+    // Select first option in base layer collection
     _baseLayerCollection.select(_baseLayerCollection.data()[0]);
-
-    _editionCollection.select(_editionCollection.data()[0]);
-    _typeCollection.select(_typeCollection.data()[0]);
-    _imtCollection.select(_imtCollection.data()[0]);
-    _periodCollection.select(_periodCollection.data()[0]);
 
     // Bind listeners
     _baseLayerCollection.on('select', _onBaseLayerSelect);
     _baseLayerCollection.on('deselect', _onBaseLayerDeselect);
-
-    _editionCollection.on('select', _onOverlaySelect);
-    _typeCollection.on('select', _onOverlaySelect);
-    _imtCollection.on('select', _onOverlaySelect);
-    _periodCollection.on('select', _onOverlaySelect);
-
-    _editionCollection.on('select', _onOverlayDeselect);
-    _typeCollection.on('select', _onOverlayDeselect);
-    _imtCollection.on('select', _onOverlayDeselect);
-    _periodCollection.on('select', _onOverlayDeselect);
   };
 
   _initViews = function () {
@@ -195,33 +170,29 @@ var LayerChooser = function (params) {
     label = fragment.appendChild(document.createElement('label'));
     label.innerHTML = 'Select data edition';
     _editionView = EditionView({
-      el: fragment.appendChild(document.createElement('div'))
+      el: fragment.appendChild(document.createElement('div')),
+      collection: _this.collection
     });
 
     label = fragment.appendChild(document.createElement('label'));
-    label.innerHTML = 'Select overlay type';
-    _typeView = CollectionSelectBox({
-      el: fragment.appendChild(document.createElement('select')),
-      collection: _typeCollection,
-      format: format
+    label.innerHTML = 'Select Overlay Type';
+    _contourTypeView = ContourTypeView({
+      el: fragment.appendChild(document.createElement('div')),
+      collection: _this.collection
     });
 
     label = fragment.appendChild(document.createElement('label'));
     label.innerHTML = 'Select intensity measure type';
     _imtView = SpectralPeriodView({
       el: fragment.appendChild(document.createElement('div')),
+      collection: _this.collection
     });
 
     label = fragment.appendChild(document.createElement('label'));
     label.innerHTML = 'Select return period';
     _periodView = TimeHorizonSelectView({
       el: fragment.appendChild(document.createElement('div')),
-    });
-
-    label = fragment.appendChild(document.createElement('label'));
-    label.innerHTML = 'Select Contour Type';
-    _contourTypeView = ContourTypeView({
-      el: fragment.appendChild(document.createElement('div')),
+      collection: _this.collection
     });
 
     label = fragment.appendChild(document.createElement('h3'));
@@ -263,7 +234,8 @@ var LayerChooser = function (params) {
   _onDatasetChange = function () {
     var edition;
 
-    edition = _editionCollection.getSelected();
+    // read edition off selected item in the collection
+    edition = _this.collection.getSelected().get('edition');
 
     if (_map && edition) {
       edition = edition.get('id');
@@ -299,16 +271,20 @@ var LayerChooser = function (params) {
   };
 
   _onOverlaySelect = function () {
+    var selected;
+
+    selected = _this.collection.getSelected();
+
     if (_map) {
       if (_selectedOverlay) {
         _map.removeLayer(_selectedOverlay.layer);
       }
 
       _selectedOverlay = _getSelectedOverlay(
-          _editionCollection.getSelected(),
-          _typeCollection.getSelected(),
-          _imtCollection.getSelected(),
-          _periodCollection.getSelected()
+          selected.get('edition'),
+          selected.get('contourType'),
+          selected.get('imt'),
+          selected.get('timeHorizon')
         );
 
       if (_selectedOverlay && !_selectedOverlay._map) {
@@ -336,7 +312,6 @@ var LayerChooser = function (params) {
     _map = map;
     _onBaseLayerSelect(_baseLayerCollection.getSelected());
     _onOverlaySelect();
-    // _onOverlaySelect();
   };
 
   _this.show = function () {

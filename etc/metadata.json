@@ -213,7 +213,7 @@
       "values": [
         {
           "id": 0,
-          "value": "Hazard Contours",
+          "value": "hazard",
           "display": "Hazard Contours",
           "displayorder": 0
         },
