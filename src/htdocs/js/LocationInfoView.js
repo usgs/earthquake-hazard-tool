@@ -38,13 +38,10 @@ var LocationInfoView = function (params) {
       lat = _this.model.get('latitude');
       lng = _this.model.get('longitude');
 
-      lat = Formatter.latitude(lat);
-      lng = Formatter.longitude(lng);
-
       if (lat !== null && lng !== null) {
         _locationInfo.innerHTML = '<ul class="no-style">' +
-            '<li>Latitude: '+ lat +'</li>' +
-            '<li>Longitude: '+ lng +'</li>' +
+            '<li>Latitude: '+ Formatter.latitude(lat) + '</li>' +
+            '<li>Longitude: '+ Formatter.longitude(lng) + '</li>' +
             '</ul>';
       } else {
         _noLocationInfo.innerHTML = '<p>Use the map to select a location.</p>';
