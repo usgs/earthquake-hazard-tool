@@ -14,8 +14,10 @@ var analyses,
 analyses = [];
 
 analyses.push(Analysis({
-  latitude: latitude,
-  longitude: longitude
+  location: {
+    latitude: latitude,
+    longitude: longitude
+  }
 }));
 
 collection = Collection(analyses);

@@ -2,7 +2,7 @@
 
 
 var EditionView = require('EditionView'),
-    LocationInfoView = require('mvc/SelectedCollectionView'), // TODO
+    LocationInfoView = require('LocationInfoView'),
     SiteClassView = require('SiteClassView'),
     TimeHorizonInputView = require('TimeHorizonInputView'),
     TimeHorizonSliderView = require('TimeHorizonSliderView'),
@@ -100,7 +100,7 @@ var BasicInputView = function (params) {
         '</li>',
         '<li>',
           '<label for="basic-location-info-view">Location</label>',
-          '<p id="basic-location-info-view"></p>',
+          '<div id="basic-location-info-view"></div>',
         '</li>',
         '<li>',
           '<label for="basic-site-class-view">Site Class</label>',

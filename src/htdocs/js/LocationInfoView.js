@@ -31,24 +31,31 @@ var LocationInfoView = function (params) {
   }, _this.destroy);
 
   _this.render = function () {
-    var lat,
-        lng;
+    var location;
 
     if (_this.model) {
-      lat = _this.model.get('latitude');
-      lng = _this.model.get('longitude');
+      location = _this.model.get('location');
 
-      if (lat !== null && lng !== null) {
-        _locationInfo.innerHTML = '<ul class="no-style">' +
-            '<li>Latitude: '+ Formatter.latitude(lat) + '</li>' +
-            '<li>Longitude: '+ Formatter.longitude(lng) + '</li>' +
-            '</ul>';
+      if (location) {
+        if (location.place) {
+          _locationInfo.innerHTML = '<strong>' + location.place + '</strong>' +
+            '<small>' +
+              Formatter.latitude(location.latitude) + ', ' +
+              Formatter.longitude(location.longitude) +
+            '</small>';
+        } else {
+          _locationInfo.innerHTML = Formatter.latitude(location.latitude) +
+              ', ' + Formatter.longitude(location.longitude);
+        }
+        _noLocationInfo.innerHTML = '';
       } else {
-        _noLocationInfo.innerHTML = '<p>Use the map to select a location.</p>';
+        _locationInfo.innerHTML = '';
+        _noLocationInfo.innerHTML = '<p class="alert info">' +
+            'Use the map to select a location.</p>';
       }
     } else {
-       _locationInfo = '';
-       _noLocationInfo = '';
+       _locationInfo.innerHTML = '';
+       _noLocationInfo.innerHTML = '';
     }
   };
 
