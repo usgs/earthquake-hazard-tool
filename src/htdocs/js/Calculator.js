@@ -1,11 +1,7 @@
 'use strict';
 
 
-var HazardCurve = require('HazardCurve'),
-    HazardResponse = require('HazardResponse'),
-    HazardUtil = require('HazardUtil'),
-
-    Collection = require('mvc/Collection'),
+var HazardResponse = require('HazardResponse'),
 
     Util = require('util/Util'),
     Xhr = require('util/Xhr');
@@ -28,8 +24,7 @@ var Calculator = function (params) {
       _pendingServiceDetailsRequests,
       _services,
 
-      _fetchServiceDetails,
-      _responseToCurve;
+      _fetchServiceDetails;
 
 
   _this = {
@@ -82,58 +77,6 @@ var Calculator = function (params) {
         }
       });
     }
-  };
-
-  _responseToCurve = function (response) {
-    var data,
-        c1,
-        c2,
-        curve,
-        latitude,
-        longitude,
-        metadata;
-
-    data = response.data;
-    metadata = response.metadata;
-    latitude = metadata.latitude;
-    longitude = metadata.longitude;
-
-    if (data.length === 1) {
-      curve = HazardUtil.coallesce(metadata.xvals, data[0].yvals);
-    } else if (data.length === 2) {
-      if (data[0].latitude === data[1].latitude) {
-        // Latitudes match, interpolate with respect to longitude
-        curve = HazardUtil.coallesce(metadata.xvals,
-            HazardUtil.interpolateCurve(data[0].longitude, data[0].yvals,
-                data[1].longitude, data[1].yvals, longitude));
-      } else if (data[0].longitude === data[1].longitude) {
-        // Longitudes match, interpolate with respect to latitude
-        curve = HazardUtil.coallesce(metadata.xvals,
-            HazardUtil.interpolateCurve(data[0].latitude, data[0].yvals,
-                data[1].latitude, data[1].yvals, latitude));
-      }
-    } else if (data.length === 4) {
-      // Interpolate first (top) two curves with respect to longitude
-      c1 = HazardUtil.interpolateCurve(data[0].longitude, data[0].yvals,
-          data[1].longitude, data[1].yvals, longitude);
-
-      // Interpolate second (bottom) two curves with respect to longitude
-      c2 = HazardUtil.interpolateCurve(data[2].longitude, data[2].yvals,
-          data[3].longitude, data[3].yvals, longitude);
-
-      // Interpolate intermediate results with respect to latitude
-      curve = HazardUtil.coallesce(metadata.xvals,
-          HazardUtil.interpolateCurve(data[0].latitude, c1,
-              data[2].latitude, c2, latitude));
-    } else {
-      throw new Error('Unexepected number (' + data.length + ') of hazard ' +
-          'curves returned in response.');
-    }
-
-    return HazardCurve({
-      label: metadata.imt.display,
-      data: curve
-    });
   };
 
 
@@ -228,25 +171,10 @@ var Calculator = function (params) {
       Xhr.ajax({
         url: url,
         success: function (response) {
-          var curves,
-              collection;
-
-          curves = response.response.map(_responseToCurve);
-          collection = analysis.get('curves');
-
-          if (!collection) {
-            collection = Collection(curves);
-            analysis.set({curves: collection});
-          } else {
-            collection.reset(curves);
-          }
+          analysis.set({'curves': HazardResponse(response.response)});
 
           if (callback) {
-            // TODO :: Handle multiple HazardResponse
-            callback({
-              analysis: analysis,
-              serviceName: serviceName
-            });
+            callback({analysis: analysis, serviceName: serviceName});
           }
         }
       });
