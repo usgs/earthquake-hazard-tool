@@ -8,6 +8,12 @@ var HazardCurve = require('HazardCurve'),
     Util = require('util/Util');
 
 
+var _PERIOD_TO_NUMBER = {
+  'PGA': 0.0,
+  'SA0P2': 0.2,
+  'SA1P0': 1.0
+};
+
 var HazardResponse = function (params) {
   var _this,
       _initialize,
@@ -55,6 +61,7 @@ var HazardResponse = function (params) {
 
     return HazardCurve({
       label: metadata.imt.display,
+      period: _PERIOD_TO_NUMBER[metadata.imt.value],
       data: HazardUtil.coallesce(metadata.xvals, yvals)
     });
   };

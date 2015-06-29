@@ -3,8 +3,8 @@
 var ActionsView = require('ActionsView'),
     BasicInputsView = require('BasicInputsView'),
     Calculator = require('Calculator'),
-    HazardCurveView = require('mvc/SelectedCollectionView'), // TODO
-    HazardSpectrumView = require('mvc/SelectedCollectionView'), // TODO
+    HazardCurveView = require('HazardCurveGraphView'),
+    HazardSpectrumView = require('ResponseSpectrumGraphView'),
     MapView = require('MapView'),
 
     Collection = require('mvc/Collection'),
@@ -37,6 +37,7 @@ var ApplicationView = function (params) {
       _initViewContainer,
       _onEditionLocationChange,
       _onRegionChange,
+      _onTimeHorizonChange,
       _onVs30Change;
 
 
@@ -71,13 +72,13 @@ var ApplicationView = function (params) {
     });
 
     _hazardCurveView = HazardCurveView({
-      collection: _this.collection,
-      el: _hazardCurveEl
+      el: _hazardCurveEl,
+      title: 'Hazard Curves'
     });
 
     _hazardSpectrumView = HazardSpectrumView({
-      collection: _this.collection,
-      el: _hazardCurveEl
+      el: _hazardSpectrumEl,
+      title: 'Hazard Response Spectrum'
     });
   };
 
@@ -180,6 +181,21 @@ var ApplicationView = function (params) {
     }
   };
 
+  _onTimeHorizonChange = function (/*changes*/) {
+    var timeHorizon;
+
+    if (_this.model) {
+      timeHorizon = _this.model.get('timeHorizon');
+
+      _hazardCurveView.model.set({
+        'timeHorizon': timeHorizon
+      });
+      _hazardSpectrumView.model.set({
+        'timeHorizon': timeHorizon
+      });
+    }
+  };
+
   /**
    *
    */
@@ -211,7 +227,6 @@ var ApplicationView = function (params) {
       }
     });
   };
-
 
 
   _this.destroy = Util.compose(_this.destroy, function () {
@@ -248,6 +263,7 @@ var ApplicationView = function (params) {
     _initViewContainer = null;
     _onEditionLocationChange = null;
     _onRegionChange = null;
+    _onTimeHorizonChange = null;
     _onVs30Change = null;
 
     _initialize = null;
@@ -255,10 +271,12 @@ var ApplicationView = function (params) {
   });
 
   _this.onCollectionDeselect = function () {
-    _this.model.on('change:edition', _onEditionLocationChange);
-    _this.model.on('change:location', _onEditionLocationChange);
-    _this.model.on('change:region', _onRegionChange);
-    _this.model.on('change:vs30', _onVs30Change);
+    _this.model.off('change:edition', _onEditionLocationChange);
+    _this.model.off('change:location', _onEditionLocationChange);
+    _this.model.off('change:region', _onRegionChange);
+    _this.model.off('change:vs30', _onVs30Change);
+    _this.model.off('change:timeHorizon', _onTimeHorizonChange);
+    _this.model.off('change:curves', 'render', _this);
 
     _this.model = null;
     _this.render({model: null});
@@ -271,17 +289,47 @@ var ApplicationView = function (params) {
     _this.model.on('change:location', _onEditionLocationChange);
     _this.model.on('change:region', _onRegionChange);
     _this.model.on('change:vs30', _onVs30Change);
+    _this.model.on('change:timeHorizon', _onTimeHorizonChange);
+    _this.model.on('change:curves', 'render', _this);
 
     _this.render({model: _this.model});
   };
 
   _this.render = function (changes) {
-    if (changes && changes.model) {
-      // new model selected, update all the things...
-      // TODO :: Or do we ... ?
-      // _this._onEditionLocationChange();
-      // _this._onVs30Change();
-      // _this._onRegionChange();
+    var curves,
+        data,
+        xAxisLabel,
+        yAxisLabel;
+
+    if (_this.model && changes) {
+      curves = _this.model.get('curves');
+
+      xAxisLabel = '';
+      yAxisLabel = '';
+      data = [];
+
+      if (curves) {
+        xAxisLabel = curves.get('xlabel');
+        yAxisLabel = curves.get('ylabel');
+
+        data = curves.get('curves').data();
+      }
+
+      // Update curve plotting
+      _hazardCurveView.model.set({
+        'xLabel': xAxisLabel,
+        'yLabel': yAxisLabel,
+        'timeHorizon': _this.model.get('timeHorizon')
+      }, {silent: true});
+      _hazardCurveView.curves.reset(data);
+
+      // Update spectra plotting
+      _hazardSpectrumView.model.set({
+        'xAxisLabel': xAxisLabel,
+        'yAxisLabel': yAxisLabel,
+        'timeHorizon': _this.model.get('timeHorizon')
+      }, {silent: true});
+      _hazardSpectrumView.curves.reset(data);
     }
   };
 

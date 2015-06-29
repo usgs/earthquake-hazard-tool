@@ -1,9 +1,7 @@
 'use strict';
 
-var d3 = require('d3'),
-    HazardResponse = require('HazardResponse'),
+var HazardResponse = require('HazardResponse'),
     HazardCurveGraphView = require('HazardCurveGraphView'),
-    Util = require('util/Util'),
     Xhr = require('util/Xhr');
 
 
@@ -37,14 +35,8 @@ view.curves.on('select', function (curve) {
 Xhr.ajax({
   url: 'data.json',
   success: function (data) {
-    var curves = [];
-    data.response.forEach(function (r) {
-      var response = HazardResponse(r);
-      response.get('curves').data().forEach(function (c) {
-        curves.push(c);
-      });
-    });
-    view.curves.reset(curves);
+    var response = HazardResponse(data.response);
+    view.curves.reset(response.get('curves').data());
   }
 });
 

@@ -38,18 +38,18 @@ Xhr.ajax({
   success: function (data) {
     var curves = [];
     var i = 0;
-    data.response.forEach(function (r) {
-      var response = HazardResponse(r);
-      // update labels, suppress render; curves reset will render
-      view.model.set({
-        xAxisLabel: response.get('xlabel'),
-        yAxisLabel: response.get('ylabel')
-      }, {silent: true});
-      response.get('curves').data().forEach(function (c) {
-        c.set({'period': ++i});
-        curves.push(c);
-      });
+    var response = HazardResponse(data.response);
+
+    response.get('curves').data().forEach(function (c) {
+      c.set({'period': ++i});
+      curves.push(c);
     });
+
+    view.model.set({
+      xAxisLabel: response.get('xlabel'),
+      yAxisLabel: response.get('ylabel')
+    });
+
     view.curves.reset(curves);
   }
 });
