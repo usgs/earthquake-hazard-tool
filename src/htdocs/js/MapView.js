@@ -36,7 +36,7 @@ var MapView = function (options) {
 
     _map = L.map(el, {
       scrollWheelZoom: false,
-      zoomAnimation: true,
+      zoomAnimation: false,
       attributionControl: false // This is added later, but order matters
     });
 
@@ -124,15 +124,18 @@ var MapView = function (options) {
         controlLocation;
 
     if (_this.model) {
-      modelLocation = _this.model.get('locatin');
+      modelLocation = _this.model.get('location');
       controlLocation = _locationControl.getLocation();
 
       if (modelLocation && (
           !controlLocation ||
           modelLocation.latitude !== controlLocation.latitude ||
           modelLocation.longutde !== controlLocation.longtiude)) {
-        _locationControl.setLocation(_this.model.get('location'));
+        _locationControl.setLocation(modelLocation);
+        _locationControl.disable();
       }
+    } else {
+      _locationControl.setLocation(null);
     }
   };
 
