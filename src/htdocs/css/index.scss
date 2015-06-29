@@ -1,3 +1,5 @@
+@import 'accordion/Accordion';
+
 @import 'locationview/CoordinateControl';
 @import 'locationview/GeocodeControl';
 @import 'locationview/GeolocationControl';
@@ -6,6 +8,7 @@
 @import 'locationview/LocationView';
 @import 'locationview/PointControl';
 
+@import '_ActionsView';
 @import '_ApplicationView';
 @import '_AnalysisCollectionView';
 @import '_AnalysisView';
