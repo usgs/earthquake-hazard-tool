@@ -18,8 +18,8 @@ el.innerHTML = '<div class="graph"></div>' +
 view = HazardCurveGraphView({
   el: el.querySelector('.graph'),
   title: 'Example HazardCurveGraphView',
-  xAxisLabel: 'Ground Motion (g)',
-  yAxisLabel: 'Annual Frequency of Exceedence',
+  xLabel: 'Ground Motion (g)',
+  yLabel: 'Annual Frequency of Exceedence',
   width: 640,
   height: 400,
   paddingLeft: 70,
@@ -54,11 +54,6 @@ Xhr.ajax({
     var curves = [];
     data.response.forEach(function (r) {
       var response = HazardResponse(r);
-      // update labels, suppress render; curves reset will render
-      view.model.set({
-        xAxisLabel: response.get('xlabel'),
-        yAxisLabel: response.get('ylabel')
-      }, {silent: true});
       response.get('curves').data().forEach(function (c) {
         curves.push(c);
       });
