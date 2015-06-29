@@ -28,9 +28,13 @@ var TimeHorizonInputView = function (params) {
     _timeHorizonInput.addEventListener('change', _updateTimeHorizon);
     div = document.createElement('div');
 
-    div.innerHTML = 'Time Horizon value must be between 0 and 5,000.';
+    div.innerHTML =
+        '<p class="error alert">' +
+          'Time Horizon value must be between 0 and 5,000.' +
+        '</p>' +
+        '<div class="slider-view"></div>';
     _sliderView = TimeHorizonSliderView({
-      el: div,
+      el: div.querySelector('.slider-view'),
       collection: _this.collection
     });
 
