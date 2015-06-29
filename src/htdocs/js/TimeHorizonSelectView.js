@@ -11,13 +11,13 @@ var Meta = require('Meta'),
 var TIME_HORIZONS = [
   {
     'id': 2475,
-    'value': 2475,
+    'value': '2P50',
     'display': '2% in 50 years',
     'displayorder': 0
   },
   {
     'id': 475,
-    'value': 475,
+    'value': '10P50',
     'display': '10% in 50 years',
     'displayorder': 1
   }
@@ -81,7 +81,7 @@ var TimeHorizonSelectView = function (params) {
 
     if (_this.model) {
       if (_timeHorizonCollection.getSelected()) {
-        timeHorizon = _timeHorizonCollection.getSelected().get('value');
+        timeHorizon = _timeHorizonCollection.getSelected();
       } else {
         timeHorizon = null;
       }
@@ -121,7 +121,7 @@ var TimeHorizonSelectView = function (params) {
       if (timeHorizon === null) {
         _timeHorizonCollection.deselect();
       } else {
-        _timeHorizonCollection.selectById(timeHorizon);
+        _timeHorizonCollection.selectById(timeHorizon.id);
       }
     } else {
       // no item in the collection has been selected

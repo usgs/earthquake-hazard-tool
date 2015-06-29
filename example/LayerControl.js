@@ -86,8 +86,18 @@ analyses.push(Analysis({
   imt: imt[0],
   vs30: vs30,
 
-  timeHorizon: 2475,
-  contourType: 0
+  timeHorizon: Meta({
+    'id': 2475,
+    'value': '2P50',
+    'display': '2% in 50 years',
+    'displayorder': 0
+  }),
+  contourType: Meta({
+    'id': 1,
+    'value': 'hazard',
+    'display': 'Hazard Contours',
+    'displayorder': 1
+  })
 }));
 
 analyses.push(Analysis({
@@ -100,8 +110,18 @@ analyses.push(Analysis({
   imt: imt[1],
   vs30: vs30,
 
-  timeHorizon: 475,
-  contourType: 0
+  timeHorizon: Meta({
+    'id': 475,
+    'value': '10P50',
+    'display': '10% in 50 years',
+    'displayorder': 1
+  }),
+  contourType: Meta({
+    'id': 1,
+    'value': 'hazard',
+    'display': 'Hazard Contours',
+    'displayorder': 1
+  })
 }));
 
 // select the first item in the collection 

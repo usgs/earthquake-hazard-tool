@@ -101,10 +101,10 @@ var LayerChooser = function (params) {
     for (i = 0, len = _overlays.length; i < len; i++) {
       overlay = _overlays[i];
 
-      if (overlay.edition === edition.get('id') &&
-          overlay.type === type.get('id') &&
-          overlay.imt === imt.get('id') &&
-          overlay.period === period.get('id')) {
+      if (overlay.edition === edition.get('value') &&
+          overlay.type === type.get('value') &&
+          overlay.imt === imt.get('value') &&
+          overlay.period === period.get('value')) {
         return overlay;
       }
     }
@@ -286,6 +286,25 @@ var LayerChooser = function (params) {
     _initialize = null;
     _this = null;
   });
+
+  /**
+   * unset the event bindings for the collection
+   */
+  _this.onCollectionDeselect = function () {
+    _this.model.off('change', _onOverlaySelect);
+    _this.model = null;
+    _onOverlaySelect();
+  };
+
+  /**
+   * set event bindings for the collection
+   */
+  _this.onCollectionSelect = function () {
+    _this.model = _this.collection.getSelected();
+    _this.model.on('change', _onOverlaySelect);
+    _onOverlaySelect();
+  };
+
 
   _this.hide = function () {
     _modal.hide();

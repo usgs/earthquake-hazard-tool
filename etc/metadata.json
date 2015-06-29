@@ -212,16 +212,16 @@
       "type": "string",
       "values": [
         {
-          "id": 0,
+          "id": 1,
           "value": "hazard",
           "display": "Hazard Contours",
-          "displayorder": 0
+          "displayorder": 1
         },
         {
-          "id": 1,
+          "id": 2,
           "value": "Earthquake Probability",
           "display": "Earthquake Probability",
-          "displayorder": 1
+          "displayorder": 2
         }
       ]
     }

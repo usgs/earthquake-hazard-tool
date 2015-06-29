@@ -10,10 +10,10 @@ var Meta = require('Meta'),
 
 var CONTOUR_TYPES = [
   {
-    'id': 0,
+    'id': 1,
     'value': 'hazard',
     'display': 'Hazard Contours',
-    'displayorder': 0
+    'displayorder': 1
   }
 ];
 
@@ -65,7 +65,7 @@ var ContourTypeView = function (params) {
 
     if (_this.model) {
       if (_contourTypeCollection.getSelected()) {
-        contourType = _contourTypeCollection.getSelected().get('id');
+        contourType = _contourTypeCollection.getSelected();
       } else {
         contourType = null;
       }
@@ -95,18 +95,18 @@ var ContourTypeView = function (params) {
   _this.render = function () {
     var contourType;
 
+    _message.innerHTML = '';
+
     if (_this.model) {
       contourType = _this.model.get('contourType');
       if (contourType === null) {
         _contourTypeCollection.deselect();
       } else {
-        _contourTypeCollection.selectById(contourType);
+        _contourTypeCollection.selectById(contourType.id);
 
         if (contourType === 0) {
           _message.innerHTML =
               '<small>This data is always for the B/C boundry.</small>';
-        } else {
-          _message.innerHTML = '';
         }
       }
     } else {
