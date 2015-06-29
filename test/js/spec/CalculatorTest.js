@@ -147,8 +147,7 @@ describe('Calculator', function () {
 
     it('returns expected results', function (done) {
         calculator.getResult('staticcurve', analysis, function (result) {
-          // TODO :: Deal with multiple HazardResponse
-          expect(result.result.toJSON().curves.length).to.equal(1);
+          expect(result.analysis.get('curves').data().length).to.equal(6);
           done();
         });
     });
