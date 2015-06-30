@@ -21,10 +21,6 @@ dependencyFactory = DependencyFactory.getInstance({
 dependencyFactory.whenReady(function () {
   analysis = Analysis();
 
-  analysis.on('change:staticcurves', function () {
-    console.log(analysis.get('staticcurves').toJSON());
-  });
-
   analyses = Collection([analysis]);
 
   ApplicationView({
@@ -34,11 +30,4 @@ dependencyFactory.whenReady(function () {
   });
 
   analyses.select(analysis);
-
-  // TODO :: remove this ...
-  window.model = analysis;
-  analysis.on('change:curves', function () {
-    document.querySelector('.tmp-output').innerHTML =
-        JSON.stringify(analysis.toJSON(), null, 2);
-  });
 });

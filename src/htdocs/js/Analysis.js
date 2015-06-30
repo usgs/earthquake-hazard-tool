@@ -24,7 +24,7 @@ var Analysis = function (options) {
 
     location: null,
 
-    imt: DependencyFactory.getInstance().getAllSpectralPeriods()[0].get('id'),
+    imt: null,
     vs30: DependencyFactory.getInstance().getAllSiteClasses()[0].get('id'),
 
     timeHorizon: 2475,
