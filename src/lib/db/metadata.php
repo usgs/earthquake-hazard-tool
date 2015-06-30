@@ -37,5 +37,9 @@ $editions = array(
 
 $regions = array(
   new Region(null, 'COUS0P05', 'Conterminous U.S. w/ 0.05 Grid', 1, 24.6,
-      50.0, -125.0, -65.0, 0.05)
+      50.0, -125.0, -65.0, 0.05),
+  new Region(null, 'WUS0P05', 'Western U.S. w/ 0.05 Grid', 2, 24.6,
+      50.0, -125.0, -100.0, 0.05),
+  new Region(null, 'CEUS0P10', 'Central and Eastern U.S. w/ 0.10 Grid', 3, 24.6,
+      50.0, -115.0, -65.0, 0.10)
 );
