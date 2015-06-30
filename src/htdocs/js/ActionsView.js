@@ -162,7 +162,8 @@ var ActionsView = function (params) {
       // }
 
       // validate Location & Region
-      if (!model.latitude || !model.longitude || !model.region) {
+      if (!model.location || !model.location.latitude ||
+          !model.location.longitude) {
         errors.push('<li>Please select a Location.</li>');
       }
 
