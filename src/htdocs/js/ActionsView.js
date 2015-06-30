@@ -248,6 +248,11 @@ var ActionsView = function (params) {
         _newButton.removeAttribute('disabled');
       }
     }
+
+    if (_errorReportEl.classList.contains('error')) {
+      // if already showing errors, rerun validation during render.
+      _onCalculateClick();
+    }
   };
 
   _initialize();
