@@ -32,6 +32,7 @@ var ActionsView = function (params) {
       _collectionView,
       _errorReportEl,
       _newButton,
+      _validateOnRender,
 
       _createNewAnalysis,
       _hasIncompleteCalculation,
@@ -84,6 +85,8 @@ var ActionsView = function (params) {
     // Collection bindings
     _this.collection.on('deselect', _removeErrorReporting);
     _this.collection.on('remove', _onAnalysisRemove);
+
+    _validateOnRender = false;
   };
 
   /**
@@ -91,6 +94,8 @@ var ActionsView = function (params) {
    */
   _createNewAnalysis = function () {
     var analysis = Analysis();
+
+    _validateOnRender = false;
     _this.collection.add(analysis);
     _this.collection.select(analysis);
   };
@@ -181,6 +186,7 @@ var ActionsView = function (params) {
       _errorReportEl.innerHTML = '<b>The following parameters must ' +
           'be selected before performing a calculation:</b>' +
           '<ul>' + errors.join('') + '</ul>';
+      _validateOnRender = true;
     }
   };
 
@@ -249,7 +255,7 @@ var ActionsView = function (params) {
       }
     }
 
-    if (_errorReportEl.classList.contains('error')) {
+    if (_validateOnRender) {
       // if already showing errors, rerun validation during render.
       _onCalculateClick();
     }
