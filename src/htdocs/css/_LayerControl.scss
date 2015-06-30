@@ -10,3 +10,52 @@
   height: 30px;
   width: 30px;
 }
+
+.contour-layer-control {
+  display: none;
+}
+
+.show-contour-layer-control > .contour-layer-control {
+  display: block;
+  margin: 0;
+  padding: 1em;
+  font-size: 16px;
+  height: 400px;
+  overflow: auto;
+
+  > label {
+    font-size: 0.8125em;
+    color: #777;
+    font-weight: 300;
+  }
+
+  > h3 {
+    margin: 16px 0 0;
+    padding: 16px 0 0;
+    border-top: 1px solid #eee;
+    font-size: 16px;
+    font-weight: bold;
+
+    &:first-child {
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+  }
+
+  .collection-selectbox {
+    min-width: 284px;
+  }
+}
+
+
+
+@media screen and (min-width: 768px) {
+
+  .show-contour-layer-control > .contour-layer-control {
+    .collection-selectbox {
+      min-width: 235px;
+    }
+  }
+
+}

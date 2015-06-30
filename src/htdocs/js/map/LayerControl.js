@@ -9,7 +9,6 @@ var EditionView = require('EditionView'),
 
     Collection = require('mvc/Collection'),
     CollectionSelectBox = require('mvc/CollectionSelectBox'),
-    ModalView = require('mvc/ModalView'),
     Model = require('mvc/Model'),
     SelectedCollectionView = require('mvc/SelectedCollectionView'),
 
@@ -32,7 +31,6 @@ var LayerChooser = function (params) {
       _editionView,
       _imtView,
       _map,
-      _modal,
       _overlays,
       _periodView,
       _selectedOverlay,
@@ -69,20 +67,6 @@ var LayerChooser = function (params) {
 
     _initCollections();
     _initViews();
-    // _updateCollectionOptions();
-
-    _modal = ModalView(_this.el, {
-      title: 'Map Layer Chooser',
-      buttons: [
-        {
-          callback: function () {
-            _modal.hide();
-          },
-          classes: ['confirm'],
-          text: 'Done'
-        }
-      ]
-    });
 
     if (!_baseLayerCollection.getSelected()) {
       _baseLayerCollection.select(_baseLayerCollection.data()[0]);
@@ -198,6 +182,8 @@ var LayerChooser = function (params) {
       dataset.input.addEventListener('change', _onDatasetChange);
     });
 
+    _this.el.classList.add('contour-layer-control');
+    _this.el.classList.add('leaflet-control');
     _this.el.classList.add('vertical');
     _this.el.appendChild(fragment);
   };
@@ -313,21 +299,11 @@ var LayerChooser = function (params) {
     _onOverlaySelect();
   };
 
-
-  _this.hide = function () {
-    _modal.hide();
-  };
-
   _this.setMap = function (map) {
     _map = map;
     _onBaseLayerSelect(_baseLayerCollection.getSelected());
     _onOverlaySelect();
   };
-
-  _this.show = function () {
-    _modal.show();
-  };
-
 
   _initialize(params);
   params = null;
@@ -359,10 +335,12 @@ var LayerControl = L.Control.extend({
 
     L.DomEvent
         .on(container, 'mousedown dblclick', L.DomEvent.stopPropagation)
+        .on(container, 'click', L.DomEvent.stopPropagation)
         .on(container, 'click', L.DomEvent.stop)
         .on(container, 'click', this._onClick, this);
 
     this._container = container;
+    this._container.appendChild(this._layerChooser.el);
 
     return container;
   },
@@ -373,8 +351,10 @@ var LayerControl = L.Control.extend({
     this._layerChooser.setMap(null);
 
     container = this._container;
+
     L.DomEvent
         .off(container, 'mousedown dblclick', L.DomEvent.stopPropagation)
+        .off(container, 'click', L.DomEvent.stopPropagation)
         .off(container, 'click', L.DomEvent.stop)
         .off(container, 'click', this._onClick, this);
 
@@ -382,7 +362,24 @@ var LayerControl = L.Control.extend({
   },
 
   _onClick: function (/*evt*/) {
-    this._layerChooser.show();
+
+    this._container.classList.add('show-contour-layer-control');
+
+    L.DomEvent
+        .on(this._container, 'mousedown dblclick', L.DomEvent.stopPropagation)
+        .on(this._container, 'click', L.DomEvent.stop)
+        .on(this._map._container, 'click', this._onMapClick, this);
+
+  },
+
+  _onMapClick: function (/*evt*/) {
+
+    this._container.classList.remove('show-contour-layer-control');
+
+    L.DomEvent
+        .off(this._container, 'mousedown dblclick', L.DomEvent.stopPropagation)
+        .off(this._container, 'click', L.DomEvent.stop)
+        .off(this._map._container, 'click', this._onMapClick, this);
   }
 });
 

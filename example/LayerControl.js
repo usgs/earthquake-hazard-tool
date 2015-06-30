@@ -129,7 +129,7 @@ collection = Collection(analyses);
 collection.select(analyses[0]);
 
 map = L.map(document.querySelector('.map-container'), {
-  mouseWheelZoom: false
+  scrollWheelZoom: false
 });
 
 map.addControl(new LayerControl(Util.extend(Layers, {'collection': collection})));
