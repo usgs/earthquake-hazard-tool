@@ -32,6 +32,7 @@ var ActionsView = function (params) {
       _collectionView,
       _errorReportEl,
       _newButton,
+      _validateOnRender,
 
       _createNewAnalysis,
       _hasIncompleteCalculation,
@@ -84,6 +85,8 @@ var ActionsView = function (params) {
     // Collection bindings
     _this.collection.on('deselect', _removeErrorReporting);
     _this.collection.on('remove', _onAnalysisRemove);
+
+    _validateOnRender = false;
   };
 
   /**
@@ -91,6 +94,8 @@ var ActionsView = function (params) {
    */
   _createNewAnalysis = function () {
     var analysis = Analysis();
+
+    _validateOnRender = false;
     _this.collection.add(analysis);
     _this.collection.select(analysis);
   };
@@ -162,7 +167,8 @@ var ActionsView = function (params) {
       // }
 
       // validate Location & Region
-      if (!model.latitude || !model.longitude || !model.region) {
+      if (!model.location || !model.location.latitude ||
+          !model.location.longitude) {
         errors.push('<li>Please select a Location.</li>');
       }
 
@@ -180,6 +186,7 @@ var ActionsView = function (params) {
       _errorReportEl.innerHTML = '<b>The following parameters must ' +
           'be selected before performing a calculation:</b>' +
           '<ul>' + errors.join('') + '</ul>';
+      _validateOnRender = true;
     }
   };
 
@@ -246,6 +253,11 @@ var ActionsView = function (params) {
       if (!_hasIncompleteCalculation()) {
         _newButton.removeAttribute('disabled');
       }
+    }
+
+    if (_validateOnRender) {
+      // if already showing errors, rerun validation during render.
+      _onCalculateClick();
     }
   };
 
