@@ -59,7 +59,8 @@ var TimeHorizonSelectView = function (params) {
     _timeHorizonCollectionSelectBox = CollectionSelectBox({
       collection: _timeHorizonCollection,
       el: _this.el,
-      includeBlankOption: true,
+      includeBlankOption: params.includeBlankOption,
+      blankOption: params.blankOption,
       format: function (model) {
         return model.get('display');
       }

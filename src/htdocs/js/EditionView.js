@@ -40,7 +40,8 @@ var EditionView = function (params) {
     _editionCollectionSelectBox = CollectionSelectBox({
       collection: _editionCollection,
       el: _this.el,
-      includeBlankOption: true,
+      includeBlankOption: params.includeBlankOption,
+      blankOption: params.blankOption,
       format: function (model) {
         return model.get('display');
       }
@@ -99,18 +100,9 @@ var EditionView = function (params) {
   _this.render = function (changes) {
     var edition;
 
-<<<<<<< HEAD
     if (changes && (changes.edition || changes.model)) {
       if (_this.model) {
         edition = this.model.get('edition');
-=======
-    if (!_isReady) {
-      return;
-    }
-
-    // Update selected edition when collection changes
-    if (_this.model) {
->>>>>>> Update ContourTypeView to get contour types if they are not passed in
 
         // else select or deslect
         if (edition !== null) {

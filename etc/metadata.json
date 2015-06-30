@@ -214,7 +214,7 @@
         {
           "id": 1,
           "value": "hazard",
-          "display": "Hazard Contours",
+          "display": "Gridded Hazard",
           "displayorder": 1
         },
         {

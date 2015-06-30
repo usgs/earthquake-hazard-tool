@@ -12,7 +12,7 @@ var CONTOUR_TYPES = [
   {
     'id': 1,
     'value': 'hazard',
-    'display': 'Hazard Contours',
+    'display': 'Gridded Hazard',
     'displayorder': 1
   }
 ];
@@ -30,7 +30,7 @@ var ContourTypeView = function (params) {
 
   _this = SelectedCollectionView(params);
 
-  _initialize = function () {
+  _initialize = function (params) {
 
     _contourTypeCollection = Collection(CONTOUR_TYPES.map(Meta));
 
@@ -43,7 +43,8 @@ var ContourTypeView = function (params) {
     _collectionSelectBox = CollectionSelectBox({
       collection: _contourTypeCollection,
       el: _selectBox,
-      includeBlankOption: true,
+      includeBlankOption: params.includeBlankOption,
+      blankOption: params.blankOption,
       format: function (model) {
         return model.get('display');
       }
@@ -114,7 +115,7 @@ var ContourTypeView = function (params) {
     }
   };
 
-  _initialize();
+  _initialize(params);
   params = null;
   return _this;
 };

@@ -152,28 +152,36 @@ var LayerChooser = function (params) {
     label.innerHTML = 'Select data edition';
     _editionView = EditionView({
       el: fragment.appendChild(document.createElement('div')),
-      collection: _this.collection
+      collection: _this.collection,
+      includeBlankOption: false
     });
 
     label = fragment.appendChild(document.createElement('label'));
     label.innerHTML = 'Select Overlay Type';
     _contourTypeView = ContourTypeView({
       el: fragment.appendChild(document.createElement('div')),
-      collection: _this.collection
+      collection: _this.collection,
+      includeBlankOption: true,
+      blankOption: {
+        'text': 'None',
+        'value': -1
+      }
     });
 
     label = fragment.appendChild(document.createElement('label'));
     label.innerHTML = 'Select intensity measure type';
     _imtView = SpectralPeriodView({
       el: fragment.appendChild(document.createElement('div')),
-      collection: _this.collection
+      collection: _this.collection,
+      includeBlankOption: false
     });
 
     label = fragment.appendChild(document.createElement('label'));
     label.innerHTML = 'Select return period';
     _periodView = TimeHorizonSelectView({
       el: fragment.appendChild(document.createElement('div')),
-      collection: _this.collection
+      collection: _this.collection,
+      includeBlankOption: false
     });
 
     label = fragment.appendChild(document.createElement('h3'));
