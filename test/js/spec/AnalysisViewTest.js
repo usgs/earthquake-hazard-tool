@@ -2,7 +2,8 @@
 'use strict';
 
 var Analysis = require('Analysis'),
-    AnalysisView = require('AnalysisView');
+    AnalysisView = require('AnalysisView'),
+    DependencyFactory = require('DependencyFactory');
 
 var expect = chai.expect;
 
@@ -23,14 +24,17 @@ describe('AnalysisView test suite.', function () {
         analysis,
         view;
 
-    beforeEach(function () {
-      analysis = Analysis();
-      view = AnalysisView({
-        model: analysis,
-        el: document.createElement('li')
-      });
+    beforeEach(function (done) {
+      DependencyFactory.getInstance().whenReady(function () {
+        analysis = Analysis();
+        view = AnalysisView({
+          model: analysis,
+          el: document.createElement('li')
+        });
 
-      renderSpy = sinon.spy(view, 'render');
+        renderSpy = sinon.spy(view, 'render');
+        done();
+      });
     });
 
     afterEach(function () {

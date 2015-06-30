@@ -25,7 +25,7 @@ describe('Unit tests for "HazardCurveDataView"', function () {
     Xhr.ajax({
       url: 'data.json',
       success: function (data) {
-        curves = HazardResponse(data.response[0]).get('curves');
+        curves = HazardResponse(data.response).get('curves');
         hazardCurveDataView = HazardCurveDataView({
           el: hazardCurveDataViewElement,
           collection: curves

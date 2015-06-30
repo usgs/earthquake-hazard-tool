@@ -3,6 +3,7 @@
 
 var Analysis = require('Analysis'),
     Calculator = require('Calculator'),
+    DependencyFactory = require('DependencyFactory'),
     Meta = require('Meta'),
     Region = require('Region'),
 
@@ -34,20 +35,7 @@ vs30 = Meta(metadata.parameters.vs30.values[0]);
 
 contourType = Meta(metadata.parameters.contourType.values[0]);
 
-analysis = Analysis({
-  edition: edition,
-  region: region,
 
-  location: {
-    latitude: latitude,
-    longitude: longitude
-  },
-
-  imt: imt,
-  vs30: vs30,
-
-  contourType: contourType
-});
 
 describe('Calculator', function () {
 
@@ -55,20 +43,38 @@ describe('Calculator', function () {
       stub;
 
   before(function (done) {
-    stub = sinon.stub(Xhr, 'ajax', function (options) {
-      options.success(metadata);
-    });
+    DependencyFactory.getInstance().whenReady(function () {
+      analysis = Analysis({
+        edition: edition,
+        region: region,
 
-    calculator = Calculator();
-    calculator.getParameters('staticcurve', function () {
-      stub.restore();
+        location: {
+          latitude: latitude,
+          longitude: longitude
+        },
 
-      stub = sinon.stub(Xhr, 'ajax', function (options) {
-        options.success(data);
+        imt: imt,
+        vs30: vs30,
+
+        contourType: contourType
       });
 
-      done();
+      stub = sinon.stub(Xhr, 'ajax', function (options) {
+        options.success(metadata);
+      });
+
+      calculator = Calculator();
+      calculator.getParameters('staticcurve', function () {
+        stub.restore();
+
+        stub = sinon.stub(Xhr, 'ajax', function (options) {
+          options.success(data);
+        });
+
+        done();
+      });
     });
+
   });
 
   after(function () {
@@ -147,7 +153,8 @@ describe('Calculator', function () {
 
     it('returns expected results', function (done) {
         calculator.getResult('staticcurve', analysis, function (result) {
-          expect(result.analysis.get('curves').data().length).to.equal(6);
+          expect(result.analysis.get('curves').get('curves').data().length)
+              .to.equal(6);
           done();
         });
     });

@@ -37,7 +37,6 @@ require('./spec/DependencyFactoryTest');
 require('./spec/EditionViewTest');
 require('./spec/MapViewTest');
 require('./spec/HazardCurveTest');
-require('./spec/HazardCurveDataViewTest');
 require('./spec/HazardCurveGraphViewTest');
 require('./spec/HazardUtilTest');
 require('./spec/SiteClassViewTest');
