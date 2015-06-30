@@ -112,10 +112,9 @@ var HazardCurveGraphView = function (options) {
    */
   _onAdd = function (curves) {
     curves.forEach(function (curve) {
-      var view = HazardCurveLineView({
-        model: curve,
+      var view = HazardCurveLineView(Util.extend({
         view: _this
-      });
+      }, curve.get()));
       view.id = curve.id;
       _this.views.add(view);
     });
