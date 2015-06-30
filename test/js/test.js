@@ -41,7 +41,6 @@ require('./spec/HazardCurveGraphViewTest');
 require('./spec/HazardUtilTest');
 require('./spec/SiteClassViewTest');
 require('./spec/SpectralPeriodViewTest');
-require('./spec/StaticCurveOutputViewTest');
 require('./spec/TimeHorizonInputViewTest');
 require('./spec/TimeHorizonSelectViewTest');
 require('./spec/TimeHorizonSliderViewTest');
