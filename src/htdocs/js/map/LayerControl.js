@@ -277,6 +277,27 @@ var LayerChooser = function (params) {
   _this.destroy = Util.compose(_this.destroy, function () {
     _this.setMap(null);
 
+    _getSelectedOverlay = null;
+    _initCollections = null;
+    _initViews = null;
+    _onBaseLayerDeselect = null;
+    _onBaseLayerSelect = null;
+    _onDatasetChange = null;
+    _onOverlayDeselect = null;
+    _onOverlaySelect = null;
+
+    _baseLayers = null;
+    _baseLayerView = null;
+    _baseLayerCollection = null;
+    _contourTypeView = null;
+    _datasets = null;
+    _editionView = null;
+    _imtView = null;
+    _map = null;
+    _overlays = null;
+    _periodView = null;
+    _selectedOverlay = null;
+
     _initialize = null;
     _this = null;
   });
@@ -303,6 +324,7 @@ var LayerChooser = function (params) {
     _map = map;
     _onBaseLayerSelect(_baseLayerCollection.getSelected());
     _onOverlaySelect();
+    _this.onCollectionSelect();
   };
 
   _initialize(params);
