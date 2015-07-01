@@ -63,7 +63,7 @@ var LayerChooser = function (params) {
       datasets: []
     }, params);
 
-    _this.collection = params.collection;
+    _this.collection = params.collection || Collection();
 
     _baseLayers = params.baseLayers;
     _datasets = params.datasets;
@@ -163,6 +163,7 @@ var LayerChooser = function (params) {
     _spectralPeriodView = SpectralPeriodView({
       el: fragment.appendChild(document.createElement('div')),
       collection: _this.collection,
+      factory: _dependencyFactory,
       includeBlankOption: false
     });
 

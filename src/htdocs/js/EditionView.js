@@ -1,6 +1,7 @@
 'use strict';
 
-var CollectionSelectBox = require('mvc/CollectionSelectBox'),
+var Collection = require('mvc/Collection'),
+    CollectionSelectBox = require('mvc/CollectionSelectBox'),
     SelectedCollectionView = require('mvc/SelectedCollectionView'),
 
     Util = require('util/Util');
@@ -34,7 +35,7 @@ var EditionView = function (params) {
    * @constructor
    */
   _initialize = function (params) {
-    _editionCollection = params.editions;
+    _editionCollection = params.editions || Collection();
 
     _editionCollectionSelectBox = CollectionSelectBox({
       collection: _editionCollection,

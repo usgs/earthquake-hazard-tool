@@ -7,6 +7,7 @@ var Layers = require('map/Layers'),
 
     LocationControl = require('locationview/LocationControl'),
 
+    Collection = require('mvc/Collection'),
     SelectedCollectionView = require('mvc/SelectedCollectionView'),
 
     Util = require('util/Util');
@@ -33,7 +34,7 @@ var MapView = function (options) {
   _initialize = function (options) {
     var el;
 
-    _this.collection = options.collection;
+    _this.collection = options.collection || Collection();
 
     _dependencyFactory = options.dependencyFactory;
     _editions = options.editions;

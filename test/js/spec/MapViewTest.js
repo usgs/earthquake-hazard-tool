@@ -15,7 +15,7 @@ describe('Unit tests for "MapView"', function () {
     });
 
     it('Can be created and destroyed', function () {
-      var view = MapView();
+      var view = MapView({});
       view.destroy();
     });
 
