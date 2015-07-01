@@ -10,8 +10,17 @@ var HazardCurve = require('HazardCurve'),
 
 var _PERIOD_TO_NUMBER = {
   'PGA': 0.0,
+  'PGV': 0.0,
+  'SA0P1': 0.1,
   'SA0P2': 0.2,
-  'SA1P0': 1.0
+  'SA0P3': 0.3,
+  'SA0P5': 0.5,
+  'SA0P75': 0.75,
+  'SA1P0': 1.0,
+  'SA2P0': 2.0,
+  'SA3P0': 3.0,
+  'SA4P0': 4.0,
+  'SA5P0': 5.0
 };
 
 var HazardResponse = function (params) {
