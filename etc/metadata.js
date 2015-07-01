@@ -19,7 +19,7 @@ module.exports = {
               'CEUS0P05'
             ],
             'contourType': [
-              0
+              1
             ]
           }
         },
@@ -35,7 +35,7 @@ module.exports = {
               'CEUS0P05'
             ],
             'contourType': [
-              0
+              1
             ]
           }
         }
