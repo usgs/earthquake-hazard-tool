@@ -23,7 +23,6 @@ var EditionView = function (params) {
   var _this,
       _initialize,
 
-      _isReady,
       _editionCollection,
       _editionCollectionSelectBox,
 

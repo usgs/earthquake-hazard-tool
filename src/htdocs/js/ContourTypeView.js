@@ -10,7 +10,7 @@ var Meta = require('Meta'),
 
 var CONTOUR_TYPES = [
   {
-    'id': 1,
+    'id': 'hazard',
     'value': 'hazard',
     'display': 'Gridded Hazard',
     'displayorder': 1
@@ -66,7 +66,7 @@ var ContourTypeView = function (params) {
 
     if (_this.model) {
       if (_contourTypeCollection.getSelected()) {
-        contourType = _contourTypeCollection.getSelected();
+        contourType = _contourTypeCollection.getSelected().id;
       } else {
         contourType = null;
       }
@@ -103,7 +103,7 @@ var ContourTypeView = function (params) {
       if (contourType === null) {
         _contourTypeCollection.deselect();
       } else {
-        _contourTypeCollection.selectById(contourType.id);
+        _contourTypeCollection.selectById(contourType);
 
         if (contourType === 0) {
           _message.innerHTML =

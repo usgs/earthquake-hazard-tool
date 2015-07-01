@@ -24,11 +24,11 @@ var Analysis = function (options) {
 
     location: null,
 
-    imt: null,
+    imt: DependencyFactory.getInstance().getAllSpectralPeriods()[0].get('id'),
     vs30: DependencyFactory.getInstance().getAllSiteClasses()[0].get('id'),
 
     timeHorizon: 2475,
-    contourType: null,
+    contourType: 'hazard',
 
     curves: null
   }, options));

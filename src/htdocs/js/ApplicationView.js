@@ -63,6 +63,8 @@ var ApplicationView = function (params) {
 
     _mapView = MapView({
       collection: _this.collection,
+      dependencyFactory: _dependencyFactory,
+      editions: _editions,
       el: _mapEl
     });
 

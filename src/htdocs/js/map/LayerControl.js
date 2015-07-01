@@ -28,7 +28,9 @@ var LayerChooser = function (params) {
       _baseLayerCollection,
       _contourTypeView,
       _datasets,
+      _dependencyFactory,
       _editionView,
+      _editions,
       _imtView,
       _map,
       _overlays,
@@ -61,9 +63,13 @@ var LayerChooser = function (params) {
       datasets: []
     }, params);
 
+    _this.collection = params.collection;
+
     _baseLayers = params.baseLayers;
-    _overlays = params.overlays;
     _datasets = params.datasets;
+    _dependencyFactory = params.dependencyFactory;
+    _editions = params.editions;
+    _overlays = params.overlays;
 
     _initCollections();
     _initViews();
@@ -85,10 +91,10 @@ var LayerChooser = function (params) {
     for (i = 0, len = _overlays.length; i < len; i++) {
       overlay = _overlays[i];
 
-      if (overlay.edition === edition.get('value') &&
-          overlay.type === type.get('value') &&
-          overlay.imt === imt.get('value') &&
-          overlay.period === period.get('value')) {
+      if (overlay.edition === edition &&
+          overlay.type === type &&
+          overlay.imt === imt &&
+          overlay.period === _periodView.getTimeHorizonId(period)) {
         return overlay;
       }
     }
@@ -136,7 +142,7 @@ var LayerChooser = function (params) {
     label.innerHTML = 'Select data edition';
     _editionView = EditionView({
       el: fragment.appendChild(document.createElement('div')),
-      collection: _this.collection,
+      editions: _editions,
       includeBlankOption: false
     });
 
@@ -215,7 +221,6 @@ var LayerChooser = function (params) {
     }
 
     if (_map && edition) {
-      edition = edition.get('id');
 
       _datasets.forEach(function (dataset) {
         if (dataset.input.checked) {
@@ -291,6 +296,7 @@ var LayerChooser = function (params) {
     _baseLayerCollection = null;
     _contourTypeView = null;
     _datasets = null;
+    _dependencyFactory = null;
     _editionView = null;
     _imtView = null;
     _map = null;
@@ -324,7 +330,6 @@ var LayerChooser = function (params) {
     _map = map;
     _onBaseLayerSelect(_baseLayerCollection.getSelected());
     _onOverlaySelect();
-    _this.onCollectionSelect();
   };
 
   _initialize(params);
