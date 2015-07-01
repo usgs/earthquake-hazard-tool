@@ -364,7 +364,6 @@ var LayerControl = L.Control.extend({
     L.DomEvent
         .on(container, 'mousedown dblclick', L.DomEvent.stopPropagation)
         .on(container, 'click', L.DomEvent.stopPropagation)
-        .on(container, 'click', L.DomEvent.stop)
         .on(container, 'click', this._onClick, this);
 
     this._container = container;
@@ -383,7 +382,6 @@ var LayerControl = L.Control.extend({
     L.DomEvent
         .off(container, 'mousedown dblclick', L.DomEvent.stopPropagation)
         .off(container, 'click', L.DomEvent.stopPropagation)
-        .off(container, 'click', L.DomEvent.stop)
         .off(container, 'click', this._onClick, this);
 
     this._map = null;
@@ -395,7 +393,6 @@ var LayerControl = L.Control.extend({
 
     L.DomEvent
         .on(this._container, 'mousedown dblclick', L.DomEvent.stopPropagation)
-        .on(this._container, 'click', L.DomEvent.stop)
         .on(this._map._container, 'click', this._onMapClick, this);
 
   },
@@ -406,7 +403,6 @@ var LayerControl = L.Control.extend({
 
     L.DomEvent
         .off(this._container, 'mousedown dblclick', L.DomEvent.stopPropagation)
-        .off(this._container, 'click', L.DomEvent.stop)
         .off(this._map._container, 'click', this._onMapClick, this);
   }
 });
