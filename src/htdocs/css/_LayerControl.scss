@@ -48,6 +48,14 @@
   }
 }
 
+.leaflet-top.leaflet-right {
+  z-index: 1001;
+
+  > .hazard-layer-control {
+    z-index: 8;
+  }
+
+}
 
 
 @media screen and (min-width: 768px) {
