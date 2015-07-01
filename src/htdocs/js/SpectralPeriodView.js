@@ -87,10 +87,16 @@ var SpectralPeriodView = function (params) {
    * the currently selected Site Class in the CollectionSelectBox.
    */
   _updateSpectralPeriods = function () {
+    var selected;
+
     if (_this.model) {
-      _this.model.set(
-        {'imt': _spectralPeriodCollection.getSelected()}
-      );
+      selected = _spectralPeriodCollection.getSelected();
+
+      if (selected) {
+        _this.model.set({'imt': selected.get('id')});
+      } else {
+        _this.model.set({'imt': null});
+      }
     }
   };
 
@@ -187,7 +193,7 @@ var SpectralPeriodView = function (params) {
         if (spectralPeriod === null) {
           _spectralPeriodCollection.deselect();
         } else {
-          _spectralPeriodCollection.selectById(spectralPeriod.id);
+          _spectralPeriodCollection.selectById(spectralPeriod);
         }
       } else {
         // no item in the collection has been selected
