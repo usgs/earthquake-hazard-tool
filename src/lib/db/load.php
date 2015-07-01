@@ -31,7 +31,7 @@ $dataFiles = array(
   'E2008R3_CEUS0P10_SA0P1_2000_Curves.tar.gz',
   'E2008R3_CEUS0P10_SA0P2_2000_Curves.tar.gz',
   'E2008R3_CEUS0P10_SA0P3_2000_Curves.tar.gz',
-  'E2008R3_CEUS0P10_SA0P4_2000_Curves.tar.gz',
+  'E2008R3_CEUS0P10_SA0P5_2000_Curves.tar.gz',
   'E2008R3_CEUS0P10_SA1P0_2000_Curves.tar.gz',
   'E2008R3_CEUS0P10_SA2P0_2000_Curves.tar.gz',
 
@@ -141,7 +141,7 @@ foreach ($dataFiles as $dataFile) {
     extractTarGz($tgzFile, $extractedDir); // Should create $txtFile
 
     echo 'Parsing and loading data file into database...';
-    $dataLoader->load($txtFile);
+    $dataLoader->load($txtFile, null, true);
     echo '...done.' . PHP_EOL;
 
   } catch (Exception $e) {
