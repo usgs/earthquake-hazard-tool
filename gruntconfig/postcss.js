@@ -11,7 +11,7 @@ var postcss = {
   options: {
     processors: [
       autoprefixer({'browsers': 'last 2 versions'}), // vendor prefix as needed
-      cssnano() // minify
+      cssnano({zindex: false}) // minify
     ]
   },
 
