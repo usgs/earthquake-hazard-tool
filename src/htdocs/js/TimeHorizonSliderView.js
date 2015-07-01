@@ -6,13 +6,13 @@ var SelectedCollectionView = require('mvc/SelectedCollectionView'),
 
 var TIME_HORIZONS = [
   {
-    'id': 2475,
+    'id': '2P50',
     'value': 2475,
     'display': '2% in 50 years',
     'displayorder': 0
   },
   {
-    'id': 475,
+    'id': '10P50',
     'value': 475,
     'display': '10% in 50 years',
     'displayorder': 1

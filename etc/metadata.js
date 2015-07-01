@@ -19,7 +19,7 @@ module.exports = {
               'CEUS0P05'
             ],
             'contourType': [
-              0
+              1
             ]
           }
         },
@@ -35,7 +35,7 @@ module.exports = {
               'CEUS0P05'
             ],
             'contourType': [
-              0
+              1
             ]
           }
         }
@@ -210,10 +210,10 @@ module.exports = {
       'type': 'string',
       'values': [
         {
-          'id': 0,
-          'value': 'Hazard Contours',
-          'display': 'Hazard Contours',
-          'displayorder': 0
+          'id': 1,
+          'value': 'hazard',
+          'display': 'Gridded Hazard',
+          'displayorder': 1
         },
         {
           'id': 1,

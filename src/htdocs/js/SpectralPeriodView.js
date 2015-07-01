@@ -55,7 +55,8 @@ var SpectralPeriodView = function (params) {
     _spectralPeriodCollectionSelectBox = CollectionSelectBox({
       collection: _spectralPeriodCollection,
       el: _this.el,
-      includeBlankOption: true,
+      includeBlankOption: params.includeBlankOption,
+      blankOption: params.blankOption,
       format: function (model) {
         return model.get('display');
       }
@@ -86,10 +87,16 @@ var SpectralPeriodView = function (params) {
    * the currently selected Site Class in the CollectionSelectBox.
    */
   _updateSpectralPeriods = function () {
+    var selected;
+
     if (_this.model) {
-      _this.model.set(
-        {'imt': _spectralPeriodCollection.getSelected()}
-      );
+      selected = _spectralPeriodCollection.getSelected();
+
+      if (selected) {
+        _this.model.set({'imt': selected.get('id')});
+      } else {
+        _this.model.set({'imt': null});
+      }
     }
   };
 
@@ -186,7 +193,7 @@ var SpectralPeriodView = function (params) {
         if (spectralPeriod === null) {
           _spectralPeriodCollection.deselect();
         } else {
-          _spectralPeriodCollection.selectById(spectralPeriod.id);
+          _spectralPeriodCollection.selectById(spectralPeriod);
         }
       } else {
         // no item in the collection has been selected

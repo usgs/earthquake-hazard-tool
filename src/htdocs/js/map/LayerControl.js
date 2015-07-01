@@ -1,34 +1,19 @@
 'use strict';
 
-var L = require('leaflet'),
+var EditionView = require('EditionView'),
+    ContourTypeView = require('ContourTypeView'),
+    SpectralPeriodView = require('SpectralPeriodView'),
+    TimeHorizonSelectView = require('TimeHorizonSelectView'),
+
+    L = require('leaflet'),
 
     Collection = require('mvc/Collection'),
     CollectionSelectBox = require('mvc/CollectionSelectBox'),
-    ModalView = require('mvc/ModalView'),
     Model = require('mvc/Model'),
-    View = require('mvc/View'),
+    SelectedCollectionView = require('mvc/SelectedCollectionView'),
 
     Util = require('util/Util');
 
-
-var PARAMETERS = {
-  'edition': [
-    Model({id: 'E2014R1', value: 'NSHMP 2014 Revision 1'}),
-    Model({id: 'E2008R3', value: 'NSHMP 2008 Revision 3'})
-  ],
-  'type': [
-    Model({id: 'hazard', value: 'Hazard Contours'})
-  ],
-  'imt': [
-    Model({id: 'PGA', value: 'Peak Ground Acceleration'}),
-    Model({id: 'SA0P2', value: '0.20 Second Spectral Acceleration'}),
-    Model({id: 'SA1P0', value: '1.00 Second Spectral Acceleration'})
-  ],
-  'period': [
-    Model({id: '2P50', value: '2% in 50 Years'}),
-    Model({id: '10P50', value: '10% in 50 Years'})
-  ]
-};
 
 // --------------------------------------------------
 // Private inner class
@@ -39,20 +24,18 @@ var LayerChooser = function (params) {
       _initialize,
 
       _baseLayers,
+      _baseLayerView,
       _baseLayerCollection,
+      _contourTypeView,
       _datasets,
-      _editionCollection,
+      _dependencyFactory,
       _editionView,
-      _imtCollection,
-      _imtView,
+      _editions,
+      _spectralPeriodView,
       _map,
-      _modal,
       _overlays,
-      _periodCollection,
-      _periodView,
+      _timeHorizonSelectView,
       _selectedOverlay,
-      _typeCollection,
-      _typeView,
 
       _getSelectedOverlay,
       _initCollections,
@@ -64,7 +47,7 @@ var LayerChooser = function (params) {
       _onOverlaySelect;
 
 
-  _this = View(params);
+  _this = SelectedCollectionView(params);
 
   _initialize = function (params) {
     params = Util.extend({
@@ -80,26 +63,16 @@ var LayerChooser = function (params) {
       datasets: []
     }, params);
 
+    _this.collection = params.collection || Collection();
+
     _baseLayers = params.baseLayers;
-    _overlays = params.overlays;
     _datasets = params.datasets;
+    _dependencyFactory = params.dependencyFactory;
+    _editions = params.editions;
+    _overlays = params.overlays;
 
     _initCollections();
     _initViews();
-    // _updateCollectionOptions();
-
-    _modal = ModalView(_this.el, {
-      title: 'Map Layer Chooser',
-      buttons: [
-        {
-          callback: function () {
-            _modal.hide();
-          },
-          classes: ['confirm'],
-          text: 'Done'
-        }
-      ]
-    });
 
     if (!_baseLayerCollection.getSelected()) {
       _baseLayerCollection.select(_baseLayerCollection.data()[0]);
@@ -118,10 +91,10 @@ var LayerChooser = function (params) {
     for (i = 0, len = _overlays.length; i < len; i++) {
       overlay = _overlays[i];
 
-      if (overlay.edition === edition.get('id') &&
-          overlay.type === type.get('id') &&
-          overlay.imt === imt.get('id') &&
-          overlay.period === period.get('id')) {
+      if (overlay.edition === edition &&
+          overlay.type === type &&
+          overlay.imt === imt &&
+          overlay.period === _timeHorizonSelectView.getTimeHorizonId(period)) {
         return overlay;
       }
     }
@@ -134,32 +107,12 @@ var LayerChooser = function (params) {
       return Model(layer);
     }));
 
-    _editionCollection = Collection(PARAMETERS.edition);
-    _typeCollection = Collection(PARAMETERS.type);
-    _imtCollection = Collection(PARAMETERS.imt);
-    _periodCollection = Collection(PARAMETERS.period);
-
-    // Select first option in each collection
+    // Select first option in base layer collection
     _baseLayerCollection.select(_baseLayerCollection.data()[0]);
-
-    _editionCollection.select(_editionCollection.data()[0]);
-    _typeCollection.select(_typeCollection.data()[0]);
-    _imtCollection.select(_imtCollection.data()[0]);
-    _periodCollection.select(_periodCollection.data()[0]);
 
     // Bind listeners
     _baseLayerCollection.on('select', _onBaseLayerSelect);
     _baseLayerCollection.on('deselect', _onBaseLayerDeselect);
-
-    _editionCollection.on('select', _onOverlaySelect);
-    _typeCollection.on('select', _onOverlaySelect);
-    _imtCollection.on('select', _onOverlaySelect);
-    _periodCollection.on('select', _onOverlaySelect);
-
-    _editionCollection.on('select', _onOverlayDeselect);
-    _typeCollection.on('select', _onOverlayDeselect);
-    _imtCollection.on('select', _onOverlayDeselect);
-    _periodCollection.on('select', _onOverlayDeselect);
   };
 
   _initViews = function () {
@@ -176,7 +129,7 @@ var LayerChooser = function (params) {
     label.innerHTML = 'Base Layer';
 
     label = fragment.appendChild(document.createElement('label'));
-    _editionView = CollectionSelectBox({
+    _baseLayerView = CollectionSelectBox({
       el: fragment.appendChild(document.createElement('select')),
       collection: _baseLayerCollection,
       format: format
@@ -187,34 +140,39 @@ var LayerChooser = function (params) {
 
     label = fragment.appendChild(document.createElement('label'));
     label.innerHTML = 'Select data edition';
-    _editionView = CollectionSelectBox({
-      el: fragment.appendChild(document.createElement('select')),
-      collection: _editionCollection,
-      format: format
+    _editionView = EditionView({
+      el: fragment.appendChild(document.createElement('div')),
+      editions: _editions,
+      includeBlankOption: false
     });
 
     label = fragment.appendChild(document.createElement('label'));
-    label.innerHTML = 'Select overlay type';
-    _typeView = CollectionSelectBox({
-      el: fragment.appendChild(document.createElement('select')),
-      collection: _typeCollection,
-      format: format
+    label.innerHTML = 'Select Overlay Type';
+    _contourTypeView = ContourTypeView({
+      el: fragment.appendChild(document.createElement('div')),
+      collection: _this.collection,
+      includeBlankOption: true,
+      blankOption: {
+        'text': 'None',
+        'value': -1
+      }
     });
 
     label = fragment.appendChild(document.createElement('label'));
     label.innerHTML = 'Select intensity measure type';
-    _imtView = CollectionSelectBox({
-      el: fragment.appendChild(document.createElement('select')),
-      collection: _imtCollection,
-      format: format
+    _spectralPeriodView = SpectralPeriodView({
+      el: fragment.appendChild(document.createElement('div')),
+      collection: _this.collection,
+      factory: _dependencyFactory,
+      includeBlankOption: false
     });
 
     label = fragment.appendChild(document.createElement('label'));
     label.innerHTML = 'Select return period';
-    _periodView = CollectionSelectBox({
-      el: fragment.appendChild(document.createElement('select')),
-      collection: _periodCollection,
-      format: format
+    _timeHorizonSelectView = TimeHorizonSelectView({
+      el: fragment.appendChild(document.createElement('div')),
+      collection: _this.collection,
+      includeBlankOption: false
     });
 
     label = fragment.appendChild(document.createElement('h3'));
@@ -231,6 +189,8 @@ var LayerChooser = function (params) {
       dataset.input.addEventListener('change', _onDatasetChange);
     });
 
+    _this.el.classList.add('contour-layer-control');
+    _this.el.classList.add('leaflet-control');
     _this.el.classList.add('vertical');
     _this.el.appendChild(fragment);
   };
@@ -256,10 +216,12 @@ var LayerChooser = function (params) {
   _onDatasetChange = function () {
     var edition;
 
-    edition = _editionCollection.getSelected();
+    // read edition off selected item in the collection
+    if (_this.collection.getSelected()) {
+      edition = _this.collection.getSelected().get('edition');
+    }
 
     if (_map && edition) {
-      edition = edition.get('id');
 
       _datasets.forEach(function (dataset) {
         if (dataset.input.checked) {
@@ -292,16 +254,20 @@ var LayerChooser = function (params) {
   };
 
   _onOverlaySelect = function () {
-    if (_map) {
+    var selected;
+
+    selected = _this.collection.getSelected();
+
+    if (_map && selected) {
       if (_selectedOverlay) {
         _map.removeLayer(_selectedOverlay.layer);
       }
 
       _selectedOverlay = _getSelectedOverlay(
-          _editionCollection.getSelected(),
-          _typeCollection.getSelected(),
-          _imtCollection.getSelected(),
-          _periodCollection.getSelected()
+          selected.get('edition'),
+          selected.get('contourType'),
+          selected.get('imt'),
+          selected.get('timeHorizon')
         );
 
       if (_selectedOverlay && !_selectedOverlay._map) {
@@ -317,25 +283,55 @@ var LayerChooser = function (params) {
   _this.destroy = Util.compose(_this.destroy, function () {
     _this.setMap(null);
 
+    _getSelectedOverlay = null;
+    _initCollections = null;
+    _initViews = null;
+    _onBaseLayerDeselect = null;
+    _onBaseLayerSelect = null;
+    _onDatasetChange = null;
+    _onOverlayDeselect = null;
+    _onOverlaySelect = null;
+
+    _baseLayers = null;
+    _baseLayerView = null;
+    _baseLayerCollection = null;
+    _contourTypeView = null;
+    _datasets = null;
+    _dependencyFactory = null;
+    _editionView = null;
+    _spectralPeriodView = null;
+    _map = null;
+    _overlays = null;
+    _timeHorizonSelectView = null;
+    _selectedOverlay = null;
+
     _initialize = null;
     _this = null;
   });
 
-  _this.hide = function () {
-    _modal.hide();
+  /**
+   * unset the event bindings for the collection
+   */
+  _this.onCollectionDeselect = function () {
+    _this.model.off('change', _onOverlaySelect);
+    _this.model = null;
+    _onOverlaySelect();
+  };
+
+  /**
+   * set event bindings for the collection
+   */
+  _this.onCollectionSelect = function () {
+    _this.model = _this.collection.getSelected();
+    _this.model.on('change', _onOverlaySelect);
+    _onOverlaySelect();
   };
 
   _this.setMap = function (map) {
     _map = map;
     _onBaseLayerSelect(_baseLayerCollection.getSelected());
     _onOverlaySelect();
-    // _onOverlaySelect();
   };
-
-  _this.show = function () {
-    _modal.show();
-  };
-
 
   _initialize(params);
   params = null;
@@ -367,10 +363,11 @@ var LayerControl = L.Control.extend({
 
     L.DomEvent
         .on(container, 'mousedown dblclick', L.DomEvent.stopPropagation)
-        .on(container, 'click', L.DomEvent.stop)
+        .on(container, 'click', L.DomEvent.stopPropagation)
         .on(container, 'click', this._onClick, this);
 
     this._container = container;
+    this._container.appendChild(this._layerChooser.el);
 
     return container;
   },
@@ -381,16 +378,32 @@ var LayerControl = L.Control.extend({
     this._layerChooser.setMap(null);
 
     container = this._container;
+
     L.DomEvent
         .off(container, 'mousedown dblclick', L.DomEvent.stopPropagation)
-        .off(container, 'click', L.DomEvent.stop)
+        .off(container, 'click', L.DomEvent.stopPropagation)
         .off(container, 'click', this._onClick, this);
 
     this._map = null;
   },
 
   _onClick: function (/*evt*/) {
-    this._layerChooser.show();
+
+    this._container.classList.add('show-contour-layer-control');
+
+    L.DomEvent
+        .on(this._container, 'mousedown dblclick', L.DomEvent.stopPropagation)
+        .on(this._map._container, 'click', this._onMapClick, this);
+
+  },
+
+  _onMapClick: function (/*evt*/) {
+
+    this._container.classList.remove('show-contour-layer-control');
+
+    L.DomEvent
+        .off(this._container, 'mousedown dblclick', L.DomEvent.stopPropagation)
+        .off(this._map._container, 'click', this._onMapClick, this);
   }
 });
 

@@ -7,6 +7,7 @@ var Layers = require('map/Layers'),
 
     LocationControl = require('locationview/LocationControl'),
 
+    Collection = require('mvc/Collection'),
     SelectedCollectionView = require('mvc/SelectedCollectionView'),
 
     Util = require('util/Util');
@@ -20,6 +21,8 @@ var MapView = function (options) {
       _initialize,
 
       // variables
+      _editions,
+      _dependencyFactory,
       _locationControl,
       _map,
 
@@ -28,8 +31,13 @@ var MapView = function (options) {
 
   _this = SelectedCollectionView(options);
 
-  _initialize = function () {
+  _initialize = function (options) {
     var el;
+
+    _this.collection = options.collection || Collection();
+
+    _dependencyFactory = options.dependencyFactory;
+    _editions = options.editions;
 
     el = _this.el.appendChild(document.createElement('div'));
     el.classList.add('map-view');
@@ -41,7 +49,11 @@ var MapView = function (options) {
     });
 
     // Add layers/control to the map
-    _map.addControl(new LayerControl(Layers));
+    _map.addControl(new LayerControl(Util.extend(Layers, {
+      collection: _this.collection,
+      dependencyFactory: _dependencyFactory,
+      editions: _editions
+    })));
 
     // Add Map Controls
     if (!Util.isMobile()) {

@@ -4,16 +4,28 @@
   <title>Layer Control Example</title>
   <link rel="stylesheet" href="css/index.css"/>
   <style>
-  .map-container {
-    display: block;
-    width: 500px;
-    height: 500px;
-  }
+    body {
+      padding: 1em;
+    }
+
+    .map-container {
+      display: block;
+      width: 500px;
+      height: 500px;
+      margin: 1em 0;
+    }
   </style>
 </head>
 <body>
+  <p><a href="example.html">Examples Index</a></p>
   <h1>Layer Control Example</h1>
   <div class="map-container"></div>
+  <div class="button-group">
+    <button class="change-location">Change Location on Analysis</button>
+    <button class="change-selected">Change Selected Analysis in Collection
+        </button>
+    <button class="remove-selected">Deselect Analysis in Collection</button>
+  </div>
 
   <script src="lib/leaflet/leaflet.js"></script>
   <script src="js/bundle.js"></script>

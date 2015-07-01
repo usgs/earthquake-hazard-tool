@@ -19,7 +19,7 @@
               "CEUS0P05"
             ],
             "contourType": [
-              0
+              1
             ]
           }
         },
@@ -35,7 +35,7 @@
               "CEUS0P05"
             ],
             "contourType": [
-              0
+              1
             ]
           }
         }
@@ -212,16 +212,16 @@
       "type": "string",
       "values": [
         {
-          "id": 0,
-          "value": "Hazard Contours",
-          "display": "Hazard Contours",
-          "displayorder": 0
+          "id": 1,
+          "value": "hazard",
+          "display": "Gridded Hazard",
+          "displayorder": 1
         },
         {
-          "id": 1,
+          "id": 2,
           "value": "Earthquake Probability",
           "display": "Earthquake Probability",
-          "displayorder": 1
+          "displayorder": 2
         }
       ]
     }
