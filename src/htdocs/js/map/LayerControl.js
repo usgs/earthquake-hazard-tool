@@ -31,10 +31,10 @@ var LayerChooser = function (params) {
       _dependencyFactory,
       _editionView,
       _editions,
-      _imtView,
+      _spectralPeriodView,
       _map,
       _overlays,
-      _periodView,
+      _timeHorizonSelectView,
       _selectedOverlay,
 
       _getSelectedOverlay,
@@ -94,7 +94,7 @@ var LayerChooser = function (params) {
       if (overlay.edition === edition &&
           overlay.type === type &&
           overlay.imt === imt &&
-          overlay.period === _periodView.getTimeHorizonId(period)) {
+          overlay.period === _timeHorizonSelectView.getTimeHorizonId(period)) {
         return overlay;
       }
     }
@@ -160,7 +160,7 @@ var LayerChooser = function (params) {
 
     label = fragment.appendChild(document.createElement('label'));
     label.innerHTML = 'Select intensity measure type';
-    _imtView = SpectralPeriodView({
+    _spectralPeriodView = SpectralPeriodView({
       el: fragment.appendChild(document.createElement('div')),
       collection: _this.collection,
       includeBlankOption: false
@@ -168,7 +168,7 @@ var LayerChooser = function (params) {
 
     label = fragment.appendChild(document.createElement('label'));
     label.innerHTML = 'Select return period';
-    _periodView = TimeHorizonSelectView({
+    _timeHorizonSelectView = TimeHorizonSelectView({
       el: fragment.appendChild(document.createElement('div')),
       collection: _this.collection,
       includeBlankOption: false
@@ -298,10 +298,10 @@ var LayerChooser = function (params) {
     _datasets = null;
     _dependencyFactory = null;
     _editionView = null;
-    _imtView = null;
+    _spectralPeriodView = null;
     _map = null;
     _overlays = null;
-    _periodView = null;
+    _timeHorizonSelectView = null;
     _selectedOverlay = null;
 
     _initialize = null;
