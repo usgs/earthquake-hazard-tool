@@ -11,7 +11,7 @@ include_once 'connect.admin.db.php'; // Provides $db
 // List of files to download and load into the application database. Each file
 // must be named as follows:
 //
-// EDITION_REGION_IMT_VS30_GRIDSPACING_Curves.tgz
+// EDITION_REGION_IMT_VS30_Curves.tgz
 //
 $dataFiles = array(
   'E2008R2_COUS0P05_PGA_760_Curves.tar.gz',
