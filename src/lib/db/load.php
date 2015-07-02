@@ -104,8 +104,8 @@ $dataFiles = array(
   'E2008R3_WUS0P05_SA5P0_760_Curves.tar.gz',
 
   'E2014R1_COUS0P05_PGA_760_Curves.tar.gz',
-  'E2014R1_COUS0P05_SA0p2_760_Curves.tar.gz',
-  'E2014R1_COUS0P05_SA1p0_760_Curves.tar.gz'
+  'E2014R1_COUS0P05_SA0P2_760_Curves.tar.gz',
+  'E2014R1_COUS0P05_SA1P0_760_Curves.tar.gz'
 );
 
 $ftpRoot = 'ftp://hazards.cr.usgs.gov/web/earthquake-hazard-tool';
