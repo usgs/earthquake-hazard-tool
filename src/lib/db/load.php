@@ -164,7 +164,7 @@ foreach ($dataFiles as $dataFile) {
 }
 
 $db->exec('ALTER TABLE curve ADD CONSTRAINT ' .
-   'curve_identifier UNIQUE (datasetid, latitude, longitude');
+   'curve_identifier UNIQUE (datasetid, latitude, longitude)');
 $db->exec('ALTER TABLE curve ADD CONSTRAINT ' .
    'curve_datasetid_fkey FOREIGN KEY (datasetid) REFERENCES dataset (id)');
 $db->exec('ALTER TABLE curve ADD PRIMARY KEY (id)');
