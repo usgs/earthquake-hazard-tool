@@ -443,20 +443,32 @@ var ApplicationView = function (params) {
       }
 
       // Update curve plotting
-      _hazardCurveView.model.set({
-        'xLabel': xAxisLabel,
-        'yLabel': yAxisLabel,
-        'timeHorizon': _this.model.get('timeHorizon')
-      }, {silent: true});
-      _hazardCurveView.curves.reset(data);
+      try {
+        _hazardCurveView.model.set({
+          'xLabel': xAxisLabel,
+          'yLabel': yAxisLabel,
+          'timeHorizon': _this.model.get('timeHorizon')
+        }, {silent: true});
+        _hazardCurveView.curves.reset(data);
+      } catch (e) {
+        if (console && console.error) {
+          console.error(e);
+        }
+      }
 
       // Update spectra plotting
-      _hazardSpectrumView.model.set({
-        'xAxisLabel': xAxisLabel,
-        'yAxisLabel': yAxisLabel,
-        'timeHorizon': _this.model.get('timeHorizon')
-      }, {silent: true});
-      _hazardSpectrumView.curves.reset(data);
+      try {
+        _hazardSpectrumView.model.set({
+          'xAxisLabel': xAxisLabel,
+          'yAxisLabel': yAxisLabel,
+          'timeHorizon': _this.model.get('timeHorizon')
+        }, {silent: true});
+        _hazardSpectrumView.curves.reset(data);
+      } catch (e) {
+        if (console && console.error) {
+          console.error(e);
+        }
+      }
     }
   };
 
