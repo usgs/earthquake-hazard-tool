@@ -41,7 +41,12 @@ var ResponseSpectrumGraphView = function (options) {
         data = [];
     // rebuild data for new time horizon
     _curves.data().forEach(function (c) {
-      data.push([c.get('period'), c.getX(afe)]);
+      var x = c.get('period'),
+          y = c.getX(afe);
+
+      if (x !== null && y !== null) {
+        data.push([x, y]);
+      }
     });
     // sort by period.
     data.sort(function (a, b) {
