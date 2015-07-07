@@ -254,24 +254,32 @@ var LayerChooser = function (params) {
   };
 
   _onOverlaySelect = function () {
-    var selected;
+    var selected,
+        selectedOverlay;
 
     selected = _this.collection.getSelected();
 
     if (_map && selected) {
-      if (_selectedOverlay) {
-        _map.removeLayer(_selectedOverlay.layer);
-      }
-
-      _selectedOverlay = _getSelectedOverlay(
+      selectedOverlay = _getSelectedOverlay(
           selected.get('edition'),
           selected.get('contourType'),
           selected.get('imt'),
           selected.get('timeHorizon')
         );
 
-      if (_selectedOverlay && !_selectedOverlay._map) {
-        _map.addLayer(_selectedOverlay.layer);
+      if (selectedOverlay === _selectedOverlay) {
+        // already selected, ignore
+        return;
+      } else {
+        if (_selectedOverlay) {
+          _map.removeLayer(_selectedOverlay.layer);
+          _selectedOverlay = null;
+        }
+
+        if (selectedOverlay) {
+          _selectedOverlay = selectedOverlay;
+          _map.addLayer(_selectedOverlay.layer);
+        }
       }
     }
 
