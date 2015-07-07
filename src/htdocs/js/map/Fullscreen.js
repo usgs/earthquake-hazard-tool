@@ -41,6 +41,7 @@ var Fullscreen = L.Control.extend({
     button = this._container = L.DomUtil.create('a',
         'leaflet-control leaflet-control-fullscreen');
     button.setAttribute('title', 'Toggle Fullscreen Map');
+    button.innerHTML = '&#9713;'; // fullscreen icon
 
     stop = L.DomEvent.stopPropagation;
 

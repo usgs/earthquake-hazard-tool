@@ -1,8 +1,12 @@
-.leaflet-control-fullscreen {
+.leaflet-container a.leaflet-control-fullscreen {
   border-radius: 4px;
+  color: #000;
   cursor: pointer;
   display: block;
-  position: relative;
+  font-family: 'Lucida Console', Monaco, monospace;
+  font-size: 22px;
+  height: 30px;
+  line-height: 30px;
   text-align: center;
 
   &:after {
