@@ -1,23 +1,23 @@
 @import 'css/alert.scss';
 
-@import 'accordion/Accordion';
+@import 'accordion/Accordion.scss';
 
-@import 'locationview/CoordinateControl';
-@import 'locationview/GeocodeControl';
-@import 'locationview/GeolocationControl';
-@import 'locationview/LeafletControls';
-@import 'locationview/LocationControl';
-@import 'locationview/LocationView';
-@import 'locationview/PointControl';
+@import 'locationview/CoordinateControl.scss';
+@import 'locationview/GeocodeControl.scss';
+@import 'locationview/GeolocationControl.scss';
+@import 'locationview/LeafletControls.scss';
+@import 'locationview/LocationControl.scss';
+@import 'locationview/LocationView.scss';
+@import 'locationview/PointControl.scss';
 
-@import '_ActionsView';
-@import '_ApplicationView';
-@import '_AnalysisCollectionView';
-@import '_AnalysisView';
-@import '_Fullscreen';
-@import '_BasicInputsView';
-@import '_HazardCurveGraphView';
-@import '_LayerControl';
-@import '_MapView';
-@import '_ResponseSpectrumGraphView';
-@import '_TimeHorizonSliderView';
+@import '_ActionsView.scss';
+@import '_ApplicationView.scss';
+@import '_AnalysisCollectionView.scss';
+@import '_AnalysisView.scss';
+@import '_Fullscreen.scss';
+@import '_BasicInputsView.scss';
+@import '_HazardCurveGraphView.scss';
+@import '_LayerControl.scss';
+@import '_MapView.scss';
+@import '_ResponseSpectrumGraphView.scss';
+@import '_TimeHorizonSliderView.scss';

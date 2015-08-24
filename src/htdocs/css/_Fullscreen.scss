@@ -7,7 +7,6 @@
 
   &:after {
     color: #000;
-    // Can also consider '\2921' or '\2922' (arrows)
     content: '\2750';
     display: block;
     font-family: 'Lucida Console', Monaco, monospace;
@@ -28,7 +27,5 @@
   top: 0;
   width: auto;
   z-index: 999;
-
   position: fixed !important;
-
 }

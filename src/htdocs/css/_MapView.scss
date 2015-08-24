@@ -1,6 +1,5 @@
-@import '../lib/leaflet/leaflet.css';
-@import '_MousePosition';
-
+@import 'leaflet.css';
+@import '_MousePosition.scss';
 
 .map-view {
   display: block;
@@ -8,7 +7,7 @@
   width: 100%;
 }
 
-// applies to all leaflet-controls
+/* applies to all leaflet-controls */
 .leaflet-control {
   background-color: #fff;
   border-radius: 2px;
@@ -16,7 +15,7 @@
   color: #000;
 }
 
-// these styles make the controls consistent between Leaflet and LocationView
+/* these styles make the controls consistent between Leaflet and LocationView */
 .leaflet-control > .leaflet-control-icon:hover {
   background-color: #f4f4f4;
 }
@@ -30,9 +29,7 @@
   line-height: 30px;
 }
 
-
-
-// have attribution span entire bottom of map, raise the other control positions
+/* have attribution span entire bottom of map, raise the other controls */
 .leaflet-bottom {
   width: 100%;
 
