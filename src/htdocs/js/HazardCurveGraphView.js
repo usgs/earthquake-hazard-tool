@@ -111,6 +111,10 @@ var HazardCurveGraphView = function (options) {
    *        curves that were added.
    */
   _onAdd = function (curves) {
+    // add time horizon view as first line
+    if (_this.views.data().length === 0 && curves.length > 0) {
+      _this.views.add(_timeHorizon);
+    }
     curves.forEach(function (curve) {
       var view = HazardCurveLineView(Util.extend({
         view: _this
@@ -142,13 +146,17 @@ var HazardCurveGraphView = function (options) {
       }
     });
     _this.views.remove.apply(_this.views, toRemove);
+    // remove time horizon if only line
+    if (_this.views.data().length === 1) {
+      _this.views.remove(_timeHorizon);
+    }
   };
 
   /**
    * Curve reset handler.
    */
   _onReset = function () {
-    _this.views.reset([_timeHorizon]);
+    _this.views.reset([]);
     _onAdd(_curves.data());
   };
 
