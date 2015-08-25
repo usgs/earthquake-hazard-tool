@@ -12,7 +12,6 @@ var gruntConfig = {
   postcss: require('./postcss'),
   uglify: require('./uglify'),
   watch: require('./watch'),
-  postcss: require('./postcss'),
 
   tasks: [
     'grunt-browserify',
