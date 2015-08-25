@@ -14,12 +14,12 @@ var watch = {
     ]
   },
 
-  compass: {
+  postcss: {
     files: [
       config.src + '/htdocs/**/*.scss'
     ],
     tasks: [
-      'compass:dev'
+      'postcss:dev'
     ]
   },
 

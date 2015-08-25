@@ -1,7 +1,5 @@
-
-@import 'd3/D3View';
-@import 'd3/D3LineView';
-
+@import 'd3/_D3View.scss';
+@import 'd3/_D3LineView.scss';
 
 .D3View {
 
@@ -46,12 +44,12 @@
     > .point { fill: #6a3d9a; }
   }
   [data-index='10'] {
-    > .line { stroke: #ffff99; } // tan
-    > .point { fill: #ffff99; } // tan
+    > .line { stroke: #ffff99; }
+    > .point { fill: #ffff99; }
   }
   [data-index='11'] {
-    > .line { stroke: #b15928; } // pink
-    > .point { fill: #b15928; } // pink
+    > .line { stroke: #b15928; }
+    > .point { fill: #b15928; }
   }
 
   .mouseover {
