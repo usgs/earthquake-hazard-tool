@@ -35,7 +35,7 @@
     "grunt-postcss": "0.5.5",
     "hazdev-accordion": "usgs/hazdev-accordion",
     "hazdev-d3": "usgs/hazdev-d3",
-    "hazdev-location-view": "file:../hazdev-location-view",
+    "hazdev-location-view": "usgs/hazdev-location-view",
     "hazdev-tablist": "usgs/hazdev-tablist",
     "hazdev-template": "usgs/hazdev-template",
     "hazdev-webutils": "usgs/hazdev-webutils",
