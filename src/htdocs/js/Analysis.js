@@ -19,13 +19,13 @@ var Analysis = function (options) {
 
 
   _this = Model(Util.extend({
-    edition: DependencyFactory.getInstance().getAllEditions()[0].get('id'),
+    edition: 'E2014R1',
     region: null,
 
     location: null,
 
-    imt: DependencyFactory.getInstance().getAllSpectralPeriods()[0].get('id'),
-    vs30: DependencyFactory.getInstance().getAllSiteClasses()[0].get('id'),
+    imt: 'PGA',
+    vs30: '760',
 
     timeHorizon: 2475,
     contourType: 'hazard',

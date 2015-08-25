@@ -84,11 +84,11 @@ class CurveFactory {
     }
   }
 
-  public function set ($curve) {
+  public function set ($curve, $skipIdLookup = false) {
     if ($curve->id === null) {
-      return $this->_create($curve);
+      return $this->_create($curve, $skipIdLookup);
     } else {
-      return $this->_update($curve);
+      return $this->_update($curve, $skipIdLookup);
     }
   }
 
@@ -154,7 +154,7 @@ class CurveFactory {
     ');
   }
 
-  private function _create ($curve) {
+  private function _create ($curve, $skipIdLookup = false) {
     $datasetid = intval($curve->datasetid);
     $latitude = floatval($curve->latitude);
     $longitude = floatval($curve->longitude);
@@ -166,12 +166,15 @@ class CurveFactory {
         $this->_arrayToDbString($curve->yvals), PDO::PARAM_STR);
 
     $this->insertCurve->execute();
-    $curve->id = $this->getId($datasetid, $latitude, $longitude);
+
+    if (!$skipIdLookup) {
+      $curve->id = $this->getId($datasetid, $latitude, $longitude);
+    }
 
     return $curve;
   }
 
-  private function _update ($curve) {
+  private function _update ($curve, $skipIdLookup = false) {
     $id = intval($curve->id);
     $datasetid = intval($curve->datasetid);
     $latitude = floatval($curve->latitude);
@@ -185,7 +188,10 @@ class CurveFactory {
         $this->_arrayToDbString($curve->yvals), PDO::PARAM_STR);
 
     $this->updateCurve->execute();
-    $curve->id = $this->getId($datasetid, $latitude, $longitude);
+
+    if (!$skipIdLookup) {
+      $curve->id = $this->getId($datasetid, $latitude, $longitude);
+    }
 
     return $curve;
   }

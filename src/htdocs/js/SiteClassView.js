@@ -50,6 +50,7 @@ var SiteClassView = function (params) {
     // bind to select on the Site Class collection
     _siteClassCollection.on('select', _updateSiteClass);
     _siteClassCollection.on('deselect', _updateSiteClass);
+    _siteClassCollection.on('reset', _updateSiteClass);
   };
 
 
@@ -79,6 +80,7 @@ var SiteClassView = function (params) {
     // unbind
     _siteClassCollection.off('select', _updateSiteClass);
     _siteClassCollection.off('deselect', _updateSiteClass);
+    _siteClassCollection.off('reset', _updateSiteClass);
 
     // destroy
     _siteClassCollectionSelectBox.destroy();

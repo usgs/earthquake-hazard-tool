@@ -9,6 +9,8 @@ include_once '../classes/RegionFactory.class.php';
 
 class DataLoader {
 
+  private $db = null;
+
   private $curveFactory = null;
   private $datasetFactory = null;
 
@@ -19,6 +21,8 @@ class DataLoader {
 
   public function __construct ($db) {
     if ($db) {
+      $this->db = $db;
+
       $this->curveFactory = new CurveFactory($db);
       $this->datasetFactory = new DatasetFactory($db);
 
@@ -71,28 +75,37 @@ class DataLoader {
       $dataset->iml[] = floatval($line);
     }
 
-    $dataset = $this->datasetFactory->set($dataset);
+    try {
+      $this->db->beginTransaction();
+      $dataset = $this->datasetFactory->set($dataset);
 
-    do {
-      // Clean up input line
-      $line = trim($line);
-      $line = str_replace('   ', ' ', $line);
-      $line = str_replace('  ', ' ', $line);
+      do {
+        // Clean up input line
+        $line = trim($line);
+        $line = str_replace('   ', ' ', $line);
+        $line = str_replace('  ', ' ', $line);
 
-      $tokens = explode(' ', $line);
-      $latitude = floatval($tokens[0]);
-      $longitude = floatval($tokens[1]);
-      $yvals = array_map('floatval', array_slice($tokens, 2));
+        $tokens = explode(' ', $line);
+        $latitude = floatval($tokens[0]);
+        $longitude = floatval($tokens[1]);
+        $yvals = array_map('floatval', array_slice($tokens, 2));
 
-      $curve = new Curve(null, $dataset->id, $latitude, $longitude, $yvals);
-      $curve = $this->curveFactory->set($curve);
+        $curve = new Curve(null, $dataset->id, $latitude, $longitude, $yvals);
+        $curve = $this->curveFactory->set($curve, true);
 
-      if ($showProgress && (
-          $progress == null || intval($curve->latitude) != $progress)) {
-        printf("  %f, %f\n", $curve->latitude, $curve->longitude);
-        $progress = intval($curve->latitude);
-      }
-    } while (($line = fgets($fp)) !== false);
+        if ($progress == null || intval($curve->latitude) != $progress) {
+          if ($showProgress) {
+            printf("  %f, %f\t%s\n", $curve->latitude, $curve->longitude, date('c'));
+          }
+
+          $progress = intval($curve->latitude);
+        }
+      } while (($line = fgets($fp)) !== false);
+
+      $this->db->commit();
+    } catch (Exception $ex) {
+      $this->db->rollback();
+    }
 
     fclose($fp);
   }

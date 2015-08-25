@@ -71,6 +71,10 @@ var HazardCurve = function (params) {
       }
     }
 
+    if (left === null || right === null) {
+      return null;
+    }
+
     x0 = left[0];
     y0 = left[1];
     x1 = right[0];

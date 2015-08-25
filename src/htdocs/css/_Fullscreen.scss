@@ -1,19 +1,17 @@
-.leaflet-control-fullscreen {
-  border-radius: 4px;
+.leaflet-container a.leaflet-control-fullscreen {
+  border-radius: 2px;
+  color: #333;
   cursor: pointer;
   display: block;
-  position: relative;
+  font-family: 'Lucida Console', Monaco, monospace;
+  font-size: 22px;
+  height: 30px;
+  line-height: 30px;
   text-align: center;
+  width: 30px;
 
-  &:after {
-    color: #000;
-    content: '\2750';
-    display: block;
-    font-family: 'Lucida Console', Monaco, monospace;
-    font-size: 18px;
-    height: 30px;
-    line-height: 30px;
-    width: 30px;
+  &:hover {
+    background-color: #f4f4f4;
   }
 }
 

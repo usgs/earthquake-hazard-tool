@@ -31,14 +31,19 @@ var ApplicationView = function (params) {
       _hazardSpectrumView,
       _mapEl,
       _mapView,
+      _queued,
       _siteClasses,
 
       // methods
       _initViewContainer,
-      _onEditionLocationChange,
+      _onEditionChange,
+      _onLocationChange,
       _onRegionChange,
       _onTimeHorizonChange,
-      _onVs30Change;
+      _onVs30Change,
+      _queueCalculation,
+      _updateRegion,
+      _updateVs30;
 
 
   _this = SelectedCollectionView(params);
@@ -133,13 +138,60 @@ var ApplicationView = function (params) {
   // (4) region changes   --> run calcuation if all values are set
   //
 
+  _onEditionChange = function (/*changes*/) {
+    _updateVs30();
+    _updateRegion();
+    _queueCalculation();
+  };
+
+  _onLocationChange = function (/*changes*/) {
+    _updateVs30();
+    _updateRegion();
+    _queueCalculation();
+  };
+
+  _onRegionChange = function (/*changes*/) {
+    _queueCalculation();
+  };
+
+  _onVs30Change = function (/*changes*/) {
+    _updateRegion();
+  };
+
+  _onTimeHorizonChange = function (/*changes*/) {
+    var timeHorizon;
+
+    if (_this.model) {
+      timeHorizon = _this.model.get('timeHorizon');
+
+      _hazardCurveView.model.set({
+        'timeHorizon': timeHorizon
+      });
+      _hazardSpectrumView.model.set({
+        'timeHorizon': timeHorizon
+      });
+    }
+  };
+
+  _queueCalculation = function () {
+    if (!_queued) {
+      window.setTimeout(function () {
+        if (_this.model.get('edition') && _this.model.get('location') &&
+          _this.model.get('region') && _this.model.get('vs30')) {
+          _calculator.getResult('staticcurve', _this.model);
+        }
+        _queued = false;
+      }, 0);
+      _queued = true;
+    }
+  };
+
   /**
-   * Find all regions supported by the current edition that also contain the
-   * current location. Create a unique list of available vs30 values and
-   * reset the vs30 collection with them.
+   * Resets the collection of siteClasses based on what is available for
+   * current selection of edition/location.
    *
    */
-  _onEditionLocationChange = function (/*changes*/) {
+  _updateVs30 = function () {
     var edition,
         ids,
         location,
@@ -174,34 +226,11 @@ var ApplicationView = function (params) {
   };
 
   /**
+   * Sets the region for the current model based on the currently selected
+   * edition, location, and vs30.
    *
    */
-  _onRegionChange = function (/*changes*/) {
-    if (_this.model.get('edition') && _this.model.get('location') &&
-        _this.model.get('region') && _this.model.get('vs30')) {
-      _calculator.getResult('staticcurve', _this.model);
-    }
-  };
-
-  _onTimeHorizonChange = function (/*changes*/) {
-    var timeHorizon;
-
-    if (_this.model) {
-      timeHorizon = _this.model.get('timeHorizon');
-
-      _hazardCurveView.model.set({
-        'timeHorizon': timeHorizon
-      });
-      _hazardSpectrumView.model.set({
-        'timeHorizon': timeHorizon
-      });
-    }
-  };
-
-  /**
-   *
-   */
-  _onVs30Change = function (/*changes*/) {
+  _updateRegion = function () {
     var edition,
         location,
         regions,
@@ -217,17 +246,20 @@ var ApplicationView = function (params) {
 
     edition = _dependencyFactory.getEdition(_this.model.get('edition'));
     location = _this.model.get('location');
-    regions = _dependencyFactory.getRegions(edition.get('supports').region);
 
-    regions.some(function (region) {
-      var supports = region.get('supports').vs30;
+    if (edition && location) {
+      regions = _dependencyFactory.getRegions(edition.get('supports').region);
 
-      if (region.contains(location) && supports.indexOf(vs30) !== -1) {
-        // region contains location and supports the current vs30, select it
-        _this.model.set({region: region.get('id')});
-        return true; // break, essentially
-      }
-    });
+      regions.some(function (region) {
+        var supports = region.get('supports').vs30;
+
+        if (region.contains(location) && supports.indexOf(vs30) !== -1) {
+          // region contains location and supports the current vs30, select it
+          _this.model.set({region: region.get('id')});
+          return true; // break, essentially
+        }
+      });
+    }
   };
 
 
@@ -259,22 +291,27 @@ var ApplicationView = function (params) {
     _hazardSpectrumView = null;
     _mapEl = null;
     _mapView = null;
+    _queued = null;
     _siteClasses = null;
 
     // methods
     _initViewContainer = null;
-    _onEditionLocationChange = null;
+    _onEditionChange = null;
+    _onLocationChange = null;
     _onRegionChange = null;
     _onTimeHorizonChange = null;
     _onVs30Change = null;
+    _queueCalculation = null;
+    _updateRegion = null;
+    _updateVs30 = null;
 
     _initialize = null;
     _this = null;
   });
 
   _this.onCollectionDeselect = function () {
-    _this.model.off('change:edition', _onEditionLocationChange);
-    _this.model.off('change:location', _onEditionLocationChange);
+    _this.model.off('change:edition', _onEditionChange);
+    _this.model.off('change:location', _onLocationChange);
     _this.model.off('change:region', _onRegionChange);
     _this.model.off('change:vs30', _onVs30Change);
     _this.model.off('change:timeHorizon', _onTimeHorizonChange);
@@ -287,8 +324,8 @@ var ApplicationView = function (params) {
   _this.onCollectionSelect = function () {
     _this.model = _this.collection.getSelected();
 
-    _this.model.on('change:edition', _onEditionLocationChange);
-    _this.model.on('change:location', _onEditionLocationChange);
+    _this.model.on('change:edition', _onEditionChange);
+    _this.model.on('change:location', _onLocationChange);
     _this.model.on('change:region', _onRegionChange);
     _this.model.on('change:vs30', _onVs30Change);
     _this.model.on('change:timeHorizon', _onTimeHorizonChange);
@@ -304,6 +341,9 @@ var ApplicationView = function (params) {
         yAxisLabel;
 
     if (_this.model && changes) {
+      _updateVs30();
+      _updateRegion();
+
       curves = _this.model.get('curves');
 
       xAxisLabel = '';
@@ -318,20 +358,32 @@ var ApplicationView = function (params) {
       }
 
       // Update curve plotting
-      _hazardCurveView.model.set({
-        'xLabel': xAxisLabel,
-        'yLabel': yAxisLabel,
-        'timeHorizon': _this.model.get('timeHorizon')
-      }, {silent: true});
-      _hazardCurveView.curves.reset(data);
+      try {
+        _hazardCurveView.model.set({
+          'xLabel': xAxisLabel,
+          'yLabel': yAxisLabel,
+          'timeHorizon': _this.model.get('timeHorizon')
+        }, {silent: true});
+        _hazardCurveView.curves.reset(data);
+      } catch (e) {
+        if (console && console.error) {
+          console.error(e);
+        }
+      }
 
       // Update spectra plotting
-      _hazardSpectrumView.model.set({
-        'xAxisLabel': xAxisLabel,
-        'yAxisLabel': yAxisLabel,
-        'timeHorizon': _this.model.get('timeHorizon')
-      }, {silent: true});
-      _hazardSpectrumView.curves.reset(data);
+      try {
+        _hazardSpectrumView.model.set({
+          'xAxisLabel': xAxisLabel,
+          'yAxisLabel': yAxisLabel,
+          'timeHorizon': _this.model.get('timeHorizon')
+        }, {silent: true});
+        _hazardSpectrumView.curves.reset(data);
+      } catch (e) {
+        if (console && console.error) {
+          console.error(e);
+        }
+      }
     }
   };
 
