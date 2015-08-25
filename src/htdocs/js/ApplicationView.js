@@ -158,58 +158,6 @@ var ApplicationView = function (params) {
     _updateRegion();
   };
 
-  // /**
-  //  * Find all regions supported by the current edition that also contain the
-  //  * current location. Create a unique list of available vs30 values and
-  //  * reset the vs30 collection with them.
-  //  *
-  //  */
-  // _onEditionLocationChange = function (/*changes*/) {
-  //   var edition,
-  //       ids,
-  //       location,
-  //       regions,
-  //       siteClasses;
-
-  //   ids = {};
-
-  //   try {
-  //     edition = _dependencyFactory.getEdition(_this.model.get('edition'));
-  //     location = _this.model.get('location');
-  //     regions = _dependencyFactory.getRegions(edition.get('supports').region);
-
-  //     regions.forEach(function (region) {
-  //       if (region.contains(location)) {
-  //         region.get('supports').vs30.forEach(function (vs30) {
-  //           ids[vs30] = true;
-  //         });
-  //       }
-  //     });
-
-  //     siteClasses = _dependencyFactory.getSiteClasses(Object.keys(ids));
-  //   } catch (e) {
-  //     // Just ignore, will set to use all site classes below
-  //   }
-
-  //   if (!siteClasses) {
-  //     siteClasses = _dependencyFactory.getAllSiteClasses();
-  //   }
-
-  //   _siteClasses.reset(siteClasses);
-  //   _queueCalculation();
-  // };
-
-  // /**
-  //  *
-  //  */
-  // _onRegionChange = function (/*changes*/) {
-  //   // if (_this.model.get('edition') && _this.model.get('location') &&
-  //   //     _this.model.get('region') && _this.model.get('vs30')) {
-  //   //   _calculator.getResult('staticcurve', _this.model);
-  //   // }
-  //   _queueCalculation();
-  // };
-
   _onTimeHorizonChange = function (/*changes*/) {
     var timeHorizon;
 
@@ -224,39 +172,6 @@ var ApplicationView = function (params) {
       });
     }
   };
-
-  // /**
-  //  *
-  //  */
-  // _onVs30Change = function (/*changes*/) {
-  //   var edition,
-  //       location,
-  //       regions,
-  //       vs30;
-
-  //   vs30 = _this.model.get('vs30');
-
-  //   if (vs30 === null) {
-  //     // no vs30, can't choose a region...
-  //     _this.model.set({'region': null});
-  //     return;
-  //   }
-
-  //   edition = _dependencyFactory.getEdition(_this.model.get('edition'));
-  //   location = _this.model.get('location');
-  //   regions = _dependencyFactory.getRegions(edition.get('supports').region);
-
-  //   regions.some(function (region) {
-  //     var supports = region.get('supports').vs30;
-
-  //     if (region.contains(location) && supports.indexOf(vs30) !== -1) {
-  //       // region contains location and supports the current vs30, select it
-  //       _this.model.set({region: region.get('id')});
-  //       return true; // break, essentially
-  //     }
-  //   });
-  //   _queueCalculation();
-  // };
 
   _queueCalculation = function () {
     if (!_queued) {
