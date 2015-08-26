@@ -79,12 +79,12 @@ var LayerChooser = function (params) {
     }
   };
 
-  _getSelectedOverlay = function (edition, type, imt, period) {
+  _getSelectedOverlay = function (edition, type, imt, period, vs30) {
     var i,
         len,
         overlay;
 
-    if (!edition || !type || !imt || !period) {
+    if (!edition || !type || !imt || !period || !vs30) {
       return null;
     }
 
@@ -94,7 +94,8 @@ var LayerChooser = function (params) {
       if (overlay.edition === edition &&
           overlay.type === type &&
           overlay.imt === imt &&
-          overlay.period === _timeHorizonSelectView.getTimeHorizonId(period)) {
+          overlay.period === _timeHorizonSelectView.getTimeHorizonId(period) &&
+          overlay.vs30 === vs30) {
         return overlay;
       }
     }
@@ -264,7 +265,8 @@ var LayerChooser = function (params) {
           selected.get('edition'),
           selected.get('contourType'),
           selected.get('imt'),
-          selected.get('timeHorizon')
+          selected.get('timeHorizon'),
+          selected.get('vs30')
         );
 
       if (selectedOverlay === _selectedOverlay) {

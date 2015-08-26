@@ -63,6 +63,7 @@ module.exports = {
       type: 'hazard',
       imt: 'PGA',
       period: '2P50',
+      vs30: '760',
       layer: L.tileLayer('http://geohazards.cr.usgs.gov/arcgis/rest/' +
           'services/USpga250_2014/MapServer/tile/{z}/{y}/{x}', {
         zIndex: Z_OVERLAY_INDEX + 1,
@@ -75,6 +76,7 @@ module.exports = {
       type: 'hazard',
       imt: 'SA0P2',
       period: '2P50',
+      vs30: '760',
       layer: L.tileLayer('http://geohazards.cr.usgs.gov/arcgis/rest/' +
           'services/US5hz250_2014/MapServer/tile/{z}/{y}/{x}', {
         zIndex: Z_OVERLAY_INDEX + 2,
@@ -87,6 +89,7 @@ module.exports = {
       type: 'hazard',
       imt: 'SA1P0',
       period: '2P50',
+      vs30: '760',
       layer: L.tileLayer('http://geohazards.cr.usgs.gov/arcgis/rest/' +
           'services/US1hz250_2014/MapServer/tile/{z}/{y}/{x}', {
         zIndex: Z_OVERLAY_INDEX + 3,
@@ -99,6 +102,7 @@ module.exports = {
       type: 'hazard',
       imt: 'PGA',
       period: '10P50',
+      vs30: '760',
       layer: L.tileLayer('http://geohazards.cr.usgs.gov/arcgis/rest/' +
           'services/USpga050_2014/MapServer/tile/{z}/{y}/{x}', {
         zIndex: Z_OVERLAY_INDEX + 4,
@@ -111,6 +115,7 @@ module.exports = {
       type: 'hazard',
       imt: 'SA0P2',
       period: '10P50',
+      vs30: '760',
       layer: L.tileLayer('http://geohazards.cr.usgs.gov/arcgis/rest/' +
           'services/US5hz050_2014/MapServer/tile/{z}/{y}/{x}', {
         zIndex: Z_OVERLAY_INDEX + 5,
@@ -123,6 +128,7 @@ module.exports = {
       type: 'hazard',
       imt: 'SA1P0',
       period: '10P50',
+      vs30: '760',
       layer: L.tileLayer('http://geohazards.cr.usgs.gov/arcgis/rest/' +
           'services/US1hz050_2014/MapServer/tile/{z}/{y}/{x}', {
         zIndex: Z_OVERLAY_INDEX + 6,
@@ -137,6 +143,7 @@ module.exports = {
       type: 'hazard',
       imt: 'PGA',
       period: '2P50',
+      vs30: '760',
       layer: L.tileLayer('http://geohazards.usgs.gov/arcgis/rest/' +
           'services/USpga250_2008/MapServer/tile/{z}/{y}/{x}', {
         zIndex: Z_OVERLAY_INDEX + 7,
@@ -149,6 +156,7 @@ module.exports = {
       type: 'hazard',
       imt: 'SA0P2',
       period: '2P50',
+      vs30: '760',
       layer: L.tileLayer('http://geohazards.usgs.gov/arcgis/rest/' +
           'services/US5hz250_2008/MapServer/tile/{z}/{y}/{x}', {
         zIndex: Z_OVERLAY_INDEX + 8,
@@ -161,6 +169,7 @@ module.exports = {
       type: 'hazard',
       imt: 'SA1P0',
       period: '2P50',
+      vs30: '760',
       layer: L.tileLayer('http://geohazards.usgs.gov/arcgis/rest/' +
           'services/US1hz250_2008/MapServer/tile/{z}/{y}/{x}', {
         zIndex: Z_OVERLAY_INDEX + 9,
@@ -174,6 +183,7 @@ module.exports = {
       type: 'hazard',
       imt: 'PGA',
       period: '10P50',
+      vs30: '760',
       layer: L.tileLayer('http://geohazards.usgs.gov/arcgis/rest/' +
           'services/USpga050_2008/MapServer/tile/{z}/{y}/{x}', {
         zIndex: Z_OVERLAY_INDEX + 10,
@@ -186,6 +196,7 @@ module.exports = {
       type: 'hazard',
       imt: 'SA0P2',
       period: '10P50',
+      vs30: '760',
       layer: L.tileLayer('http://geohazards.usgs.gov/arcgis/rest/' +
           'services/US5hz050_2008/MapServer/tile/{z}/{y}/{x}', {
         zIndex: Z_OVERLAY_INDEX + 11,
@@ -198,6 +209,7 @@ module.exports = {
       type: 'hazard',
       imt: 'SA1P0',
       period: '10P50',
+      vs30: '760',
       layer: L.tileLayer('http://geohazards.usgs.gov/arcgis/rest/' +
           'services/US1hz050_2008/MapServer/tile/{z}/{y}/{x}', {
         zIndex: Z_OVERLAY_INDEX + 12,
