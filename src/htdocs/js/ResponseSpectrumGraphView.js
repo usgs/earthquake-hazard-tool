@@ -37,11 +37,15 @@ var ResponseSpectrumGraphView = function (options) {
   };
 
   _this.render = Util.compose(function (changed) {
-    var timeHorizon = _this.model.get('timeHorizon'),
-        afe = 1 / timeHorizon,
-        data = [],
-        editCurve = [],
+    var afe,
+        data,
+        timeHorizon,
         yExtent;
+
+    timeHorizon = _this.model.get('timeHorizon');
+    afe = 1 / timeHorizon;
+    data = [];
+    yExtent = [];
 
     // rebuild data for new time horizon
     _curves.data().forEach(function (c) {
@@ -54,7 +58,7 @@ var ResponseSpectrumGraphView = function (options) {
 
       c.get('data').every(function (p) {
         if (p[1] >= 0.0002) {
-          editCurve.push(p[0]);
+          yExtent.push(p[0]);
           return true;
         } else {
           return false;
@@ -67,7 +71,7 @@ var ResponseSpectrumGraphView = function (options) {
       return a[0] - b[0];
     });
 
-    yExtent = d3.extent(editCurve);
+    yExtent = d3.extent(yExtent);
     _this.model.set({
       yExtent: yExtent
     }, {silent:true});
