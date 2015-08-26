@@ -14,6 +14,8 @@ var LocationInfoView = function (params) {
   _this = SelectedCollectionView(params);
 
   _initialize = function () {
+    _this.el.classList.add('alert');
+    _this.el.classList.add('info');
     _this.el.innerHTML = '<div class="locationInfo"></div>' +
         '<div class="noLocationInfo"></div>';
 
@@ -37,6 +39,9 @@ var LocationInfoView = function (params) {
       location = _this.model.get('location');
 
       if (location) {
+        _this.el.classList.remove('info');
+        _this.el.classList.add('success');
+
         if (location.place) {
           _locationInfo.innerHTML = '<strong>' + location.place + '</strong>' +
             '<small>' +
@@ -50,8 +55,7 @@ var LocationInfoView = function (params) {
         _noLocationInfo.innerHTML = '';
       } else {
         _locationInfo.innerHTML = '';
-        _noLocationInfo.innerHTML = '<p class="alert info">' +
-            'Use the map to select a location.</p>';
+        _noLocationInfo.innerHTML = 'Use the map to select a location.';
       }
     } else {
        _locationInfo.innerHTML = '';

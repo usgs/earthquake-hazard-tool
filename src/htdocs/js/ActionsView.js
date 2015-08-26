@@ -149,9 +149,15 @@ var ActionsView = function (params) {
    */
   _onCalculateClick = function () {
     var errors,
-        model;
+        model,
+        locationEl,
+        siteClassEl,
+        timeHorizonEl;
 
     errors = [];
+    locationEl = document.querySelector('#basic-location-info-view');
+    siteClassEl = document.querySelector('#basic-site-class-view');
+    timeHorizonEl = document.querySelector('.timeHorizonInput');
 
     if (_this.model) {
       model = _this.model.get();
@@ -161,20 +167,21 @@ var ActionsView = function (params) {
         errors.push('<li>Please select an Edition.</li>');
       }
 
-      // // Location & Region
-      // if (!model.location || !model.region) {
-      //   errors.push('<li>Please select a Location.</li>');
-      // }
-
       // validate Location & Region
       if (!model.location || !model.location.latitude ||
           !model.location.longitude) {
         errors.push('<li>Please select a Location.</li>');
+        locationEl.classList.add('error');
+      } else {
+        locationEl.classList.remove('error');
       }
 
       // validate Site Class
       if (!model.vs30) {
         errors.push('<li>Please select a Site Class.</li>');
+        siteClassEl.classList.add('error');
+      } else {
+        siteClassEl.classList.remove('error');
       }
     }
 
