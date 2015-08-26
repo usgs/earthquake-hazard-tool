@@ -36,6 +36,38 @@ var ResponseSpectrumGraphView = function (options) {
     _this.views.add(_spectrum);
   };
 
+  /**
+   * Set default extent if there is no data.
+   */
+  _this.getXExtent = Util.compose(_this.getXExtent, function (extent) {
+    var min = null,
+        max = null;
+    if (extent) {
+      min = extent[0];
+      max = extent[extent.length - 1];
+    }
+    if (!extent || isNaN(min) || isNaN(max) || min === max) {
+      extent = [0, 5];
+    }
+    return extent;
+  });
+
+  /**
+   * Set default extent if there is no data.
+   */
+  _this.getYExtent = Util.compose(_this.getYExtent, function (extent) {
+    var min = null,
+        max = null;
+    if (extent) {
+      min = extent[0];
+      max = extent[extent.length - 1];
+    }
+    if (!extent || isNaN(min) || isNaN(max) || min === max) {
+      extent = [0, 1];
+    }
+    return extent;
+  });
+
   _this.render = Util.compose(function (changed) {
     var afe,
         data,
