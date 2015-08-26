@@ -33,6 +33,7 @@ require('./spec/AnalysisCollectionViewTest');
 require('./spec/ApplicationViewTest');
 require('./spec/ContourTypeViewTest');
 require('./spec/CalculatorTest');
+require('./spec/DataExportTest');
 require('./spec/DependencyFactoryTest');
 require('./spec/EditionViewTest');
 require('./spec/MapViewTest');
