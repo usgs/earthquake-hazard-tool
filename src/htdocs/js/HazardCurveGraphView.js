@@ -40,7 +40,10 @@ var HazardCurveGraphView = function (options) {
       _onReset,
       _onSelect;
 
-  _this = D3View(options);
+  _this = D3View(Util.extend({
+    xLabel: 'Ground Motion (g)',
+    yLabel: 'Annual Frequency of Exceedence'
+  }, options));
 
   _initialize = function (options) {
     _this.model.set({
