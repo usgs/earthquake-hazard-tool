@@ -52,11 +52,10 @@ var ResponseSpectrumGraphView = function (options) {
         data.push([x, y]);
       }
 
-      data.push([c.get('period'), c.getX(afe)]);
-
       c.get('data').every(function (p) {
-        if (p[0] >= 0.0002) {
-          editCurve.push(p[1]);
+        if (p[1] >= 0.0002) {
+          editCurve.push(p[0]);
+          return true;
         } else {
           return false;
         }
@@ -67,16 +66,14 @@ var ResponseSpectrumGraphView = function (options) {
     data.sort(function (a, b) {
       return a[0] - b[0];
     });
-    // sort extent
-    editCurve.sort();
 
-    yExtent = [editCurve[0], editCurve[editCurve.length - 1]];
-
-    console.log(d3.extent(yExtent));
+    yExtent = d3.extent(editCurve);
+    _this.model.set({
+      yExtent: yExtent
+    }, {silent:true});
 
     _spectrum.model.set({
       data: data,
-      yExtent: d3.extent(yExtent)
     }, {silent: true});
 
     // pass argument to original render method.
