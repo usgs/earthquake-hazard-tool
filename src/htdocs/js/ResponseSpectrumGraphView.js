@@ -2,6 +2,7 @@
 
 
 var Collection = require('mvc/Collection'),
+    d3 = require('d3'),
     D3View = require('d3/D3View'),
     ResponseSpectrumLineView = require('./ResponseSpectrumLineView'),
     Util = require('util/Util');
@@ -36,9 +37,16 @@ var ResponseSpectrumGraphView = function (options) {
   };
 
   _this.render = Util.compose(function (changed) {
-    var timeHorizon = _this.model.get('timeHorizon'),
-        afe = 1 / timeHorizon,
-        data = [];
+    var afe,
+        data,
+        timeHorizon,
+        yExtent;
+
+    timeHorizon = _this.model.get('timeHorizon');
+    afe = 1 / timeHorizon;
+    data = [];
+    yExtent = [];
+
     // rebuild data for new time horizon
     _curves.data().forEach(function (c) {
       var x = c.get('period'),
@@ -47,12 +55,30 @@ var ResponseSpectrumGraphView = function (options) {
       if (x !== null && y !== null) {
         data.push([x, y]);
       }
+
+      c.get('data').every(function (p) {
+        if (p[1] >= 0.0002) {
+          yExtent.push(p[0]);
+          return true;
+        } else {
+          return false;
+        }
+      });
     });
+
     // sort by period.
     data.sort(function (a, b) {
       return a[0] - b[0];
     });
-    _spectrum.model.set({data: data}, {silent: true});
+
+    yExtent = d3.extent(yExtent);
+    _this.model.set({
+      yExtent: yExtent
+    }, {silent:true});
+
+    _spectrum.model.set({
+      data: data,
+    }, {silent: true});
 
     // pass argument to original render method.
     return changed;

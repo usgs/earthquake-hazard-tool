@@ -177,7 +177,7 @@ var ApplicationView = function (params) {
     if (!_queued) {
       window.setTimeout(function () {
         if (_this.model.get('edition') && _this.model.get('location') &&
-          _this.model.get('region') && _this.model.get('vs30')) {
+            _this.model.get('region') && _this.model.get('vs30')) {
           _calculator.getResult('staticcurve', _this.model);
         }
         _queued = false;
@@ -222,7 +222,8 @@ var ApplicationView = function (params) {
       siteClasses = _dependencyFactory.getAllSiteClasses();
     }
 
-    _siteClasses.reset(siteClasses);
+    _siteClasses.reset(siteClasses, {silent: true});
+    _siteClasses.trigger('reset', {});
   };
 
   /**
