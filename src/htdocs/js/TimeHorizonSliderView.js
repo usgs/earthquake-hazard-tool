@@ -8,13 +8,13 @@ var TIME_HORIZONS = [
   {
     'id': '2P50',
     'value': 2475,
-    'display': '2% in 50 years',
+    'display': '2% in 50 years<br /> (2,475 years)',
     'displayorder': 0
   },
   {
     'id': '10P50',
     'value': 475,
-    'display': '10% in 50 years',
+    'display': '10% in 50 years<br /> (475 years)',
     'displayorder': 1
   }
 ];
