@@ -5,6 +5,7 @@ var autoprefixer = require('autoprefixer-core'),
     precss = require('precss');
 
 var config = require('./config');
+var CWD = process.cwd();
 
 var postcss = {
   dev: {
@@ -13,14 +14,14 @@ var postcss = {
       processors: [
         precss({
           path: [
-            process.cwd() + '/' + config.src,
-            process.cwd() + '/node_modules/hazdev-accordion/src',
-            process.cwd() + '/node_modules/hazdev-d3/src',
-            process.cwd() + '/node_modules/leaflet/dist',
-            process.cwd() + '/node_modules/hazdev-location-view/src',
-            process.cwd() + '/node_modules/hazdev-tablist/src',
-            process.cwd() + '/node_modules/hazdev-template/src/htdocs',
-            process.cwd() + '/node_modules/hazdev-webutils/src'
+            CWD + '/' + config.src,
+            CWD + '/node_modules/hazdev-accordion/src',
+            CWD + '/node_modules/hazdev-d3/src',
+            CWD + '/node_modules/leaflet/dist',
+            CWD + '/node_modules/hazdev-location-view/src',
+            CWD + '/node_modules/hazdev-tablist/src',
+            CWD + '/node_modules/hazdev-template/src/htdocs',
+            CWD + '/node_modules/hazdev-webutils/src'
           ]
         }),
         autoprefixer({'browsers': 'last 2 versions'}), // vendor prefix as needed
