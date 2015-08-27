@@ -28,7 +28,8 @@ var HazardResponse = function (params) {
       _initialize,
 
       _createCurve,
-      _spatiallyInterpolate;
+      _spatiallyInterpolate,
+      _trimSmallValues;
 
 
   _this = Model();
@@ -63,6 +64,7 @@ var HazardResponse = function (params) {
         metadata,
         yvals;
 
+    response = _trimSmallValues(response);
     data = response.data;
     metadata = response.metadata;
 
@@ -73,6 +75,51 @@ var HazardResponse = function (params) {
       period: _PERIOD_TO_NUMBER[metadata.imt.value],
       data: HazardUtil.coallesce(metadata.xvals, yvals)
     });
+  };
+
+  /**
+  * Trims off Y values that are lower than 1E-14.
+  * Only uses the number of points as the lowest curve that is trimed.
+  *
+  * @param response {object}
+  *     contains all data.
+  */
+  _trimSmallValues = function (response) {
+    var curves,
+        index,
+        metadata;
+
+    curves = response.data;
+    metadata = response.metadata;
+
+    // Finds smallest index of y values below 1E-14
+    index = null;
+    curves.every(function (curve) {
+      curve.yvals.every(function (point, i) {
+        if (point <= 1e-14) {
+          if (index === null || i < index) {
+            index = i;
+          }
+          return false;
+        } else {
+          return true;
+        }
+      });
+    });
+
+    //If value found then trim all data arrays
+    if (index !== null) {
+      metadata.xvals = metadata.xvals.slice(0, index);
+
+      response.data = curves.map(function (curve) {
+        curve = Util.extend({}, curve);
+        curve.yvals = curve.yvals.slice(0, index);
+
+        return curve;
+      });
+    }
+
+    return response;
   };
 
   _spatiallyInterpolate = function (latitude, longitude, data) {
