@@ -88,14 +88,10 @@ var ResponseSpectrumGraphView = function (options) {
         data.push([x, y]);
       }
 
-      c.get('data').every(function (p) {
-        if (p[1] >= 0.0002) {
-          yExtent.push(p[0]);
-          return true;
-        } else {
-          return false;
-        }
-      });
+      // Use smallest x-value and x-value corresponding to 5000 year return
+      // period for yExtent
+      yExtent.push(c.get('data')[0][0]);
+      yExtent.push(c.getX(0.0002));
     });
 
     // sort by period.
