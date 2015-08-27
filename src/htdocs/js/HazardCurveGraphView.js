@@ -39,7 +39,9 @@ var HazardCurveGraphView = function (options) {
       _onDeselect,
       _onRemove,
       _onReset,
-      _onSelect;
+      _onSelect,
+      _onViewSelect,
+      _onViewDeselect;
 
   _this = D3View(Util.extend({
     xLabel: 'Ground Motion (g)',
@@ -73,6 +75,8 @@ var HazardCurveGraphView = function (options) {
     _curves.on('reset', _onReset);
     _curves.on('select', _onSelect);
     _this.curves = _curves;
+    _this.views.on('select', _onViewSelect);
+    _this.views.on('deselect', _onViewDeselect);
 
     _timeHorizon = new TimeHorizonLineView({
       el: document.createElementNS('http://www.w3.org/2000/svg', 'g'),
@@ -177,6 +181,24 @@ var HazardCurveGraphView = function (options) {
   };
 
   /**
+   * View deselect handler.
+   *
+   * Deselects curve in curves collection.
+   */
+  _onViewDeselect = function () {
+    _curves.deselect();
+  };
+
+  /**
+   * View select handler.
+   *
+   * Selects the corresponding curve in the curves collection.
+   */
+  _onViewSelect = function () {
+    _curves.selectById(_this.views.getSelected().id);
+  };
+
+  /**
    * Set default extent if there is no data.
    */
   _this.getXExtent = Util.compose(_this.getXExtent, function (extent) {
@@ -227,6 +249,9 @@ var HazardCurveGraphView = function (options) {
     }
     _this.curves = null;
 
+    _this.views.off('select', _onViewSelect);
+    _this.views.off('deselect', _onViewDeselect);
+
     _timeHorizon.destroy();
     _timeHorizon = null;
 
@@ -235,6 +260,8 @@ var HazardCurveGraphView = function (options) {
     _onRemove = null;
     _onReset = null;
     _onSelect = null;
+    _onViewSelect = null;
+    _onViewDeselect = null;
     _this = null;
   }, _this.destroy);
 
