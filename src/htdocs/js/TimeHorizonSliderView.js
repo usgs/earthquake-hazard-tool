@@ -69,10 +69,12 @@ var TimeHorizonSliderView = function (params) {
    * the time horizon value from the button that was clicked
    */
   _updateTimeHorizon = function (e) {
-    var timeHorizon = e.target.value;
+    var button;
 
-    if (_this.model) {
-      _this.model.set({'timeHorizon': parseInt(timeHorizon, 10)});
+    button = Util.getParentNode(e.target, 'button', _buttonGroup);
+
+    if (_this.model && button) {
+      _this.model.set({'timeHorizon': parseInt(button.value, 10)});
     }
   };
 
@@ -90,6 +92,22 @@ var TimeHorizonSliderView = function (params) {
     _this = null;
     _initialize = null;
   }, _this.destroy);
+
+  _this.render = function () {
+    var timeHorizon;
+
+    if (_this.model) {
+      timeHorizon = _this.model.get('timeHorizon');
+      Array.prototype.forEach.call(_buttonGroup.querySelectorAll('button'),
+          function (button) {
+        if (timeHorizon === parseInt(button.value, 10)) {
+          button.setAttribute('disabled', 'disabled');
+        } else {
+          button.removeAttribute('disabled');
+        }
+      });
+    }
+  };
 
 
   _initialize(params);
