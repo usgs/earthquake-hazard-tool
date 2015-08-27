@@ -70,6 +70,7 @@ var HazardResponse = function (params) {
 
     return HazardCurve({
       label: metadata.imt.display,
+      imt: metadata.imt.value,
       period: _PERIOD_TO_NUMBER[metadata.imt.value],
       data: HazardUtil.coallesce(metadata.xvals, yvals)
     });
