@@ -78,12 +78,13 @@ var HazardResponse = function (params) {
   };
 
   /**
-  * Trims off Y values that are lower than 1E-14.
-  * Only uses the number of points as the lowest curve that is trimed.
-  *
-  * @param response {object}
-  *     contains all data.
-  */
+   * Trims off Y values that are lower than 1E-14.
+   * Only uses the number of points as the curve with the least number of
+   * points.
+   *
+   * @param response {object}
+   *     contains all data.
+   */
   _trimSmallValues = function (response) {
     var curves,
         index,
