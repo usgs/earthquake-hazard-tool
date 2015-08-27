@@ -1,5 +1,32 @@
 <?php
   /**
+   * Prompts the user for web service configuration details based on the given
+   * named web service.
+   *
+   * @param $serviceName {String}
+   *      The name of the web service to configure.
+   *
+   * @return {String}
+   *      The configuration string for the web service. Formatted as follows:
+   *
+   *      {serviceName}|{serviceMeta}|{serviceHandler}
+   *
+   *      Where
+   *           serviceName is the named web service
+   *           serviceMeta is the URL to fetch metadata for the named service
+   *           serviceHandler is the JS class to use when handling responses
+   */
+  function configureWebService ($serviceName) {
+    print "\nConfiguration details for ${serviceName}...\n";
+
+    $serviceMeta = configure('SERVICE_META', '/', '  Meta URL');
+    $serviceHandler = configure('SERVICE_HANDLER', 'HazardResponse',
+        '  Response Handler');
+
+    return "${serviceName}|${serviceMeta}|${serviceHandler}";
+  }
+
+  /**
    * Prompts user for a configuration $option and returns the resulting input.
    *
    * @param $option {String}

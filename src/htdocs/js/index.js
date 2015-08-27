@@ -1,3 +1,4 @@
+/* global WEB_SERVICES */
 'use strict';
 
 var Analysis = require('Analysis'),
@@ -15,7 +16,7 @@ var analyses,
     dependencyFactory;
 
 dependencyFactory = DependencyFactory.getInstance({
-  url: '/hazws/staticcurve/1/'
+  services: WEB_SERVICES
 });
 
 dependencyFactory.whenReady(function () {

@@ -1,6 +1,7 @@
 'use strict';
 
-var Meta = require('Meta'),
+var HazardResponse = require('HazardResponse'),
+    Meta = require('Meta'),
     Region = require('Region'),
 
     Collection = require('mvc/Collection'),
@@ -10,7 +11,14 @@ var Meta = require('Meta'),
 
 
 var _DEFAULTS = {
-  url: 'metadata.json'
+  services: {
+    'staticcurve': {
+      metaUrl: '/hazws/staticcurve/1/',
+      urlStub: null,
+      params: null,
+      constructor: HazardResponse
+    }
+  }
 };
 
 var _INSTANCE = null;
@@ -20,20 +28,20 @@ var DependencyFactory = function (params) {
       _initialize,
 
       _callbacks,
-      // _contourTypes,
       _data,
-      _editions,
       _inRegion,
       _isReady,
-      _regions,
-      _siteClasses,
-      _spectralPeriods,
-      _url,
+      _pendingRequests,
+      _services,
 
       _buildCollection,
+      _fetchService,
+      _getAllFromAll,
       _getSupported,
-      _onSuccess,
-      _onError;
+      _onComplete,
+      _onError,
+      _onSuccess;
+
 
   _this = {
     getEdition: null,
@@ -54,53 +62,94 @@ var DependencyFactory = function (params) {
   };
 
   _initialize = function (params) {
+    var serviceName;
+
     params = Util.extend({}, _DEFAULTS, params);
 
-    _url = params.url;
-    _editions = Collection([]);
-    // _contourTypes = Collection([]);
-    _regions = Collection([]);
-    _siteClasses = Collection([]);
-    _spectralPeriods = Collection([]);
+    _data = {};
+
+    _services = params.services;
+    _pendingRequests = {};
 
     _callbacks = [];
     _isReady = false;
 
-    Xhr.ajax({
-      url: _url,
-      success: _onSuccess,
-      error: _onError
-    });
+    for (serviceName in _services) {
+      if (_services.hasOwnProperty(serviceName)) {
+        _fetchService(serviceName);
+      }
+    }
+  };
+
+  _fetchService = function (serviceName) {
+    var service,
+        url;
+
+    service = _services[serviceName];
+
+    if (service) {
+      url = service.metaUrl;
+
+      _pendingRequests[serviceName] = true;
+
+      Xhr.ajax({
+        error: function () {
+          _onError(serviceName);
+          _onComplete(serviceName);
+        },
+        success: function (data/*, xhr*/) {
+          _onSuccess(serviceName, data);
+          _onComplete(serviceName);
+        },
+        url: url
+      });
+    }
+  };
+
+  _onComplete = function (serviceName) {
+    if (_pendingRequests.hasOwnProperty(serviceName)) {
+      _pendingRequests[serviceName] = null;
+      delete _pendingRequests[serviceName];
+    }
+
+    if (Object.keys(_pendingRequests).length === 0) {
+      _isReady = true;
+
+      _callbacks.forEach(function (callback) {
+        callback();
+      });
+    }
   };
 
   /**
    * Sets the dependency collections with the default values
    * returned by the Xhr request.
    *
-   * @param  data {Object}
-   *         Data returned from the Xhr request.
+   * @param serviceName {String}
+   *      The name for the service to which the data should be associated.
+   * @param data {Object}
+   *      Data returned from the service fetch request.
    */
-  _onSuccess = function (data/*, xhr*/) {
+  _onSuccess = function (serviceName, data) {
+    var service;
 
-    _data = data;
-    _editions.reset(_data.parameters.edition.values.map(Meta));
-    _regions.reset(_data.parameters.region.values.map(Region));
-    // _contourTypes.reset(_data.parameters.contourType.values.map(Meta));
-    _siteClasses.reset(_data.parameters.vs30.values.map(Meta));
-    _spectralPeriods.reset(_data.parameters.imt.values.map(Meta));
+    // Note :: The "...|| {}" may result in data being tossed. Good.
+    service = _services[serviceName] || {};
 
-    _isReady = true;
+    service.params = data.parameters;
+    service.urlStub = data.syntax;
 
-    _callbacks.forEach(function (callback) {
-      callback();
-    });
+    service.editions = Collection(data.parameters.edition.values.map(Meta));
+    service.regions = Collection(data.parameters.region.values.map(Region));
+    service.siteClasses = Collection(data.parameters.vs30.values.map(Meta));
+    service.spectralPeriods = Collection(data.parameters.imt.values.map(Meta));
   };
 
   /**
-   * Error callback for the Xhr request
+   * Error callback when a service fetch fails
    */
-  _onError = function (/*status, xhr*/) {
-    throw new Error('Error retreiving dependancy data.');
+  _onError = function (serviceName) {
+    throw new Error('Error retreiving data for service: ' + serviceName + '.');
   };
 
   /**
@@ -124,24 +173,57 @@ var DependencyFactory = function (params) {
   };
 
   /**
+   * Get a unique listing (based on model id) of available models across all
+   * available services.
+   *
+   * @param typeName {String}
+   *      The name of the type for which to fetch models. i.e. "editions",
+   *      "regions", "siteClasses", "spectralPeriods"
+   *
+   * @return {Array}
+   *      An array containing models corresponding to a unique set of models
+   *      of the given typeName across all services.
+   */
+  _getAllFromAll = function (typeName) {
+    var all;
+
+    all = {};
+
+    // Use an object to create a unique list
+    Object.keys(_services).forEach(function (serviceName) {
+      var collection;
+
+      collection = _services[serviceName][typeName];
+
+      collection.data().forEach(function (model) {
+        all[model.id] = model;
+      });
+    });
+
+    // Now convert the object to an array
+    return Object.keys(all).map(function (key) {
+      return all[key];
+    });
+  };
+
+  /**
    * Clean up variables and methods
    */
   _this.destroy = function () {
     _buildCollection = null;
+    _fetchService = null;
+    _getAllFromAll = null;
     _getSupported = null;
+    _onComplete = null;
     _onError = null;
     _onSuccess = null;
 
     _callbacks = null;
-    // _contourTypes = null;
     _data = null;
-    _editions = null;
     _isReady = null;
     _inRegion = null;
-    _regions = null;
-    _siteClasses = null;
-    _spectralPeriods = null;
-    _url = null;
+    _pendingRequests = null;
+    _services = null;
 
     _this = null;
     _initialize = null;
@@ -149,89 +231,207 @@ var DependencyFactory = function (params) {
     _INSTANCE = null;
   };
 
-  /**
-   * Get all Countour Types
-   *
-   * @return {Collection} Collection of Contour Type models.
-   */
-  // _this.getContourType = function(id) {
-  //   return _contourTypes.get(id);
-  // };
 
-  // _this.getContourTypes = function (ids) {
-  //   return _getSupported(_contourTypes, ids);
-  // };
+  // Edition methods ...
 
-  // _this.getAllContourTypes = function () {
-  //   return _contourTypes.data();
-  // };
-
-  /**
-   * Get all Editions
-   *
-   * @return {Collection} Collection of Edition models.
-   */
   _this.getEdition = function(id) {
-    return _editions.get(id);
+    var service;
+
+    service = _this.getService(id);
+
+    if (service) {
+      return service.editions.get(id);
+    } else {
+      return null;
+    }
   };
 
-  _this.getEditions = function (ids) {
-    return _getSupported(_editions, ids);
+  _this.getEditions = function (ids, editionId) {
+    var service;
+
+    service = _this.getService(editionId);
+
+    if (service) {
+      return _getSupported(service.editions, ids);
+    } else {
+      return [];
+    }
   };
 
-  _this.getAllEditions = function () {
-    return _editions.data();
+  _this.getAllEditions = function (editionId) {
+    var all,
+        service;
+
+    if (editionId) {
+      service = _this.getService(editionId);
+
+      if (service) {
+        all = service.editions.data();
+      } else {
+        all = [];
+      }
+    } else {
+      all = _getAllFromAll('editions');
+    }
+
+    return all;
   };
 
-  /**
-   * Get all Regions
-   *
-   * @return {Collection} Collection of Site Class models.
-   */
-  _this.getRegion = function (id) {
-    return _regions.get(id);
+  // Region methods ...
+
+  _this.getRegion = function (id, editionId) {
+    var service;
+
+    service = _this.getService(editionId);
+
+    if (service) {
+      return service.regions.get(id);
+    } else {
+      return null;
+    }
   };
 
-  _this.getRegions = function (ids) {
-    return _getSupported(_regions, ids);
+  _this.getRegions = function (ids, editionId) {
+    var service;
+
+    service = _this.getService(editionId);
+
+    if (service) {
+      return _getSupported(service.regions, ids);
+    } else {
+      return [];
+    }
   };
 
-  _this.getAllRegions = function () {
-    return _regions.data();
+  _this.getAllRegions = function (editionId) {
+    var all,
+        service;
+
+    if (editionId) {
+      service = _this.getService(editionId);
+
+      if (service) {
+        all = service.regions.data();
+      } else {
+        all = [];
+      }
+    } else {
+      all = _getAllFromAll('regions');
+    }
+
+    return all;
   };
 
-  /**
-   * Get all Site Classes
-   *
-   * @return {Collection} Collection of Site Class models.
-   */
-  _this.getSiteClass = function (id) {
-    return _siteClasses.get(id);
+  // Site class methods ...
+
+  _this.getSiteClass = function (id, editionId) {
+    var service;
+
+    service = _this.getService(editionId);
+
+    if (service) {
+      return service.siteClasses.get(id);
+    } else {
+      return null;
+    }
   };
 
-  _this.getSiteClasses = function (ids) {
-    return _getSupported(_siteClasses, ids);
+  _this.getSiteClasses = function (ids, editionId) {
+    var service;
+
+    service = _this.getService(editionId);
+
+    if (service) {
+      return _getSupported(service.siteClasses, ids);
+    } else {
+      return [];
+    }
   };
 
-  _this.getAllSiteClasses = function () {
-    return _siteClasses.data();
+  _this.getAllSiteClasses = function (editionId) {
+    var all,
+        service;
+
+    if (editionId) {
+      service = _this.getService(editionId);
+
+      if (service) {
+        all = service.siteClasses.data();
+      } else {
+        all = [];
+      }
+    } else {
+      all = _getAllFromAll('siteClasses');
+    }
+
+    return all;
   };
 
-  /**
-   * Get all Spectral Periods.
-   *
-   * @return {Collection} Collection of Spectral Period models.
-   */
-  _this.getSpectralPeriod = function (id) {
-    return _spectralPeriods.get(id);
+  // Spectral period methods ...
+
+  _this.getSpectralPeriod = function (id, editionId) {
+    var service;
+
+    service = _this.getService(editionId);
+
+    if (service) {
+      return service.spectralPeriods.get(id);
+    } else {
+      return null;
+    }
   };
 
-  _this.getSpectralPeriods = function (ids) {
-    return _getSupported(_spectralPeriods, ids);
+  _this.getSpectralPeriods = function (ids, editionId) {
+    var service;
+
+    service = _this.getService(editionId);
+
+    if (service) {
+      return _getSupported(service.spectralPeriods, ids);
+    } else {
+      return [];
+    }
   };
 
-  _this.getAllSpectralPeriods = function () {
-    return _spectralPeriods.data();
+  _this.getAllSpectralPeriods = function (editionId) {
+    var all,
+        service;
+
+    if (editionId) {
+      service = _this.getService(editionId);
+
+      if (service) {
+        all = service.spectralPeriods.data();
+      } else {
+        all = [];
+      }
+    } else {
+      all = _getAllFromAll('spectralPeriods');
+    }
+
+    return all;
+  };
+
+  // Service methods ...
+
+  _this.getServices = function () {
+    return _services;
+  };
+
+  _this.getService = function (editionId) {
+    var service;
+
+    Object.keys(_services).some(function (name) {
+      service = _services[name];
+
+      if (!(service.editions && service.editions.get(editionId))) {
+        service = null;
+      }
+
+      return service;
+    });
+
+    return service;
   };
 
   /**
@@ -242,52 +442,20 @@ var DependencyFactory = function (params) {
    *
    * @return {Collection} Collection of Contour Type models.
    */
-  _this.getFilteredContourTypes = function (editionId) {
+  _this.getFilteredContourTypes = function (editionId, service) {
     var edition,
         ids;
 
+    if (!service) {
+      throw new Error('Service name not provided!');
+    }
+
     // get supported countour types
-    edition = _this.getEdition(editionId);
+    edition = _this.getEdition(editionId, service);
     ids = edition.get('supports').contourType;
 
     return _this.getContourTypes(ids);
   };
-
-  /**
-   * Get all Spectral Periods for the provided Edition
-   *
-   * @param  editionId {Integer}
-   *         Edition model.id
-   *
-   * @param  latitude {Number}
-   *         The latitude of the selected location
-   *
-   * @param  longitude {Number}
-   *         The longitude of the selected location
-   *
-   * @return {Collection} Collection of Spectral Period models.
-   */
-  // _this.getFilteredSpectralPeriods = function (editionId, latitude, longitude) {
-  //   var edition,
-  //       regions,
-  //       ids = [];
-
-  //   // get edition
-  //   edition = _this.getEdition(editionId);
-
-  //   // find supported regions
-  //   regions = _this.getRegions(edition.get('supports').region);
-
-  //   // check that latitude/longitude is valid for region
-  //   regions.forEach(function (region) {
-  //     // get spectral period ids
-  //     if (_inRegion(region, latitude, longitude)) {
-  //       ids = ids.concat(region.get('supports').imt);
-  //     }
-  //   });
-
-  //   return _this.getSpectralPeriods(ids);
-  // };
 
   /**
    * Get the first region supported by the given editionId that also contains
@@ -348,8 +516,8 @@ var DependencyFactory = function (params) {
   _initialize(params);
   params = null;
   return _this;
-
 };
+
 
 /**
  * Creates an instance of the DependencyFactory

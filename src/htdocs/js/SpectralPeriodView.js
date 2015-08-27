@@ -76,10 +76,8 @@ var SpectralPeriodView = function (params) {
     }
 
     // update/select the spectral period in the currently selected Analysis
-    _dependencyFactory.whenReady(function () {
-      _updateSpectralPeriodsCollectionSelectBox();
-      _this.render();
-    });
+    _updateSpectralPeriodsCollectionSelectBox();
+    _this.render();
   };
 
   /**
@@ -110,7 +108,6 @@ var SpectralPeriodView = function (params) {
         longitude,
         spectralPeriods = [];
 
-    spectralPeriods = _dependencyFactory.getAllSpectralPeriods();
 
     if (_this.model) {
       edition = _this.model.get('edition');
@@ -121,6 +118,8 @@ var SpectralPeriodView = function (params) {
       if (edition && latitude && longitude) {
         spectralPeriods = _dependencyFactory.getFilteredSpectralPeriods(
             edition.get('id'), latitude, longitude);
+      } else {
+        spectralPeriods = _dependencyFactory.getAllSpectralPeriods(edition);
       }
     }
     // reset spectral period collection with new spectral periods

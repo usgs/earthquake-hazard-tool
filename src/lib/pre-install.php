@@ -67,7 +67,7 @@ $HELP_TEXT = array(
   'DB_USER' => 'Read-only username for database connections',
   'DB_PASS' => 'Password for database user',
 
-  'WEB_SERVICES' => 'Comma-separated list of web service URLs'
+  'WEB_SERVICES' => 'Comma-separated list of web services to configure'
 );
 
 

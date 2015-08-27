@@ -56,7 +56,8 @@ var ApplicationView = function (params) {
 
     _dependencyFactory = params.dependencyFactory;
 
-    _calculator = Calculator();
+    _calculator = Calculator(params.webServices);
+
     _siteClasses = Collection(_dependencyFactory.getAllSiteClasses());
     _editions = Collection(_dependencyFactory.getAllEditions());
 
@@ -215,7 +216,10 @@ var ApplicationView = function (params) {
       window.setTimeout(function () {
         if (_this.model.get('edition') && _this.model.get('location') &&
             _this.model.get('region') && _this.model.get('vs30')) {
-          _calculator.getResult('staticcurve', _this.model);
+          _calculator.getResult(
+              _dependencyFactory.getService(_this.model.get('edition')),
+              _this.model
+            );
         }
         _queued = false;
       }, 0);
@@ -240,7 +244,8 @@ var ApplicationView = function (params) {
     try {
       edition = _dependencyFactory.getEdition(_this.model.get('edition'));
       location = _this.model.get('location');
-      regions = _dependencyFactory.getRegions(edition.get('supports').region);
+      regions = _dependencyFactory.getRegions(
+          edition.get('supports').region, edition.id);
 
       regions.forEach(function (region) {
         if (region.contains(location)) {
@@ -250,13 +255,15 @@ var ApplicationView = function (params) {
         }
       });
 
-      siteClasses = _dependencyFactory.getSiteClasses(Object.keys(ids));
+      siteClasses = _dependencyFactory.getSiteClasses(Object.keys(ids),
+          _this.model.get('edition'));
     } catch (e) {
       // Just ignore, will set to use all site classes below
     }
 
     if (!siteClasses) {
-      siteClasses = _dependencyFactory.getAllSiteClasses();
+      siteClasses = _dependencyFactory.getAllSiteClasses(
+          _this.model.get('edition'));
     }
 
     _siteClasses.reset(siteClasses, {silent: true});
@@ -286,7 +293,8 @@ var ApplicationView = function (params) {
     location = _this.model.get('location');
 
     if (edition && location) {
-      regions = _dependencyFactory.getRegions(edition.get('supports').region);
+      regions = _dependencyFactory.getRegions(
+          edition.get('supports').region, edition.id);
 
       regions.some(function (region) {
         var supports = region.get('supports').vs30;

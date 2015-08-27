@@ -30,7 +30,7 @@ var Calculator = function (params) {
   _this = {
     destroy: null,
     getParameters: null,
-    getResult: null,
+    getResult: null
   };
 
   _initialize = function (params) {
@@ -48,7 +48,7 @@ var Calculator = function (params) {
 
 
   _fetchServiceDetails = function (serviceName, callback) {
-    if (_services[serviceName].params !== null) {
+    if (_services[serviceName].params) {
       if (callback) {
         callback(_services[serviceName].params);
       }
@@ -119,66 +119,57 @@ var Calculator = function (params) {
    * results, sets the results to the serviceName property on the input
    * analysis.
    *
-   * @param serviceName {String}
-   *      The name of the service for which to get the parameters.
+   * @param service {Object}
+   *      The service from which to get the result.
    * @param analysis {Analysis}
    *      The analysis onto which the result will be set once computed.
    * @param callback {Function} Optional.
    *      A callback function that will be invoked an object containing
    *      the name of the service, the input analysis, and the computed result.
    */
-  _this.getResult = function (serviceName, analysis, callback) {
+  _this.getResult = function (service, analysis, callback) {
     var input,
         paramName,
         params,
-        service,
         url;
 
-    if (!_services.hasOwnProperty(serviceName)) {
-      throw new Error('No such service [' + serviceName + '] recognized.');
-    }
-
-    service = _services[serviceName];
     params = service.params;
     url = service.urlStub;
 
     if (url === null || params === null) {
-      _fetchServiceDetails(serviceName, function () {
-        _this.getResult(serviceName, analysis, callback);
-      });
-    } else {
-      for (paramName in params) {
+      throw new Error('URL and Params must be set before using a service.');
+    }
 
-        if (paramName === 'latitude' || paramName === 'longitude') {
-          // these come off of the 'location'
-          input = analysis.get('location')[paramName];
-        } else if (paramName === 'imt') {
-          input = 'any';
-        } else {
-          input = analysis.get(paramName);
-        }
-
-        if (typeof input === 'undefined' || input === null) {
-          throw new Error('Invalid input parameters for given service name.');
-        }
-        if (input.get) {
-          url = url.replace('{' + paramName + '}', input.get('value'));
-        } else {
-          url = url.replace('{' + paramName + '}', input);
-        }
+    for (paramName in params) {
+      if (paramName === 'latitude' || paramName === 'longitude') {
+        // these come off of the 'location'
+        input = analysis.get('location')[paramName];
+      } else if (paramName === 'imt') {
+        input = 'any';
+      } else {
+        input = analysis.get(paramName);
       }
 
-      Xhr.ajax({
-        url: url,
-        success: function (response) {
-          analysis.set({'curves': HazardResponse(response.response)});
-
-          if (callback) {
-            callback({analysis: analysis, serviceName: serviceName});
-          }
-        }
-      });
+      if (typeof input === 'undefined' || input === null) {
+        throw new Error('Invalid input parameters for given service name.');
+      }
+      if (input.get) {
+        url = url.replace('{' + paramName + '}', input.get('value'));
+      } else {
+        url = url.replace('{' + paramName + '}', input);
+      }
     }
+
+    Xhr.ajax({
+      url: url,
+      success: function (response) {
+        analysis.set({'curves': HazardResponse(response.response)});
+
+        if (callback) {
+          callback({analysis: analysis, service: service});
+        }
+      }
+    });
   };
 
 

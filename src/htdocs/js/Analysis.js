@@ -62,15 +62,18 @@ var Analysis = function (options) {
   };
 
   _this.getRegion = function () {
-    return _dependencyFactory.getRegion(_this.get('region'));
+    return _dependencyFactory.getRegion(_this.get('region'),
+        _this.get('edition'));
   };
 
   _this.getVs30 = function () {
-    return _dependencyFactory.getSiteClass(_this.get('vs30'));
+    return _dependencyFactory.getSiteClass(_this.get('vs30'),
+        _this.get('edition'));
   };
 
   _this.getSpectralPeriod = function () {
-    return _dependencyFactory.getSpectralPeriod(_this.get('imt'));
+    return _dependencyFactory.getSpectralPeriod(_this.get('imt'),
+        _this.get('edition'));
   };
 
   _initialize(options);

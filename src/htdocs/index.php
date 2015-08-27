@@ -1,5 +1,6 @@
 <?php
 if (!isset($TEMPLATE)) {
+  include_once '../conf/config.inc.php';
 
   $TITLE = 'Hazard Tool';
 
@@ -12,8 +13,22 @@ if (!isset($TEMPLATE)) {
     <link rel="stylesheet" href="css/index.css"/>
   ';
 
+  $services = array();
+  foreach (explode(',', $CONFIG['WEB_SERVICES']) as $service) {
+    $parts = explode('|', $service);
+    $services[] = '\'' . $parts[0] . '\': {
+      metaUrl: \'' . $parts[1] . '\',
+      constructor: \'' . $parts[2] . '\'
+    }';
+  }
+
   // Stuff that goes at the bottom of the page (i.e. <script> tags)
   $FOOT = '
+    <script>
+      var WEB_SERVICES = {
+        ' . implode(',', $services) . '
+      };
+    </script>
     <script src="lib/leaflet/leaflet.js"></script>
     <script src="js/index.js"></script>
   ';
