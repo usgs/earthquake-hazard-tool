@@ -122,7 +122,7 @@ var TimeHorizonSelectView = function (params) {
       if (timeHorizon === null) {
         _timeHorizonCollection.deselect();
       } else {
-        _timeHorizonCollection.selectById(timeHorizon);
+        _timeHorizonCollection.selectById(timeHorizon, {silent: true});
       }
     } else {
       // no item in the collection has been selected
