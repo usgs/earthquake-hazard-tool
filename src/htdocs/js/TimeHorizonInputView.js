@@ -19,13 +19,14 @@ var TimeHorizonInputView = function (params) {
     var div;
 
     _this.el.innerHTML =
-        '<label for="timeHorizonInput">Time Horizon</label>' +
+        '<label for="time-horizon-input-view">Time Horizon</label>' +
         '<small class="help">Return period in years</small>' +
-        '<input type="text" class="timeHorizonInput"/>';
-    _timeHorizonInput = _this.el.querySelector('.timeHorizonInput');
-    _timeHorizonInput.addEventListener('change', _updateTimeHorizon);
-    div = document.createElement('div');
+        '<input type="text" id="time-horizon-input-view"/>';
 
+    _timeHorizonInput = _this.el.querySelector('#time-horizon-input-view');
+    _timeHorizonInput.addEventListener('change', _updateTimeHorizon);
+
+    div = document.createElement('div');
     div.innerHTML =
         '<p class="error alert">' +
           'Time Horizon value must be between 1 and 5,000 inclusive. ' +
@@ -59,6 +60,7 @@ var TimeHorizonInputView = function (params) {
         }
       ]
     });
+
     _this.render();
   };
 

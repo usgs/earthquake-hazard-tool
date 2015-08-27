@@ -1,16 +1,13 @@
 
-.basic-time-horizon-view {
+#time-horizon-slider-view > button {
+  height: auto;
+  line-height: 1em;
+  padding: .5em 0;
+  width: 50%;
 
-  > .button-group > button {
-    height: auto;
-    line-height: 1em;
-    padding: .5em 0;
-    width: 50%;
-
-    > small {
-      color: #888;
-      display: block;
-    }
+  > small {
+    color: #888;
+    display: block;
   }
-
 }
+

@@ -157,7 +157,7 @@ var ActionsView = function (params) {
     errors = [];
     locationEl = document.querySelector('#basic-location-info-view');
     siteClassEl = document.querySelector('#basic-site-class-view');
-    timeHorizonEl = document.querySelector('.timeHorizonInput');
+    timeHorizonEl = document.querySelector('#time-horizon-input-view');
 
     if (_this.model) {
       model = _this.model.get();
@@ -182,6 +182,13 @@ var ActionsView = function (params) {
         siteClassEl.classList.add('error');
       } else {
         siteClassEl.classList.remove('error');
+      }
+
+      if (!model.timeHorizon) {
+        errors.push('<li>Please select a Time Horizon.</li>');
+        timeHorizonEl.classList.add('error');
+      } else {
+        timeHorizonEl.classList.remove('error');
       }
     }
 
