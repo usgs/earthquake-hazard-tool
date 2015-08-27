@@ -15,7 +15,9 @@ var HazardCurve = function (params) {
 
   _this = Model(Util.extend({
     id: 'curve-' + CURVE_ID++,
+    imt: null,
     label: 'Hazard Curve',
+    period: null,
     data: []
   }, params));
 
