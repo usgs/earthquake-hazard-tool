@@ -31,6 +31,7 @@ var HazardCurveGraphView = function (options) {
       _initialize,
       // variables
       _curves,
+      _destroyCurves,
       _timeHorizon,
       // methods
       _getTicks,
@@ -60,7 +61,12 @@ var HazardCurveGraphView = function (options) {
     options = options || {};
 
     // HazardCurve collection
-    _curves = options.curves || Collection();
+    _curves = options.curves;
+    _destroyCurves = false;
+    if (!_curves) {
+      _curves = Collection();
+      _destroyCurves = true;
+    }
     _curves.on('add', _onAdd);
     _curves.on('deselect', _onDeselect);
     _curves.on('remove', _onRemove);
@@ -206,11 +212,30 @@ var HazardCurveGraphView = function (options) {
    * Unbind event listeners and free references.
    */
   _this.destroy = Util.compose(function () {
-    _this.curves.destroy();
+    if (_this === null) {
+      return;
+    }
+
+    if (_destroyCurves) {
+      _this.curves.destroy();
+    } else {
+      _curves.off('add', _onAdd);
+      _curves.off('deselect', _onDeselect);
+      _curves.off('remove', _onRemove);
+      _curves.off('reset', _onReset);
+      _curves.off('select', _onSelect);
+    }
     _this.curves = null;
 
     _timeHorizon.destroy();
     _timeHorizon = null;
+
+    _onAdd = null;
+    _onDeselect = null;
+    _onRemove = null;
+    _onReset = null;
+    _onSelect = null;
+    _this = null;
   }, _this.destroy);
 
 
