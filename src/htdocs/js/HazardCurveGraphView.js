@@ -40,7 +40,10 @@ var HazardCurveGraphView = function (options) {
       _onReset,
       _onSelect;
 
-  _this = D3View(options);
+  _this = D3View(Util.extend({
+    xLabel: 'Ground Motion (g)',
+    yLabel: 'Annual Frequency of Exceedence'
+  }, options));
 
   _initialize = function (options) {
     _this.model.set({
@@ -111,6 +114,10 @@ var HazardCurveGraphView = function (options) {
    *        curves that were added.
    */
   _onAdd = function (curves) {
+    // add time horizon view as first line
+    if (_this.views.data().length === 0 && curves.length > 0) {
+      _this.views.add(_timeHorizon);
+    }
     curves.forEach(function (curve) {
       var view = HazardCurveLineView(Util.extend({
         view: _this
@@ -142,13 +149,17 @@ var HazardCurveGraphView = function (options) {
       }
     });
     _this.views.remove.apply(_this.views, toRemove);
+    // remove time horizon if only line
+    if (_this.views.data().length === 1) {
+      _this.views.remove(_timeHorizon);
+    }
   };
 
   /**
    * Curve reset handler.
    */
   _onReset = function () {
-    _this.views.reset([_timeHorizon]);
+    _this.views.reset([]);
     _onAdd(_curves.data());
   };
 
@@ -158,6 +169,38 @@ var HazardCurveGraphView = function (options) {
   _onSelect = function (curve) {
     _this.views.selectById(curve.id);
   };
+
+  /**
+   * Set default extent if there is no data.
+   */
+  _this.getXExtent = Util.compose(_this.getXExtent, function (extent) {
+    var min = null,
+        max = null;
+    if (extent) {
+      min = extent[0];
+      max = extent[extent.length - 1];
+    }
+    if (!extent || isNaN(min) || isNaN(max) || min === max) {
+      extent = [1E-3, 3];
+    }
+    return extent;
+  });
+
+  /**
+   * Set default extent if there is no data.
+   */
+  _this.getYExtent = Util.compose(_this.getYExtent, function (extent) {
+    var min = null,
+        max = null;
+    if (extent) {
+      min = extent[0];
+      max = extent[extent.length - 1];
+    }
+    if (!extent || isNaN(min) || isNaN(max) || min === max) {
+      extent = [1E-6, 1E-1];
+    }
+    return extent;
+  });
 
   /**
    * Unbind event listeners and free references.

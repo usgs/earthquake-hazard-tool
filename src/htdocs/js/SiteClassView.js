@@ -67,7 +67,7 @@ var SiteClassView = function (params) {
       if (selected) {
         _this.model.set({'vs30': selected.get('id')});
       } else {
-        _this.model.set({'vs30': null});
+        _this.model.set({'vs30': null, 'curves': null});
       }
     }
   };

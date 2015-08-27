@@ -338,52 +338,52 @@ var ApplicationView = function (params) {
   _this.render = function (changes) {
     var curves,
         data,
+        timeHorizon,
         xAxisLabel,
         yAxisLabel;
+
+    // default labels, data, time horizon
+    xAxisLabel = 'Ground Motion (g)';
+    yAxisLabel = 'Annual Frequency of Exceedence';
+    data = [];
+    timeHorizon = 2475;
 
     if (_this.model && changes) {
       _updateVs30();
       _updateRegion();
 
       curves = _this.model.get('curves');
-
-      xAxisLabel = '';
-      yAxisLabel = '';
-      data = [];
-
       if (curves) {
         xAxisLabel = curves.get('xlabel');
         yAxisLabel = curves.get('ylabel');
-
         data = curves.get('curves').data();
       }
+      timeHorizon = _this.model.get('timeHorizon');
+    }
 
-      // Update curve plotting
-      try {
-        _hazardCurveView.model.set({
-          'xLabel': xAxisLabel,
-          'yLabel': yAxisLabel,
-          'timeHorizon': _this.model.get('timeHorizon')
-        }, {silent: true});
-        _hazardCurveView.curves.reset(data);
-      } catch (e) {
-        if (console && console.error) {
-          console.error(e);
-        }
+    // Update curve plotting
+    try {
+      _hazardCurveView.model.set({
+        'xLabel': xAxisLabel,
+        'yLabel': yAxisLabel,
+        'timeHorizon': timeHorizon
+      }, {silent: true});
+      _hazardCurveView.curves.reset(data);
+    } catch (e) {
+      if (console && console.error) {
+        console.error(e);
       }
+    }
 
-      // Update spectra plotting
-      try {
-        _hazardSpectrumView.model.set({
-          'xAxisLabel': xAxisLabel,
-          'yAxisLabel': yAxisLabel,
-          'timeHorizon': _this.model.get('timeHorizon')
-        }, {silent: true});
-        _hazardSpectrumView.curves.reset(data);
-      } catch (e) {
-        if (console && console.error) {
-          console.error(e);
-        }
+    // Update spectra plotting
+    try {
+      _hazardSpectrumView.model.set({
+        'timeHorizon': timeHorizon
+      }, {silent: true});
+      _hazardSpectrumView.curves.reset(data);
+    } catch (e) {
+      if (console && console.error) {
+        console.error(e);
       }
     }
   };

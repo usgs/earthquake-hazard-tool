@@ -35,7 +35,7 @@ var TimeHorizonLineView = function (options) {
 
   _this.render = Util.compose(function (changed) {
     var timeHorizon = _this.view.model.get('timeHorizon'),
-        xExtent = _this.view.getXExtent(),
+        xExtent = _this.view.getPlotXExtent(),
         afe,
         data;
 
