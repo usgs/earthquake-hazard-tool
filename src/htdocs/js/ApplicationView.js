@@ -381,6 +381,8 @@ var ApplicationView = function (params) {
   _this.render = function (changes) {
     var curves,
         data,
+        id,
+        period,
         timeHorizon,
         xAxisLabel,
         yAxisLabel;
@@ -390,6 +392,8 @@ var ApplicationView = function (params) {
     yAxisLabel = 'Annual Frequency of Exceedence';
     data = [];
     timeHorizon = 2475;
+    id = null;
+
 
     if (_this.model && changes) {
       _updateVs30();
@@ -402,6 +406,16 @@ var ApplicationView = function (params) {
         data = curves.get('curves').data();
       }
       timeHorizon = _this.model.get('timeHorizon');
+
+      // find model period, to select curve within collection
+      period = _this.model.get('period');
+      data.every(function (curve) {
+        if (curve.get('period') === period) {
+          id = curve.get('id');
+          return false;
+        }
+        return true;
+      });
     }
 
     // Update curve plotting
@@ -429,6 +443,10 @@ var ApplicationView = function (params) {
     }
 
     _curves.reset(data);
+
+    if (id !== null) {
+      _curves.selectById(id);
+    }
   };
 
 
