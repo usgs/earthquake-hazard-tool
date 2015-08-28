@@ -226,31 +226,43 @@ var ApplicationView = function (params) {
   /**
    * Resets the collection of siteClasses based on what is available for
    * current selection of edition/location.
-   *
+   * Uses site class based on location.
    */
   _updateVs30 = function () {
     var edition,
+        i,
         ids,
         location,
         regions,
-        siteClasses;
-
-    ids = {};
+        siteClasses,
+        siteClassIds;
 
     try {
       edition = _dependencyFactory.getEdition(_this.model.get('edition'));
+      ids = [];
       location = _this.model.get('location');
       regions = _dependencyFactory.getRegions(edition.get('supports').region);
+      siteClassIds = _dependencyFactory.getAllSiteClasses();
 
-      regions.forEach(function (region) {
-        if (region.contains(location)) {
-          region.get('supports').vs30.forEach(function (vs30) {
-            ids[vs30] = true;
-          });
+      for (i = 0; i < siteClassIds.length; i++ ) {
+        if (location.longitude <= -115) {
+          if (parseInt(siteClassIds[i].get('id')) <= 1150) {
+            ids.push(siteClassIds[i].get('id').toString());
+          }
+        } else if (location.longitude > -115 && location.longitude < -100) {
+          if (parseInt(siteClassIds[i].get('id')) === 760) {
+            ids.push(siteClassIds[i].get('id').toString());
+          }
+        } else if (location.longitude >= -100) {
+          if (parseInt(siteClassIds[i].get('id')) === 760 ||
+              parseInt(siteClassIds[i].get('id')) === 2000) {
+            ids.push(siteClassIds[i].get('id').toString());
+          }
         }
-      });
+      }
 
-      siteClasses = _dependencyFactory.getSiteClasses(Object.keys(ids));
+      siteClasses = _dependencyFactory.getSiteClasses(ids);
+
     } catch (e) {
       // Just ignore, will set to use all site classes below
     }
