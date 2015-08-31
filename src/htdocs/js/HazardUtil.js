@@ -4,10 +4,27 @@
 var HazardUtil = {};
 
 
+var _PERIOD_TO_NUMBER_MAP = {
+  'PGA': 0.0,
+  'PGV': 0.0,
+  'SA0P1': 0.1,
+  'SA0P2': 0.2,
+  'SA0P3': 0.3,
+  'SA0P5': 0.5,
+  'SA0P75': 0.75,
+  'SA1P0': 1.0,
+  'SA2P0': 2.0,
+  'SA3P0': 3.0,
+  'SA4P0': 4.0,
+  'SA5P0': 5.0
+};
+
+
 var _coallesce,
     _interpolate,
     _interpolateCurve,
-    _interpolateLogLog;
+    _interpolateLogLog,
+    _periodToNumber;
 
 
 _coallesce = function (xvals, yvals) {
@@ -75,12 +92,21 @@ _interpolateCurve = function (x0, y0, x1, y1, x) {
   return y;
 };
 
+_periodToNumber = function (period) {
+  if (_PERIOD_TO_NUMBER_MAP.hasOwnProperty(period)) {
+    return _PERIOD_TO_NUMBER_MAP[period];
+  } else {
+    return null; // is NaN better?
+  }
+};
+
 
 // Expose the API
 HazardUtil.coallesce = _coallesce;
 HazardUtil.interpolate = _interpolate;
 HazardUtil.interpolateCurve = _interpolateCurve;
 HazardUtil.interpolateLogLog = _interpolateLogLog;
+HazardUtil.periodToNumber = _periodToNumber;
 
 
 module.exports = HazardUtil;

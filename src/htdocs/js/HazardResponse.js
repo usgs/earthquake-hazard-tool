@@ -8,20 +8,8 @@ var HazardCurve = require('HazardCurve'),
     Util = require('util/Util');
 
 
-var _PERIOD_TO_NUMBER = {
-  'PGA': 0.0,
-  'PGV': 0.0,
-  'SA0P1': 0.1,
-  'SA0P2': 0.2,
-  'SA0P3': 0.3,
-  'SA0P5': 0.5,
-  'SA0P75': 0.75,
-  'SA1P0': 1.0,
-  'SA2P0': 2.0,
-  'SA3P0': 3.0,
-  'SA4P0': 4.0,
-  'SA5P0': 5.0
-};
+var _TYPE = 'HazardResponse';
+
 
 var HazardResponse = function (params) {
   var _this,
@@ -38,6 +26,7 @@ var HazardResponse = function (params) {
     var attributes;
 
     attributes = {
+      'type': _TYPE,
       'xlabel': '',
       'ylabel': '',
       'curves': []
@@ -45,7 +34,7 @@ var HazardResponse = function (params) {
 
     params = params || [];
 
-    params.map(function (response) {
+    params.forEach(function (response) {
       attributes.xlabel = response.metadata.xlabel;
       attributes.ylabel = response.metadata.ylabel;
 
@@ -73,7 +62,7 @@ var HazardResponse = function (params) {
     return HazardCurve({
       label: metadata.imt.display,
       imt: metadata.imt.value,
-      period: _PERIOD_TO_NUMBER[metadata.imt.value],
+      period: HazardUtil.periodToNumber(metadata.imt.value),
       data: HazardUtil.coallesce(metadata.xvals, yvals)
     });
   };
@@ -188,5 +177,9 @@ var HazardResponse = function (params) {
   params = null;
   return _this;
 };
+
+
+HazardResponse.TYPE = _TYPE;
+
 
 module.exports = HazardResponse;
