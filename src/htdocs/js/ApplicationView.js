@@ -382,7 +382,7 @@ var ApplicationView = function (params) {
     var curves,
         data,
         id,
-        period,
+        imt,
         timeHorizon,
         xAxisLabel,
         yAxisLabel;
@@ -408,9 +408,9 @@ var ApplicationView = function (params) {
       timeHorizon = _this.model.get('timeHorizon');
 
       // find model period, to select curve within collection
-      period = _this.model.get('period');
+      imt = _this.model.get('imt');
       data.every(function (curve) {
-        if (curve.get('period') === period) {
+        if (curve.get('imt') === imt) {
           id = curve.get('id');
           return false;
         }
