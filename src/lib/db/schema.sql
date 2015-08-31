@@ -44,11 +44,18 @@ CREATE TABLE region (
   maxlatitude DECIMAL(5, 2) NOT NULL,
   minlongitude DECIMAL(5, 2) NOT NULL,
   maxlongitude DECIMAL(5, 2) NOT NULL,
+
+  uiminlatitude DECIMAL(5, 2) NOT NULL,
+  uimaxlatitude DECIMAL(5, 2) NOT NULL,
+  uiminlongitude DECIMAL(5, 2) NOT NULL,
+  uimaxlongitude DECIMAL(5, 2) NOT NULL,
+
   gridspacing DECIMAL(5, 2) NOT NULL,
 
   CONSTRAINT region_identifier UNIQUE (value),
   CONSTRAINT region_parameters UNIQUE (minlatitude, maxlatitude, minlongitude,
-    maxlongitude, gridspacing)
+    maxlongitude, uiminlatitude, uimaxlatitude, uiminlongitude, uimaxlongitude,
+    gridspacing)
 );
 
 CREATE TABLE dataset (
