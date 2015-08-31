@@ -1,7 +1,6 @@
 'use strict';
 
-var HazardResponse = require('HazardResponse'),
-    Meta = require('Meta'),
+var Meta = require('Meta'),
     Region = require('Region'),
 
     Collection = require('mvc/Collection'),
@@ -16,7 +15,7 @@ var _DEFAULTS = {
       metaUrl: 'metadata.json',
       urlStub: null,
       params: null,
-      constructor: HazardResponse
+      constructor: 'HazardResponse'
     }
   }
 };

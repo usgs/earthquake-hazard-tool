@@ -1,9 +1,7 @@
 'use strict';
 
 
-var HazardResponse = require('HazardResponse'),
-
-    Util = require('util/Util'),
+var Util = require('util/Util'),
     Xhr = require('util/Xhr');
 
 
@@ -12,7 +10,7 @@ var _DEFAULTS = {
     metaUrl: '/hazws/staticcurve/1/',
     urlStub: null,
     params: null,
-    constructor: HazardResponse
+    constructor: 'HazardResponse'
   }
 };
 
@@ -163,7 +161,9 @@ var Calculator = function (params) {
     Xhr.ajax({
       url: url,
       success: function (response) {
-        analysis.set({'curves': HazardResponse(response.response)});
+        analysis.set({
+          'curves': require(service.constructor)(response.response)
+        });
 
         if (callback) {
           callback({analysis: analysis, service: service});
