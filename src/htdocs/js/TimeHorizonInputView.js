@@ -23,8 +23,6 @@ var TimeHorizonInputView = function (params) {
         '<input type="text" id="basic-time-horizon-view"/>';
 
     _timeHorizonInput = _this.el.querySelector('#basic-time-horizon-view');
-    _timeHorizonInput.addEventListener('change', _updateTimeHorizon);
-
     _timeHorizonInput.addEventListener('change', _validateTimeHorizon);
     Events.on('validate', _validateTimeHorizon);
 
@@ -44,11 +42,25 @@ var TimeHorizonInputView = function (params) {
             'timeHorizon': timeHorizonInputValue
           });
           return;
+        } else {
+          _this.model.set({
+            'timeHorizon': null
+          });
         }
       }
       _timeHorizonInput.focus();
 
     }
+  };
+
+    // Updates timeHorizon on the model
+  _updateTimeHorizon = function (value) {
+    if (_this.model) {
+      _this.model.set({
+        'timeHorizon': value
+      });
+    }
+    _timeHorizonInput.focus();
   };
 
   /**
@@ -66,14 +78,16 @@ var TimeHorizonInputView = function (params) {
             'input': 'timeHorizon'
           });
           _timeHorizonInput.className = '';
+          _updateTimeHorizon(timeHorizonInputValue);
         } else {
-          _timeHorizonInput.className = 'alert error';
+          _timeHorizonInput.className = 'error';
           Events.trigger('add-errors', {
             'input': 'timeHorizon',
             'messages': [
               'The Time Horizon value must be >= 1 and <= 5,000'
             ]
           });
+          _updateTimeHorizon(null);
         }
       }
     }
@@ -82,6 +96,7 @@ var TimeHorizonInputView = function (params) {
   _this.render = function () {
     if (_this.model) {
       _timeHorizonInput.value = _this.model.get('timeHorizon');
+      _validateTimeHorizon();
     }
   };
 
