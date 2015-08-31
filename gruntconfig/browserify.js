@@ -4,7 +4,8 @@ var config = require('./config');
 
 var CWD = process.cwd(),
     EXPORTS = [],
-    NODE_MODULES = CWD + '/node_modules';
+    NODE_MODULES = CWD + '/node_modules',
+    RESPONSE_HANDLERS = [];
 
 
 /**
@@ -57,6 +58,7 @@ addExports(config.src + '/htdocs/js', [
   'ContourTypeView',
   'DataExport',
   'DependencyFactory',
+  'DynamicHazardResponse',
   'EditionView',
   'HazardCurve',
   'HazardCurveGraphView',
@@ -77,6 +79,9 @@ addExports(config.src + '/htdocs/js', [
   'map/Layers',
   'map/LayerControl'
 ]);
+
+RESPONSE_HANDLERS.push('HazardResponse');
+RESPONSE_HANDLERS.push('DynamicHazardResponse');
 
 // Subsequent source files can then require "Class" with:
 // var Class = require('package/Class');
@@ -104,6 +109,7 @@ var browerify = {
     src: [config.src + '/htdocs/js/index.js'],
     dest: config.build + '/' + config.src + '/htdocs/js/index.js',
     options: {
+      require: RESPONSE_HANDLERS,
       external: [
         'leaflet'
       ]
@@ -116,6 +122,7 @@ var browerify = {
     dest: config.build + '/' + config.src + '/htdocs/js/bundle.js',
     options: {
       alias: EXPORTS,
+      require: RESPONSE_HANDLERS,
       external: [
         'leaflet'
       ]
@@ -127,6 +134,7 @@ var browerify = {
     src: [config.test + '/js/test.js'],
     dest: config.build + '/' + config.test + '/js/test.js',
     options: {
+      require: RESPONSE_HANDLERS,
       external: EXPORTS.concat(['leaflet'])
     }
   },
