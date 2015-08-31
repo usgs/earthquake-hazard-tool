@@ -4,6 +4,7 @@ var ActionsView = require('ActionsView'),
     BasicInputsView = require('BasicInputsView'),
     Calculator = require('Calculator'),
     ComponentCurvesGraphView = require('ComponentCurvesGraphView'),
+    ErrorsView = require('ErrorsView'),
     HazardCurveView = require('HazardCurveGraphView'),
     HazardSpectrumView = require('ResponseSpectrumGraphView'),
     MapView = require('MapView'),
@@ -29,6 +30,8 @@ var ApplicationView = function (params) {
       _curves,
       _dependencyFactory,
       _editions,
+      _errorsEl,
+      _errorsView,
       _hazardCurveEl,
       _hazardCurveView,
       _hazardSpectrumEl,
@@ -82,6 +85,11 @@ var ApplicationView = function (params) {
       el: _mapEl
     });
 
+    _errorsView = ErrorsView({
+      collection: _this.collection,
+      el: _errorsEl,
+    });
+
     _actionsView = ActionsView({
       collection: _this.collection,
       el: _actionsEl,
@@ -119,6 +127,7 @@ var ApplicationView = function (params) {
         '<section class="application-basic-inputs"></section>',
         '<section class="application-map"></section>',
       '</div>',
+      '<div class="application-errors"></div>',
       '<div class="application-actions"></div>',
       '<div class="row">',
         '<section class="application-hazard-curve column one-of-two">',
@@ -132,6 +141,7 @@ var ApplicationView = function (params) {
 
     _basicInputsEl = el.querySelector('.application-basic-inputs');
     _mapEl = el.querySelector('.application-map');
+    _errorsEl = el.querySelector('.application-errors');
     _actionsEl = el.querySelector('.application-actions');
     _componentCurveEl = el.querySelector('.application-hazard-component');
     _hazardCurveEl = el.querySelector('.application-hazard-curve');
