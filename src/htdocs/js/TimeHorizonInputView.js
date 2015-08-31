@@ -84,7 +84,8 @@ var TimeHorizonInputView = function (params) {
           Events.trigger('add-errors', {
             'input': 'timeHorizon',
             'messages': [
-              'The Time Horizon value must be >= 1 and <= 5,000'
+              'Invalid Time Horizon value. Valid values are between ' +
+              '1 and 5000 years.'
             ]
           });
           _updateTimeHorizon(null);

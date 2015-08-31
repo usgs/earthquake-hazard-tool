@@ -54,7 +54,7 @@ var LocationInfoView = function (params) {
         }
 
       } else {
-        errors.push('Please use the map to select a location.');
+        errors.push('Location is a required field.');
       }
     }
 

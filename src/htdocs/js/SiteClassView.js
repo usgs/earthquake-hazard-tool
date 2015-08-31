@@ -98,7 +98,7 @@ var SiteClassView = function (params) {
         Events.trigger('add-errors', {
           'input': 'siteClass',
           'messages': [
-            'Please select a Site Class.'
+            'Site Class is a required field.'
           ]
         });
       }
