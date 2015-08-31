@@ -46,7 +46,7 @@ var ErrorsView = function (params) {
 
     markup = [];
 
-    // clear div
+    // remove errors
     if (!_errors.edition && !_errors.location && !_errors.siteClass &&
         !_errors.timeHorizon) {
       _errorMarkup.innerHTML = '';
@@ -55,8 +55,6 @@ var ErrorsView = function (params) {
       return;
     }
 
-    console.log(_errors);
-
     // display errors
     _this.el.classList.add('alert');
     _this.el.classList.add('error');
@@ -64,7 +62,7 @@ var ErrorsView = function (params) {
     markup.push('<b>Errors:</b>');
     markup.push('<ul>');
 
-    // maintain the visual order of the inputs with error output
+    // replicate the input order with the error output
     if (_errors.edition) {
       markup.push('<li>' + _errors.edition.join('</li><li>') + '</li>');
     }
