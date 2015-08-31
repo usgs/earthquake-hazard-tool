@@ -19,7 +19,11 @@ class RegionFactory extends MetadataFactory {
         minlatitude,
         maxlatitude,
         minlongitude,
-        maxlongitude,
+        maxlongitude
+        uiminlatitude,
+        uimaxlatitude,
+        uiminlongitude,
+        uimaxlongitude,
         gridspacing
       FROM
         region
@@ -38,7 +42,11 @@ class RegionFactory extends MetadataFactory {
         minlatitude,
         maxlatitude,
         minlongitude,
-        maxlongitude,
+        maxlongitude
+        uiminlatitude,
+        uimaxlatitude,
+        uiminlongitude,
+        uimaxlongitude,
         gridspacing
       FROM
         region
@@ -58,6 +66,10 @@ class RegionFactory extends MetadataFactory {
         r.maxlatitude,
         r.minlongitude,
         r.maxlongitude,
+        r.uiminlatitude,
+        r.uimaxlatitude,
+        r.uiminlongitude,
+        r.uimaxlongitude,
         r.gridspacing
       FROM
         region AS r
@@ -83,10 +95,12 @@ class RegionFactory extends MetadataFactory {
     $this->insert = $this->db->prepare('
       INSERT INTO region
           (value, display, displayorder, minlatitude, maxlatitude,
-           minlongitude, maxlongitude, gridspacing)
+           minlongitude, maxlongitude, uiminlatitude, uimaxlatitude,
+           uiminlongitude, uimaxlongitude, gridspacing)
         VALUES
-          (:value, :display, :displayorder, :minlatitude, :maxlatitude, :minlongitude,
-           :maxlongitude, :gridspacing)
+          (:value, :display, :displayorder, :minlatitude, :maxlatitude,
+           :minlongitude, :maxlongitude, :uiminlatitude, :uimaxlatitude,
+           :uiminlongitude, :uimaxlongitude, :gridspacing)
     ');
 
     $this->update = $this->db->prepare('
@@ -98,6 +112,10 @@ class RegionFactory extends MetadataFactory {
           maxlatitude = :maxlatitude,
           minlongitude = :minlongitude,
           maxlongitude = :maxlongitude,
+          uiminlatitude = :uiminlatitude,
+          uimaxlatitude = :uimaxlatitude,
+          uiminlongitude = :uiminlongitude,
+          uimaxlongitude = :uimaxlongitude,
           gridspacing = :gridspacing
         WHERE
           id = :id
@@ -114,6 +132,14 @@ class RegionFactory extends MetadataFactory {
     $query->bindValue(':minlongitude', floatval($instance->minlongitude),
         PDO::PARAM_STR);
     $query->bindValue(':maxlongitude', floatval($instance->maxlongitude),
+        PDO::PARAM_STR);
+    $query->bindValue(':uiminlatitude', floatval($instance->uiminlatitude),
+        PDO::PARAM_STR);
+    $query->bindValue(':uimaxlatitude', floatval($instance->uimaxlatitude),
+        PDO::PARAM_STR);
+    $query->bindValue(':uiminlongitude', floatval($instance->uiminlongitude),
+        PDO::PARAM_STR);
+    $query->bindValue(':uimaxlongitude', floatval($instance->uimaxlongitude),
         PDO::PARAM_STR);
     $query->bindValue(':gridspacing', floatval($instance->gridspacing),
         PDO::PARAM_STR);
