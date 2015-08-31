@@ -152,6 +152,40 @@ var DependencyFactory = function (params) {
   };
 
   /**
+   * Determines if the location (lat/lon) is in the provided region
+   *
+   * @param  region {Object}
+   *         [description]
+   *
+   * @param  latitude {Number}
+   *         [description]
+   *
+   * @param  longitude {Number}
+   *         [description]
+   *
+   * @return {boolean},
+   *         Whether the point is in the region.
+   */
+  _inRegion = function (region, latitude, longitude) {
+    var minlatitude,
+        minlongitude,
+        maxlatitude,
+        maxlongitude;
+
+    minlatitude = region.get('minlatitude');
+    minlongitude = region.get('minlongitude');
+    maxlatitude = region.get('maxlatitude');
+    maxlongitude = region.get('maxlongitude');
+
+    if (latitude > minlatitude && latitude < maxlatitude &&
+        longitude > minlongitude && longitude < maxlongitude) {
+      return true;
+    }
+
+    return false;
+  };
+
+  /**
    * Filter a collection based on an array of ids
    *
    * @param  collection {Collection}
