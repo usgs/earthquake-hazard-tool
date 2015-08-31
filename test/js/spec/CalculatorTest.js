@@ -131,7 +131,9 @@ describe('Calculator', function () {
 
     it('throws an error for bad input parameters', function () {
       var badInputParams = function () {
-        calculator.getResult('staticcurve', Analysis());
+        calculator.getResult(
+            DependencyFactory.getInstance().getService('E2008R3'),
+            Analysis());
       };
 
       expect(badInputParams).to.throw(Error);

@@ -1,7 +1,7 @@
 {
   "status": "usage",
   "description": "Retrieves hazard curve data for an input location",
-  "syntax": "http://localhost:8500/hazws/staticcurve/1/{edition}/{region}/{longitude}/{latitude}/{imt}/{vs30}",
+  "syntax": "data.json?edition={edition}&region={region}&longitude={longitude}&latitude={latitude}&imt={imt}&vs30={vs30}",
   "parameters": {
     "edition": {
       "label": "Model edition",

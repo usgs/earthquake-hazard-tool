@@ -13,7 +13,7 @@ var HazardResponse = require('HazardResponse'),
 var _DEFAULTS = {
   services: {
     'staticcurve': {
-      metaUrl: '/hazws/staticcurve/1/',
+      metaUrl: 'metadata.json',
       urlStub: null,
       params: null,
       constructor: HazardResponse

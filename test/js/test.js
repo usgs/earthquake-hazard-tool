@@ -26,6 +26,9 @@ if (!Function.prototype.bind) {
 
 mocha.ui('bdd');
 
+// var staticMeta = require('etc/metadata'),
+//     df = require('DependencyFactory').getInstance(staticMeta);
+
 // Add each test class here as they are implemented
 require('./spec/ActionsViewTest');
 require('./spec/AnalysisViewTest');
