@@ -3,6 +3,7 @@
 var CollectionSelectBox = require('mvc/CollectionSelectBox'),
     SelectedCollectionView = require('mvc/SelectedCollectionView'),
 
+    Events = require('util/Events'),
     Util = require('util/Util');
 
 /**
@@ -26,7 +27,8 @@ var SiteClassView = function (params) {
       _siteClassCollection,
       _siteClassCollectionSelectBox,
 
-      _updateSiteClass;
+      _updateSiteClass,
+      _validateSiteClass;
 
 
   _this = SelectedCollectionView(params);
@@ -51,6 +53,9 @@ var SiteClassView = function (params) {
     _siteClassCollection.on('select', _updateSiteClass);
     _siteClassCollection.on('deselect', _updateSiteClass);
     _siteClassCollection.on('reset', _updateSiteClass);
+
+    _siteClassCollection.on('select', _validateSiteClass);
+    Events.on('validate', _validateSiteClass);
   };
 
 
@@ -72,6 +77,33 @@ var SiteClassView = function (params) {
     }
   };
 
+
+  /**
+   * [_validateSiteClass description]
+   * @return {[type]} [description]
+   */
+  _validateSiteClass = function () {
+    var selected;
+
+    if (_this.model) {
+      selected = _siteClassCollection.getSelected();
+
+      if (selected) {
+        _this.el.classList.remove('error');
+        Events.trigger('remove-errors', {
+          'input': 'siteClass'
+        });
+      } else {
+        _this.el.classList.add('error');
+        Events.trigger('add-errors', {
+          'input': 'siteClass',
+          'messages': [
+            'Please select a Site Class.'
+          ]
+        });
+      }
+    }
+  };
 
   /**
    * Calls CollectionSelectBox.destroy() and cleans up local variables
@@ -117,7 +149,6 @@ var SiteClassView = function (params) {
     if (changes && (changes.vs30 || changes.model)) {
       if (_this.model) {
         siteClass = _this.model.get('vs30');
-
         if (siteClass !== null) {
           _siteClassCollection.selectById(siteClass);
         } else {
@@ -128,6 +159,7 @@ var SiteClassView = function (params) {
         _siteClassCollection.deselect();
       }
     }
+
   };
 
 

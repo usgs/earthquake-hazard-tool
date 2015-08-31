@@ -1,19 +1,27 @@
 'use strict';
 
-var Formatter = require('./util/Formatter'),
+var DependencyFactory = require('DependencyFactory'),
+    Formatter = require('./util/Formatter'),
     SelectedCollectionView = require('mvc/SelectedCollectionView'),
+
+    Events = require('util/Events'),
     Util = require('util/Util');
 
 var LocationInfoView = function (params) {
   var _this,
       _initialize,
 
+      _dependencyFactory,
       _locationInfo,
-      _noLocationInfo;
+      _noLocationInfo,
+
+      _validateLocation;
 
   _this = SelectedCollectionView(params);
 
   _initialize = function () {
+    _dependencyFactory = DependencyFactory.getInstance();
+
     _this.el.classList.add('alert');
     _this.el.classList.add('info');
     _this.el.innerHTML = '<div class="locationInfo"></div>' +
@@ -22,7 +30,46 @@ var LocationInfoView = function (params) {
     _locationInfo = _this.el.querySelector('.locationInfo');
     _noLocationInfo = _this.el.querySelector('.noLocationInfo');
 
+    Events.on('validate', _validateLocation);
+
     _this.render();
+  };
+
+  _validateLocation = function () {
+    var location,
+        region,
+        errors;
+
+    errors = [];
+
+    if (_this.model) {
+      location = _this.model.get('location');
+
+      if (location) {
+        region = _dependencyFactory.getRegionByEdition(
+          _this.model.get('edition'),location.latitude, location.longitude);
+
+        if (!region) {
+          errors.push('This location is not supported by the selected edition.');
+        }
+
+      } else {
+        errors.push('Please use the map to select a location.');
+      }
+    }
+
+    if (errors.length === 0) {
+      _this.el.className = 'alert success';
+      Events.trigger('remove-errors', {
+        'input': 'location'
+      });
+    } else {
+      _this.el.className = 'alert error';
+      Events.trigger('add-errors', {
+        'input': 'location',
+        'messages': errors
+      });
+    }
   };
 
   _this.destroy = Util.compose(function () {
@@ -39,8 +86,8 @@ var LocationInfoView = function (params) {
       location = _this.model.get('location');
 
       if (location) {
-        _this.el.classList.remove('info');
-        _this.el.classList.add('success');
+
+        _validateLocation();
 
         if (location.place) {
           _locationInfo.innerHTML = '<strong>' + location.place + '</strong>' +

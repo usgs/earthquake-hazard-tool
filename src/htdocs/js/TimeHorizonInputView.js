@@ -1,65 +1,32 @@
 'use strict';
 
-var ModalView = require('mvc/ModalView'),
-    SelectedCollectionView = require('mvc/SelectedCollectionView'),
-    Util = require('util/Util');
+var SelectedCollectionView = require('mvc/SelectedCollectionView'),
+    Util = require('util/Util'),
+    Events = require('util/Events');
 
 var TimeHorizonInputView = function (params) {
   var _this,
       _initialize,
 
-      _modal,
       _timeHorizonInput,
 
-      _updateTimeHorizon;
+      _updateTimeHorizon,
+      _validateTimeHorizon;
 
   _this = SelectedCollectionView(params);
 
   _initialize = function () {
-    var div;
 
     _this.el.innerHTML =
-        '<label for="time-horizon-input-view">Time Horizon</label>' +
+        '<label for="basic-time-horizon-view">Time Horizon</label>' +
         '<small class="help">Return period in years</small>' +
-        '<input type="text" id="time-horizon-input-view"/>';
+        '<input type="text" id="basic-time-horizon-view"/>';
 
-    _timeHorizonInput = _this.el.querySelector('#time-horizon-input-view');
+    _timeHorizonInput = _this.el.querySelector('#basic-time-horizon-view');
     _timeHorizonInput.addEventListener('change', _updateTimeHorizon);
 
-    div = document.createElement('div');
-    div.innerHTML =
-        '<p class="error alert">' +
-          'Time Horizon value must be between 1 and 5,000 inclusive. ' +
-          'Click 2% in 50 years or 10% in 50 years to add either ' +
-          'selected value to the Time Horizon Input Box. Cancel returns ' +
-          'without changing the time horizon value.' +
-        '</p>' +
-        '<div class="slider-view"></div>';
-
-    _modal = ModalView(div, {
-      title: 'Validation error',
-      classes: ['modal-error'],
-      buttons: [
-        {
-          callback: function () {
-            _this.model.set({'timeHorizon': 2475}, {'force': true});
-          },
-          text: '2% in 50 years'
-        },
-        {
-          callback: function () {
-            _this.model.set({'timeHorizon': 475}, {'force': true});
-          },
-          text: '10% in 50 years'
-        },
-        {
-          callback: function () {
-            _modal.hide();
-          },
-          text: 'Cancel'
-        }
-      ]
-    });
+    _timeHorizonInput.addEventListener('change', _validateTimeHorizon);
+    Events.on('validate', _validateTimeHorizon);
 
     _this.render();
   };
@@ -79,20 +46,42 @@ var TimeHorizonInputView = function (params) {
           return;
         }
       }
-      _timeHorizonInput.classList.add('error');
       _timeHorizonInput.focus();
-      _modal.show();
+
+    }
+  };
+
+  /**
+   * [_validateTimeHorizon description]
+   * @return {[type]} [description]
+   */
+  _validateTimeHorizon = function () {
+    var timeHorizonInputValue;
+
+    if (_this.model) {
+      if (_timeHorizonInput.value) {
+        timeHorizonInputValue = parseInt(_timeHorizonInput.value, 10);
+        if (timeHorizonInputValue >= 1 && timeHorizonInputValue <= 5000) {
+          Events.trigger('remove-errors', {
+            'input': 'timeHorizon'
+          });
+          _timeHorizonInput.className = '';
+        } else {
+          _timeHorizonInput.className = 'alert error';
+          Events.trigger('add-errors', {
+            'input': 'timeHorizon',
+            'messages': [
+              'The Time Horizon value must be >= 1 and <= 5,000'
+            ]
+          });
+        }
+      }
     }
   };
 
   _this.render = function () {
     if (_this.model) {
       _timeHorizonInput.value = _this.model.get('timeHorizon');
-      _timeHorizonInput.classList.remove('error');
-    }
-
-    if (_modal) {
-      _modal.hide();
     }
   };
 
@@ -100,12 +89,11 @@ var TimeHorizonInputView = function (params) {
   _this.destroy = Util.compose(function () {
     _timeHorizonInput.removeEventListener('change', _updateTimeHorizon);
 
-    _modal = null;
-    // _sliderView = null;
     _initialize = null;
     _this = null;
     _timeHorizonInput = null;
     _updateTimeHorizon = null;
+    _validateTimeHorizon = null;
   }, _this.destroy);
 
   _initialize();

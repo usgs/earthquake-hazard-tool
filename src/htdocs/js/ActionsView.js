@@ -6,6 +6,7 @@ var Analysis = require('Analysis'),
     Accordion = require('accordion/Accordion'),
 
     SelectedCollectionView = require('mvc/SelectedCollectionView'),
+    Events = require('util/Events'),
     Util = require('util/Util');
 
 /**
@@ -148,60 +149,7 @@ var ActionsView = function (params) {
    * of the required parameters are set to perform a calculation.
    */
   _onCalculateClick = function () {
-    var errors,
-        model,
-        locationEl,
-        siteClassEl,
-        timeHorizonEl;
-
-    errors = [];
-    locationEl = document.querySelector('#basic-location-info-view');
-    siteClassEl = document.querySelector('#basic-site-class-view');
-    timeHorizonEl = document.querySelector('#time-horizon-input-view');
-
-    if (_this.model) {
-      model = _this.model.get();
-
-      // validate Edition
-      if (!model.edition) {
-        errors.push('<li>Please select an Edition.</li>');
-      }
-
-      // validate Location & Region
-      if (!model.location || !model.location.latitude ||
-          !model.location.longitude) {
-        errors.push('<li>Please select a Location.</li>');
-        locationEl.classList.add('error');
-      } else {
-        locationEl.classList.remove('error');
-      }
-
-      // validate Site Class
-      if (!model.vs30) {
-        errors.push('<li>Please select a Site Class.</li>');
-        siteClassEl.classList.add('error');
-      } else {
-        siteClassEl.classList.remove('error');
-      }
-
-      if (!model.timeHorizon) {
-        errors.push('<li>Please select a Time Horizon.</li>');
-        timeHorizonEl.classList.add('error');
-      } else {
-        timeHorizonEl.classList.remove('error');
-      }
-    }
-
-    if (errors.length === 0) {
-      _removeErrorReporting();
-    } else {
-      _errorReportEl.classList.add('alert');
-      _errorReportEl.classList.add('error');
-      _errorReportEl.innerHTML = '<b>The following parameters must ' +
-          'be selected before performing a calculation:</b>' +
-          '<ul>' + errors.join('') + '</ul>';
-      _validateOnRender = true;
-    }
+    Events.trigger('validate');
   };
 
   /**
