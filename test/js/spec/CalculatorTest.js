@@ -141,20 +141,26 @@ describe('Calculator', function () {
 
     it('handles no callback provided', function () {
         var noCallback = function () {
-          calculator.getResult('staticcurve', analysis);
+          calculator.getResult(
+              DependencyFactory.getInstance().getService('E2008R3'),
+              analysis);
         };
 
         expect(noCallback).to.not.throw(Error);
     });
 
     it('calls the callback', function (done) {
-      calculator.getResult('staticcurve', analysis, function () {
+      calculator.getResult(
+          DependencyFactory.getInstance().getService('E2008R3'),
+          analysis, function () {
         done();
       });
     });
 
     it('returns expected results', function (done) {
-        calculator.getResult('staticcurve', analysis, function (result) {
+        calculator.getResult(
+            DependencyFactory.getInstance().getService('E2008R3'),
+            analysis, function (result) {
           expect(result.analysis.get('curves').get('curves').data().length)
               .to.equal(6);
           done();
