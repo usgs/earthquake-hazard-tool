@@ -31,6 +31,7 @@ var HazardCurveGraphView = function (options) {
       _initialize,
       // variables
       _curves,
+      _destroyCurves,
       _timeHorizon,
       // methods
       _getTicks,
@@ -38,7 +39,9 @@ var HazardCurveGraphView = function (options) {
       _onDeselect,
       _onRemove,
       _onReset,
-      _onSelect;
+      _onSelect,
+      _onViewSelect,
+      _onViewDeselect;
 
   _this = D3View(Util.extend({
     xLabel: 'Ground Motion (g)',
@@ -60,13 +63,20 @@ var HazardCurveGraphView = function (options) {
     options = options || {};
 
     // HazardCurve collection
-    _curves = options.curves || Collection();
+    _curves = options.curves;
+    _destroyCurves = false;
+    if (!_curves) {
+      _curves = Collection();
+      _destroyCurves = true;
+    }
     _curves.on('add', _onAdd);
     _curves.on('deselect', _onDeselect);
     _curves.on('remove', _onRemove);
     _curves.on('reset', _onReset);
     _curves.on('select', _onSelect);
     _this.curves = _curves;
+    _this.views.on('select', _onViewSelect);
+    _this.views.on('deselect', _onViewDeselect);
 
     _timeHorizon = new TimeHorizonLineView({
       el: document.createElementNS('http://www.w3.org/2000/svg', 'g'),
@@ -171,6 +181,24 @@ var HazardCurveGraphView = function (options) {
   };
 
   /**
+   * View deselect handler.
+   *
+   * Deselects curve in curves collection.
+   */
+  _onViewDeselect = function () {
+    _curves.deselect();
+  };
+
+  /**
+   * View select handler.
+   *
+   * Selects the corresponding curve in the curves collection.
+   */
+  _onViewSelect = function () {
+    _curves.selectById(_this.views.getSelected().id);
+  };
+
+  /**
    * Set default extent if there is no data.
    */
   _this.getXExtent = Util.compose(_this.getXExtent, function (extent) {
@@ -206,11 +234,35 @@ var HazardCurveGraphView = function (options) {
    * Unbind event listeners and free references.
    */
   _this.destroy = Util.compose(function () {
-    _this.curves.destroy();
+    if (_this === null) {
+      return;
+    }
+
+    if (_destroyCurves) {
+      _this.curves.destroy();
+    } else {
+      _curves.off('add', _onAdd);
+      _curves.off('deselect', _onDeselect);
+      _curves.off('remove', _onRemove);
+      _curves.off('reset', _onReset);
+      _curves.off('select', _onSelect);
+    }
     _this.curves = null;
+
+    _this.views.off('select', _onViewSelect);
+    _this.views.off('deselect', _onViewDeselect);
 
     _timeHorizon.destroy();
     _timeHorizon = null;
+
+    _onAdd = null;
+    _onDeselect = null;
+    _onRemove = null;
+    _onReset = null;
+    _onSelect = null;
+    _onViewSelect = null;
+    _onViewDeselect = null;
+    _this = null;
   }, _this.destroy);
 
 

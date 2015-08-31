@@ -23,6 +23,7 @@ var ApplicationView = function (params) {
       _basicInputsEl,
       _basicInputsView,
       _calculator,
+      _curves,
       _dependencyFactory,
       _editions,
       _hazardCurveEl,
@@ -36,6 +37,8 @@ var ApplicationView = function (params) {
 
       // methods
       _initViewContainer,
+      _onCurveDeselect,
+      _onCurveSelect,
       _onEditionChange,
       _onLocationChange,
       _onRegionChange,
@@ -54,10 +57,12 @@ var ApplicationView = function (params) {
     _dependencyFactory = params.dependencyFactory;
 
     _calculator = Calculator();
-
     _siteClasses = Collection(_dependencyFactory.getAllSiteClasses());
     _editions = Collection(_dependencyFactory.getAllEditions());
 
+    _curves = Collection();
+    _curves.on('select', _onCurveSelect);
+    _curves.on('deselect', _onCurveDeselect);
 
     _basicInputsView = BasicInputsView({
       collection: _this.collection,
@@ -79,11 +84,13 @@ var ApplicationView = function (params) {
     });
 
     _hazardCurveView = HazardCurveView({
+      curves: _curves,
       el: _hazardCurveEl,
       title: 'Hazard Curves'
     });
 
     _hazardSpectrumView = HazardSpectrumView({
+      curves: _curves,
       el: _hazardSpectrumEl,
       title: 'Hazard Response Spectrum'
     });
@@ -116,6 +123,36 @@ var ApplicationView = function (params) {
     _actionsEl = el.querySelector('.application-actions');
     _hazardCurveEl = el.querySelector('.application-hazard-curve');
     _hazardSpectrumEl = el.querySelector('.application-hazard-spectrum');
+  };
+
+  /**
+   * Called when a curve for the current model is deselected.
+   *
+   * Clears the "imt" and "period" values on the current model.
+   */
+  _onCurveDeselect = function () {
+    if (_this.model) {
+      _this.model.set({
+        imt: null,
+        period: null
+      });
+    }
+  };
+
+  /**
+   * Called whena curve for the current model is selected.
+   *
+   * Updates the "imt" and "period" values on the current model.
+   */
+  _onCurveSelect = function () {
+    var selected;
+    if (_this.model) {
+      selected = _curves.getSelected();
+      _this.model.set({
+        imt: selected.get('imt'),
+        period: selected.get('period')
+      });
+    }
   };
 
   //
@@ -278,6 +315,10 @@ var ApplicationView = function (params) {
     _editions.destroy();
     _siteClasses.destroy();
 
+    _curves.off('select', _onCurveSelect);
+    _curves.off('deselect', _onCurveDeselect);
+    _curves.destroy();
+
     // variables
     _actionsEl = null;
     _actionsView = null;
@@ -297,6 +338,8 @@ var ApplicationView = function (params) {
 
     // methods
     _initViewContainer = null;
+    _onCurveDeselect = null;
+    _onCurveSelect = null;
     _onEditionChange = null;
     _onLocationChange = null;
     _onRegionChange = null;
@@ -338,6 +381,8 @@ var ApplicationView = function (params) {
   _this.render = function (changes) {
     var curves,
         data,
+        id,
+        imt,
         timeHorizon,
         xAxisLabel,
         yAxisLabel;
@@ -347,6 +392,8 @@ var ApplicationView = function (params) {
     yAxisLabel = 'Annual Frequency of Exceedence';
     data = [];
     timeHorizon = 2475;
+    id = null;
+
 
     if (_this.model && changes) {
       _updateVs30();
@@ -359,6 +406,16 @@ var ApplicationView = function (params) {
         data = curves.get('curves').data();
       }
       timeHorizon = _this.model.get('timeHorizon');
+
+      // find model period, to select curve within collection
+      imt = _this.model.get('imt');
+      data.every(function (curve) {
+        if (curve.get('imt') === imt) {
+          id = curve.get('id');
+          return false;
+        }
+        return true;
+      });
     }
 
     // Update curve plotting
@@ -368,7 +425,6 @@ var ApplicationView = function (params) {
         'yLabel': yAxisLabel,
         'timeHorizon': timeHorizon
       }, {silent: true});
-      _hazardCurveView.curves.reset(data);
     } catch (e) {
       if (console && console.error) {
         console.error(e);
@@ -380,11 +436,16 @@ var ApplicationView = function (params) {
       _hazardSpectrumView.model.set({
         'timeHorizon': timeHorizon
       }, {silent: true});
-      _hazardSpectrumView.curves.reset(data);
     } catch (e) {
       if (console && console.error) {
         console.error(e);
       }
+    }
+
+    _curves.reset(data);
+
+    if (id !== null) {
+      _curves.selectById(id);
     }
   };
 
