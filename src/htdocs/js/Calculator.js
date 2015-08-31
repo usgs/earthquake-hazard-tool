@@ -1,116 +1,17 @@
 'use strict';
 
 
-var Util = require('util/Util'),
-    Xhr = require('util/Xhr');
+var Xhr = require('util/Xhr');
 
 
-var _DEFAULTS = {
-  'staticcurve': {
-    metaUrl: '/hazws/staticcurve/1/',
-    urlStub: null,
-    params: null,
-    constructor: 'HazardResponse'
-  }
-};
-
-
-var Calculator = function (params) {
-  var _this,
-      _initialize,
-
-      _pendingServiceDetailsRequests,
-      _services,
-
-      _fetchServiceDetails;
+var Calculator = function (/*params*/) {
+  var _this;
 
 
   _this = {
-    destroy: null,
-    getParameters: null,
     getResult: null
   };
 
-  _initialize = function (params) {
-    var service;
-
-    _services = Util.extend({}, _DEFAULTS, params);
-    _pendingServiceDetailsRequests = {};
-
-    for (service in _services) {
-      if (_services.hasOwnProperty(service)) {
-        _fetchServiceDetails(service);
-      }
-    }
-  };
-
-
-  _fetchServiceDetails = function (serviceName, callback) {
-    if (_services[serviceName].params) {
-      if (callback) {
-        callback(_services[serviceName].params);
-      }
-    } else {
-      if (callback) {
-        if (!_pendingServiceDetailsRequests.hasOwnProperty(serviceName)) {
-          _pendingServiceDetailsRequests[serviceName] = [];
-        }
-        _pendingServiceDetailsRequests[serviceName].push(callback);
-      }
-
-      Xhr.ajax({
-        url: _services[serviceName].metaUrl,
-        success: function (response) {
-          _services[serviceName].urlStub = response.syntax;
-          _services[serviceName].params = response.parameters;
-
-          if (_pendingServiceDetailsRequests.hasOwnProperty(serviceName)) {
-            _pendingServiceDetailsRequests[serviceName].forEach(function (cb) {
-              cb(_services[serviceName].params);
-            });
-
-            _pendingServiceDetailsRequests[serviceName] = null;
-            delete _pendingServiceDetailsRequests[serviceName];
-          }
-        }
-      });
-    }
-  };
-
-
-  _this.destroy = function () {
-    _services = null;
-    _pendingServiceDetailsRequests = null;
-
-    _fetchServiceDetails = null;
-
-    _this = null;
-  };
-
-  /**
-   * Determines the parameters required in order to make a call to getResult
-   * for the given named service. This method may proceed asynchronously and
-   * the callback (if provided) is invoked with a single argument that is an
-   * object containg the required parameters for the named service.
-   *
-   * @param serviceName {String}
-   *      The name of the service for which to get the parameters.
-   * @param callback {Function}
-   *      The function to call once parameters have been fetched.
-   */
-  _this.getParameters = function (serviceName, callback) {
-    if (!_services.hasOwnProperty(serviceName)) {
-      throw new Error('No such service [' + serviceName + '] recognized.');
-    }
-
-    if (_services[serviceName].params !== null) {
-      if (callback) {
-        callback(_services[serviceName].params);
-      }
-    } else {
-      _fetchServiceDetails(serviceName, callback);
-    }
-  };
 
   /**
    * Interacts with the web service for the named service and upon receiving
@@ -172,9 +73,6 @@ var Calculator = function (params) {
     });
   };
 
-
-  _initialize(params);
-  params = null;
   return _this;
 };
 
