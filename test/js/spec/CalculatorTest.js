@@ -43,6 +43,10 @@ describe('Calculator', function () {
       stub;
 
   before(function (done) {
+    stub = sinon.stub(Xhr, 'ajax', function (options) {
+      options.success(metadata);
+    });
+
     DependencyFactory.getInstance().whenReady(function () {
       analysis = Analysis({
         edition: edition,
@@ -59,65 +63,24 @@ describe('Calculator', function () {
         contourType: contourType
       });
 
+      stub.restore();
       stub = sinon.stub(Xhr, 'ajax', function (options) {
-        options.success(metadata);
+        options.success(data);
       });
 
       calculator = Calculator();
-      calculator.getParameters('staticcurve', function () {
-        stub.restore();
-
-        stub = sinon.stub(Xhr, 'ajax', function (options) {
-          options.success(data);
-        });
-
-        done();
-      });
+      done();
     });
 
   });
 
   after(function () {
-    calculator.destroy();
     stub.restore();
   });
 
   describe('Constructor', function () {
     it('can be constructed without blowing up', function () {
-      expect(calculator).to.respondTo('destroy');
-      expect(calculator).to.respondTo('getParameters');
       expect(calculator).to.respondTo('getResult');
-    });
-  });
-
-  describe('getParameters', function () {
-    it('throws an error for unknown services', function () {
-      var unknownServiceParams = function () {
-        calculator.getParameters('unknownServiceName');
-      };
-      expect(unknownServiceParams).to.throw(Error);
-    });
-
-    it('handles no callback provided', function () {
-      var noCallback = function () {
-        calculator.getParameters('staticcurve');
-      };
-
-      expect(noCallback).to.not.throw(Error);
-    });
-
-    it('calls the callback', function (done) {
-      calculator.getParameters('staticcurve', function () {
-        done();
-      });
-    });
-
-    it('does not re-fetch parameters after fetched', function (done) {
-      var callCount = stub.callCount;
-      calculator.getParameters('staticcurve', function () {
-        expect(stub.callCount).to.equal(callCount);
-        done();
-      });
     });
   });
 
