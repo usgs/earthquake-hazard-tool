@@ -226,43 +226,30 @@ var ApplicationView = function (params) {
   /**
    * Resets the collection of siteClasses based on what is available for
    * current selection of edition/location.
-   * Uses site class based on location.
    */
   _updateVs30 = function () {
     var edition,
-        i,
         ids,
         location,
         regions,
-        siteClasses,
-        siteClassIds;
+        siteClasses;
+
+    ids = {};
 
     try {
       edition = _dependencyFactory.getEdition(_this.model.get('edition'));
-      ids = [];
       location = _this.model.get('location');
       regions = _dependencyFactory.getRegions(edition.get('supports').region);
-      siteClassIds = _dependencyFactory.getAllSiteClasses();
 
-      for (i = 0; i < siteClassIds.length; i++ ) {
-        if (location.longitude <= -115) {
-          if (parseInt(siteClassIds[i].get('id')) <= 1150) {
-            ids.push(siteClassIds[i].get('id').toString());
-          }
-        } else if (location.longitude > -115 && location.longitude < -100) {
-          if (parseInt(siteClassIds[i].get('id')) === 760) {
-            ids.push(siteClassIds[i].get('id').toString());
-          }
-        } else if (location.longitude >= -100) {
-          if (parseInt(siteClassIds[i].get('id')) === 760 ||
-              parseInt(siteClassIds[i].get('id')) === 2000) {
-            ids.push(siteClassIds[i].get('id').toString());
-          }
+      regions.forEach(function (region) {
+        if (region.contains(location)) {
+          region.get('supports').vs30.forEach(function (vs30) {
+            ids[vs30] = true;
+          });
         }
-      }
+      });
 
-      siteClasses = _dependencyFactory.getSiteClasses(ids);
-
+      siteClasses = _dependencyFactory.getSiteClasses(Object.keys(ids));
     } catch (e) {
       // Just ignore, will set to use all site classes below
     }
