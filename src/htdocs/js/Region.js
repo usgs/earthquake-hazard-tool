@@ -27,10 +27,10 @@ var Region = function (options) {
     latitude = location.latitude;
     longitude = location.longitude;
 
-    minlatitude = _this.get('minlatitude');
-    minlongitude = _this.get('minlongitude');
-    maxlatitude = _this.get('maxlatitude');
-    maxlongitude = _this.get('maxlongitude');
+    minlatitude = _this.get('uiminlatitude');
+    minlongitude = _this.get('uiminlongitude');
+    maxlatitude = _this.get('uimaxlatitude');
+    maxlongitude = _this.get('uimaxlongitude');
 
     return (latitude >= minlatitude && latitude <= maxlatitude &&
         longitude >= minlongitude && longitude <= maxlongitude);
