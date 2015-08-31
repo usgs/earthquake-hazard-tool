@@ -36,7 +36,6 @@ class Region extends Metadata {
     if (isset($maxlongitude)) {
       $this->maxlongitude = floatval($maxlongitude);
     }
-
     if (isset($uiminlatitude)) {
       $this->uiminlatitude = floatval($uiminlatitude);
     }
@@ -49,7 +48,6 @@ class Region extends Metadata {
     if (isset($uimaxlongitude)) {
       $this->uimaxlongitude = floatval($uimaxlongitude);
     }
-
     if (isset($gridspacing)) {
       $this->gridspacing = floatval($gridspacing);
     }
@@ -65,7 +63,6 @@ class Region extends Metadata {
           floatval($this->minlongitude) : null,
       'maxlongitude' => isset($this->maxlongitude) ?
           floatval($this->maxlongitude) : null,
-
       'uiminlatitude' => isset($this->uiminlatitude) ?
           floatval($this->uiminlatitude) : null,
       'uimaxlatitude' => isset($this->uimaxlatitude) ?
@@ -74,9 +71,6 @@ class Region extends Metadata {
           floatval($this->uiminlongitude) : null,
       'uimaxlongitude' => isset($this->uimaxlongitude) ?
           floatval($this->uimaxlongitude) : null,
-
-
-
       'gridspacing' => isset($this->gridspacing) ?
           floatval($this->gridspacing) : null
     );
