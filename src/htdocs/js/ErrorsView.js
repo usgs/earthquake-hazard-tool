@@ -1,7 +1,8 @@
 'use strict';
 
 var View = require('mvc/View'),
-    Events = require('util/Events');
+    Events = require('util/Events'),
+    Util = require('util/Util');
 
 var ErrorsView = function (params) {
 
@@ -83,6 +84,22 @@ var ErrorsView = function (params) {
 
     _errorMarkup.innerHTML = markup.join('');
   };
+
+  _this.destroy = Util.compose(function () {
+
+    Events.off('add-errors', _addErrors);
+    Events.off('remove-errors', _removeErrors);
+
+    _initialize = null;
+    _this = null;
+
+    _errors = null;
+    _errorMarkup = null;
+
+    _addErrors = null;
+    _removeErrors = null;
+  }, _this.destroy);
+
 
   _initialize();
   params = null;

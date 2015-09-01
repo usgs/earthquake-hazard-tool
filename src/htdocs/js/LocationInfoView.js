@@ -73,6 +73,8 @@ var LocationInfoView = function (params) {
   };
 
   _this.destroy = Util.compose(function () {
+    _validateLocation = null;
+    _dependencyFactory = null;
     _locationInfo = null;
     _noLocationInfo = null;
     _this = null;

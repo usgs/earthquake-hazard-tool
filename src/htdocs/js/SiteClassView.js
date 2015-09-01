@@ -119,6 +119,7 @@ var SiteClassView = function (params) {
 
     // methods
     _updateSiteClass = null;
+    _validateSiteClass = null;
 
     // variables
     _siteClassCollection = null;
