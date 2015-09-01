@@ -64,8 +64,10 @@ var TimeHorizonInputView = function (params) {
   };
 
   /**
-   * [_validateTimeHorizon description]
-   * @return {[type]} [description]
+   * Validate the Time Horizon value. Ensure that a value is selected
+   * and that the Time Horizon value is inside the allowed range.
+   *
+   * Update Time Horizon on the model to null when it does not pass validation.
    */
   _validateTimeHorizon = function () {
     var timeHorizonInputValue;

@@ -35,6 +35,10 @@ var LocationInfoView = function (params) {
     _this.render();
   };
 
+  /**
+   * Validate the location input. Ensure a location has been selected
+   * and that the location is inside an edition's region.
+   */
   _validateLocation = function () {
     var location,
         region,

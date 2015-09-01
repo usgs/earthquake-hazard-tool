@@ -9,8 +9,8 @@ var ErrorsView = function (params) {
   var _this,
       _initialize,
 
-      _errors, // array of errors
-      _errorMarkup, // error list html markup
+      _errors,
+      _errorMarkup,
 
       _addErrors,
       _removeErrors;
@@ -18,7 +18,7 @@ var ErrorsView = function (params) {
   _this = View(params);
 
   _initialize = function () {
-
+    // error object that stores error messages
     _errors = {};
 
     _errorMarkup = document.createElement('div');
@@ -29,12 +29,17 @@ var ErrorsView = function (params) {
     Events.on('remove-errors', _removeErrors);
   };
 
+  /**
+   * Build an input keyed object with an array of errors for each input.
+   */
   _addErrors = function (e) {
-    // update the errors object
     _errors[e.input] = e.messages;
     _this.render();
   };
 
+  /**
+   * Remove errors from _errors for the input type passed in.
+   */
   _removeErrors = function (e) {
     if (_errors[e.input]) {
       _errors[e.input] = null;
@@ -42,14 +47,16 @@ var ErrorsView = function (params) {
     _this.render();
   };
 
+  /**
+   * Render the error output
+   */
   _this.render = function () {
     var markup;
 
     markup = [];
 
     // remove errors
-    if (!_errors.edition && !_errors.location && !_errors.siteClass &&
-        !_errors.timeHorizon) {
+    if (!_errors.location && !_errors.siteClass && !_errors.timeHorizon) {
       _errorMarkup.innerHTML = '';
       _this.el.classList.remove('alert');
       _this.el.classList.remove('error');
@@ -64,10 +71,6 @@ var ErrorsView = function (params) {
     markup.push('<ul>');
 
     // replicate the input order with the error output
-    if (_errors.edition) {
-      markup.push('<li>' + _errors.edition.join('</li><li>') + '</li>');
-    }
-
     if (_errors.location) {
       markup.push('<li>' + _errors.location.join('</li><li>') + '</li>');
     }

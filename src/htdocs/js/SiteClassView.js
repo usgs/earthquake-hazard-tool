@@ -79,8 +79,8 @@ var SiteClassView = function (params) {
 
 
   /**
-   * [_validateSiteClass description]
-   * @return {[type]} [description]
+   * Validate the Site Class input.
+   * Ensure that a Site Class has been selected.
    */
   _validateSiteClass = function () {
     var selected;
