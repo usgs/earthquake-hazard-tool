@@ -29,8 +29,7 @@ var DynamicHazardResponse = function (params) {
       'type': _TYPE,
       'xlabel': '',
       'ylabel': '',
-      'curves': [],
-      'components': {}
+      'curves': []
     };
 
     params = params || [];
@@ -40,8 +39,6 @@ var DynamicHazardResponse = function (params) {
       attributes.ylabel = response.metadata.ylabel;
 
       attributes.curves.push(_createTotalCurve(response));
-      attributes.components[response.metadata.imt.value] =
-          _createComponentCurveCollection(response);
     });
 
     attributes.curves = Collection(attributes.curves);
@@ -68,7 +65,8 @@ var DynamicHazardResponse = function (params) {
       label: metadata.imt.display,
       imt: metadata.imt.value,
       period: HazardUtil.periodToNumber(metadata.imt.value),
-      data: _trimSmallValues(metadata.xvalues, item.yvalues)
+      data: _trimSmallValues(metadata.xvalues, item.yvalues),
+      components: _createComponentCurveCollection(response)
     });
   };
 

@@ -18,7 +18,8 @@ var HazardCurve = function (params) {
     imt: null,
     label: 'Hazard Curve',
     period: null,
-    data: []
+    data: [],
+    components: null
   }, params));
 
   _initialize = function () {

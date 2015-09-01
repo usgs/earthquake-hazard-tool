@@ -63,7 +63,8 @@ var HazardResponse = function (params) {
       label: metadata.imt.display,
       imt: metadata.imt.value,
       period: HazardUtil.periodToNumber(metadata.imt.value),
-      data: HazardUtil.coallesce(metadata.xvals, yvals)
+      data: HazardUtil.coallesce(metadata.xvals, yvals),
+      components: null
     });
   };
 
