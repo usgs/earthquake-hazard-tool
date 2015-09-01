@@ -9,11 +9,18 @@ class Region extends Metadata {
   public $minlongitude = null;
   public $maxlongitude = null;
 
+  public $uiminlatitude = null;
+  public $uimaxlatitude = null;
+  public $uiminlongitude = null;
+  public $uimaxlongitude = null;
+
   public $gridspacing = null;
 
   public function __construct ($id=null, $value=null, $display=null,
       $displayorder=null, $minlatitude=null, $maxlatitude=null,
-      $minlongitude=null, $maxlongitude=null, $gridspacing=null) {
+      $minlongitude=null, $maxlongitude=null,
+      $uiminlatitude=null, $uimaxlatitude=null,
+      $uiminlongitude=null, $uimaxlongitude=null, $gridspacing=null) {
 
     parent::__construct($id, $value, $display, $displayorder);
 
@@ -29,7 +36,18 @@ class Region extends Metadata {
     if (isset($maxlongitude)) {
       $this->maxlongitude = floatval($maxlongitude);
     }
-
+    if (isset($uiminlatitude)) {
+      $this->uiminlatitude = floatval($uiminlatitude);
+    }
+    if (isset($uimaxlatitude)) {
+      $this->uimaxlatitude = floatval($uimaxlatitude);
+    }
+    if (isset($uiminlongitude)) {
+      $this->uiminlongitude = floatval($uiminlongitude);
+    }
+    if (isset($uimaxlongitude)) {
+      $this->uimaxlongitude = floatval($uimaxlongitude);
+    }
     if (isset($gridspacing)) {
       $this->gridspacing = floatval($gridspacing);
     }
@@ -45,7 +63,14 @@ class Region extends Metadata {
           floatval($this->minlongitude) : null,
       'maxlongitude' => isset($this->maxlongitude) ?
           floatval($this->maxlongitude) : null,
-
+      'uiminlatitude' => isset($this->uiminlatitude) ?
+          floatval($this->uiminlatitude) : null,
+      'uimaxlatitude' => isset($this->uimaxlatitude) ?
+          floatval($this->uimaxlatitude) : null,
+      'uiminlongitude' => isset($this->uiminlongitude) ?
+          floatval($this->uiminlongitude) : null,
+      'uimaxlongitude' => isset($this->uimaxlongitude) ?
+          floatval($this->uimaxlongitude) : null,
       'gridspacing' => isset($this->gridspacing) ?
           floatval($this->gridspacing) : null
     );

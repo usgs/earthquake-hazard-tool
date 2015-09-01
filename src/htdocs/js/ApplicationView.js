@@ -230,7 +230,6 @@ var ApplicationView = function (params) {
   /**
    * Resets the collection of siteClasses based on what is available for
    * current selection of edition/location.
-   *
    */
   _updateVs30 = function () {
     var edition,
