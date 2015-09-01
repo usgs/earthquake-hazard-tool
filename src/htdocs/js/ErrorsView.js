@@ -10,7 +10,6 @@ var ErrorsView = function (params) {
       _initialize,
 
       _errors,
-      _errorMarkup,
 
       _addErrors,
       _removeErrors;
@@ -20,10 +19,6 @@ var ErrorsView = function (params) {
   _initialize = function () {
     // error object that stores error messages
     _errors = {};
-
-    _errorMarkup = document.createElement('div');
-    _errorMarkup.className = 'error-list';
-    _this.el.appendChild(_errorMarkup);
 
     Events.on('add-errors', _addErrors);
     Events.on('remove-errors', _removeErrors);
@@ -57,7 +52,7 @@ var ErrorsView = function (params) {
 
     // remove errors
     if (!_errors.location && !_errors.siteClass && !_errors.timeHorizon) {
-      _errorMarkup.innerHTML = '';
+      _this.el.innerHTML = '';
       _this.el.classList.remove('alert');
       _this.el.classList.remove('error');
       return;
@@ -68,7 +63,7 @@ var ErrorsView = function (params) {
     _this.el.classList.add('error');
 
     markup.push('<b>Errors:</b>');
-    markup.push('<ul>');
+    markup.push('<ul class="error-list">');
 
     // replicate the input order with the error output
     if (_errors.location) {
@@ -85,7 +80,7 @@ var ErrorsView = function (params) {
 
     markup.push('</ul>');
 
-    _errorMarkup.innerHTML = markup.join('');
+    _this.el.innerHTML = markup.join('');
   };
 
   _this.destroy = Util.compose(function () {
@@ -97,7 +92,6 @@ var ErrorsView = function (params) {
     _this = null;
 
     _errors = null;
-    _errorMarkup = null;
 
     _addErrors = null;
     _removeErrors = null;
