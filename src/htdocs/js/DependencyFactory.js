@@ -28,7 +28,6 @@ var DependencyFactory = function (params) {
 
       _callbacks,
       _data,
-      _inRegion,
       _isReady,
       _pendingRequests,
       _services,
@@ -152,40 +151,6 @@ var DependencyFactory = function (params) {
   };
 
   /**
-   * Determines if the location (lat/lon) is in the provided region
-   *
-   * @param  region {Object}
-   *         [description]
-   *
-   * @param  latitude {Number}
-   *         [description]
-   *
-   * @param  longitude {Number}
-   *         [description]
-   *
-   * @return {boolean},
-   *         Whether the point is in the region.
-   */
-  _inRegion = function (region, latitude, longitude) {
-    var minlatitude,
-        minlongitude,
-        maxlatitude,
-        maxlongitude;
-
-    minlatitude = region.get('minlatitude');
-    minlongitude = region.get('minlongitude');
-    maxlatitude = region.get('maxlatitude');
-    maxlongitude = region.get('maxlongitude');
-
-    if (latitude > minlatitude && latitude < maxlatitude &&
-        longitude > minlongitude && longitude < maxlongitude) {
-      return true;
-    }
-
-    return false;
-  };
-
-  /**
    * Filter a collection based on an array of ids
    *
    * @param  collection {Collection}
@@ -254,7 +219,6 @@ var DependencyFactory = function (params) {
     _callbacks = null;
     _data = null;
     _isReady = null;
-    _inRegion = null;
     _pendingRequests = null;
     _services = null;
 
@@ -505,7 +469,7 @@ var DependencyFactory = function (params) {
    *      The first region match based on input parameters, or null if no
    *      region is supported.
    */
-  _this.getRegionByEdition = function (editionId, latitude, longitude) {
+  _this.getRegionByEdition = function (editionId, location) {
     var edition,
         region,
         regions;
@@ -517,7 +481,7 @@ var DependencyFactory = function (params) {
       regions = _this.getRegions(edition.get('supports').region);
 
       regions.every(function (r) {
-        if (_inRegion(r, latitude, longitude)) {
+        if (r.contains(location)) {
           region = r;
           // no return is falsey, essentially "break"
         } else {

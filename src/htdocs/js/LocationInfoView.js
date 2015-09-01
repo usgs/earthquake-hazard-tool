@@ -51,7 +51,7 @@ var LocationInfoView = function (params) {
 
       if (location) {
         region = _dependencyFactory.getRegionByEdition(
-          _this.model.get('edition'),location.latitude, location.longitude);
+          _this.model.get('edition'), location);
 
         if (!region) {
           errors.push('This location is not supported by the selected edition.');
