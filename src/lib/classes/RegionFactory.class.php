@@ -19,7 +19,7 @@ class RegionFactory extends MetadataFactory {
         minlatitude,
         maxlatitude,
         minlongitude,
-        maxlongitude
+        maxlongitude,
         uiminlatitude,
         uimaxlatitude,
         uiminlongitude,
@@ -42,7 +42,7 @@ class RegionFactory extends MetadataFactory {
         minlatitude,
         maxlatitude,
         minlongitude,
-        maxlongitude
+        maxlongitude,
         uiminlatitude,
         uimaxlatitude,
         uiminlongitude,
