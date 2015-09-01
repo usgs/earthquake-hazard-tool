@@ -3,6 +3,7 @@
 var ActionsView = require('ActionsView'),
     BasicInputsView = require('BasicInputsView'),
     Calculator = require('Calculator'),
+    ComponentCurvesGraphView = require('ComponentCurvesGraphView'),
     HazardCurveView = require('HazardCurveGraphView'),
     HazardSpectrumView = require('ResponseSpectrumGraphView'),
     MapView = require('MapView'),
@@ -23,6 +24,8 @@ var ApplicationView = function (params) {
       _basicInputsEl,
       _basicInputsView,
       _calculator,
+      _componentCurveEl,
+      _componentCurveView,
       _curves,
       _dependencyFactory,
       _editions,
@@ -95,6 +98,12 @@ var ApplicationView = function (params) {
       el: _hazardSpectrumEl,
       title: 'Hazard Response Spectrum'
     });
+
+    _componentCurveView = ComponentCurvesGraphView({
+      collection: _curves,
+      el: _componentCurveEl,
+      title: 'Hazard Curve Compoents'
+    });
   };
 
 
@@ -116,12 +125,15 @@ var ApplicationView = function (params) {
         '</section>',
         '<section class="application-hazard-spectrum column one-of-two">',
         '</section>',
+        '<section class="application-hazard-component column one-of-two">',
+        '</section>',
       '</div>'
     ].join('');
 
     _basicInputsEl = el.querySelector('.application-basic-inputs');
     _mapEl = el.querySelector('.application-map');
     _actionsEl = el.querySelector('.application-actions');
+    _componentCurveEl = el.querySelector('.application-hazard-component');
     _hazardCurveEl = el.querySelector('.application-hazard-curve');
     _hazardSpectrumEl = el.querySelector('.application-hazard-spectrum');
   };
