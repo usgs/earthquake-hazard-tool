@@ -91,10 +91,10 @@ var BasicInputView = function (params) {
   _createView = function () {
     var el;
 
-    el = document.createElement('ul');
-    el.classList.add('basic-inputs');
+    el = _this.el;
 
     el.innerHTML = [
+      '<ul class="basic-inputs">',
         '<li>',
           '<label for="basic-edition-view">Edition</label>',
           '<select id="basic-edition-view"></select>',
@@ -106,17 +106,15 @@ var BasicInputView = function (params) {
         '<li>',
           '<label for="basic-site-class-view">Site Class</label>',
           '<select id="basic-site-class-view"></select>',
-        '</li>'
+        '</li>',
+        '<li class="basic-time-horizon-view"></li>',
+      '</ul>'
     ].join('');
 
     _editionEl = el.querySelector('#basic-edition-view');
     _locationInfoEl = el.querySelector('#basic-location-info-view');
     _siteClassEl = el.querySelector('#basic-site-class-view');
-
-    _timeHorizonEl = document.createElement('li');
-    el.appendChild(_timeHorizonEl);
-
-    _this.el.appendChild(el);
+    _timeHorizonEl = el.querySelector('.basic-time-horizon-view');
   };
 
 
