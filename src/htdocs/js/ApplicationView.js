@@ -71,11 +71,17 @@ var ApplicationView = function (params) {
     _curves.on('select', _onCurveSelect);
     _curves.on('deselect', _onCurveDeselect);
 
+    _errorsView = ErrorsView({
+      collection: _this.collection,
+      el: _errorsEl,
+    });
+
     _basicInputsView = BasicInputsView({
       collection: _this.collection,
       editions: _editions,
       el: _basicInputsEl,
-      siteClasses: _siteClasses
+      siteClasses: _siteClasses,
+      errorsView: _errorsView
     });
 
     _mapView = MapView({
@@ -85,14 +91,10 @@ var ApplicationView = function (params) {
       el: _mapEl
     });
 
-    _errorsView = ErrorsView({
-      collection: _this.collection,
-      el: _errorsEl,
-    });
-
     _actionsView = ActionsView({
       collection: _this.collection,
       el: _actionsEl,
+      errorsView: _errorsView
     });
 
     _hazardCurveView = HazardCurveView({

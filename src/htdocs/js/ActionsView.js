@@ -6,7 +6,6 @@ var Analysis = require('Analysis'),
     Accordion = require('accordion/Accordion'),
 
     SelectedCollectionView = require('mvc/SelectedCollectionView'),
-    Events = require('util/Events'),
     Util = require('util/Util');
 
 /**
@@ -32,6 +31,7 @@ var ActionsView = function (params) {
       _calculateButton,
       _collectionView,
       _errorReportEl,
+      _errorsView,
       _newButton,
       _validateOnRender,
 
@@ -47,8 +47,10 @@ var ActionsView = function (params) {
   /**
    * @constructor
    */
-  _initialize = function () {
+  _initialize = function (params) {
     var toggleText;
+
+    _errorsView = params.errorsView;
 
     _this.el.innerHTML = '<div class="error-reporting"></div>';
     _this.el.classList.add('actions-view');
@@ -149,7 +151,7 @@ var ActionsView = function (params) {
    * of the required parameters are set to perform a calculation.
    */
   _onCalculateClick = function () {
-    Events.trigger('validate');
+    _errorsView.trigger('validate');
   };
 
   /**
@@ -196,6 +198,7 @@ var ActionsView = function (params) {
     _calculateButton = null;
     _collectionView = null;
     _errorReportEl = null;
+    _errorsView = null;
     _newButton = null;
 
     _this = null;
@@ -223,7 +226,7 @@ var ActionsView = function (params) {
     }
   };
 
-  _initialize();
+  _initialize(params);
   params = null;
   return _this;
 

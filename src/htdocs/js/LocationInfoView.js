@@ -4,7 +4,6 @@ var DependencyFactory = require('DependencyFactory'),
     Formatter = require('./util/Formatter'),
     SelectedCollectionView = require('mvc/SelectedCollectionView'),
 
-    Events = require('util/Events'),
     Util = require('util/Util');
 
 var LocationInfoView = function (params) {
@@ -12,6 +11,7 @@ var LocationInfoView = function (params) {
       _initialize,
 
       _dependencyFactory,
+      _errorsView,
       _locationInfo,
       _noLocationInfo,
 
@@ -19,8 +19,10 @@ var LocationInfoView = function (params) {
 
   _this = SelectedCollectionView(params);
 
-  _initialize = function () {
+  _initialize = function (params) {
+
     _dependencyFactory = DependencyFactory.getInstance();
+    _errorsView = params.errorsView;
 
     _this.el.classList.add('alert');
     _this.el.classList.add('info');
@@ -30,7 +32,7 @@ var LocationInfoView = function (params) {
     _locationInfo = _this.el.querySelector('.locationInfo');
     _noLocationInfo = _this.el.querySelector('.noLocationInfo');
 
-    Events.on('validate', _validateLocation);
+    _errorsView.on('validate', _validateLocation);
 
     _this.render();
   };
@@ -64,12 +66,12 @@ var LocationInfoView = function (params) {
 
     if (errors.length === 0) {
       _this.el.className = 'alert success';
-      Events.trigger('remove-errors', {
+      _errorsView.removeErrors({
         'input': 'location'
       });
     } else {
       _this.el.className = 'alert error';
-      Events.trigger('add-errors', {
+      _errorsView.addErrors({
         'input': 'location',
         'messages': errors
       });
@@ -79,6 +81,7 @@ var LocationInfoView = function (params) {
   _this.destroy = Util.compose(function () {
     _validateLocation = null;
     _dependencyFactory = null;
+    _errorsView = null;
     _locationInfo = null;
     _noLocationInfo = null;
     _this = null;

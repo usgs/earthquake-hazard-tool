@@ -1,13 +1,13 @@
 'use strict';
 
 var SelectedCollectionView = require('mvc/SelectedCollectionView'),
-    Util = require('util/Util'),
-    Events = require('util/Events');
+    Util = require('util/Util');
 
 var TimeHorizonInputView = function (params) {
   var _this,
       _initialize,
 
+      _errorsView,
       _timeHorizonInput,
 
       _updateTimeHorizon,
@@ -15,7 +15,9 @@ var TimeHorizonInputView = function (params) {
 
   _this = SelectedCollectionView(params);
 
-  _initialize = function () {
+  _initialize = function (params) {
+
+    _errorsView = params.errorsView;
 
     _this.el.innerHTML =
         '<label for="basic-time-horizon-view">Time Horizon</label>' +
@@ -24,7 +26,7 @@ var TimeHorizonInputView = function (params) {
 
     _timeHorizonInput = _this.el.querySelector('#basic-time-horizon-view');
     _timeHorizonInput.addEventListener('change', _validateTimeHorizon);
-    Events.on('validate', _validateTimeHorizon);
+    _errorsView.on('validate', _validateTimeHorizon);
 
     _this.render();
   };
@@ -41,7 +43,6 @@ var TimeHorizonInputView = function (params) {
           _this.model.set({
             'timeHorizon': timeHorizonInputValue
           });
-          return;
         } else {
           _this.model.set({
             'timeHorizon': null
@@ -53,15 +54,6 @@ var TimeHorizonInputView = function (params) {
     }
   };
 
-    // Updates timeHorizon on the model
-  _updateTimeHorizon = function (value) {
-    if (_this.model) {
-      _this.model.set({
-        'timeHorizon': value
-      });
-    }
-    _timeHorizonInput.focus();
-  };
 
   /**
    * Validate the Time Horizon value. Ensure that a value is selected
@@ -76,14 +68,14 @@ var TimeHorizonInputView = function (params) {
       if (_timeHorizonInput.value) {
         timeHorizonInputValue = parseInt(_timeHorizonInput.value, 10);
         if (timeHorizonInputValue >= 1 && timeHorizonInputValue <= 5000) {
-          Events.trigger('remove-errors', {
+          _errorsView.removeErrors({
             'input': 'timeHorizon'
           });
           _timeHorizonInput.className = '';
           _updateTimeHorizon(timeHorizonInputValue);
         } else {
           _timeHorizonInput.className = 'error';
-          Events.trigger('add-errors', {
+          _errorsView.addErrors({
             'input': 'timeHorizon',
             'messages': [
               'Invalid Time Horizon value. Valid values are between ' +
@@ -114,7 +106,7 @@ var TimeHorizonInputView = function (params) {
     _validateTimeHorizon = null;
   }, _this.destroy);
 
-  _initialize();
+  _initialize(params);
   params = null;
   return _this;
 };

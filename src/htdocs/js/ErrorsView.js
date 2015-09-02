@@ -1,7 +1,6 @@
 'use strict';
 
 var View = require('mvc/View'),
-    Events = require('util/Events'),
     Util = require('util/Util');
 
 var ErrorsView = function (params) {
@@ -9,25 +8,19 @@ var ErrorsView = function (params) {
   var _this,
       _initialize,
 
-      _errors,
-
-      _addErrors,
-      _removeErrors;
+      _errors;
 
   _this = View(params);
 
   _initialize = function () {
     // error object that stores error messages
     _errors = {};
-
-    Events.on('add-errors', _addErrors);
-    Events.on('remove-errors', _removeErrors);
   };
 
   /**
    * Build an input keyed object with an array of errors for each input.
    */
-  _addErrors = function (e) {
+  _this.addErrors = function (e) {
     _errors[e.input] = e.messages;
     _this.render();
   };
@@ -35,7 +28,7 @@ var ErrorsView = function (params) {
   /**
    * Remove errors from _errors for the input type passed in.
    */
-  _removeErrors = function (e) {
+  _this.removeErrors = function (e) {
     if (_errors[e.input]) {
       _errors[e.input] = null;
     }
@@ -85,16 +78,11 @@ var ErrorsView = function (params) {
 
   _this.destroy = Util.compose(function () {
 
-    Events.off('add-errors', _addErrors);
-    Events.off('remove-errors', _removeErrors);
-
     _initialize = null;
     _this = null;
 
     _errors = null;
 
-    _addErrors = null;
-    _removeErrors = null;
   }, _this.destroy);
 
 

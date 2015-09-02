@@ -3,7 +3,6 @@
 var CollectionSelectBox = require('mvc/CollectionSelectBox'),
     SelectedCollectionView = require('mvc/SelectedCollectionView'),
 
-    Events = require('util/Events'),
     Util = require('util/Util');
 
 /**
@@ -24,6 +23,7 @@ var SiteClassView = function (params) {
   var _this,
       _initialize,
 
+      _errorsView,
       _siteClassCollection,
       _siteClassCollectionSelectBox,
 
@@ -38,6 +38,7 @@ var SiteClassView = function (params) {
    */
   _initialize = function (params) {
     _siteClassCollection = params.siteClasses;
+    _errorsView = params.errorsView;
 
     // site class CollectionSelectBox
     _siteClassCollectionSelectBox = CollectionSelectBox({
@@ -55,7 +56,7 @@ var SiteClassView = function (params) {
     _siteClassCollection.on('reset', _updateSiteClass);
 
     _siteClassCollection.on('select', _validateSiteClass);
-    Events.on('validate', _validateSiteClass);
+    _errorsView.on('validate', _validateSiteClass);
   };
 
 
@@ -90,12 +91,12 @@ var SiteClassView = function (params) {
 
       if (selected) {
         _this.el.classList.remove('error');
-        Events.trigger('remove-errors', {
+        _errorsView.removeErrors({
           'input': 'siteClass'
         });
       } else {
         _this.el.classList.add('error');
-        Events.trigger('add-errors', {
+        _errorsView.addErrors({
           'input': 'siteClass',
           'messages': [
             'Site Class is a required field.'
@@ -122,6 +123,7 @@ var SiteClassView = function (params) {
     _validateSiteClass = null;
 
     // variables
+    _errorsView = null;
     _siteClassCollection = null;
     _siteClassCollectionSelectBox = null;
 
