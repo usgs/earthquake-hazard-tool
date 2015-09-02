@@ -236,7 +236,7 @@ var ApplicationView = function (params) {
           _calculator.getResult(
               _dependencyFactory.getService(_this.model.get('edition')),
               _this.model,
-              _loaderView.hide()
+              _loaderView.hide
             );
         }
         _queued = false;

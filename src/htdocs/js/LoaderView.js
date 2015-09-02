@@ -30,7 +30,7 @@ var LoaderView = function(params) {
   };
 
   _this.hide = function () {
-    if (_isVisible) {
+    if (_isVisible()) {
       document.body.removeChild(_this.el);
     }
   };
