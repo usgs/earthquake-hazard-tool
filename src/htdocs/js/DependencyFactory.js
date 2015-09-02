@@ -271,6 +271,10 @@ var DependencyFactory = function (params) {
       all = _getAllFromAll('editions');
     }
 
+    all.sort(function (a,b) {
+      return a.get('displayorder') - b.get('displayorder');
+    });
+
     return all;
   };
 
