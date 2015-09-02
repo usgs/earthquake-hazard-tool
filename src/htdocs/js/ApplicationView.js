@@ -99,19 +99,19 @@ var ApplicationView = function (params) {
 
     _hazardCurveView = HazardCurveView({
       curves: _curves,
-      el: _hazardCurveEl,
+      el: _hazardCurveEl.appendChild(document.createElement('div')),
       title: 'Hazard Curves'
     });
 
     _hazardSpectrumView = HazardSpectrumView({
       curves: _curves,
-      el: _hazardSpectrumEl,
+      el: _hazardSpectrumEl.appendChild(document.createElement('div')),
       title: 'Hazard Response Spectrum'
     });
 
     _componentCurveView = ComponentCurvesGraphView({
       collection: _curves,
-      el: _componentCurveEl,
+      el: _componentCurveEl.appendChild(document.createElement('div')),
       title: 'Hazard Curve Compoents'
     });
   };
