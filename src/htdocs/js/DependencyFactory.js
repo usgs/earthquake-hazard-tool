@@ -478,7 +478,7 @@ var DependencyFactory = function (params) {
 
     try {
       edition = _this.getEdition(editionId);
-      regions = _this.getRegions(edition.get('supports').region);
+      regions = _this.getRegions(edition.get('supports').region, editionId);
 
       regions.every(function (r) {
         if (r.contains(location)) {
