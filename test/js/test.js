@@ -48,7 +48,6 @@ require('./spec/SpectralPeriodViewTest');
 require('./spec/TimeHorizonInputViewTest');
 require('./spec/TimeHorizonSelectViewTest');
 require('./spec/TimeHorizonSliderViewTest');
-require('./spec/map/FullscreenTest');
 require('./spec/LocationInfoViewTest');
 
 if (window.mochaPhantomJS) {

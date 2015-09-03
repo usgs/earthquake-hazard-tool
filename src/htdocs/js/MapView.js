@@ -1,6 +1,7 @@
 'use strict';
 
-var Layers = require('map/Layers'),
+var FullscreenControl = require('leaflet/FullscreenControl'),
+    Layers = require('map/Layers'),
     LayerControl = require('map/LayerControl'),
 
     L = require('leaflet'),
@@ -13,7 +14,6 @@ var Layers = require('map/Layers'),
     Util = require('util/Util');
 
 require('map/MousePosition');
-require('map/Fullscreen');
 
 
 var MapView = function (options) {
@@ -57,7 +57,7 @@ var MapView = function (options) {
 
     // Add Map Controls
     if (!Util.isMobile()) {
-      _map.addControl(L.control.fullscreen());
+      _map.addControl(new FullscreenControl());
       _map.addControl(L.control.scale({position: 'bottomright'}));
       _map.addControl(L.control.mousePosition());
       _map.addControl(L.control.attribution());

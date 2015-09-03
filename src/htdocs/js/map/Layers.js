@@ -1,6 +1,8 @@
 'use strict';
 
-var L = require('leaflet');
+var L = require('leaflet'),
+    HazardFaultLayer = require('leaflet/HazardFaultLayer');
+
 
 var Z_BASELAYER_INDEX = 0,
     Z_OVERLAY_INDEX = 100,
@@ -224,15 +226,15 @@ module.exports = {
       overlays: [
         {
           edition: 'E2014R1',
-          layer: L.tileLayer('http://geohazards.usgs.gov/arcgis/rest/' +
-              'services/hazfaults2014/MapServer/tile/{z}/{y}/{x}', {
-            zIndex: Z_DATASET_INDEX,
+          layer: HazardFaultLayer.HazardFault2014({
+            clickable: true,
+            zIndex: Z_DATASET_INDEX
           })
         },
         {
           edition: 'E2008R3',
-          layer: L.tileLayer('http://geohazards.usgs.gov/arcgis/rest/' +
-              'services/hazfaults/MapServer/tile/{z}/{y}/{x}', {
+          layer: HazardFaultLayer.HazardFault2008({
+            clickable: true,
             zIndex: Z_DATASET_INDEX + 1
           })
         }
