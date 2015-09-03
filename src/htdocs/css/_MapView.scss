@@ -50,3 +50,26 @@
   white-space: nowrap;
   width: 100%;
 }
+
+
+.hazard-fault-layer-popup {
+  width: 300px;
+  max-height: 300px;
+  overflow-y: auto;
+
+  > li + li {
+    border-top: 1px solid #ccc;
+    margin-top: 1em;
+    padding-top: 1em;
+  }
+
+  .fault-name {
+    font-size: 1.2em;
+    font-weight: bold;
+  }
+
+  > li > dl {
+    margin-top: 0;
+  }
+
+}
