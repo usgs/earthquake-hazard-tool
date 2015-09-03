@@ -1,51 +1,75 @@
 'use strict';
 
+
 var View = require('mvc/View'),
     Util = require('util/Util');
 
-var LoaderView = function(params) {
 
+var LoaderView = function() {
   var _this,
       _initialize,
 
+      _showCount,
+
       _isVisible;
 
-  _this = View(params);
+
+  _this = View();
 
   _initialize = function () {
-    _this.el = document.createElement('div');
+    _showCount = 0;
+
     _this.el.className = 'loader-mask';
     _this.el.innerHTML = '<div class="loader-container">' +
         '<div class="loader"></div>' +
         '<p class="loader-text">Calculating</p>' +
-        '</div>';
+      '</div>';
   };
+
 
   _isVisible = function () {
-    return document.querySelector('.loader-mask');
+    return _this.el.parentNode;
   };
 
+
   _this.show = function () {
-    document.body.appendChild(_this.el);
+    if (_showCount === 0) {
+      document.body.appendChild(_this.el);
+    }
+
+    _showCount += 1;
   };
 
   _this.hide = function () {
-    if (_isVisible()) {
-      document.body.removeChild(_this.el);
+    _showCount -= 1;
+
+    if (_showCount < 0) {
+      _showCount = 0;
+    }
+
+    if (_showCount === 0 && _isVisible()) {
+      _this.el.parentNode.removeChild(_this.el);
     }
   };
- 
+
   _this.destroy = Util.compose(function () {
+    _isVisible = null;
+
+    _showCount = null;
+
     _this = null;
     _initialize = null;
-
-    _isVisible = null;
   }, _this.destroy);
 
-  _initialize();
-  params = null;
-  return _this;
 
+  _initialize();
+  return _this;
 };
 
-module.exports = LoaderView;
+
+var _INSTANCE = LoaderView();
+
+
+module.exports = function () {
+  return _INSTANCE;
+};
