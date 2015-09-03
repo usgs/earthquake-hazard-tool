@@ -1,64 +1,33 @@
 'use strict';
 
-var ModalView = require('mvc/ModalView'),
-    SelectedCollectionView = require('mvc/SelectedCollectionView'),
+var SelectedCollectionView = require('mvc/SelectedCollectionView'),
     Util = require('util/Util');
 
 var TimeHorizonInputView = function (params) {
   var _this,
       _initialize,
 
-      _modal,
+      _errorsView,
       _timeHorizonInput,
 
-      _updateTimeHorizon;
+      _updateTimeHorizon,
+      _validateTimeHorizon;
 
   _this = SelectedCollectionView(params);
 
-  _initialize = function () {
-    var div;
+  _initialize = function (params) {
+
+    _errorsView = params.errorsView;
 
     _this.el.innerHTML =
-        '<label for="timeHorizonInput">Time Horizon</label>' +
+        '<label for="basic-time-horizon-view">Time Horizon</label>' +
         '<small class="help">Return period in years</small>' +
-        '<input type="text" class="timeHorizonInput"/>';
-    _timeHorizonInput = _this.el.querySelector('.timeHorizonInput');
-    _timeHorizonInput.addEventListener('change', _updateTimeHorizon);
-    div = document.createElement('div');
+        '<input type="text" id="basic-time-horizon-view"/>';
 
-    div.innerHTML =
-        '<p class="error alert">' +
-          'Time Horizon value must be between 1 and 5,000 inclusive. ' +
-          'Click 2% in 50 years or 10% in 50 years to add either ' +
-          'selected value to the Time Horizon Input Box. Cancel returns ' +
-          'without changing the time horizon value.' +
-        '</p>' +
-        '<div class="slider-view"></div>';
+    _timeHorizonInput = _this.el.querySelector('#basic-time-horizon-view');
+    _timeHorizonInput.addEventListener('change', _validateTimeHorizon);
+    _errorsView.on('validate', _validateTimeHorizon);
 
-    _modal = ModalView(div, {
-      title: 'Validation error',
-      classes: ['modal-error'],
-      buttons: [
-        {
-          callback: function () {
-            _this.model.set({'timeHorizon': 2475}, {'force': true});
-          },
-          text: '2% in 50 years'
-        },
-        {
-          callback: function () {
-            _this.model.set({'timeHorizon': 475}, {'force': true});
-          },
-          text: '10% in 50 years'
-        },
-        {
-          callback: function () {
-            _modal.hide();
-          },
-          text: 'Cancel'
-        }
-      ]
-    });
     _this.render();
   };
 
@@ -74,23 +43,55 @@ var TimeHorizonInputView = function (params) {
           _this.model.set({
             'timeHorizon': timeHorizonInputValue
           });
-          return;
+        } else {
+          _this.model.set({
+            'timeHorizon': null
+          });
         }
       }
-      _timeHorizonInput.classList.add('error');
       _timeHorizonInput.focus();
-      _modal.show();
+
+    }
+  };
+
+
+  /**
+   * Validate the Time Horizon value. Ensure that a value is selected
+   * and that the Time Horizon value is inside the allowed range.
+   *
+   * Update Time Horizon on the model to null when it does not pass validation.
+   */
+  _validateTimeHorizon = function () {
+    var timeHorizonInputValue;
+
+    if (_this.model) {
+      if (_timeHorizonInput.value) {
+        timeHorizonInputValue = parseInt(_timeHorizonInput.value, 10);
+        if (timeHorizonInputValue >= 1 && timeHorizonInputValue <= 5000) {
+          _errorsView.removeErrors({
+            'input': 'timeHorizon'
+          });
+          _timeHorizonInput.className = '';
+          _updateTimeHorizon(timeHorizonInputValue);
+        } else {
+          _timeHorizonInput.className = 'error';
+          _errorsView.addErrors({
+            'input': 'timeHorizon',
+            'messages': [
+              'Invalid Time Horizon value. Valid values are between ' +
+              '1 and 5000 years.'
+            ]
+          });
+          _updateTimeHorizon(null);
+        }
+      }
     }
   };
 
   _this.render = function () {
     if (_this.model) {
       _timeHorizonInput.value = _this.model.get('timeHorizon');
-      _timeHorizonInput.classList.remove('error');
-    }
-
-    if (_modal) {
-      _modal.hide();
+      _validateTimeHorizon();
     }
   };
 
@@ -98,15 +99,14 @@ var TimeHorizonInputView = function (params) {
   _this.destroy = Util.compose(function () {
     _timeHorizonInput.removeEventListener('change', _updateTimeHorizon);
 
-    _modal = null;
-    // _sliderView = null;
     _initialize = null;
     _this = null;
     _timeHorizonInput = null;
     _updateTimeHorizon = null;
+    _validateTimeHorizon = null;
   }, _this.destroy);
 
-  _initialize();
+  _initialize(params);
   params = null;
   return _this;
 };

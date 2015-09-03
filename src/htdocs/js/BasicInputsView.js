@@ -31,6 +31,7 @@ var BasicInputView = function (params) {
       _editions,
       _editionEl,
       _editionView,
+      _errorsView,
       _locationInfoEl,
       _locationInfoView,
       _siteClasses,
@@ -56,6 +57,7 @@ var BasicInputView = function (params) {
 
     _editions = params.editions;
     _siteClasses = params.siteClasses;
+    _errorsView = params.errorsView;
 
     _createView();
 
@@ -67,18 +69,21 @@ var BasicInputView = function (params) {
 
     _locationInfoView = LocationInfoView({
       collection: _this.collection,
-      el: _locationInfoEl
+      el: _locationInfoEl,
+      errorsView: _errorsView
     });
 
     _siteClassView = SiteClassView({
       collection: _this.collection,
       el: _siteClassEl,
-      siteClasses: _siteClasses
+      siteClasses: _siteClasses,
+      errorsView: _errorsView
     });
 
     _timeHorizonInputView = TimeHorizonInputView({
       collection: _this.collection,
-      el: _timeHorizonEl
+      el: _timeHorizonEl,
+      errorsView: _errorsView
     });
 
     _timeHorizonSliderView = TimeHorizonSliderView({
@@ -92,6 +97,7 @@ var BasicInputView = function (params) {
     var el;
 
     el = _this.el;
+
     el.innerHTML = [
       '<ul class="basic-inputs">',
         '<li>',
@@ -129,6 +135,7 @@ var BasicInputView = function (params) {
     _editions = null;
     _editionEl = null;
     _editionView = null;
+    _errorsView = null;
     _locationInfoEl = null;
     _locationInfoView = null;
     _siteClassEl = null;

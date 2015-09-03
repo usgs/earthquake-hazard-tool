@@ -2,6 +2,7 @@
 
 var Analysis = require('Analysis'),
     AnalysisCollectionView = require('AnalysisCollectionView'),
+    ErrorsView = require('ErrorsView'),
 
     Accordion = require('accordion/Accordion'),
 
@@ -31,6 +32,7 @@ var ActionsView = function (params) {
       _calculateButton,
       _collectionView,
       _errorReportEl,
+      _errorsView,
       _newButton,
       _validateOnRender,
 
@@ -46,8 +48,12 @@ var ActionsView = function (params) {
   /**
    * @constructor
    */
-  _initialize = function () {
+  _initialize = function (params) {
     var toggleText;
+
+    params = params || {};
+
+    _errorsView = params.errorsView || ErrorsView();
 
     _this.el.innerHTML = '<div class="error-reporting"></div>';
     _this.el.classList.add('actions-view');
@@ -148,46 +154,7 @@ var ActionsView = function (params) {
    * of the required parameters are set to perform a calculation.
    */
   _onCalculateClick = function () {
-    var errors,
-        model;
-
-    errors = [];
-
-    if (_this.model) {
-      model = _this.model.get();
-
-      // validate Edition
-      if (!model.edition) {
-        errors.push('<li>Please select an Edition.</li>');
-      }
-
-      // // Location & Region
-      // if (!model.location || !model.region) {
-      //   errors.push('<li>Please select a Location.</li>');
-      // }
-
-      // validate Location & Region
-      if (!model.location || !model.location.latitude ||
-          !model.location.longitude) {
-        errors.push('<li>Please select a Location.</li>');
-      }
-
-      // validate Site Class
-      if (!model.vs30) {
-        errors.push('<li>Please select a Site Class.</li>');
-      }
-    }
-
-    if (errors.length === 0) {
-      _removeErrorReporting();
-    } else {
-      _errorReportEl.classList.add('alert');
-      _errorReportEl.classList.add('error');
-      _errorReportEl.innerHTML = '<b>The following parameters must ' +
-          'be selected before performing a calculation:</b>' +
-          '<ul>' + errors.join('') + '</ul>';
-      _validateOnRender = true;
-    }
+    _errorsView.trigger('validate');
   };
 
   /**
@@ -234,6 +201,7 @@ var ActionsView = function (params) {
     _calculateButton = null;
     _collectionView = null;
     _errorReportEl = null;
+    _errorsView = null;
     _newButton = null;
 
     _this = null;
@@ -261,7 +229,7 @@ var ActionsView = function (params) {
     }
   };
 
-  _initialize();
+  _initialize(params);
   params = null;
   return _this;
 

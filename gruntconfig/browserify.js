@@ -119,7 +119,7 @@ var browerify = {
   // the bundle used by tests
   bundle: {
     src: [],
-    dest: config.build + '/' + config.src + '/htdocs/js/bundle.js',
+    dest: config.build + '/' + config.test + '/js/bundle.js',
     options: {
       alias: EXPORTS,
       require: RESPONSE_HANDLERS,

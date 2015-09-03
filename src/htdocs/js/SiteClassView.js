@@ -23,10 +23,12 @@ var SiteClassView = function (params) {
   var _this,
       _initialize,
 
+      _errorsView,
       _siteClassCollection,
       _siteClassCollectionSelectBox,
 
-      _updateSiteClass;
+      _updateSiteClass,
+      _validateSiteClass;
 
 
   _this = SelectedCollectionView(params);
@@ -36,6 +38,7 @@ var SiteClassView = function (params) {
    */
   _initialize = function (params) {
     _siteClassCollection = params.siteClasses;
+    _errorsView = params.errorsView;
 
     // site class CollectionSelectBox
     _siteClassCollectionSelectBox = CollectionSelectBox({
@@ -51,6 +54,9 @@ var SiteClassView = function (params) {
     _siteClassCollection.on('select', _updateSiteClass);
     _siteClassCollection.on('deselect', _updateSiteClass);
     _siteClassCollection.on('reset', _updateSiteClass);
+
+    _siteClassCollection.on('select', _validateSiteClass);
+    _errorsView.on('validate', _validateSiteClass);
   };
 
 
@@ -74,6 +80,33 @@ var SiteClassView = function (params) {
 
 
   /**
+   * Validate the Site Class input.
+   * Ensure that a Site Class has been selected.
+   */
+  _validateSiteClass = function () {
+    var selected;
+
+    if (_this.model) {
+      selected = _siteClassCollection.getSelected();
+
+      if (selected) {
+        _this.el.classList.remove('error');
+        _errorsView.removeErrors({
+          'input': 'siteClass'
+        });
+      } else {
+        _this.el.classList.add('error');
+        _errorsView.addErrors({
+          'input': 'siteClass',
+          'messages': [
+            'Site Class is a required field.'
+          ]
+        });
+      }
+    }
+  };
+
+  /**
    * Calls CollectionSelectBox.destroy() and cleans up local variables
    */
   _this.destroy = Util.compose(function () {
@@ -87,8 +120,10 @@ var SiteClassView = function (params) {
 
     // methods
     _updateSiteClass = null;
+    _validateSiteClass = null;
 
     // variables
+    _errorsView = null;
     _siteClassCollection = null;
     _siteClassCollectionSelectBox = null;
 
@@ -117,7 +152,6 @@ var SiteClassView = function (params) {
     if (changes && (changes.vs30 || changes.model)) {
       if (_this.model) {
         siteClass = _this.model.get('vs30');
-
         if (siteClass !== null) {
           _siteClassCollection.selectById(siteClass);
         } else {
@@ -128,6 +162,7 @@ var SiteClassView = function (params) {
         _siteClassCollection.deselect();
       }
     }
+
   };
 
 

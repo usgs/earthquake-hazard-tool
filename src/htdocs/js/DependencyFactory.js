@@ -28,7 +28,6 @@ var DependencyFactory = function (params) {
 
       _callbacks,
       _data,
-      _inRegion,
       _isReady,
       _pendingRequests,
       _services,
@@ -220,7 +219,6 @@ var DependencyFactory = function (params) {
     _callbacks = null;
     _data = null;
     _isReady = null;
-    _inRegion = null;
     _pendingRequests = null;
     _services = null;
 
@@ -475,7 +473,7 @@ var DependencyFactory = function (params) {
    *      The first region match based on input parameters, or null if no
    *      region is supported.
    */
-  _this.getRegionByEdition = function (editionId, latitude, longitude) {
+  _this.getRegionByEdition = function (editionId, location) {
     var edition,
         region,
         regions;
@@ -484,10 +482,10 @@ var DependencyFactory = function (params) {
 
     try {
       edition = _this.getEdition(editionId);
-      regions = _this.getRegions(edition.get('supports').region);
+      regions = _this.getRegions(edition.get('supports').region, editionId);
 
       regions.every(function (r) {
-        if (_inRegion(r, latitude, longitude)) {
+        if (r.contains(location)) {
           region = r;
           // no return is falsey, essentially "break"
         } else {

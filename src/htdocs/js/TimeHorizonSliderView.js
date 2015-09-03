@@ -56,6 +56,7 @@ var TimeHorizonSliderView = function (params) {
 
     _buttonGroup = document.createElement('div');
     _buttonGroup.className = 'button-group';
+    _buttonGroup.id = 'time-horizon-slider-view';
     _buttonGroup.innerHTML = buttons.join('');
 
     // bind to click on the button group
