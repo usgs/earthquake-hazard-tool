@@ -22,10 +22,10 @@ $dataFiles = array(
   'E2008R2_COUS0P05_SA1P0_760_Curves.tar.gz',
   'E2008R2_COUS0P05_SA2P0_760_Curves.tar.gz',
 
-  'E2008R2_WUS0P05_SA0P75_760_Curves.tar.gz',
-  'E2008R2_WUS0P05_SA3P0_760_Curves.tar.gz',
-  'E2008R2_WUS0P05_SA4P0_760_Curves.tar.gz',
-  'E2008R2_WUS0P05_SA5P0_760_Curves.tar.gz',
+  // 'E2008R2_WUS0P05_SA0P75_760_Curves.tar.gz',
+  // 'E2008R2_WUS0P05_SA3P0_760_Curves.tar.gz',
+  // 'E2008R2_WUS0P05_SA4P0_760_Curves.tar.gz',
+  // 'E2008R2_WUS0P05_SA5P0_760_Curves.tar.gz',
 
   'E2008R3_CEUS0P10_PGA_2000_Curves.tar.gz',
   'E2008R3_CEUS0P10_SA0P1_2000_Curves.tar.gz',
