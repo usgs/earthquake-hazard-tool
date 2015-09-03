@@ -2,6 +2,7 @@
 
 var Analysis = require('Analysis'),
     AnalysisCollectionView = require('AnalysisCollectionView'),
+    ErrorsView = require('ErrorsView'),
 
     Accordion = require('accordion/Accordion'),
 
@@ -50,7 +51,9 @@ var ActionsView = function (params) {
   _initialize = function (params) {
     var toggleText;
 
-    _errorsView = params.errorsView;
+    params = params || {};
+
+    _errorsView = params.errorsView || ErrorsView();
 
     _this.el.innerHTML = '<div class="error-reporting"></div>';
     _this.el.classList.add('actions-view');
