@@ -102,9 +102,9 @@ var TimeHorizonSliderView = function (params) {
       Array.prototype.forEach.call(_buttonGroup.querySelectorAll('button'),
           function (button) {
         if (timeHorizon === parseInt(button.value, 10)) {
-          button.setAttribute('disabled', 'disabled');
+          button.classList.add('selected');
         } else {
-          button.removeAttribute('disabled');
+          button.classList.remove('selected');
         }
       });
     }
