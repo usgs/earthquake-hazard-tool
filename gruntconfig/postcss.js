@@ -18,6 +18,7 @@ var postcss = {
             CWD + '/node_modules/hazdev-accordion/src',
             CWD + '/node_modules/hazdev-d3/src',
             CWD + '/node_modules/leaflet/dist',
+            CWD + '/node_modules/hazdev-leaflet/src',
             CWD + '/node_modules/hazdev-location-view/src',
             CWD + '/node_modules/hazdev-tablist/src',
             CWD + '/node_modules/hazdev-template/src/htdocs',
