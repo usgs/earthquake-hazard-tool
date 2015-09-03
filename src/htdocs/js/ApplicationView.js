@@ -7,6 +7,7 @@ var ActionsView = require('ActionsView'),
     ErrorsView = require('ErrorsView'),
     HazardCurveView = require('HazardCurveGraphView'),
     HazardSpectrumView = require('ResponseSpectrumGraphView'),
+    LoaderView = require('LoaderView'),
     MapView = require('MapView'),
 
     Collection = require('mvc/Collection'),
@@ -36,6 +37,7 @@ var ApplicationView = function (params) {
       _hazardCurveView,
       _hazardSpectrumEl,
       _hazardSpectrumView,
+      _loaderView,
       _mapEl,
       _mapView,
       _queued,
@@ -63,6 +65,8 @@ var ApplicationView = function (params) {
     _dependencyFactory = params.dependencyFactory;
 
     _calculator = Calculator(params.webServices);
+
+    _loaderView = LoaderView();
 
     _siteClasses = Collection(_dependencyFactory.getAllSiteClasses());
     _editions = Collection(_dependencyFactory.getAllEditions());
@@ -240,9 +244,11 @@ var ApplicationView = function (params) {
       window.setTimeout(function () {
         if (_this.model.get('edition') && _this.model.get('location') &&
             _this.model.get('region') && _this.model.get('vs30')) {
+          _loaderView.show();
           _calculator.getResult(
               _dependencyFactory.getService(_this.model.get('edition')),
-              _this.model
+              _this.model,
+              _loaderView.hide
             );
         }
         _queued = false;
@@ -364,6 +370,7 @@ var ApplicationView = function (params) {
     _hazardCurveView = null;
     _hazardSpectrumEl = null;
     _hazardSpectrumView = null;
+    _loaderView = null;
     _mapEl = null;
     _mapView = null;
     _queued = null;
