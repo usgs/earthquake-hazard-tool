@@ -26,6 +26,7 @@
   > label {
     color: #777;
     margin: 1em 0 0;
+    font-size: 0.88em;
   }
 
   > h3 {
@@ -40,7 +41,7 @@
   }
 
   .collection-selectbox {
-    min-width: 284px;
+    min-width: 222px;
   }
 }
 
@@ -62,7 +63,7 @@ input[type=checkbox]:checked+label:after {
 
   .show-contour-layer-control > .contour-layer-control {
     .collection-selectbox {
-      min-width: 235px;
+      min-width: 285px;
     }
   }
 }
