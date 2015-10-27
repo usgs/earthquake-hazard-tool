@@ -4,15 +4,16 @@
 }
 
 .application-basic-inputs {
-  width: 304px;
-  max-width: 100%;
+  width: 100%;
 }
 
 .application-actions {
   margin-bottom: 1em;
 }
 
-@media screen and (min-width: 560px) {
+
+@media screen and (min-width: 960px) {
+
   .flexible {
     display: flex;
   }
@@ -20,6 +21,7 @@
   .application-basic-inputs {
     flex-basis: main-value;
     margin-right: 16px;
+    width: 304px;
   }
 
   .application-map {
