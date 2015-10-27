@@ -8,28 +8,6 @@
   padding: 0;
 }
 
-/* applies to all leaflet-controls */
-.leaflet-control {
-  background-color: #fff;
-  border-radius: 2px;
-  box-shadow: 0 1px 1px #333;
-  color: #000;
-}
-
-/* these styles make the controls consistent between Leaflet and LocationView */
-.leaflet-control > .leaflet-control-icon:hover {
-  background-color: #f4f4f4;
-}
-
-.leaflet-control > .leaflet-control-zoom-in,
-.leaflet-control > .leaflet-control-zoom-out,
-.leaflet-control > .leaflet-control-zoom-in:hover,
-.leaflet-control > .leaflet-control-zoom-out:hover {
-  height: 30px;
-  line-height: 30px;
-  width: 30px;
-}
-
 /* have attribution span entire bottom of map, raise the other controls */
 .leaflet-bottom {
   width: 100%;

@@ -1,19 +1,9 @@
 .actions-view {
 
-  > .error-reporting {
-    margin: 1em 0 0;
-  }
-
   > .accordion {
-    margin: 1em 0 0;
 
-    > .accordion-toggle {
-      font-family: monospace;
-      padding: .6em 2em .6em 1em;
-
-      &:before {
-        padding: 1rem 1.5rem 1rem 0;
-      }
+    > .accordion-toggle:before {
+      padding: 1rem 1.5rem 1rem 0;
     }
 
     > .accordion-content {

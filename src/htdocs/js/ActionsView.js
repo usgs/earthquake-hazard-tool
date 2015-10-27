@@ -31,7 +31,6 @@ var ActionsView = function (params) {
       _accordion,
       _calculateButton,
       _collectionView,
-      _errorReportEl,
       _errorsView,
       _newButton,
       _validateOnRender,
@@ -40,8 +39,7 @@ var ActionsView = function (params) {
       _hasIncompleteCalculation,
       _onAnalysisRemove,
       _onCalculateClick,
-      _onNewClick,
-      _removeErrorReporting;
+      _onNewClick;
 
   _this = SelectedCollectionView(params);
 
@@ -80,16 +78,13 @@ var ActionsView = function (params) {
       ]
     });
 
-    _errorReportEl = _this.el.querySelector('.error-reporting');
-
     _calculateButton = _this.el.querySelector('.actions-view-calculate');
     _calculateButton.addEventListener('click', _onCalculateClick);
 
     _newButton = _this.el.querySelector('.actions-view-new');
     _newButton.addEventListener('click', _onNewClick);
 
-    // Collection bindings
-    _this.collection.on('deselect', _removeErrorReporting);
+    // Collection bindings=
     _this.collection.on('remove', _onAnalysisRemove);
 
     _validateOnRender = false;
@@ -169,14 +164,6 @@ var ActionsView = function (params) {
   };
 
   /**
-   * Removes all of the error output from the view
-   */
-  _removeErrorReporting = function () {
-    _errorReportEl.innerHTML = '';
-    _errorReportEl.classList.remove('error');
-    _errorReportEl.classList.remove('alert');
-  };
-  /**
    * Calls CollectionSelectBox.destroy() and cleans up local variables
    */
   _this.destroy = Util.compose(function () {
@@ -184,7 +171,6 @@ var ActionsView = function (params) {
     _calculateButton.removeEventListener('click', _onCalculateClick);
     _newButton.removeEventListener('click', _onNewClick);
 
-    _this.collection.off('deselect', _removeErrorReporting);
     _this.collection.off('remove', _onAnalysisRemove);
 
     _accordion.destroy();
@@ -195,12 +181,10 @@ var ActionsView = function (params) {
     _onAnalysisRemove = null;
     _onCalculateClick = null;
     _onNewClick = null;
-    _removeErrorReporting = null;
 
     _accordion = null;
     _calculateButton = null;
     _collectionView = null;
-    _errorReportEl = null;
     _errorsView = null;
     _newButton = null;
 
