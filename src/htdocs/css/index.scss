@@ -1,5 +1,11 @@
 @import 'accordion/Accordion.scss';
 
+@import 'leaflet.css';
+@import 'leaflet/control/_Control.scss';
+@import 'leaflet/control/_Fullscreen.scss';
+@import 'leaflet/control/_MousePosition.scss';
+
+@import 'locationview/_controls.scss';
 @import 'locationview/CoordinateControl.scss';
 @import 'locationview/GeocodeControl.scss';
 @import 'locationview/GeolocationControl.scss';

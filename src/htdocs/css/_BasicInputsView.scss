@@ -11,10 +11,8 @@
     }
 
     > label {
-      color: #444;
       display: block;
       font-weight: bold;
-      margin-left: 4px;
     }
 
     > select {
@@ -22,10 +20,9 @@
     }
 
     > .help {
-      color: #666;
+      color: #757575;
       display: block;
-      font-size: 0.8em;
-      margin-left: 4px;
+      font-size: 0.88em;
     }
 
     > .button-group {
@@ -33,7 +30,7 @@
     }
 
     > #basic-location-info-view {
-      margin: 4px 2px;
+      margin: 0.2em 0;
     }
   }
 }

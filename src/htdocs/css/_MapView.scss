@@ -1,12 +1,11 @@
-@import 'leaflet.css';
-@import 'leaflet/control/_Control.scss';
-@import 'leaflet/control/_Fullscreen.scss';
-@import 'leaflet/control/_MousePosition.scss';
-
 .map-view {
   display: block;
   height: 450px;
   width: 100%;
+}
+
+.location-control {
+  padding: 0;
 }
 
 /* applies to all leaflet-controls */
