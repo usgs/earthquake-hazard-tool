@@ -29,7 +29,8 @@ var watch = {
     ],
     tasks: [
       'jshint:test',
-      'concurrent:test',
+      'browserify:test',
+      'copy:test',
       'mocha_phantomjs'
     ]
   },
