@@ -1,6 +1,6 @@
 'use strict';
 
-var L = require('leaflet');
+var L = require('leaflet/Leaflet');
 
 
 // Copyright 2012 Ardhi Lukianto

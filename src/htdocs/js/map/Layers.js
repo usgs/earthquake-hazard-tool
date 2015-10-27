@@ -1,8 +1,6 @@
 'use strict';
 
-var L = require('leaflet'),
-    HazardFaultLayer = require('leaflet/HazardFaultLayer');
-
+var L = require('leaflet/Leaflet');
 
 var Z_BASELAYER_INDEX = 0,
     Z_OVERLAY_INDEX = 100,
@@ -13,47 +11,29 @@ module.exports = {
     {
       id: 1,
       value: 'Terrain',
-      layer: L.tileLayer('http://{s}.arcgisonline.com/ArcGIS/rest/services/' +
-          'NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}.jpg', {
-        subdomains: ['server', 'services'],
-        zIndex: Z_BASELAYER_INDEX + 1,
-        attribution: 'Content may not reflect National Geographic\'s ' +
-            'current map policy. Sources: National Geographic, Esri, ' +
-            'DeLorme, HERE, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, ' +
-            'GEBCO, NOAA, increment P Corp.'
+      layer: L.esriTerrain({
+        zIndex: Z_BASELAYER_INDEX + 1
       })
     },
     {
       id: 2,
       value: 'Grayscale',
-      layer: L.tileLayer('http://{s}.arcgisonline.com/ArcGIS/rest/services/' +
-          'Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}.jpg', {
-        subdomains: ['server', 'services'],
-        zIndex: Z_BASELAYER_INDEX + 2,
-        attribution: 'Sources: Esri, DeLorme, HERE, MapmyIndia,  &copy; ' +
-            'OpenStreetMap contributors, and the GIS community'
+      layer: L.esriGrayscale({
+        zIndex: Z_BASELAYER_INDEX + 2
       })
     },
     {
       id: 3,
       value: 'Street',
-      layer: L.tileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/osm/' +
-          '{z}/{x}/{y}.jpg', {
-        subdomains: '1234',
-        zIndex: Z_BASELAYER_INDEX + 3,
-        attribution: 'Portions Courtesy NASA/JPL-Caltech and U.S. ' +
-            'Depart. of Agriculture, Farm Service Agency'
+      layer: L.openStreetMap({
+        zIndex: Z_BASELAYER_INDEX + 3
       })
     },
     {
       id: 4,
-      value: 'Satellite',
-      layer: L.tileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/sat/' +
-          '{z}/{x}/{y}.jpg', {
-        subdomains: '1234',
-        zIndex: Z_BASELAYER_INDEX + 4,
-        attribution: '<a href="http://www.openstreetmap.org/copyright">' +
-            '&copy; OpenStreetMap contributors</a>'
+      value: 'Aerial',
+      layer: L.openAerialMap({
+        zIndex: Z_BASELAYER_INDEX + 4
       })
     }
   ],
@@ -226,14 +206,14 @@ module.exports = {
       overlays: [
         {
           edition: 'E2014R1',
-          layer: HazardFaultLayer.HazardFault2014({
+          layer: L.HazardFault2014({
             clickable: true,
             zIndex: Z_DATASET_INDEX
           })
         },
         {
           edition: 'E2008R3',
-          layer: HazardFaultLayer.HazardFault2008({
+          layer: L.HazardFault2008({
             clickable: true,
             zIndex: Z_DATASET_INDEX + 1
           })

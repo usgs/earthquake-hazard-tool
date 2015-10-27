@@ -5,7 +5,7 @@ var EditionView = require('EditionView'),
     SpectralPeriodView = require('SpectralPeriodView'),
     TimeHorizonSelectView = require('TimeHorizonSelectView'),
 
-    L = require('leaflet'),
+    L = require('leaflet/Leaflet'),
 
     Collection = require('mvc/Collection'),
     CollectionSelectBox = require('mvc/CollectionSelectBox'),

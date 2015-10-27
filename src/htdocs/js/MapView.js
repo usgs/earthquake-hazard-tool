@@ -1,14 +1,13 @@
 'use strict';
 
-var FullscreenControl = require('leaflet/FullscreenControl'),
+var FullscreenControl = require('leaflet/control/Fullscreen'),
     Layers = require('map/Layers'),
     LayerControl = require('map/LayerControl'),
 
-    L = require('leaflet'),
+    L = require('leaflet/Leaflet'),
 
     LocationControl = require('locationview/LocationControl'),
 
-    Collection = require('mvc/Collection'),
     SelectedCollectionView = require('mvc/SelectedCollectionView'),
 
     Util = require('util/Util');
@@ -33,8 +32,6 @@ var MapView = function (options) {
 
   _initialize = function (options) {
     var el;
-
-    _this.collection = options.collection || Collection();
 
     _dependencyFactory = options.dependencyFactory;
     _editions = options.editions;
