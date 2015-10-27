@@ -119,6 +119,7 @@ var LayerChooser = function (params) {
   _initViews = function () {
     var format,
         fragment,
+        input,
         label;
 
     fragment = document.createDocumentFragment();
@@ -180,13 +181,16 @@ var LayerChooser = function (params) {
     label.innerHTML = 'Datasets';
 
     _datasets.forEach(function (dataset) {
-      label = fragment.appendChild(document.createElement('label'));
-      label.innerHTML = [
-        '<input type="checkbox" id="dataset-', dataset.id, '"/> ',
-        dataset.value
-      ].join('');
+      input = fragment.appendChild(document.createElement('input'));
+      input.setAttribute('type', 'checkbox');
+      input.setAttribute('id', 'dataset-' + dataset.id);
+      input.setAttribute('value', dataset.value);
 
-      dataset.input = label.querySelector('input');
+      label = fragment.appendChild(document.createElement('label'));
+      label.setAttribute('for', 'dataset-' + dataset.id);
+      label.innerHTML = dataset.value;
+
+      dataset.input = input;
       dataset.input.addEventListener('change', _onDatasetChange);
     });
 

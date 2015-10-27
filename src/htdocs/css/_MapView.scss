@@ -1,7 +1,7 @@
 @import 'leaflet.css';
-@import 'leaflet/_Controls.scss';
-@import 'leaflet/_FullscreenControl.scss';
-@import '_MousePosition.scss';
+@import 'leaflet/control/_Control.scss';
+@import 'leaflet/control/_Fullscreen.scss';
+@import 'leaflet/control/_MousePosition.scss';
 
 .map-view {
   display: block;
@@ -26,9 +26,9 @@
 .leaflet-control > .leaflet-control-zoom-out,
 .leaflet-control > .leaflet-control-zoom-in:hover,
 .leaflet-control > .leaflet-control-zoom-out:hover {
-  width: 30px;
   height: 30px;
   line-height: 30px;
+  width: 30px;
 }
 
 /* have attribution span entire bottom of map, raise the other controls */
@@ -55,9 +55,9 @@
 
 
 .hazard-fault-layer-popup {
-  width: 300px;
   max-height: 300px;
   overflow-y: auto;
+  width: 300px;
 
   > li + li {
     border-top: 1px solid #ccc;
@@ -73,5 +73,4 @@
   > li > dl {
     margin-top: 0;
   }
-
 }

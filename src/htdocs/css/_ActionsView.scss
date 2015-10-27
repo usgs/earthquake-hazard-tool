@@ -1,34 +1,23 @@
 .actions-view {
-  .error-reporting {
+
+  > .error-reporting {
     margin: 1em 0 0;
   }
 
   > .accordion {
     margin: 1em 0 0;
 
-    .accordion-toggle {
+    > .accordion-toggle {
       font-family: monospace;
       padding: .6em 2em .6em 1em;
-      text-decoration: none;
 
       &:before {
-        font-size: 1.5em;
-        left: auto;
-        right: 0;
+        padding: 1rem 1.5rem 1rem 0;
       }
     }
 
     > .accordion-content {
       padding: 0;
-
-      > .analysis-collection-list {
-        margin: 0;
-
-        > li {
-          margin: 0;
-          padding: 1em;
-        }
-      }
     }
   }
 }

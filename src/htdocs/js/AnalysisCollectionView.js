@@ -72,7 +72,8 @@ var AnalysisCollectionView = function (params) {
     a.setAttribute('href', '#');
     a.setAttribute('title', 'Delete');
     a.classList.add('delete');
-    a.innerHTML = 'x';
+    a.classList.add('material-icons');
+    a.innerHTML = 'close';
 
     return view;
   };

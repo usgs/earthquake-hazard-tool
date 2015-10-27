@@ -17,29 +17,29 @@
 
 .show-contour-layer-control > .contour-layer-control {
   display: block;
-  margin: 0;
-  padding: 1em;
   font-size: 16px;
   height: 400px;
+  margin: 0;
   overflow: auto;
+  padding: 1em;
 
   > label {
-    font-size: 0.8125em;
     color: #777;
+    font-size: 0.88em;
     font-weight: 300;
   }
 
   > h3 {
-    margin: 16px 0 0;
-    padding: 16px 0 0;
     border-top: 1px solid #eee;
     font-size: 16px;
     font-weight: bold;
+    margin: 16px 0 0;
+    padding: 16px 0 0;
 
     &:first-child {
+      border: 0;
       margin: 0;
       padding: 0;
-      border: 0;
     }
   }
 
@@ -54,6 +54,11 @@
   > .hazard-layer-control {
     z-index: 8;
   }
+}
+
+input[type=checkbox]:checked+label:after {
+  top: 0.3em;
+  left: 0.9em;
 }
 
 
