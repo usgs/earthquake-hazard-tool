@@ -97,7 +97,6 @@ $ npm install
 
 ```bash
 $ gem install sass
-$ gem install compass
 ```
 
 ### Create Database

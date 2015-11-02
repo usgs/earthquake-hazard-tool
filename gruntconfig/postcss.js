@@ -1,18 +1,24 @@
 'use strict';
 
-var autoprefixer = require('autoprefixer-core'),
+var autoprefixer = require('autoprefixer'),
     cssnano = require('cssnano'),
+    postcssImport = require('postcss-import'),
     precss = require('precss');
 
 var config = require('./config');
-var CWD = process.cwd();
+var CWD = '.';
 
 var postcss = {
   dev: {
+    expand: true,
+    cwd: config.src + '/htdocs',
+    dest: config.build + '/' + config.src + '/htdocs',
+    ext: '.css',
+    extDot: 'last',
     options: {
-      map: true,
+      map: 'inline',
       processors: [
-        precss({
+        postcssImport({
           path: [
             CWD + '/' + config.src,
             CWD + '/node_modules/hazdev-accordion/src',
@@ -25,21 +31,21 @@ var postcss = {
             CWD + '/node_modules/hazdev-webutils/src'
           ]
         }),
-        autoprefixer({'browsers': 'last 2 versions'}), // vendor prefix as needed
+        precss(),
+        autoprefixer({'browsers': 'last 2 versions'})
       ]
     },
-    src: config.src + '/htdocs/css/index.scss',
-    dest: config.build + '/' + config.src + '/htdocs/css/index.css'
+    src: 'css/index.scss'
   },
 
   dist: {
+    dest: config.dist + '/htdocs/css/index.css',
     options: {
       processors: [
-        cssnano({zindex: false}) // minify
+        cssnano({zindex: false})
       ]
     },
-    src: config.build + '/' + config.src + '/htdocs/css/index.css',
-    dest: config.dist + '/htdocs/css/index.css'
+    src: config.build + '/' + config.src + '/htdocs/css/index.css'
   }
 };
 
