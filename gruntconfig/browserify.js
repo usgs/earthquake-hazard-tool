@@ -2,7 +2,7 @@
 
 var config = require('./config');
 
-var CWD = process.cwd(),
+var CWD = '.',
     EXPORTS = [],
     NODE_MODULES = CWD + '/node_modules',
     RESPONSE_HANDLERS = [];
