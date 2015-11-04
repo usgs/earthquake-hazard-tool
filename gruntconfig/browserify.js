@@ -27,6 +27,7 @@ var addExports = function (basedir, files) {
 
 EXPORTS.push(CWD + '/etc/data.js:etc/data');
 EXPORTS.push(CWD + '/etc/metadata.js:etc/metadata');
+EXPORTS.push(CWD + '/etc/deagg.js:etc/deagg');
 EXPORTS.push(NODE_MODULES + '/d3/d3.js:d3');
 
 // hazdev-webutils exports
@@ -76,6 +77,7 @@ addExports(config.src + '/htdocs/js', [
   'TimeHorizonSliderView',
 
   'deagg/Deaggregation',
+  'deagg/DeaggResponse',
 
   'map/Layers',
   'map/LayerControl'
