@@ -75,6 +75,8 @@ addExports(config.src + '/htdocs/js', [
   'TimeHorizonSelectView',
   'TimeHorizonSliderView',
 
+  'deagg/Deaggregation',
+
   'map/Layers',
   'map/LayerControl'
 ]);
