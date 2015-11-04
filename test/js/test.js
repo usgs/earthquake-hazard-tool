@@ -50,6 +50,8 @@ require('./spec/TimeHorizonSelectViewTest');
 require('./spec/TimeHorizonSliderViewTest');
 require('./spec/LocationInfoViewTest');
 
+require('./spec/deagg/DeaggregationTest');
+
 if (window.mochaPhantomJS) {
     window.mochaPhantomJS.run();
 } else {
