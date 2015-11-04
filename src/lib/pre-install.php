@@ -54,7 +54,8 @@ $DEFAULTS = array(
   'DB_USER' => 'web',
   'DB_PASS' => '',
 
-  'WEB_SERVICES' => ''
+  'CURVE_SERVICES' => '',
+  'DEAGG_SERVICES' => ''
 );
 
 $HELP_TEXT = array(
@@ -67,7 +68,8 @@ $HELP_TEXT = array(
   'DB_USER' => 'Read-only username for database connections',
   'DB_PASS' => 'Password for database user',
 
-  'WEB_SERVICES' => 'Comma-separated list of web services to configure'
+  'CURVE_SERVICES' => 'Comma-separated list of curve services to configure',
+  'DEAGG_SERVICES' => 'Comma-separated list of deaggregation services to configure'
 );
 
 foreach ($argv as $arg) {
