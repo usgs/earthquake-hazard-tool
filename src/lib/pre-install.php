@@ -70,6 +70,15 @@ $HELP_TEXT = array(
   'WEB_SERVICES' => 'Comma-separated list of web services to configure'
 );
 
+foreach ($argv as $arg) {
+  if ($arg === '--non-interactive') {
+    define('NON_INTERACTIVE', true);
+  }
+}
+if (!defined('NON_INTERACTIVE')) {
+  define('NON_INTERACTIVE', false);
+}
+
 
 // ----------------------------------------------------------------------
 // MAIN

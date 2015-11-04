@@ -6,7 +6,11 @@
 
   // Check if previous configuration file exists
   if (file_exists($CONFIG_FILE)) {
-    $configure_action = '0';
+    if (NON_INTERACTIVE) {
+      $configure_action = '2'; // Save existing by default if non interactive
+    } else {
+      $configure_action = '0';
+    }
   }
 
   while ($configure_action !== '1' && $configure_action !== '2' &&

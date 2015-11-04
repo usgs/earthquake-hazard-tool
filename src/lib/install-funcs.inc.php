@@ -49,6 +49,10 @@
   function configure ($option, $default=null, $comment='', $secure=false,
       $unknown=false) {
 
+    if (NON_INTERACTIVE) {
+      return $default;
+    }
+
     // check if windows
     static $isWindows = null;
     if ($isWindows === null) {
@@ -103,6 +107,11 @@
         ($default === true ? 'Y' : 'y') . '/' .
         ($default === false ? 'N' : 'n') . ']: ';
     $answer = null;
+
+    if (NON_INTERACTIVE) {
+      return $default;
+    }
+
     while ($answer === null) {
       echo $question;
       $answer = strtoupper(trim(fgets(STDIN)));
