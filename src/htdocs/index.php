@@ -13,10 +13,20 @@ if (!isset($TEMPLATE)) {
     <link rel="stylesheet" href="css/index.css"/>
   ';
 
-  $services = array();
-  foreach (explode(',', $CONFIG['WEB_SERVICES']) as $service) {
+  $curves = array();
+  $deaggs = array();
+
+  foreach (explode(',', $CONFIG['CURVE_SERVICES']) as $service) {
     $parts = explode('|', $service);
-    $services[] = '\'' . $parts[0] . '\': {
+    $curves[] = '\'' . $parts[0] . '\': {
+      metaUrl: \'' . $parts[1] . '\',
+      constructor: \'' . $parts[2] . '\'
+    }';
+  }
+
+  foreach (explode(',', $CONFIG['DEAGG_SERVICES']) as $service) {
+    $parts = explode('|', $service);
+    $deaggs[] = '\'' . $parts[0] . '\': {
       metaUrl: \'' . $parts[1] . '\',
       constructor: \'' . $parts[2] . '\'
     }';
@@ -25,8 +35,11 @@ if (!isset($TEMPLATE)) {
   // Stuff that goes at the bottom of the page (i.e. <script> tags)
   $FOOT = '
     <script>
-      var WEB_SERVICES = {
-        ' . implode(',', $services) . '
+      var CURVE_SERVICES = {
+        ' . implode(',', $curves) . '
+      };
+      var DEAGG_SERVICES = {
+        ' . implode(',', $deaggs) . '
       };
     </script>
     <script src="lib/leaflet/leaflet.js"></script>

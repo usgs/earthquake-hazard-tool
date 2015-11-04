@@ -1,4 +1,4 @@
-/* global WEB_SERVICES */
+/* global CURVE_SERVICES */
 'use strict';
 
 var Analysis = require('Analysis'),
@@ -16,7 +16,7 @@ var analyses,
     dependencyFactory;
 
 dependencyFactory = DependencyFactory.getInstance({
-  services: WEB_SERVICES
+  services: CURVE_SERVICES
 });
 
 dependencyFactory.whenReady(function () {
