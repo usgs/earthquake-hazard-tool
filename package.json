@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "test": "grunt test",
-    "postinstall": "php src/lib/pre-install.php"
+    "postinstall": "php src/lib/pre-install.php --non-interactive"
   },
   "dependencies": {},
   "devDependencies": {
