@@ -51,6 +51,7 @@ require('./spec/TimeHorizonSliderViewTest');
 require('./spec/LocationInfoViewTest');
 
 require('./spec/deagg/DeaggregationTest');
+require('./spec/deagg/DeaggResponseTest');
 
 if (window.mochaPhantomJS) {
     window.mochaPhantomJS.run();
