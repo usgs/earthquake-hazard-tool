@@ -12,6 +12,7 @@ var Deaggregation = require('deagg/Deaggregation'),
 // Default values to be used by constructor
 var _DEFAULTS = {
   metadata: {
+    imt: {value: 'Unknown'},
     rlabel: 'Distance',
     mlabel: 'Magnitude',
     εlabel: 'Contribution',
@@ -46,8 +47,8 @@ var DeaggResponse = function (params) {
         deaggs,
         metadata;
 
-    params = Util.extend({}, params,
-        {id: 'deagg-response-' + (_DEAGG_ID++)}, _DEFAULTS);
+    params = Util.extend({}, _DEFAULTS,
+        {id: 'deagg-response-' + (_DEAGG_ID++)}, params);
 
     metadata = params.metadata;
     deaggs = [];

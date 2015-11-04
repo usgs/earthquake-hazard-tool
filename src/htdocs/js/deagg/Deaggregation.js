@@ -25,7 +25,7 @@ var Deaggregation = function (params) {
   var _this;
 
 
-  params = Util.extend({}, params, {id: 'deagg-' + (_DEAGG_ID++)}, _DEFAULTS);
+  params = Util.extend({}, _DEFAULTS, {id: 'deagg-' + (_DEAGG_ID++)}, params);
   _this = Model(params);
 
 
