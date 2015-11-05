@@ -11,6 +11,37 @@
   margin-bottom: 1em;
 }
 
+.curve-output {
+  position: relative;
+}
+
+.curve-output-mask {
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 1em; /* because the mask is in a row with negative margin left */
+  bottom: 0;
+  right: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 1;
+
+  > p {
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+    max-width: 30em;
+    flex-grow: none;
+  }
+}
+
+.curve-output-calculate {
+  margin-top: 1em;
+}
+
+.curve-output-ready > .curve-output-mask {
+  display: none;
+}
+
 
 @media screen and (min-width: 960px) {
 
@@ -26,5 +57,15 @@
 
   .application-map {
     flex-grow: 3;
+  }
+
+  .curve-output-mask {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    > p {
+      margin-top: 0;
+    }
   }
 }
