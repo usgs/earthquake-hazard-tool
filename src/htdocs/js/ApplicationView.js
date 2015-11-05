@@ -245,24 +245,6 @@ var ApplicationView = function (params) {
     }
   };
 
-  _this.queueCalculation = function () {
-    if (!_queued) {
-      window.setTimeout(function () {
-        if (_this.model.get('edition') && _this.model.get('location') &&
-            _this.model.get('region') && _this.model.get('vs30')) {
-          _loaderView.show();
-          _calculator.getResult(
-              _dependencyFactory.getService(_this.model.get('edition')),
-              _this.model,
-              _loaderView.hide
-            );
-        }
-        _queued = false;
-      }, 0);
-      _queued = true;
-    }
-  };
-
   /**
    * Resets the collection of siteClasses based on what is available for
    * current selection of edition/location.
@@ -422,6 +404,24 @@ var ApplicationView = function (params) {
     _this.model.on('change:curves', 'render', _this);
 
     _this.render({model: _this.model});
+  };
+
+  _this.queueCalculation = function () {
+    if (!_queued) {
+      window.setTimeout(function () {
+        if (_this.model.get('edition') && _this.model.get('location') &&
+            _this.model.get('region') && _this.model.get('vs30')) {
+          _loaderView.show();
+          _calculator.getResult(
+              _dependencyFactory.getService(_this.model.get('edition')),
+              _this.model,
+              _loaderView.hide
+            );
+        }
+        _queued = false;
+      }, 0);
+      _queued = true;
+    }
   };
 
   _this.render = function (changes) {
