@@ -16,21 +16,20 @@
 }
 
 .curve-output-mask {
-  position: absolute;
-  display: block;
-  top: 0;
-  left: 1em; /* because the mask is in a row with negative margin left */
-  bottom: 0;
-  right: 0;
   background-color: rgba(255, 255, 255, 0.8);
+  bottom: 0;
+  display: block;
+  left: 1em; /* because the mask is in a row with negative margin left */
+  position: absolute;
+  right: 0;
+  top: 0;
   z-index: 1;
 
   > p {
     margin-left: auto;
     margin-right: auto;
-    width: 90%;
     max-width: 30em;
-    flex-grow: none;
+    width: 90%;
   }
 }
 
