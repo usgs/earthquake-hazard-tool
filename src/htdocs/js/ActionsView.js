@@ -2,7 +2,6 @@
 
 var Analysis = require('Analysis'),
     AnalysisCollectionView = require('AnalysisCollectionView'),
-    ErrorsView = require('ErrorsView'),
 
     Accordion = require('accordion/Accordion'),
 
