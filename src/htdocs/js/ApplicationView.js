@@ -44,6 +44,7 @@ var ApplicationView = function (params) {
       _siteClasses,
 
       // methods
+      _clearOutput,
       _initViewContainer,
       _onCurveDeselect,
       _onCurveSelect,
@@ -52,7 +53,6 @@ var ApplicationView = function (params) {
       _onRegionChange,
       _onTimeHorizonChange,
       _onVs30Change,
-      _queueCalculation,
       _updateRegion,
       _updateVs30;
 
@@ -98,7 +98,8 @@ var ApplicationView = function (params) {
     _actionsView = ActionsView({
       collection: _this.collection,
       el: _actionsEl,
-      errorsView: _errorsView
+      errorsView: _errorsView,
+      application: _this
     });
 
     _hazardCurveView = HazardCurveView({
@@ -120,6 +121,10 @@ var ApplicationView = function (params) {
     });
   };
 
+
+  _clearOutput = function () {
+    _this.model.set({curves: null});
+  };
 
   _initViewContainer = function () {
     var el;
@@ -207,21 +212,22 @@ var ApplicationView = function (params) {
   _onEditionChange = function (/*changes*/) {
     _updateVs30();
     _updateRegion();
-    _queueCalculation();
+    _clearOutput();
   };
 
   _onLocationChange = function (/*changes*/) {
     _updateVs30();
     _updateRegion();
-    _queueCalculation();
+    _clearOutput();
   };
 
   _onRegionChange = function (/*changes*/) {
-    _queueCalculation();
+    _clearOutput();
   };
 
   _onVs30Change = function (/*changes*/) {
     _updateRegion();
+    _clearOutput();
   };
 
   _onTimeHorizonChange = function (/*changes*/) {
@@ -239,7 +245,7 @@ var ApplicationView = function (params) {
     }
   };
 
-  _queueCalculation = function () {
+  _this.queueCalculation = function () {
     if (!_queued) {
       window.setTimeout(function () {
         if (_this.model.get('edition') && _this.model.get('location') &&
@@ -377,6 +383,7 @@ var ApplicationView = function (params) {
     _siteClasses = null;
 
     // methods
+    _clearOutput = null;
     _initViewContainer = null;
     _onCurveDeselect = null;
     _onCurveSelect = null;
@@ -385,7 +392,6 @@ var ApplicationView = function (params) {
     _onRegionChange = null;
     _onTimeHorizonChange = null;
     _onVs30Change = null;
-    _queueCalculation = null;
     _updateRegion = null;
     _updateVs30 = null;
 
