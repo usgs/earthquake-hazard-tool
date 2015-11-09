@@ -92,6 +92,7 @@ var connect = {
     options: {
       base: [
         config.build + '/' + config.src + '/htdocs',
+        config.build + '/' + config.test,
         config.example,
         config.etc
       ],
