@@ -51,18 +51,18 @@ var connect = {
 
   proxies: [
     {
+      context: iniConfig.MOUNT_PATH + '/data',
+      host: 'localhost',
+      port: config.dataPort,
+      rewrite: dataProxyRewrite
+    },
+    {
       context: '/theme/',
       host: 'localhost',
       port: config.templatePort,
       rewrite: {
         '^/theme': ''
       }
-    },
-    {
-      context: iniConfig.MOUNT_PATH + '/data',
-      host: 'localhost',
-      port: config.dataPort,
-      rewrite: dataProxyRewrite
     }
   ],
 
