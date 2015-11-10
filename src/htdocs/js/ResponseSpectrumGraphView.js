@@ -34,6 +34,7 @@ var ResponseSpectrumGraphView = function (options) {
     _curves.on('add', _this.render);
     _curves.on('remove',  _this.render);
     _curves.on('reset', _this.render);
+    _curves.on('select', _this.render);
     _this.curves = _curves;
 
     _spectrum = ResponseSpectrumLineView({
@@ -52,6 +53,7 @@ var ResponseSpectrumGraphView = function (options) {
       _curves.off('add', _this.render);
       _curves.off('remove', _this.render);
       _curves.off('reset', _this.render);
+      _curves.off('select', _this.render);
     }
     _this.curves = null;
   }, _this.destroy);
