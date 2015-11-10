@@ -161,16 +161,35 @@ If an error occurred try running npm install again.
 $ npm install
 ```
 
-#### Preview in a Browser
+#### Run Pre-Install
 
-```bash
-$ ./src/lib/pre-install
-$ grunt
+1. Run pre-install setup
+```
+src/lib/pre-install
+```
+2. For option 'Url path to application'
+```
+/hazardtool
+```
+3. For option 'Comma-separated list of web services to configure'
+```
+staticcurve
+```
+4. For option 'Meta URL'
+```
+hazws/staticcurve/1
 ```
 
   > The `pre-install` script will prompt you for several configuration values.
   > Values related to the database should match those that were used during the
   > "Create Database" step (above).
+
+
+#### Preview in a Browser
+
+```bash
+$ grunt
+```
 
 ## Windows Installation
 
