@@ -18,6 +18,7 @@ var ResponseSpectrumLineView = function (params) {
   _this = D3LineView(Util.extend({
     data: [],
     legend: null,
+    pointRadius: 3,
     showLine: true,
     showPoints: true,
     imt: null
