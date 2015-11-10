@@ -21,6 +21,7 @@ module.exports = function (grunt) {
 
   // default task useful during development
   grunt.registerTask('default', [
+    'clean',
     'dev',
     // test
     'jshint:test',
@@ -32,8 +33,8 @@ module.exports = function (grunt) {
     'configureProxies:dev',
     'connect:data',
     'connect:template',
-    'connect:example',
     'connect:dev',
+    'connect:example',
 
     'watch'
   ]);
