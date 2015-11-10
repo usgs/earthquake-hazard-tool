@@ -95,6 +95,7 @@ var connect = {
         config.example,
         config.etc
       ],
+      livereload: config.liveReloadPort,
       middleware: addMiddleware,
       open: 'http://localhost:' + config.examplePort + '/example.html',
       port: config.examplePort
