@@ -91,8 +91,14 @@ var ResponseSpectrumGraphView = function (options) {
   _this.render = Util.compose(function (changed) {
     var afe,
         data,
+        imt,
         timeHorizon,
         yExtent;
+
+    imt = _this.model.get('curves').getSelected();
+    if (imt !== null) {
+      imt = imt.get('imt');
+    }
 
     timeHorizon = _this.model.get('timeHorizon');
     afe = 1 / timeHorizon;
@@ -126,6 +132,7 @@ var ResponseSpectrumGraphView = function (options) {
 
     _spectrum.model.set({
       data: data,
+      imt: imt // Send IMT so the line highlights the corresponding point
     }, {silent: true});
 
     // pass argument to original render method.
