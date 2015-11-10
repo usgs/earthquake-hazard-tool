@@ -74,6 +74,7 @@ var ResponseSpectrumLineView = function (params) {
 
     points.attr('r', _this.model.get('pointRadius'))
         .attr('class', _getPointClasses)
+        .attr('data-index', function (d, i) { return i+1; })
         .attr('cx', _this.getScaleX)
         .attr('cy', _this.getScaleY);
 
