@@ -1,6 +1,8 @@
 'use strict';
 
 var View = require('mvc/View'),
+
+    Message = require('util/Message'),
     Util = require('util/Util');
 
 var ErrorsView = function (params) {
@@ -39,21 +41,21 @@ var ErrorsView = function (params) {
    * Render the error output
    */
   _this.render = function () {
-    var markup;
+    var classes,
+        markup;
 
+    classes = [];
     markup = [];
+    _this.el.innerHTML = '';
 
     // remove errors
     if (!_errors.location && !_errors.siteClass && !_errors.timeHorizon) {
-      _this.el.innerHTML = '';
-      _this.el.classList.remove('alert');
-      _this.el.classList.remove('error');
       return;
     }
 
     // display errors
-    _this.el.classList.add('alert');
-    _this.el.classList.add('error');
+    classes.push('alert');
+    classes.push('error');
 
     markup.push('<b>Errors:</b>');
     markup.push('<ul class="error-list">');
@@ -73,7 +75,13 @@ var ErrorsView = function (params) {
 
     markup.push('</ul>');
 
-    _this.el.innerHTML = markup.join('');
+    markup = markup.join('');
+
+    Message({
+      classes: classes,
+      container: _this.el,
+      content: markup
+    });
   };
 
   _this.destroy = Util.compose(function () {
