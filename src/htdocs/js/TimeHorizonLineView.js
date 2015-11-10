@@ -42,6 +42,16 @@ var TimeHorizonLineView = function (params) {
     return [];
   };
 
+  _this.onPointOut = function () {
+    console.log('onPointOut');
+    // ... do nothing ...
+  };
+
+  _this.onPointOver = function () {
+    console.log('onPointOver');
+    // ... do nothing ...
+  };
+
   _this.render = Util.compose(function (changed) {
     var timeHorizon = _this.view.model.get('timeHorizon'),
         xExtent = _this.view.getPlotXExtent(),

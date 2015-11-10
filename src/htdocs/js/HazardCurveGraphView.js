@@ -272,6 +272,13 @@ var HazardCurveGraphView = function (options) {
     return 'legend-content HazardCurveGraphView-legend';
   };
 
+  _this.onClick = Util.compose(function (view) {
+    if (_this.model.get('clickToSelect') &&
+        view !== _timeHorizon) {
+      _this.views.select(view);
+    }
+  });
+
 
   _initialize(options);
   options = null;

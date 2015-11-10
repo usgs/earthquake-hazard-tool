@@ -6,15 +6,17 @@
 .TimeHorizonLineView,
 .HazardCurveLineView,
 .HazardCurveGraphView-legend > .D3LineView {
-  > .line,
-  &.mouseover > .line {
-    cursor: pointer;
+  > .line {
     stroke-width: $lineStroke;
   }
 
   > .point {
-    cursor:pointer;
     stroke-width: $pointStroke;
+  }
+
+  &.mouseover > .line,
+  &.mouseover > .point {
+    cursor: pointer;
   }
 
   &[data-index='0'] {
@@ -96,5 +98,18 @@
   > .line {
     stroke-width: $lineStroke;
   }
+}
 
+.TimeHorizonLineView.mouseover > .line {
+  cursor: auto;
+}
+
+.HazardCurveGraphView-legend {
+  > .D3LineView > .text {
+    cursor: pointer;
+  }
+  > :first-child > .text {
+    font-weight: normal;
+    cursor: text;
+  }
 }
