@@ -113,7 +113,7 @@ var ResponseSpectrumGraphView = function (options) {
           y = c.getX(afe);
 
       if (x !== null && y !== null) {
-        data.push([x, y]);
+        data.push([x, y, c.get('imt')]);
       }
 
       // Use smallest x-value and x-value corresponding to 5000 year return
