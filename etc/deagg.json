@@ -876,14 +876,16 @@
               ]
             }
           ],
-          "primarySourceSets": [
+          "sources": [
             {
               "name": "California B-Faults CH",
               "contribution": 28.5,
               "id": -1,
               "rBar": 5.0,
               "mBar": 7.4,
-              "εBar": 0.4
+              "εBar": 0.4,
+              "azimuth": null,
+              "type": ""
             },
             {
               "name": "California B-Faults GR",
@@ -891,7 +893,9 @@
               "id": -1,
               "rBar": 6.2,
               "mBar": 6.7,
-              "εBar": 0.15
+              "εBar": 0.15,
+              "azimuth": null,
+              "type": ""
             },
             {
               "name": "CA Crustal Gridded",
@@ -899,10 +903,10 @@
               "id": -1,
               "rBar": 7.0,
               "mBar": 6.7,
-              "εBar": -0.2
-            }
-          ],
-          "primarySources": [
+              "εBar": -0.2,
+              "azimuth": null,
+              "type": ""
+            },
             {
               "name": "Puente Hills",
               "contribution": 5.2,
@@ -910,7 +914,8 @@
               "r": 3.2,
               "m": 7.6,
               "ε": 0.5,
-              "azimuth": 160.1
+              "azimuth": 160.1,
+              "type": ""
             },
             {
               "name": "Elysian Park",
@@ -919,7 +924,8 @@
               "r": 5.6,
               "m": 6.8,
               "ε": 0.7,
-              "azimuth": 340.0
+              "azimuth": 340.0,
+              "type": ""
             },
             {
               "name": "San Andreas (Mojave)",
@@ -928,7 +934,8 @@
               "r": 32.1,
               "m": 8.2,
               "ε": 1.5,
-              "azimuth": 22.3
+              "azimuth": 22.3,
+              "type": ""
             }
           ]
         }
