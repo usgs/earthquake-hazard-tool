@@ -35,10 +35,10 @@ var ResponseSpectrumGraphView = function (options) {
     _curves.on('remove',  _this.render);
     _curves.on('reset', _this.render);
     _curves.on('select', _this.render);
-    _this.curves = _curves;
 
     _spectrum = ResponseSpectrumLineView({
-      view: _this
+      view: _this,
+      curves: _curves
     });
     _this.views.add(_spectrum);
   };
@@ -48,14 +48,14 @@ var ResponseSpectrumGraphView = function (options) {
    */
   _this.destroy = Util.compose(function () {
     if (_destroyCurves) {
-      _this.curves.destroy();
+      _curves.destroy();
     } else {
       _curves.off('add', _this.render);
       _curves.off('remove', _this.render);
       _curves.off('reset', _this.render);
       _curves.off('select', _this.render);
     }
-    _this.curves = null;
+    _curves = null;
   }, _this.destroy);
 
   /**
