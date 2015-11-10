@@ -53,6 +53,29 @@ var ResponseSpectrumLineView = function (params) {
     return y.toFixed(4);
   };
 
+  _this.plotPoints = function (points) {
+    points.enter()
+        .append('svg:circle')
+        .attr('data-imt', _getImt)
+        .on('mouseout', _this.onPointOut)
+        .on('mouseover', _this.onPointOver)
+        .on('click', _onPointClick);
+
+    points.attr('r', _this.model.get('pointRadius'))
+        .attr('class', _getPointClasses)
+        .attr('cx', _this.getScaleX)
+        .attr('cy', _this.getScaleY);
+
+    points.exit()
+        .on('mouseout', null)
+        .on('mouseover', null)
+        .on('click', null)
+        .remove();
+  };
+
+
+  _initialize(params);
+  params = null;
   return _this;
 };
 
