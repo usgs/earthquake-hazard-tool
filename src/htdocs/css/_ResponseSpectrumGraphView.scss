@@ -1,49 +1,80 @@
 @import '_GraphVariables.scss';
 
-.ResponseSpectrumGraphView {
-  .ResponseSpectrumLineView {
-    > .line {
-      stroke: #000;
-    }
-    > .selected {
-      stroke-width: 3;
+.ResponseSpectrumLineView {
+  > .line,
+  &.mouseover > .line {
+    stroke-width: calc($lineStroke + $selectedStrokeOffset);
+    stroke: $selectedGraphColor;
+  }
+
+  > .point {
+    cursor:pointer;
+    stroke-width: calc($pointStroke + $selectedStrokeOffset);
+
+    &[data-index='0'] {
+      stroke: $graphColor0;
+      fill: $graphColor0);
     }
 
-    > .point[data-index='0'] {
-      fill: $graph_color_0;
+    &[data-index='1'] {
+      stroke: $graphColor1;
+      fill: $graphColor1;
     }
-    > .point[data-index='1'] {
-      fill: $graph_color_1;
+
+    &[data-index='2'] {
+      stroke: $graphColor2;
+      fill: $graphColor2;
     }
-    > .point[data-index='2'] {
-      fill: $graph_color_2;
+
+    &[data-index='3'] {
+      stroke: $graphColor3;
+      fill: $graphColor3;
     }
-    > .point[data-index='3'] {
-      fill: $graph_color_3;
+
+    &[data-index='4'] {
+      stroke: $graphColor4;
+      fill: $graphColor4;
     }
-    > .point[data-index='4'] {
-      fill: $graph_color_4;
+
+    &[data-index='5'] {
+      stroke: $graphColor5;
+      fill: $graphColor5;
     }
-    > .point[data-index='5'] {
-      fill: $graph_color_5;
+
+    &[data-index='6'] {
+      stroke: $graphColor6;
+      fill: $graphColor6;
     }
-    > .point[data-index='6'] {
-      fill: $graph_color_6;
+
+    &[data-index='7'] {
+      stroke: $graphColor7;
+      fill: $graphColor7;
     }
-    > .point[data-index='7'] {
-      fill: $graph_color_7;
+
+    &[data-index='8'] {
+      stroke: $graphColor8;
+      fill: $graphColor8;
     }
-    > .point[data-index='8'] {
-      fill: $graph_color_8;
+
+    &[data-index='9'] {
+      stroke: $graphColor9;
+      fill: $graphColor9;
     }
-    > .point[data-index='9'] {
-      fill: $graph_color_9;
+
+    &[data-index='10'] {
+      stroke: $graphColor10;
+      fill: $graphColor10;
     }
-    > .point[data-index='0'] {
-      fill: $graph_color_10;
+
+    &[data-index='11'] {
+      stroke: $graphColor11;
+      fill: $graphColor11;
     }
-    > .point[data-index='11'] {
-      fill: $graph_color_11;
+
+    &.selected {
+      stroke-width: calc($pointStroke + (2 * $selectedStrokeOffset));
+      fill: $selectedGraphColor;
+      stroke: $selectedGraphColor;
     }
   }
 }
