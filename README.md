@@ -167,15 +167,15 @@ $ npm install
 ```
 src/lib/pre-install
 ```
-2. For option 'Url path to application'
+1. For option 'Url path to application'
 ```
 /hazardtool
 ```
-3. For option 'Comma-separated list of web services to configure'
+1. For option 'Comma-separated list of web services to configure'
 ```
 staticcurve
 ```
-4. For option 'Meta URL'
+1. For option 'Meta URL'
 ```
 hazws/staticcurve/1
 ```
@@ -213,7 +213,7 @@ There are multiple dependencies that must be installed for this project:
 
 #### Install PostgreSQL
 1. Install PostgreSQL version 9.2.14 (http://www.postgresql.org/).
-2. Open admin command promp and stop postgresSQL server.
+1. Open admin command promp and stop postgresSQL server.
   ```
   cd C:\Program Files\postgresSQL\
   bin\pg_ctl -D data stop
@@ -222,13 +222,13 @@ There are multiple dependencies that must be installed for this project:
 #### Install/Setup PHP
 1. Install PHP, from zip.
   1. Download the appropriate zip file from http://windows.php.net/download/
-  2. Unzip the folder and copy the content into a new folder on your C:\ drive.
-  3. Open a terminal window
+  1. Unzip the folder and copy the content into a new folder on your C:\ drive.
+  1. Open a terminal window
     ```
     $ cd
     $ vi .bash_profile
     ```
-  4. add to this file.
+  1. add to this file.
     ```
     export PATH=$PATH:<PHP_directory>
     export PATH=$PATH:<node_directory>
@@ -245,13 +245,13 @@ There are multiple dependencies that must be installed for this project:
     export PATH=$PATH:/c/Program\ Files/PostgreSQL/9.2/bin
     ```
 
-  5. Rename file in php dir from php.ini-development to php.ini and Edit this
+  1. Rename file in php dir from php.ini-development to php.ini and Edit this
      file by uncommenting these lines.
       1. extension_dir = “`<PHP_directory>`/ext”
-      2. extension=php_pdo_pqsql.dll
-      3. extension=php_curl.dll
-      4. extension=php_pdo_mysql.dll
-      5. extension=php_pdo_sqlite.dll
+      1. extension=php_pdo_pqsql.dll
+      1. extension=php_curl.dll
+      1. extension=php_pdo_mysql.dll
+      1. extension=php_pdo_sqlite.dll
 
 #### Clone the project
 1. Use git to clone the project from GitHub repository (if you haven't already).
@@ -274,13 +274,13 @@ There are multiple dependencies that must be installed for this project:
   Note: We suggest defining a .data directory at the root level of this
   application for the `<db_directory>`.
 
-2. Start/Stop PostgreSQL
+1. Start/Stop PostgreSQL
   1. After running the initdb command, you should see a success message. Use
      the pg_ctl utility to start the database.
      ```
      $ pg_ctl -D <db_directory> start
      ```
-3. Login
+1. Login
   1. Login to the default postgres database with the user that created the
      database.
      ```
@@ -340,18 +340,18 @@ $
 #### Edit PHP File
 1. Edit earthquake-hazard-tool/node_modules/hazdev-template/dist/conf/php.ini
   1. extension_dir = “`<Path to php dir>`\ext\”
-  2. extension=php_pdo_pgsql.dll
+  1. extension=php_pdo_pgsql.dll
 
 #### Run Pre-Install
 1. Run pre-install setup
 ```
 php src/lib/pre-install.php
 ```
-2. For option 'Comma-separated list of web services to configure'
+1. For option 'Comma-separated list of web services to configure'
 ```
 staticcurve
 ```
-3. For option 'Meta URL'
+1. For option 'Meta URL'
 ```
 hazws/staticcurve/1
 ```
