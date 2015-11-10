@@ -7,18 +7,18 @@ var SelectedCollectionView = require('mvc/SelectedCollectionView'),
 
 var _RETURN_CHARACTERS;
 
-_RETURN_CHARACTERS = '&#13;&#10;';
+_RETURN_CHARACTERS = '\r\n';
 
 var DeaggregationReportView = function (params) {
   var _this,
       _initialize,
 
       _response,
-      _deaggregations,
 
       _buildDeaggregationHeader,
       _buildDeaggregationMetadata,
       _buildDeaggregationPrincipalSources,
+      _buildDeaggregationSummaryStatistics,
       _buildDeaggregationTableBody,
       _buildDeaggregationTableHeader,
       _sumValues;
@@ -34,13 +34,35 @@ var DeaggregationReportView = function (params) {
     return '#This deaggregation corresponds to ' + component;
   };
 
+  _buildDeaggregationMetadata = function () {
+    var output;
+
+    output = [];
+
+    output.push(
+      'PSHA Deaggregation. %contributions.',
+      'site: Test',
+      'longitude: ' + Formatter.longitude(_this.model.get('location').longitude),
+      'latitude: ' + Formatter.longitude(_this.model.get('location').latitude),
+      'Vs30 = ' + _this.model.get('vs30') +
+          ' (some WUS atten. models use Site Class not Vs30).',
+      'NSHMP 2007-08 See USGS OFR 2008-1128. dM=0.2 below',
+      'Return period: ' + _this.model.get('timeHorizon') + ' yrs.',
+      'Exceedance PGA = 0.8928 g.',
+      'Weight * Computed_Rate_Ex 0.407E-03',
+      '#Pr [at least one eq with median motion >= PGA in 50 yrs] = 0.00048'
+    );
+
+    return output.join(_RETURN_CHARACTERS);
+  };
+
   _buildDeaggregationPrincipalSources = function (sources) {
     var output,
         source;
 
     output = [];
     output.push('Principal Sources (faults, subduction, random seismicity ' +
-        'having &gt; 3% contribution');
+        'having > 3% contribution');
 
     for (var i = 0; i < sources.length; i++) {
       source = sources[i];
@@ -67,23 +89,13 @@ var DeaggregationReportView = function (params) {
     return output.join(_RETURN_CHARACTERS);
   };
 
-  _buildDeaggregationTableHeader = function () {
-    var output,
-        ebins,
-        min,
-        max;
+  _buildDeaggregationSummaryStatistics = function () {
+    var output;
 
-    ebins = _response.get('εbins');
     output = [];
-    output.push( _response.get('rlabel') + ',' + _response.get('mlabel') + ',ALL_EPS');
+    output.push('TODO::waiting on updates to feed');
 
-    for (var i = (ebins.length - 1); i >= 0; i--) {
-      min = (ebins[i].min ? ebins[i].min + '&lt;' : '');
-      max = (ebins[i].max ? '&lt;' + ebins[i].max : '');
-      output.push(min + 'EPS' + max);
-    }
-
-    return output.join(',') + _RETURN_CHARACTERS;
+    return output.join(_RETURN_CHARACTERS);
   };
 
   _buildDeaggregationTableBody = function (data) {
@@ -113,6 +125,25 @@ var DeaggregationReportView = function (params) {
     return output.join(_RETURN_CHARACTERS);
   };
 
+  _buildDeaggregationTableHeader = function () {
+    var output,
+        ebins,
+        min,
+        max;
+
+    ebins = _response.get('εbins');
+    output = [];
+    output.push( _response.get('rlabel') + ',' + _response.get('mlabel') + ',ALL_EPS');
+
+    for (var i = (ebins.length - 1); i >= 0; i--) {
+      min = (ebins[i].min ? ebins[i].min + '<' : '');
+      max = (ebins[i].max ? '<' + ebins[i].max : '');
+      output.push(min + 'ε' + max);
+    }
+
+    return output.join(',');
+  };
+
   _sumValues = function (values) {
     var total;
 
@@ -125,54 +156,36 @@ var DeaggregationReportView = function (params) {
     return (total / values.length).toFixed(3);
   };
 
-
-  _this.getResponseSummary = function () {
+  _this.getDeaggregationSummaryStatisticsHtml = function () {
     var output;
 
-    if (_this.model === null) {
-      return '';
-    }
+    output = [
+      '<p>TODO:: once summmary data is available...</p>'
+    ];
 
-    output = 'TODO::waiting on updates to feed';
-
-    return output;
+    return output.join('');
   };
 
-  _buildDeaggregationMetadata = function () {
-    var output;
+  _this.getDeaggregationReport = function () {
+    var deaggregations,
+        output;
 
-    output = [];
+    deaggregations = _response.get('deaggregations').data();
+    output = [
+      '*** Deaggregation of Seismic Hazard at One Period of Spectral Accel. ***',
+      //'*** Data from TODO ****'
+      '*** Data from ' + _this.model.getEdition().get('display') + ' ****'
+    ];
 
-    output.push(
-      'PSHA Deaggregation. %contributions.',
-      'site: Test',
-      'longitude: ' + Formatter.longitude(_this.model.get('location').longitude),
-      'latitude: ' + Formatter.longitude(_this.model.get('location').latitude),
-      'Vs30 = ' + _this.model.get('vs30') +
-          ' (some WUS atten. models use Site Class not Vs30).',
-      'NSHMP 2007-08 See USGS OFR 2008-1128. dM=0.2 below',
-      'Return period: ' + _this.model.get('timeHorizon') + ' yrs.',
-      'Exceedance PGA = 0.8928 g.',
-      'Weight * Computed_Rate_Ex 0.407E-03',
-      '#Pr [at least one eq with median motion >= PGA in 50 yrs] = 0.00048'
-    );
-
-    return output.join(_RETURN_CHARACTERS);
-  };
-
-  _this.getDeaggregationTables = function () {
-    var output;
-
-    output = [];
-    _deaggregations = _response.get('deaggregations').data();
-
-    for (var i = 0; i < _deaggregations.length; i++) {
+    // Loop over deaggregations in the deaggregation response
+    for (var i = 0; i < deaggregations.length; i++) {
       output.push(
         _buildDeaggregationMetadata(),
-        _buildDeaggregationHeader(_deaggregations[i].get('component')),
-        _buildDeaggregationTableHeader(_deaggregations[i].get('data')),
-        _buildDeaggregationTableBody(_deaggregations[i].get('data')),
-        _buildDeaggregationPrincipalSources(_deaggregations[i].get('sources'))
+        _buildDeaggregationHeader(deaggregations[i].get('component')),
+        _buildDeaggregationSummaryStatistics(deaggregations[i].get('summary')),
+        _buildDeaggregationTableHeader(deaggregations[i].get('data')),
+        _buildDeaggregationTableBody(deaggregations[i].get('data')),
+        _buildDeaggregationPrincipalSources(deaggregations[i].get('sources'))
       );
     }
 
@@ -184,6 +197,7 @@ var DeaggregationReportView = function (params) {
     _buildDeaggregationHeader = null;
     _buildDeaggregationMetadata = null;
     _buildDeaggregationPrincipalSources = null;
+    _buildDeaggregationSummaryStatistics = null;
     _buildDeaggregationTableBody = null;
     _buildDeaggregationTableHeader = null;
     _sumValues = null;
@@ -196,32 +210,27 @@ var DeaggregationReportView = function (params) {
 
 
   _this.render = function () {
-    var output,
-        responses;
+    var responses;
 
-    if (_this.model === null) {
+    if (_this.model === null || _this.model.get('deaggregation') === null) {
       _this.el.innerHTML = '';
       return;
     }
 
-    // get the deaggResponse that matches the imt of the currently
-    // selected analysis model
+    // set _response equal to the DeaggResponse that matches the imt
+    // of the currently selected analysis model
     responses = _this.model.get('deaggregation').data();
     for (var i = 0; i < responses.length; i++) {
       if (responses[i].get('imt') === _this.model.get('imt')) {
         _response = responses[i];
+        break;
       }
     }
 
-    // build report output
-    output = [
-        '*** Deaggregation of Seismic Hazard at One Period of Spectral Accel. ***',
-        '*** Data from ', /*_this.model.getEdition().get('display'),*/ ' ****',
-        //_this.getResponseSummary(),
-        _this.getDeaggregationTables()
-    ];
-
-    _this.el.innerHTML = output.join(_RETURN_CHARACTERS);
+    _this.el.innerHTML = '<h4>Summary Statistics</h4>' +
+        _this.getDeaggregationSummaryStatisticsHtml() +
+        '<a href="data:text/plain;charset=UTF-8,' + encodeURIComponent(_this.getDeaggregationReport()) +
+        '">Click to Download Deaggregation Report</a>';
   };
 
   _initialize(params);
