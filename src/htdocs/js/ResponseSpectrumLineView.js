@@ -58,6 +58,14 @@ var ResponseSpectrumLineView = function (params) {
   };
 
 
+  _this.formatX = function (x) {
+    if (x === 0) {
+      return 'PGA';
+    } else {
+      return x;
+    }
+  };
+
   /**
    * Override y value formatting.
    */
