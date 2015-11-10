@@ -1,3 +1,5 @@
+@import '_GraphVariables.scss';
+
 .ResponseSpectrumGraphView {
   .ResponseSpectrumLineView {
     > .line {
@@ -5,6 +7,43 @@
     }
     > .selected {
       stroke-width: 3;
+    }
+
+    > .point[data-index='0'] {
+      fill: $graph_color_0;
+    }
+    > .point[data-index='1'] {
+      fill: $graph_color_1;
+    }
+    > .point[data-index='2'] {
+      fill: $graph_color_2;
+    }
+    > .point[data-index='3'] {
+      fill: $graph_color_3;
+    }
+    > .point[data-index='4'] {
+      fill: $graph_color_4;
+    }
+    > .point[data-index='5'] {
+      fill: $graph_color_5;
+    }
+    > .point[data-index='6'] {
+      fill: $graph_color_6;
+    }
+    > .point[data-index='7'] {
+      fill: $graph_color_7;
+    }
+    > .point[data-index='8'] {
+      fill: $graph_color_8;
+    }
+    > .point[data-index='9'] {
+      fill: $graph_color_9;
+    }
+    > .point[data-index='0'] {
+      fill: $graph_color_10;
+    }
+    > .point[data-index='11'] {
+      fill: $graph_color_11;
     }
   }
 }
