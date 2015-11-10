@@ -11,14 +11,51 @@ On OS X, we recommend using `homebrew` to install application dependencies.
 ### Dependencies
 There are multiple dependencies that must be installed for this project:
 
+1. Xcode
+1. HomeBrew
+1. Node
+1. Grunt
 1. PHP
 1. PostgreSQL
-1. NPM Dependencies (development only)
-1. Sass and Compass (development only)
+
+#### Install Xcode
+```
+https://developer.apple.com/xcode/
+```
+
+#### Install HomeBrew
+```
+http://mxcl.github.io/homebrew/
+```
+
+#### Install Node and NPM
+1. nodejs.org
+1. Download v4.2.2
+1. Update paths as needed in your ~/.bash_profile: (If you use a tool other
+   than brew to install these dependencies, you may need to modify these paths
+   to point to the install directories.)
+```
+# brew installed binaries
+export PATH=$PATH:/usr/local/bin
+# npm installed binaries
+export PATH=$PATH:/usr/local/share/npm/bin
+```
+
+#### Install Grunt
+```
+sudo npm install -g grunt-cli
+```
 
 #### Install PHP
 ```bash
 $ brew install php55
+$ brew install php55-pdo-pgsql
+```
+
+#### Clone the project
+1. Use git to clone the project from GitHub repository (if you haven't already).
+```
+git clone <clone URL>
 ```
 
 #### Install PostgreSQL
@@ -78,28 +115,13 @@ PostgreSQL database locally.
   database.
 
   ```bash
-  $ psql postgres
+  $ psql -U <db_admin_username> postgres
   ```
 
   > Note: PostgreSQL will create the default database `postgres`, which  you
   > can access with the same user that you used to create the database.
 
-
-#### Install NPM Dependencies
-
-From the root of the project directory:
-
-```bash
-$ npm install
-```
-
-#### Install Sass and Compass with Ruby
-
-```bash
-$ gem install sass
-```
-
-### Create Database
+#### Create Database
 
 When installing this application you will be prompted for a database DSN (host,
 port, db name) as well as database username and password.
@@ -112,7 +134,7 @@ rather a dedicated username/password for this application.
 
 ```bash
 $ mkdir <db_directory>/<db_name>
-$ psql postgres
+$ psql -U <db_admin_username> postgres
 
 postgres=# CREATE USER <db_user> WITH ENCRYPTED PASSWORD '<db_pass>';
 postgres=# CREATE TABLESPACE <db_name>_ts
@@ -127,12 +149,19 @@ postgres=# \c <db_name>;
 $
 ```
 
-  > Note: You will need to replace any value contained in angle brackes (eg.
+  > Note: You will need to replace any value contained in angle brackets (eg.
   > `<db_name>`) with the actual value that makes sense in your environment. You
   > will need to use most of these same values again during the `pre-install`
   > script that gets run (below).
 
-### Preview in a Browser
+#### Install NPM Dependencies
+From the root of the project directory.
+If an error occurred try running npm install again.
+```bash
+$ npm install
+```
+
+#### Preview in a Browser
 
 ```bash
 $ ./src/lib/pre-install
@@ -142,15 +171,6 @@ $ grunt
   > The `pre-install` script will prompt you for several configuration values.
   > Values related to the database should match those that were used during the
   > "Create Database" step (above).
-
-## Having trouble getting started?
-
-If this is your first time using **grunt**, you need to install the grunt
-command line interface globally.
-
-```bash
-$ npm install -g grunt-cli
-```
 
 ## Windows Installation
 
@@ -168,11 +188,11 @@ There are multiple dependencies that must be installed for this project:
    (http://git-scm.com/download/win) was used to test these steps, but Cygwin
    (http://cygwin.com/install.html) or another unix-like editor should work too.
 
-### Install Node
+#### Install Node
 1. Install the latest release of Node (http://nodejs.org/) for Windows, using
    the Windows Installer (.msi). Defaults should be sufficient for this.
 
-### Install PostgreSQL
+#### Install PostgreSQL
 1. Install PostgreSQL version 9.2.14 (http://www.postgresql.org/).
 2. Open admin command promp and stop postgresSQL server.
   ```
@@ -180,7 +200,7 @@ There are multiple dependencies that must be installed for this project:
   bin\pg_ctl -D data stop
   ```
 
-### Install/Setup PHP
+#### Install/Setup PHP
 1. Install PHP, from zip.
   1. Download the appropriate zip file from http://windows.php.net/download/
   2. Unzip the folder and copy the content into a new folder on your C:\ drive.
@@ -199,7 +219,7 @@ There are multiple dependencies that must be installed for this project:
     You will need to replace the `<PHP_directory>`, `<node_directory>` and
     `<PostgreSQL_directory>` with the correct path to each.
 
-    Example
+    Example:
     ```
     export PATH=$PATH:/c/php-5.6
     export PAtH=$PATH:/c/Program\ Files/nodejs
@@ -214,10 +234,10 @@ There are multiple dependencies that must be installed for this project:
       4. extension=php_pdo_mysql.dll
       5. extension=php_pdo_sqlite.dll
 
-### Clone the project
+#### Clone the project
 1. Use git to clone the project from GitHub repository (if you haven't already).
 
-### Setup Database
+#### Setup Database
 1. If this is your first install, create a database with:
   ```
   $ initdb \
@@ -245,25 +265,26 @@ There are multiple dependencies that must be installed for this project:
   1. Login to the default postgres database with the user that created the
      database.
      ```
-     $ psql postgres
+     $ psql -U <db_admin_username> postgres
      ```
 
      Note: PostgreSQL will create the default database postgres, which you can
      access with the same user that you used to create the database.
 
-### Install Grunt
+#### Install Grunt
 1. Use npm to install grunt
   ```
   $ npm install -g grunt-cli
   ```
 
-### NPM install
+#### NPM install
+From the root of the project directory.
 If an error occurred try running npm install again.
 ```
 $ npm install
 ```
 
-### Create Database
+#### Create Database
 
 When installing this application you will be prompted for a database DSN (host,
 port, db name) as well as database username and password.
@@ -276,7 +297,7 @@ rather a dedicated username/password for this application.
 
 ```bash
 $ mkdir <db_directory>/<db_name>
-$ psql postgres
+$ psql -U <db_admin_username> postgres
 
 postgres=# CREATE USER <db_user> WITH ENCRYPTED PASSWORD '<db_pass>';
 postgres=# CREATE TABLESPACE <db_name>_ts
@@ -297,12 +318,12 @@ $
   > script that gets run (below).
 
 
-### Edit PHP File
+#### Edit PHP File
 1. Edit earthquake-hazard-tool/node_modules/hazdev-template/dist/conf/php.ini
   1. extension_dir = “`<Path to php dir>`\ext\”
   2. extension=php_pdo_pgsql.dll
 
-### Run Pre-Install
+#### Run Pre-Install
 1. Run pre-install setup
 ```
 php src/lib/pre-install.php
@@ -316,7 +337,7 @@ staticcurve
 hazws/staticcurve/1
 ```
 
-### Run Grunt
+#### Run Grunt
 ```
 $ grunt
 ```
