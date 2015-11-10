@@ -1,12 +1,21 @@
 'use strict';
 
-var D3LineView = require('d3/D3LineView');
+var D3LineView = require('d3/D3LineView'),
+    Util = require('util/Util');
 
 
-var HazardCurveLineView = function (options) {
-  var _this;
+var HazardCurveLineView = function (params) {
+  var _this,
+      _initialize;
 
-  _this = D3LineView(options);
+
+  _this = D3LineView(Util.extend({
+      pointRadius: 2
+    }, params));
+
+  _initialize = function (/*params*/) {
+    _this.el.classList.add('HazardCurveLineView');
+  };
 
   /**
    * Override formatting for y values.
@@ -15,6 +24,8 @@ var HazardCurveLineView = function (options) {
     return y.toExponential(5);
   };
 
+  _initialize(params);
+  params = null;
   return _this;
 };
 
