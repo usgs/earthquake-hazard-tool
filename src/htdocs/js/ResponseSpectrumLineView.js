@@ -8,6 +8,8 @@ var ResponseSpectrumLineView = function (params) {
   var _this,
       _initialize,
 
+      _curves,
+
       _getImt,
       _getPointClasses,
       _onPointClick;
@@ -21,8 +23,9 @@ var ResponseSpectrumLineView = function (params) {
     imt: null
   }, params));
 
-  _initialize = function (/*params*/) {
+  _initialize = function (params) {
     _this.el.classList.add('ResponseSpectrumLineView');
+    _curves = params.curves;
   };
 
 
@@ -40,9 +43,17 @@ var ResponseSpectrumLineView = function (params) {
     return classes.join(' ');
   };
 
-  _onPointClick = function (/*data, index*/) {
-    console.log('point clicked!');
-    console.log(arguments);
+  _onPointClick = function (data/*, index*/) {
+    var pointImt = data[2];
+
+    if (_curves) {
+      _curves.data().some(function (c) {
+        if (c.get('imt') === pointImt) {
+          _curves.select(c);
+          return true;
+        }
+      });
+    }
   };
 
 
