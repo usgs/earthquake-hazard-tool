@@ -133,7 +133,7 @@ var DeaggregationReportView = function (params) {
 
     ebins = _response.get('εbins');
     output = [];
-    output.push( _response.get('rlabel') + ',' + _response.get('mlabel') + ',ALL_EPS');
+    output.push( _response.get('rlabel') + ',' + _response.get('mlabel') + ',ALL_ε');
 
     for (var i = (ebins.length - 1); i >= 0; i--) {
       min = (ebins[i].min ? ebins[i].min + '<' : '');
