@@ -21,6 +21,7 @@ module.exports = function (grunt) {
 
   // default task useful during development
   grunt.registerTask('default', [
+    'clean',
     'dev',
     // test
     'jshint:test',
