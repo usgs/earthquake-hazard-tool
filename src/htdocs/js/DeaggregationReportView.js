@@ -14,6 +14,7 @@ var DeaggregationReportView = function (params) {
       _initialize,
 
       _response,
+      _summaries,
 
       _buildDeaggregationHeader,
       _buildDeaggregationMetadata,
@@ -21,11 +22,13 @@ var DeaggregationReportView = function (params) {
       _buildDeaggregationSummaryStatistics,
       _buildDeaggregationTableBody,
       _buildDeaggregationTableHeader,
+      _checkDeaggregationSummary,
       _sumValues;
 
   _this = SelectedCollectionView(params);
 
   _initialize = function () {
+    _summaries = {};
     _this.render();
   };
 
@@ -38,7 +41,6 @@ var DeaggregationReportView = function (params) {
     var output;
 
     output = [];
-
     output.push(
       'PSHA Deaggregation. %contributions.',
       'site: Test',
@@ -89,11 +91,29 @@ var DeaggregationReportView = function (params) {
     return output.join(_RETURN_CHARACTERS);
   };
 
-  _buildDeaggregationSummaryStatistics = function () {
-    var output;
+  _buildDeaggregationSummaryStatistics = function (summaries) {
+    var data,
+        output,
+        summary;
 
-    output = [];
-    output.push('TODO::waiting on updates to feed');
+    output = ['Summary statistics for above PSHA PGA deaggregation, R=distance, e=epsilon'];
+
+    for (var i = 0; i < summaries.length; i++) {
+      summary = summaries[i];
+      data = summary.data;
+      // if data has no name it does not belong in summary seciton
+      if (data[0] && data[0].name === null) {
+        continue;
+      }
+      output.push(summary.name);
+      for (var x = 0; x < data.length; x++) {
+        if (data[x].name !== null) {
+          output.push(
+            data[x].name + ', ' + data[x].value
+          );
+        }
+      }
+    }
 
     return output.join(_RETURN_CHARACTERS);
   };
@@ -144,6 +164,23 @@ var DeaggregationReportView = function (params) {
     return output.join(',');
   };
 
+  _checkDeaggregationSummary = function (summary) {
+    var output,
+        data;
+
+    output = [];
+
+    for (var i = 0; i < summary.length; i++) {
+      data = summary[i].data;
+      // if data has no name it does not belong in summary seciton
+      if (data[0] && data[0].name === null && data[0].value !== null) {
+        output.push(summary[i].name + ': ' + data[0].value);
+      }
+    }
+
+    return output.join(_RETURN_CHARACTERS);
+  };
+
   _sumValues = function (values) {
     var total;
 
@@ -156,12 +193,62 @@ var DeaggregationReportView = function (params) {
     return (total / values.length).toFixed(3);
   };
 
-  _this.getDeaggregationSummaryStatisticsHtml = function () {
-    var output;
+  _this.getDeaggregationReportSummary = function (component) {
+    var deaggregations;
 
-    output = [
-      '<p>TODO:: once summmary data is available...</p>'
-    ];
+    // return summary if it exists
+    if (_summaries && component && _summaries.hasOwnProperty('component')) {
+      return _summaries[component];
+    }
+
+    // build _summaries
+    deaggregations = _response.get('deaggregations').data();
+
+    // Loop over deaggregations in the deaggregation response
+    for (var i = 0; i < deaggregations.length; i++) {
+      _summaries[deaggregations[i].get('component')] =
+          deaggregations[i].get('summary');
+    }
+
+    return _summaries;
+  };
+
+  _this.getDeaggregationSummaryStatisticsHtml = function (component) {
+    var output,
+        summary,
+        data;
+
+    output = [];
+    summary = _this.getDeaggregationReportSummary(component);
+
+    if (summary === null) {
+      return '';
+    }
+
+    // Loop over array of values in summary object
+    for (var key in summary) {
+      output.push('<h3>Summary statistics for, Deaggregation: ',key,'</h3>');
+
+      for (var i = 0; i < summary[key].length; i++) {
+        data = summary[key][i].data;
+
+        if (summary[key][i].display === false) {
+          // skip
+          continue;
+        }
+
+        output.push('<h4>', summary[key][i].name, '</h4><dl>');
+
+        for (var x = 0; x < data.length; x++) {
+          output.push(
+            '<dt>', data[x].name + '</dt>' +
+            '<dd>' + data[x].value + '</dd>'
+          );
+        }
+      }
+
+      output.push('</dl>');
+    }
 
     return output.join('');
   };
@@ -182,6 +269,7 @@ var DeaggregationReportView = function (params) {
       output.push(
         _buildDeaggregationMetadata(),
         _buildDeaggregationHeader(deaggregations[i].get('component')),
+        _checkDeaggregationSummary(deaggregations[i].get('summary')),
         _buildDeaggregationSummaryStatistics(deaggregations[i].get('summary')),
         _buildDeaggregationTableHeader(deaggregations[i].get('data')),
         _buildDeaggregationTableBody(deaggregations[i].get('data')),
@@ -200,6 +288,7 @@ var DeaggregationReportView = function (params) {
     _buildDeaggregationSummaryStatistics = null;
     _buildDeaggregationTableBody = null;
     _buildDeaggregationTableHeader = null;
+    _checkDeaggregationSummary = null;
     _sumValues = null;
 
     _response = null;
@@ -227,9 +316,11 @@ var DeaggregationReportView = function (params) {
       }
     }
 
+    _this.getDeaggregationReportSummary('Total');
     _this.el.innerHTML = '<h4>Summary Statistics</h4>' +
         _this.getDeaggregationSummaryStatisticsHtml() +
-        '<a href="data:text/plain;charset=UTF-8,' + encodeURIComponent(_this.getDeaggregationReport()) +
+        '<a href="data:text/plain;charset=UTF-8,' +
+          encodeURIComponent(_this.getDeaggregationReport()) +
         '">Click to Download Deaggregation Report</a>';
   };
 

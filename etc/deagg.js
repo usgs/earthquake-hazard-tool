@@ -876,59 +876,207 @@ module.exports = {
               ]
             }
           ],
-          'primarySourceSets': [
+          'sources': [
             {
               'name': 'California B-Faults CH',
+              'type': 'MULTI',
               'contribution': 28.5,
               'id': -1,
-              'rBar': 5.0,
-              'mBar': 7.4,
-              'εBar': 0.4
+              'r': 5.0,
+              'm': 7.4,
+              'ε': 0.4,
+              'azimuth': null,
+              'latitude': null,
+              'longitude': null
             },
             {
               'name': 'California B-Faults GR',
+              'type': 'MULTI',
               'contribution': 22.0,
               'id': -1,
-              'rBar': 6.2,
-              'mBar': 6.7,
-              'εBar': 0.15
+              'r': 6.2,
+              'm': 6.7,
+              'ε': 0.15,
+              'azimuth': null,
+              'latitude': null,
+              'longitude': null
             },
             {
               'name': 'CA Crustal Gridded',
+              'type': 'MULTI',
               'contribution': 15.0,
               'id': -1,
-              'rBar': 7.0,
-              'mBar': 6.7,
-              'εBar': -0.2
-            }
-          ],
-          'primarySources': [
+              'r': 7.0,
+              'm': 6.7,
+              'ε': -0.2,
+              'azimuth': null,
+              'latitude': null,
+              'longitude': null
+            },
             {
               'name': 'Puente Hills',
+              'type': 'SINGLE',
               'contribution': 5.2,
               'id': 521,
               'r': 3.2,
               'm': 7.6,
               'ε': 0.5,
-              'azimuth': 160.1
+              'azimuth': 160.1,
+              'latitude': 33.5,
+              'longitude': -118.5
             },
             {
               'name': 'Elysian Park',
+              'type': 'SINGLE',
               'contribution': 4.0,
               'id': 431,
               'r': 5.6,
               'm': 6.8,
               'ε': 0.7,
-              'azimuth': 340.0
+              'azimuth': 340.0,
+              'latitude': 33.6,
+              'longitude': -118.4
             },
             {
               'name': 'San Andreas (Mojave)',
+              'type': 'SINGLE',
               'contribution': 1.2,
               'id': 44,
               'r': 32.1,
               'm': 8.2,
               'ε': 1.5,
-              'azimuth': 22.3
+              'azimuth': 22.3,
+              'latitude': 34.0,
+              'longitude': -117.5
+            },
+            {
+              'name': 'Grid Source ',
+              'type': 'GRID',
+              'contribution': 7.4,
+              'id': null,
+              'r': 22.5,
+              'm': 6.2,
+              'ε': -1.2,
+              'azimuth': 345.0,
+              'latitude': 33.7,
+              'longitude': -118.6
+            }
+          ],
+          'summary': [
+            {
+              'name': 'Deaggregation targets',
+              'display': true,
+              'data': [
+                {
+                  'name': 'Return period',
+                  'value': 2475.0,
+                  'units': 'yrs'
+                },
+                {
+                  'name': 'Exceedance rate',
+                  'value': 4.0404E-4,
+                  'units': 'yrs⁻¹'
+                },
+                {
+                  'name': 'Exceedance IML',
+                  'value': 0.6085,
+                  'units': 'g'
+                }
+              ]
+            },
+            {
+              'name': 'Recovered targets',
+              'display': false,
+              'data': [
+                {
+                  'name': 'Return period',
+                  'value': 2521.0,
+                  'units': 'yrs'
+                },
+                {
+                  'name': 'Exceedance rate',
+                  'value': 3.9315E-4,
+                  'units': 'yrs⁻¹'
+                },
+                {
+                  'name': 'Exceedance IML',
+                  'value': 0.6085,
+                  'units': 'g'
+                }
+              ]
+            },
+            {
+              'name': 'Mean',
+              'display': true,
+              'data': [
+                {
+                  'name': 'r',
+                  'value': 11.2,
+                  'units': 'km'
+                },
+                {
+                  'name': 'm',
+                  'value': 6.98,
+                  'units': null
+                },
+                {
+                  'name': 'ε₀',
+                  'value': 0.34,
+                  'units': null
+                }
+              ]
+            },
+            {
+              'name': 'Mode (largest r-m bin)',
+              'display': true,
+              'data': [
+                {
+                  'name': 'r',
+                  'value': 9.4,
+                  'units': 'km'
+                },
+                {
+                  'name': 'm',
+                  'value': 6.78,
+                  'units': null
+                },
+                {
+                  'name': 'ε₀',
+                  'value': 0.79,
+                  'units': null
+                },
+                {
+                  'name': 'Contribution',
+                  'value': 27.3,
+                  'units': '%'
+                }
+              ]
+            },
+            {
+              'name': 'Mode (largest ε₀ bin)',
+              'display': true,
+              'data': [
+                {
+                  'name': 'r',
+                  'value': 9.4,
+                  'units': 'km'
+                },
+                {
+                  'name': 'm',
+                  'value': 6.78,
+                  'units': null
+                },
+                {
+                  'name': 'ε interval',
+                  'value': 0.5,
+                  'units': 'σ'
+                },
+                {
+                  'name': 'Contribution',
+                  'value': 15.2,
+                  'units': '%'
+                }
+              ]
             }
           ]
         }
