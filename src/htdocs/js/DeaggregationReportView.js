@@ -14,33 +14,59 @@ var DeaggregationReportView = function (params) {
       _initialize,
 
       _response,
-      _summaries,
 
-      _buildDeaggregationHeader,
-      _buildDeaggregationMetadata,
-      _buildDeaggregationPrincipalSources,
-      _buildDeaggregationSummaryStatistics,
-      _buildDeaggregationTableBody,
-      _buildDeaggregationTableHeader,
-      _checkDeaggregationSummary,
-      _sumValues;
+      _calculateMean,
+      _checkSummaryValues,
+      _getHeader,
+      _getMetadata,
+      _getSources,
+      _getSummary,
+      _getTable,
+      _getTableBody,
+      _getTableHeader,
+      _getTitle,
+      _setSummaries;
 
   _this = SelectedCollectionView(params);
 
+
   _initialize = function () {
     _this.el.classList.add('deaggregation-report-view');
-    _summaries = {};
     _this.render();
   };
 
-  _buildDeaggregationHeader = function (component) {
+
+  /**
+   * Get plain/text markup for the response metadata,
+   * formatted with line endings
+   */
+  _getTitle = function () {
+    return [
+      '*** Deaggregation of Seismic Hazard at One Period of Spectral Accel. ***',
+      '*** Data from ' + _this.model.getEdition().get('display') + ' ****'
+    ].join(_RETURN_CHARACTERS);
+  };
+
+
+  /**
+   * Get plain/text markup for the deaggregation header
+   */
+  _getHeader = function (component) {
     return '#This deaggregation corresponds to: ' + component;
   };
 
-  _buildDeaggregationMetadata = function () {
-    var output;
+
+  /**
+   * Get plain/text markup for the response metadata,
+   * formatted with line endings
+   */
+  _getMetadata = function (summary) {
+    var output,
+        summaryMarkup;
 
     output = [];
+    summaryMarkup = _checkSummaryValues(summary);
+
     output.push(
       'PSHA Deaggregation. %contributions.',
       'site: Test',
@@ -49,14 +75,24 @@ var DeaggregationReportView = function (params) {
       'imt: ' + _this.model.getSpectralPeriod().get('display'),
       'vs30 = ' + _this.model.getVs30().get('display') +
           ' (some WUS atten. models use Site Class not Vs30).',
-      'return period: ' + _this.model.get('timeHorizon') + ' yrs.',
-      'NSHMP 2007-08 See USGS OFR 2008-1128. dM=0.2 below'
+      'return period: ' + _this.model.get('timeHorizon') + ' yrs.'
     );
+
+    if (summaryMarkup.length !== 0) {
+      output.push(summaryMarkup.join(_RETURN_CHARACTERS));
+    }
+
+    output.push('NSHMP 2007-08 See USGS OFR 2008-1128. dM=0.2 below');
 
     return output.join(_RETURN_CHARACTERS);
   };
 
-  _buildDeaggregationPrincipalSources = function (sources) {
+
+  /**
+   * Get plain/text markup for the deaggregation soures data,
+   * formatted with line endings
+   */
+  _getSources = function (sources) {
     var output,
         source;
 
@@ -92,7 +128,12 @@ var DeaggregationReportView = function (params) {
     return output.join(_RETURN_CHARACTERS);
   };
 
-  _buildDeaggregationSummaryStatistics = function (summaries) {
+
+  /**
+   * Get plain/text markup for the deaggregation summary data, 
+   * formatted with line endings
+   */
+  _getSummary = function (summaries) {
     var data,
         output,
         summary;
@@ -121,7 +162,22 @@ var DeaggregationReportView = function (params) {
     return output.join(_RETURN_CHARACTERS);
   };
 
-  _buildDeaggregationTableBody = function (data) {
+
+  /**
+   * Get plain/text markup for ebin table data
+   */
+  _getTable = function (data) {
+    return [
+      _getTableHeader(),
+      _getTableBody(data)
+    ].join();
+  };
+
+
+  /**
+   * Get plain/text markup for the table body, formatted using tab delimiters
+   */
+  _getTableBody = function (data) {
     var output,
         row,
         edata;
@@ -133,7 +189,7 @@ var DeaggregationReportView = function (params) {
       row = [];
 
       // distance, magnitude, and mean values
-      row.push(data[i].r, data[i].m, _sumValues(data[i].εdata));
+      row.push(data[i].r, data[i].m, _calculateMean(data[i].εdata));
 
       // edata values
       for (var x = 0; x < _response.get('εbins').length; x++) {
@@ -148,7 +204,11 @@ var DeaggregationReportView = function (params) {
     return output.join(_RETURN_CHARACTERS);
   };
 
-  _buildDeaggregationTableHeader = function () {
+
+  /**
+   * Get plain/text markup for the table header, formatted using tab delimiters
+   */
+  _getTableHeader = function () {
     var output,
         ebins,
         min,
@@ -167,7 +227,12 @@ var DeaggregationReportView = function (params) {
     return output.join('\t');
   };
 
-  _checkDeaggregationSummary = function (summary) {
+
+  /**
+   * Parse through deaggregation summary values to see if any values should be
+   * added to the metadata section.
+   */
+  _checkSummaryValues = function (summary) {
     var output,
         data;
 
@@ -182,10 +247,14 @@ var DeaggregationReportView = function (params) {
       }
     }
 
-    return output.join(_RETURN_CHARACTERS);
+    return output;
   };
 
-  _sumValues = function (values) {
+
+  /*
+   * Calculate the mean from an array of values
+   */
+  _calculateMean = function (values) {
     var total;
 
     total = 0;
@@ -197,51 +266,64 @@ var DeaggregationReportView = function (params) {
     return (total / values.length).toFixed(3);
   };
 
-  _this.getDeaggregationReportSummary = function (component) {
-    var deaggregations;
 
-    // return summary if it exists
-    if (_summaries && component && _summaries.hasOwnProperty('component')) {
-      return _summaries[component];
-    }
+  /**
+   * Get plain/text markup for the entire deaggregation report,
+   * formatted with line endings
+   */
+  _this.getReport = function () {
+    var deaggregations,
+        output;
 
-    // build _summaries
     deaggregations = _response.get('deaggregations').data();
+
+    // start building report output
+    output = [];
+    output.push(_getTitle());
 
     // Loop over deaggregations in the deaggregation response
     for (var i = 0; i < deaggregations.length; i++) {
-      _summaries[deaggregations[i].get('component')] =
-          deaggregations[i].get('summary');
+      output.push(
+        _getMetadata(deaggregations[i].get('summary')),
+        _getHeader(deaggregations[i].get('component')),
+        _getSummary(deaggregations[i].get('summary')),
+        _getTable(deaggregations[i].get('data')),
+        _getSources(deaggregations[i].get('sources'))
+      );
     }
 
-    return _summaries;
+    return output.join(_RETURN_CHARACTERS);
   };
 
-  _this.getDeaggregationSummaryStatisticsHtml = function (component) {
-    var output,
+
+  /**
+   * Get html markup for the entire deaggregation report, includes a link to
+   * download the report in its entirety. 
+   */
+  _this.getReportHtml = function () {
+    var deaggregations,
+        output,
         summary,
         data;
 
     output = [];
-    summary = _this.getDeaggregationReportSummary(component);
-
-    if (summary === null) {
-      return '';
-    }
+    deaggregations = _response.get('deaggregations').data();
 
     // Loop over array of values in summary object
-    for (var key in summary) {
-      output.push('<h3>Summary statistics for, Deaggregation: ',key,'</h3>');
+    for (var i = 0; i < deaggregations.length; i++) {
+      summary = deaggregations[i].get('summary');
+      output.push('<h3>Summary statistics for, Deaggregation: ',
+          deaggregations[i].get('component'), '</h3>');
 
-      for (var i = 0; i < summary[key].length; i++) {
-        data = summary[key][i].data;
+      for (var n = 0; n < summary.length; n++) {
+        data = summary[n].data;
 
-        if (summary[key][i].display === false) {
+        if (summary[n].display === false) {
           // skip
           continue;
         }
 
-        output.push('<h4>', summary[key][i].name, '</h4><dl class="summary">');
+        output.push('<h4>', summary[n].name, '</h4><dl class="summary">');
 
         for (var x = 0; x < data.length; x++) {
           output.push(
@@ -253,51 +335,30 @@ var DeaggregationReportView = function (params) {
 
         output.push('</dl>');
       }
-
     }
 
-    return output.join('');
-  };
-
-  _this.getDeaggregationReport = function () {
-    var deaggregations,
-        output;
-
-    deaggregations = _response.get('deaggregations').data();
-    output = [
-      '*** Deaggregation of Seismic Hazard at One Period of Spectral Accel. ***',
-      //'*** Data from TODO ****'
-      '*** Data from ' + _this.model.getEdition().get('display') + ' ****'
-    ];
-
-    // Loop over deaggregations in the deaggregation response
-    for (var i = 0; i < deaggregations.length; i++) {
-      output.push(
-        _buildDeaggregationMetadata(),
-        _checkDeaggregationSummary(deaggregations[i].get('summary')),
-        _buildDeaggregationHeader(deaggregations[i].get('component')),
-        _buildDeaggregationSummaryStatistics(deaggregations[i].get('summary')),
-        _buildDeaggregationTableHeader(deaggregations[i].get('data')),
-        _buildDeaggregationTableBody(deaggregations[i].get('data')),
-        _buildDeaggregationPrincipalSources(deaggregations[i].get('sources'))
-      );
-    }
-
-    return output.join(_RETURN_CHARACTERS);
+    return '<a href="data:text/plain;charset=UTF-8,' +
+          encodeURIComponent(_this.getReport()) +
+        '">Click to Download Deaggregation Report</a>' +
+        output.join('');
   };
 
 
   _this.destroy = Util.compose(function () {
-    _buildDeaggregationHeader = null;
-    _buildDeaggregationMetadata = null;
-    _buildDeaggregationPrincipalSources = null;
-    _buildDeaggregationSummaryStatistics = null;
-    _buildDeaggregationTableBody = null;
-    _buildDeaggregationTableHeader = null;
-    _checkDeaggregationSummary = null;
-    _sumValues = null;
 
-    _response = null;
+      _calculateMean = null;
+      _checkSummaryValues = null;
+      _getHeader = null;
+      _getMetadata = null;
+      _getSources = null;
+      _getSummary = null;
+      _getTable = null;
+      _getTableBody = null;
+      _getTableHeader = null;
+      _getTitle = null;
+      _setSummaries = null;
+
+      _response = null;
 
     _initialize = null;
     _this =  null;
@@ -322,11 +383,8 @@ var DeaggregationReportView = function (params) {
       }
     }
 
-    _this.getDeaggregationReportSummary('Total');
-    _this.el.innerHTML = _this.getDeaggregationSummaryStatisticsHtml() +
-        '<a href="data:text/plain;charset=UTF-8,' +
-          encodeURIComponent(_this.getDeaggregationReport()) +
-        '">Click to Download Deaggregation Report</a>';
+    // get HTML output
+    _this.el.innerHTML = _this.getReportHtml();
   };
 
   _initialize(params);
