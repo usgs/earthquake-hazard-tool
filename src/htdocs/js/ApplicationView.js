@@ -28,7 +28,9 @@ var ApplicationView = function (params) {
       _calculator,
       _componentCurveEl,
       _componentCurveView,
+      _computeCurveBtn,
       _curves,
+      _curveOutput,
       _dependencyFactory,
       _editions,
       _errorsEl,
@@ -44,6 +46,7 @@ var ApplicationView = function (params) {
       _siteClasses,
 
       // methods
+      _clearOutput,
       _initViewContainer,
       _onCurveDeselect,
       _onCurveSelect,
@@ -52,7 +55,6 @@ var ApplicationView = function (params) {
       _onRegionChange,
       _onTimeHorizonChange,
       _onVs30Change,
-      _queueCalculation,
       _updateRegion,
       _updateVs30;
 
@@ -98,7 +100,8 @@ var ApplicationView = function (params) {
     _actionsView = ActionsView({
       collection: _this.collection,
       el: _actionsEl,
-      errorsView: _errorsView
+      errorsView: _errorsView,
+      application: _this
     });
 
     _hazardCurveView = HazardCurveView({
@@ -121,6 +124,10 @@ var ApplicationView = function (params) {
   };
 
 
+  _clearOutput = function () {
+    _this.model.set({curves: null});
+  };
+
   _initViewContainer = function () {
     var el;
 
@@ -135,7 +142,16 @@ var ApplicationView = function (params) {
       '</div>',
       '<div class="application-errors"></div>',
       '<div class="application-actions"></div>',
-      '<div class="row">',
+      '<div class="row curve-output">',
+        '<div class="curve-output-mask">',
+          '<p class="alert info">',
+            'Please select &ldquo;Edition&rdquo;, &ldquo;Location&rdquo; ',
+            '&amp; &ldquo;Site Class&rdquo; above to compute a hazard curve.',
+            '<br/><button class="curve-output-calculate">',
+              'Compute Hazard Curve',
+            '</button>',
+          '</p>',
+        '</div>',
         '<section class="application-hazard-curve column one-of-two">',
         '</section>',
         '<section class="application-hazard-spectrum column one-of-two">',
@@ -149,9 +165,13 @@ var ApplicationView = function (params) {
     _mapEl = el.querySelector('.application-map');
     _errorsEl = el.querySelector('.application-errors');
     _actionsEl = el.querySelector('.application-actions');
+    _computeCurveBtn = el.querySelector('.curve-output-calculate');
     _componentCurveEl = el.querySelector('.application-hazard-component');
+    _curveOutput = el.querySelector('.curve-output');
     _hazardCurveEl = el.querySelector('.application-hazard-curve');
     _hazardSpectrumEl = el.querySelector('.application-hazard-spectrum');
+
+    _computeCurveBtn.addEventListener('click', _this.queueCalculation, _this);
   };
 
   /**
@@ -207,21 +227,22 @@ var ApplicationView = function (params) {
   _onEditionChange = function (/*changes*/) {
     _updateVs30();
     _updateRegion();
-    _queueCalculation();
+    _clearOutput();
   };
 
   _onLocationChange = function (/*changes*/) {
     _updateVs30();
     _updateRegion();
-    _queueCalculation();
+    _clearOutput();
   };
 
   _onRegionChange = function (/*changes*/) {
-    _queueCalculation();
+    _clearOutput();
   };
 
   _onVs30Change = function (/*changes*/) {
     _updateRegion();
+    _clearOutput();
   };
 
   _onTimeHorizonChange = function (/*changes*/) {
@@ -236,24 +257,6 @@ var ApplicationView = function (params) {
       _hazardSpectrumView.model.set({
         'timeHorizon': timeHorizon
       });
-    }
-  };
-
-  _queueCalculation = function () {
-    if (!_queued) {
-      window.setTimeout(function () {
-        if (_this.model.get('edition') && _this.model.get('location') &&
-            _this.model.get('region') && _this.model.get('vs30')) {
-          _loaderView.show();
-          _calculator.getResult(
-              _dependencyFactory.getService(_this.model.get('edition')),
-              _this.model,
-              _loaderView.hide
-            );
-        }
-        _queued = false;
-      }, 0);
-      _queued = true;
     }
   };
 
@@ -341,6 +344,9 @@ var ApplicationView = function (params) {
   _this.destroy = Util.compose(_this.destroy, function () {
     _calculator.destroy();
 
+    _computeCurveBtn.removeEventListener('click', _this.queueCalculation,
+        _this);
+
     // sub-views
     _actionsView.destroy();
     _basicInputsView.destroy();
@@ -362,6 +368,8 @@ var ApplicationView = function (params) {
     _basicInputsEl = null;
     _basicInputsView = null;
     _calculator = null;
+    _computeCurveBtn = null;
+    _curveOutput = null;
     _dependencyFactory = null;
     _editions = null;
     _errorsEl = null;
@@ -377,6 +385,7 @@ var ApplicationView = function (params) {
     _siteClasses = null;
 
     // methods
+    _clearOutput = null;
     _initViewContainer = null;
     _onCurveDeselect = null;
     _onCurveSelect = null;
@@ -385,7 +394,6 @@ var ApplicationView = function (params) {
     _onRegionChange = null;
     _onTimeHorizonChange = null;
     _onVs30Change = null;
-    _queueCalculation = null;
     _updateRegion = null;
     _updateVs30 = null;
 
@@ -416,6 +424,24 @@ var ApplicationView = function (params) {
     _this.model.on('change:curves', 'render', _this);
 
     _this.render({model: _this.model});
+  };
+
+  _this.queueCalculation = function () {
+    if (!_queued) {
+      window.setTimeout(function () {
+        if (_this.model.get('edition') && _this.model.get('location') &&
+            _this.model.get('region') && _this.model.get('vs30')) {
+          _loaderView.show();
+          _calculator.getResult(
+              _dependencyFactory.getService(_this.model.get('edition')),
+              _this.model,
+              _loaderView.hide
+            );
+        }
+        _queued = false;
+      }, 0);
+      _queued = true;
+    }
   };
 
   _this.render = function (changes) {
@@ -483,6 +509,13 @@ var ApplicationView = function (params) {
     }
 
     _curves.reset(data);
+
+    if (data.length === 0) {
+      // No curve data
+      _curveOutput.classList.remove('curve-output-ready');
+    } else {
+      _curveOutput.classList.add('curve-output-ready');
+    }
 
     if (id !== null) {
       _curves.selectById(id);

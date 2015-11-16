@@ -2,7 +2,6 @@
 
 var Analysis = require('Analysis'),
     AnalysisCollectionView = require('AnalysisCollectionView'),
-    ErrorsView = require('ErrorsView'),
 
     Accordion = require('accordion/Accordion'),
 
@@ -29,9 +28,9 @@ var ActionsView = function (params) {
       _initialize,
 
       _accordion,
+      _application,
       _calculateButton,
       _collectionView,
-      _errorsView,
       _newButton,
       _validateOnRender,
 
@@ -51,7 +50,7 @@ var ActionsView = function (params) {
 
     params = params || {};
 
-    _errorsView = params.errorsView || ErrorsView();
+    _application = params.application || null;
 
     _this.el.innerHTML = '<div class="error-reporting"></div>';
     _this.el.classList.add('actions-view');
@@ -149,7 +148,7 @@ var ActionsView = function (params) {
    * of the required parameters are set to perform a calculation.
    */
   _onCalculateClick = function () {
-    _errorsView.trigger('validate');
+    _application.queueCalculation();
   };
 
   /**
@@ -182,10 +181,10 @@ var ActionsView = function (params) {
     _onCalculateClick = null;
     _onNewClick = null;
 
+    _application = null;
     _accordion = null;
     _calculateButton = null;
     _collectionView = null;
-    _errorsView = null;
     _newButton = null;
 
     _this = null;

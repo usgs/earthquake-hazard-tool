@@ -25,7 +25,6 @@ describe('DeaggResponse', function () {
       var deaggResponse;
 
       deaggResponse = DeaggResponse(rawResponse);
-      console.log(JSON.stringify(rawResponse, null, '  '));
 
       expect(deaggResponse.get('imt')).to.equal('PGA');
       expect(deaggResponse.get('rlabel')).to.equal(
