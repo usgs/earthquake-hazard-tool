@@ -34,10 +34,11 @@ var ResponseSpectrumGraphView = function (options) {
     _curves.on('add', _this.render);
     _curves.on('remove',  _this.render);
     _curves.on('reset', _this.render);
-    _this.curves = _curves;
+    _curves.on('select', _this.render);
 
     _spectrum = ResponseSpectrumLineView({
-      view: _this
+      view: _this,
+      curves: _curves
     });
     _this.views.add(_spectrum);
   };
@@ -47,13 +48,14 @@ var ResponseSpectrumGraphView = function (options) {
    */
   _this.destroy = Util.compose(function () {
     if (_destroyCurves) {
-      _this.curves.destroy();
+      _curves.destroy();
     } else {
       _curves.off('add', _this.render);
       _curves.off('remove', _this.render);
       _curves.off('reset', _this.render);
+      _curves.off('select', _this.render);
     }
-    _this.curves = null;
+    _curves = null;
   }, _this.destroy);
 
   /**
@@ -91,8 +93,14 @@ var ResponseSpectrumGraphView = function (options) {
   _this.render = Util.compose(function (changed) {
     var afe,
         data,
+        imt,
         timeHorizon,
         yExtent;
+
+    imt = _this.model.get('curves').getSelected();
+    if (imt !== null) {
+      imt = imt.get('imt');
+    }
 
     timeHorizon = _this.model.get('timeHorizon');
     afe = 1 / timeHorizon;
@@ -105,7 +113,7 @@ var ResponseSpectrumGraphView = function (options) {
           y = c.getX(afe);
 
       if (x !== null && y !== null) {
-        data.push([x, y]);
+        data.push([x, y, c.get('imt')]);
       }
 
       // Use smallest x-value and x-value corresponding to 5000 year return
@@ -126,6 +134,7 @@ var ResponseSpectrumGraphView = function (options) {
 
     _spectrum.model.set({
       data: data,
+      imt: imt // Send IMT so the line highlights the corresponding point
     }, {silent: true});
 
     // pass argument to original render method.

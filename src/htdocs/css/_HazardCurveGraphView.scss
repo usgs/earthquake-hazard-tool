@@ -1,66 +1,67 @@
 @import 'd3/_D3View.scss';
 @import 'd3/_D3LineView.scss';
+@import '_GraphVariables.scss';
 
 .D3View {
 
   [data-index='0'] {
-    > .line { stroke: #a6cee3; }
-    > .point { fill: #a6cee3; }
+    > .line { stroke: $graph_color_0; }
+    > .point { fill: $graph_color_0; }
   }
 
   [data-index='1'] {
-    > .line { stroke: #1f78b4; }
-    > .point { fill: #1f78b4; }
+    > .line { stroke: $graph_color_1; }
+    > .point { fill: $graph_color_1; }
   }
 
   [data-index='2'] {
-    > .line { stroke: #33a02c; }
-    > .point { fill: #33a02c; }
+    > .line { stroke: $graph_color_2; }
+    > .point { fill: $graph_color_2; }
   }
 
   [data-index='3'] {
-    > .line { stroke: #e31a1c; }
-    > .point { fill: #e31a1c; }
+    > .line { stroke: $graph_color_3; }
+    > .point { fill: $graph_color_3; }
   }
 
   [data-index='4'] {
-    > .line { stroke: #b2df8a; }
-    > .point { fill: #b2df8a; }
+    > .line { stroke: $graph_color_4; }
+    > .point { fill: $graph_color_4; }
   }
 
   [data-index='5'] {
-    > .line { stroke: #fb9a99; }
-    > .point { fill: #fb9a99; }
+    > .line { stroke: $graph_color_5; }
+    > .point { fill: $graph_color_5; }
   }
 
   [data-index='6'] {
-    > .line { stroke: #fdbf6f; }
-    > .point { fill: #fdbf6f; }
+    > .line { stroke: $graph_color_6; }
+    > .point { fill: $graph_color_6; }
   }
 
   [data-index='7'] {
-    > .line { stroke: #ff7f00; }
-    > .point { fill: #ff7f00; }
+    > .line { stroke: $graph_color_7; }
+    > .point { fill: $graph_color_7; }
   }
 
   [data-index='8'] {
-    > .line { stroke: #cab2d6; }
-    > .point { fill: #cab2d6; }
+    > .line { stroke: $graph_color_8; }
+    > .point { fill: $graph_color_8; }
   }
 
   [data-index='9'] {
-    > .line { stroke: #6a3d9a; }
-    > .point { fill: #6a3d9a; }
+    > .line { stroke: $graph_color_9; }
+    > .point { fill: $graph_color_9; }
   }
 
   [data-index='10'] {
-    > .line { stroke: #ffff99; }
-    > .point { fill: #ffff99; }
+    > .line { stroke: $graph_color_10; }
+    > .point { fill: $graph_color_10; }
   }
 
   [data-index='11'] {
-    > .line { stroke: #b15928; }
-    > .point { fill: #b15928; }
+    > .line { stroke: $graph_color_11; }
+    > .point { fill: $graph_color_11; }
   }
 
   .mouseover {
