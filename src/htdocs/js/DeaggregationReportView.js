@@ -242,9 +242,9 @@ var DeaggregationReportView = function (params) {
     output.push( _response.get('rlabel') + '\t' + _response.get('mlabel') + '\tALL_ε');
 
     for (var i = (ebins.length - 1); i >= 0; i--) {
-      min = (ebins[i].min ? ebins[i].min + '<' : '');
-      max = (ebins[i].max ? '<' + ebins[i].max : '');
-      output.push(min + 'ε' + max);
+      min = (ebins[i].min ? '>' +ebins[i].min : '');
+      max = (ebins[i].max ? ebins[i].max + '>' : '');
+      output.push(max + 'ε' + min);
     }
 
     return output.join('\t') + _RETURN_CHARACTERS;
