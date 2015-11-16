@@ -28,10 +28,10 @@ var DeaggregationReportView = function (params) {
   _this = SelectedCollectionView(params);
 
   _initialize = function () {
+    _this.el.classList.add('deaggregation-report-view');
     _summaries = {};
     _this.render();
   };
-
 
   _buildDeaggregationHeader = function (component) {
     return '#This deaggregation corresponds to: ' + component;
@@ -156,7 +156,7 @@ var DeaggregationReportView = function (params) {
 
     ebins = _response.get('εbins');
     output = [];
-    output.push( _response.get('rlabel') + ',' + _response.get('mlabel') + ',ALL_ε');
+    output.push( _response.get('rlabel') + '\t' + _response.get('mlabel') + '\tALL_ε');
 
     for (var i = (ebins.length - 1); i >= 0; i--) {
       min = (ebins[i].min ? ebins[i].min + '<' : '');
@@ -177,7 +177,8 @@ var DeaggregationReportView = function (params) {
       data = summary[i].data;
       // if data has no name it does not belong in summary seciton
       if (data[0] && data[0].name === null && data[0].value !== null) {
-        output.push(summary[i].name + ': ' + data[0].value);
+        output.push(summary[i].name + ': ' + data[0].value +
+            (data[0].units ? ' ' + data[0].units : ''));
       }
     }
 
@@ -240,17 +241,19 @@ var DeaggregationReportView = function (params) {
           continue;
         }
 
-        output.push('<h4>', summary[key][i].name, '</h4><dl>');
+        output.push('<h4>', summary[key][i].name, '</h4><dl class="summary">');
 
         for (var x = 0; x < data.length; x++) {
           output.push(
             '<dt>', data[x].name + '</dt>' +
-            '<dd>' + data[x].value + '</dd>'
+            '<dd>' + data[x].value +
+                (data[x].units ? ' ' + data[x].units : '') + '</dd>'
           );
         }
+
+        output.push('</dl>');
       }
 
-      output.push('</dl>');
     }
 
     return output.join('');
@@ -320,8 +323,7 @@ var DeaggregationReportView = function (params) {
     }
 
     _this.getDeaggregationReportSummary('Total');
-    _this.el.innerHTML = '<h4>Summary Statistics</h4>' +
-        _this.getDeaggregationSummaryStatisticsHtml() +
+    _this.el.innerHTML = _this.getDeaggregationSummaryStatisticsHtml() +
         '<a href="data:text/plain;charset=UTF-8,' +
           encodeURIComponent(_this.getDeaggregationReport()) +
         '">Click to Download Deaggregation Report</a>';
