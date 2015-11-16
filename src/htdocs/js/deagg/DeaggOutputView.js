@@ -12,6 +12,11 @@ var _DEFAULTS = {
 
 };
 
+/**
+ * This view serves as a wrapper around the various output component views
+ * for a deaggregation calculation.
+ *
+ */
 var DeaggOutputView = function (params) {
   var _this,
       _initialize,
@@ -36,6 +41,10 @@ var DeaggOutputView = function (params) {
   };
 
 
+  /**
+   * Populates the view container structure.
+   *
+   */
   _createViewSkeleton = function () {
     _this.el.innerHTML = [
       '<select class="deagg-component-select-view"></select>',
@@ -44,6 +53,10 @@ var DeaggOutputView = function (params) {
     ].join('');
   };
 
+  /**
+   * Clean up each managed sub-view.
+   *
+   */
   _destroySubViews = function () {
     if (_componentSelectView) {
       _componentSelectView.destroy();
@@ -61,6 +74,10 @@ var DeaggOutputView = function (params) {
     }
   };
 
+  /**
+   * Initialize each managed sub-view.
+   *
+   */
   _initSubViews = function () {
     _componentSelectView = DeaggComponentSelectView({
       el: _this.el.querySelector('.deagg-component-select-view'),
@@ -78,7 +95,10 @@ var DeaggOutputView = function (params) {
     });
   };
 
-
+  /**
+   * Free resouces associated with this view.
+   *
+   */
   _this.destroy = Util.compose(function () {
     _destroySubViews();
 
@@ -90,13 +110,23 @@ var DeaggOutputView = function (params) {
     _this = null;
   }, _this.destroy);
 
+  /**
+   * Destroys sub-views and then calls default implementation to unbind
+   * from _this.model.
+   *
+   */
   _this.onCollectionDeselect = Util.extend(function () {
     _destroySubViews();
   }, _this.onCollectionDeselect);
 
-  _this.onCollectionSelect = Util.extend(function () {
+  /**
+   * Calls default implementation then initializes the sub-views with the new
+   * _this.model.
+   *
+   */
+  _this.onCollectionSelect = Util.extend(_this.onCollectionSelect, function () {
     _initSubViews();
-  }, _this.onCollectionSelect);
+  });
 
 
   _initialize(params);
