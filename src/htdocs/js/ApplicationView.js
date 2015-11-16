@@ -427,16 +427,17 @@ var ApplicationView = function (params) {
   };
 
   _this.queueCalculation = function () {
+    var request;
     if (!_queued) {
       window.setTimeout(function () {
         if (_this.model.get('edition') && _this.model.get('location') &&
             _this.model.get('region') && _this.model.get('vs30')) {
-          _loaderView.show();
-          _calculator.getResult(
+          request = _calculator.getResult(
               _dependencyFactory.getService(_this.model.get('edition')),
               _this.model,
               _loaderView.hide
             );
+          _loaderView.show(request);
         }
         _queued = false;
       }, 0);

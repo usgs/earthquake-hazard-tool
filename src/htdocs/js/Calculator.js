@@ -59,7 +59,7 @@ var Calculator = function (/*params*/) {
       }
     }
 
-    Xhr.ajax({
+    var request = Xhr.ajax({
       url: url,
       success: function (response) {
         analysis.set({
@@ -71,6 +71,8 @@ var Calculator = function (/*params*/) {
         }
       }
     });
+
+    return request;
   };
 
   return _this;

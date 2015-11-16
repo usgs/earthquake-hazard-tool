@@ -9,6 +9,8 @@ var LoaderView = function() {
   var _this,
       _initialize,
 
+      _cancelButton,
+      _request,
       _showCount,
 
       _isVisible;
@@ -23,7 +25,11 @@ var LoaderView = function() {
     _this.el.innerHTML = '<div class="loader-container">' +
         '<div class="loader"></div>' +
         '<p class="loader-text">Calculating</p>' +
+        '<button class="cancel-request">Cancel Request</button>' +
       '</div>';
+
+    _cancelButton = _this.el.querySelector('.cancel-request');
+    _cancelButton.addEventListener('click', _this.cancel, _this);
   };
 
 
@@ -32,7 +38,11 @@ var LoaderView = function() {
   };
 
 
-  _this.show = function () {
+  _this.show = function (request) {
+    if (request) {
+      _request = request;
+    }
+
     if (_showCount === 0) {
       document.body.appendChild(_this.el);
     }
@@ -52,9 +62,25 @@ var LoaderView = function() {
     }
   };
 
+  _this.cancel = function () {
+    // cancel XHR request
+    if (_request) {
+      _request.abort();
+      _request = null;
+    }
+
+    // close spinner
+    _this.hide();
+  };
+
   _this.destroy = Util.compose(function () {
+
+    _cancelButton.removeEventListener('click', _this.cancel, _this);
+
     _isVisible = null;
 
+    _cancelButton = null;
+    _request = null;
     _showCount = null;
 
     _this = null;
