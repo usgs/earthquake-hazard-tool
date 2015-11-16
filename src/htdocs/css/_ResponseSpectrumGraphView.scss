@@ -3,13 +3,13 @@
 .ResponseSpectrumLineView {
   > .line,
   &.mouseover > .line {
-    stroke-width: calc($lineStroke + $selectedStrokeOffset);
+    stroke-width: $lineStroke;
     stroke: $selectedGraphColor;
   }
 
   > .point {
     cursor:pointer;
-    stroke-width: calc($pointStroke + $selectedStrokeOffset);
+    stroke-width: $pointStroke;
 
     &[data-index='0'] {
       stroke: $graphColor0;
@@ -72,7 +72,7 @@
     }
 
     &.selected {
-      stroke-width: calc($pointStroke + (2 * $selectedStrokeOffset));
+      stroke-width: calc($pointStroke + $selectedStrokeOffset);
       fill: $selectedGraphColor;
       stroke: $selectedGraphColor;
     }
