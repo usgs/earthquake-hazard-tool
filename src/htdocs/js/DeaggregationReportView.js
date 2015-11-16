@@ -34,7 +34,7 @@ var DeaggregationReportView = function (params) {
 
 
   _buildDeaggregationHeader = function (component) {
-    return '#This deaggregation corresponds to ' + component;
+    return '#This deaggregation corresponds to: ' + component;
   };
 
   _buildDeaggregationMetadata = function () {
@@ -46,13 +46,11 @@ var DeaggregationReportView = function (params) {
       'site: Test',
       'longitude: ' + Formatter.longitude(_this.model.get('location').longitude),
       'latitude: ' + Formatter.longitude(_this.model.get('location').latitude),
-      'Vs30 = ' + _this.model.get('vs30') +
+      'imt: ' + _this.model.getSpectralPeriod().get('display'),
+      'vs30 = ' + _this.model.getVs30().get('display') +
           ' (some WUS atten. models use Site Class not Vs30).',
-      'NSHMP 2007-08 See USGS OFR 2008-1128. dM=0.2 below',
-      'Return period: ' + _this.model.get('timeHorizon') + ' yrs.',
-      'Exceedance PGA = 0.8928 g.',
-      'Weight * Computed_Rate_Ex 0.407E-03',
-      '#Pr [at least one eq with median motion >= PGA in 50 yrs] = 0.00048'
+      'return period: ' + _this.model.get('timeHorizon') + ' yrs.',
+      'NSHMP 2007-08 See USGS OFR 2008-1128. dM=0.2 below'
     );
 
     return output.join(_RETURN_CHARACTERS);
@@ -71,19 +69,22 @@ var DeaggregationReportView = function (params) {
 
       if (source.azimuth === null) {
         output.push(
-          source.name,
-          'Percent Contributed,' + source.contribution,
-          'Distance (km),' + source.rBar,
-          'Magnitude,' + source.mBar,
-          'Epsilon (mean values),' + source.εBar
+          source.name + ': ',
+          '  Percent Contributed: ' + source.contribution,
+          '  Distance (km): ' + source.r,
+          '  Magnitude: ' + source.m,
+          '  Epsilon (mean values): ' + source.ε
         );
       } else {
         output.push(
-          source.name,
-          'Percent Contributed,' + source.contribution,
-          'Distance (km),' + source.r,
-          'Magnitude,' + source.m,
-          'Epsilon (mean values),' + source.ε
+          source.name + ': ',
+          '  Percent Contributed: ' + source.contribution,
+          '  Distance (km): ' + source.r,
+          '  Magnitude: ' + source.m,
+          '  Epsilon (mean values): ' + source.ε,
+          '  Azimuth: ' + source.azimuth,
+          '  Latitude: ' + source.latitude,
+          '  Longitude: ' + source.longitude
         );
       }
     }
@@ -96,7 +97,7 @@ var DeaggregationReportView = function (params) {
         output,
         summary;
 
-    output = ['Summary statistics for above PSHA PGA deaggregation, R=distance, e=epsilon'];
+    output = ['Summary statistics for above PSHA PGA deaggregation, r=distance, ε=epsilon:'];
 
     for (var i = 0; i < summaries.length; i++) {
       summary = summaries[i];
@@ -105,11 +106,13 @@ var DeaggregationReportView = function (params) {
       if (data[0] && data[0].name === null) {
         continue;
       }
-      output.push(summary.name);
+      output.push(summary.name + ': ');
+
       for (var x = 0; x < data.length; x++) {
         if (data[x].name !== null) {
           output.push(
-            data[x].name + ', ' + data[x].value
+            '  ' + data[x].name + ': ' + data[x].value +
+              (data[x].units ? ' ' + data[x].units : '')
           );
         }
       }
@@ -138,7 +141,7 @@ var DeaggregationReportView = function (params) {
       }
 
       // add row to output
-      output.push(row.join(','));
+      output.push(row.join('\t'));
     }
 
     // join with line endings (CR LF)
@@ -161,7 +164,7 @@ var DeaggregationReportView = function (params) {
       output.push(min + 'ε' + max);
     }
 
-    return output.join(',');
+    return output.join('\t');
   };
 
   _checkDeaggregationSummary = function (summary) {
@@ -268,8 +271,8 @@ var DeaggregationReportView = function (params) {
     for (var i = 0; i < deaggregations.length; i++) {
       output.push(
         _buildDeaggregationMetadata(),
-        _buildDeaggregationHeader(deaggregations[i].get('component')),
         _checkDeaggregationSummary(deaggregations[i].get('summary')),
+        _buildDeaggregationHeader(deaggregations[i].get('component')),
         _buildDeaggregationSummaryStatistics(deaggregations[i].get('summary')),
         _buildDeaggregationTableHeader(deaggregations[i].get('data')),
         _buildDeaggregationTableBody(deaggregations[i].get('data')),
