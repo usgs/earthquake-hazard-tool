@@ -1,11 +1,13 @@
 'use strict';
 
-var DeaggComponentSelectView = require('mvc/View'),
-    DeaggGraphView = require('mvc/View'),
+var DeaggGraphView = require('mvc/View'),
     DeaggReportView = require('mvc/View'),
 
-    Util = require('util/Util'),
-    View = require('mvc/View');
+    Collection = require('mvc/Collection'),
+    CollectionSelectBox = require('mvc/SelectView'),
+    SelectedCollectionView = require('mvc/SelectedCollectionView'),
+
+    Util = require('util/Util');
 
 
 var _DEFAULTS = {
@@ -26,15 +28,19 @@ var DeaggOutputView = function (params) {
       _initSubViews,
 
       _componentSelectView,
+      _deaggCollection,
       _graphView,
       _reportView;
 
 
   params = Util.extend({}, _DEFAULTS, params);
-  _this = View(params);
+  _this = SelectedCollectionView(params);
 
   _initialize = function (/*params*/) {
     _this.el.classList.add('deagg-output-view');
+
+    _deaggCollection = Collection();
+    _deaggCollection.on('select', 'onComponentSelect', _this);
 
     _createViewSkeleton();
     _initSubViews();
@@ -79,18 +85,21 @@ var DeaggOutputView = function (params) {
    *
    */
   _initSubViews = function () {
-    _componentSelectView = DeaggComponentSelectView({
+    _componentSelectView = CollectionSelectBox({
+      collection: _deaggCollection,
       el: _this.el.querySelector('.deagg-component-select-view'),
       model: _this.model
     });
 
     _graphView = DeaggGraphView({
-      el: _this.querySelector('.deagg-output-view-graph'),
+      collection: _deaggCollection,
+      el: _this.el.querySelector('.deagg-output-view-graph'),
       model: _this.model
     });
 
     _reportView = DeaggReportView({
-      el: _this.querySelector('.deagg-output-view-report'),
+      collection: _this.collection,
+      el: _this.el.querySelector('.deagg-output-view-report'),
       model: _this.model
     });
   };
@@ -101,6 +110,10 @@ var DeaggOutputView = function (params) {
    */
   _this.destroy = Util.compose(function () {
     _destroySubViews();
+
+    _deaggCollection.off('select', 'onComponentSelect', _this);
+    _deaggCollection.destroy();
+    _deaggCollection = null;
 
     _createViewSkeleton = null;
     _destroySubViews = null;
@@ -116,6 +129,7 @@ var DeaggOutputView = function (params) {
    *
    */
   _this.onCollectionDeselect = Util.extend(function () {
+    _deaggCollection.reset([]);
     _destroySubViews();
   }, _this.onCollectionDeselect);
 
@@ -125,7 +139,23 @@ var DeaggOutputView = function (params) {
    *
    */
   _this.onCollectionSelect = Util.extend(_this.onCollectionSelect, function () {
-    _initSubViews();
+    var imt,
+        response,
+        responses;
+
+    imt = _this.model.get('imt');
+    responses = _this.model.get('deaggResponses');
+
+    if (responses) {
+      responses.data.some(function (r) {
+        if (r.get('imt').value === imt.value) {
+          response = r;
+          return true;
+        }
+      });
+    }
+
+    _deaggCollection.reset(response ? response.get('data') : []);
   });
 
 
