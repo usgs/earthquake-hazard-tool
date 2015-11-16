@@ -7,12 +7,14 @@ var SelectedCollectionView = require('mvc/SelectedCollectionView'),
 
 var _RETURN_CHARACTERS;
 
-_RETURN_CHARACTERS = '\r\n';
+_RETURN_CHARACTERS = '\n';
 
 var DeaggregationReportView = function (params) {
   var _this,
       _initialize,
 
+      _downloadEl,
+      _reportEl,
       _response,
 
       _calculateMean,
@@ -25,14 +27,35 @@ var DeaggregationReportView = function (params) {
       _getTableBody,
       _getTableHeader,
       _getTitle,
+      _onDownloadClick,
       _setSummaries;
 
   _this = SelectedCollectionView(params);
 
 
   _initialize = function () {
+
+    _downloadEl = document.createElement('a');
+    _downloadEl.className = 'download-deaggregation-report';
+    _downloadEl.innerHTML = 'Download Deaggregation Report';
+    _downloadEl.setAttribute('download', 'deaggregation-report.txt');
+    _downloadEl.href = '#';
+
+    _reportEl = document.createElement('div');
+    _reportEl.className = 'deaggregation-report';
+
     _this.el.classList.add('deaggregation-report-view');
+    _this.el.appendChild(_downloadEl);
+    _this.el.appendChild(_reportEl);
+
+    // bind event listeners
+    _downloadEl.addEventListener('click', _onDownloadClick);
+
     _this.render();
+  };
+
+  _onDownloadClick = function () {
+    _downloadEl.href = 'data:text/plain;charset=UTF-8,' + encodeURIComponent(_this.getReport());
   };
 
 
@@ -170,7 +193,7 @@ var DeaggregationReportView = function (params) {
     return [
       _getTableHeader(),
       _getTableBody(data)
-    ].join();
+    ].join('');
   };
 
 
@@ -200,7 +223,7 @@ var DeaggregationReportView = function (params) {
       output.push(row.join('\t'));
     }
 
-    // join with line endings (CR LF)
+    // join with line endings
     return output.join(_RETURN_CHARACTERS);
   };
 
@@ -224,7 +247,7 @@ var DeaggregationReportView = function (params) {
       output.push(min + 'ε' + max);
     }
 
-    return output.join('\t');
+    return output.join('\t') + _RETURN_CHARACTERS;
   };
 
 
@@ -337,28 +360,30 @@ var DeaggregationReportView = function (params) {
       }
     }
 
-    return '<a href="data:text/plain;charset=UTF-8,' +
-          encodeURIComponent(_this.getReport()) +
-        '">Click to Download Deaggregation Report</a>' +
-        output.join('');
+    return output.join('');
   };
 
 
   _this.destroy = Util.compose(function () {
 
-      _calculateMean = null;
-      _checkSummaryValues = null;
-      _getHeader = null;
-      _getMetadata = null;
-      _getSources = null;
-      _getSummary = null;
-      _getTable = null;
-      _getTableBody = null;
-      _getTableHeader = null;
-      _getTitle = null;
-      _setSummaries = null;
+    _reportEl.removeEventListener('click', _onDownloadClick);
 
-      _response = null;
+    _calculateMean = null;
+    _checkSummaryValues = null;
+    _getHeader = null;
+    _getMetadata = null;
+    _getSources = null;
+    _getSummary = null;
+    _getTable = null;
+    _getTableBody = null;
+    _getTableHeader = null;
+    _getTitle = null;
+    _onDownloadClick = null;
+    _setSummaries = null;
+
+    _downloadEl = null;
+    _reportEl = null;
+    _response = null;
 
     _initialize = null;
     _this =  null;
@@ -384,7 +409,7 @@ var DeaggregationReportView = function (params) {
     }
 
     // get HTML output
-    _this.el.innerHTML = _this.getReportHtml();
+    _reportEl.innerHTML = _this.getReportHtml();
   };
 
   _initialize(params);
