@@ -4,6 +4,7 @@ var ActionsView = require('ActionsView'),
     BasicInputsView = require('BasicInputsView'),
     Calculator = require('CurveCalculator'),
     ComponentCurvesGraphView = require('ComponentCurvesGraphView'),
+    DeaggOutputView = require('deagg/DeaggOutputView'),
     ErrorsView = require('ErrorsView'),
     HazardCurveView = require('HazardCurveGraphView'),
     HazardSpectrumView = require('ResponseSpectrumGraphView'),
@@ -31,6 +32,7 @@ var ApplicationView = function (params) {
       _computeCurveBtn,
       _curves,
       _curveOutput,
+      _deaggOutputEl,
       _dependencyFactory,
       _editions,
       _errorsEl,
@@ -121,6 +123,11 @@ var ApplicationView = function (params) {
       el: _componentCurveEl.appendChild(document.createElement('div')),
       title: 'Hazard Curve Compoents'
     });
+
+    _deaggOutputEl = DeaggOutputView({
+      collection: _this.collection,
+      el: _deaggOutputEl
+    });
   };
 
 
@@ -141,6 +148,7 @@ var ApplicationView = function (params) {
         '<section class="application-map"></section>',
       '</div>',
       '<div class="application-errors"></div>',
+      '<h2>Hazard Curve</h2>',
       '<div class="application-actions"></div>',
       '<div class="row curve-output">',
         '<div class="curve-output-mask">',
@@ -158,7 +166,9 @@ var ApplicationView = function (params) {
         '</section>',
         '<section class="application-hazard-component column one-of-two">',
         '</section>',
-      '</div>'
+      '</div>',
+      '<h2>Deaggregation</h2>',
+      '<div class="row deagg-output"></div>'
     ].join('');
 
     _basicInputsEl = el.querySelector('.application-basic-inputs');
@@ -170,6 +180,8 @@ var ApplicationView = function (params) {
     _curveOutput = el.querySelector('.curve-output');
     _hazardCurveEl = el.querySelector('.application-hazard-curve');
     _hazardSpectrumEl = el.querySelector('.application-hazard-spectrum');
+
+    _deaggOutputEl = el.querySelector('.deagg-output');
 
     _computeCurveBtn.addEventListener('click', _this.queueCalculation, _this);
   };
@@ -372,6 +384,7 @@ var ApplicationView = function (params) {
     _calculator = null;
     _computeCurveBtn = null;
     _curveOutput = null;
+    _deaggOutputEl = null;
     _dependencyFactory = null;
     _editions = null;
     _errorsEl = null;
