@@ -42,7 +42,7 @@ var DeaggregationReportView = function (params) {
     _downloadEl.href = '#';
 
     _reportEl = document.createElement('div');
-    _reportEl.className = 'deaggregation-report';
+    _reportEl.className = 'deaggregation-report-summary';
 
     _this.el.classList.add('deaggregation-report-view');
     _this.el.appendChild(_reportEl);
@@ -336,7 +336,8 @@ var DeaggregationReportView = function (params) {
     for (var i = 0; i < deaggregations.length; i++) {
       summary = deaggregations[i].get('summary');
       output.push('<h3>Summary statistics for, Deaggregation: ',
-          deaggregations[i].get('component'), '</h3>');
+          deaggregations[i].get('component'), '</h3>',
+          '<div class="summary-group">');
 
       for (var n = 0; n < summary.length; n++) {
         data = summary[n].data;
@@ -346,7 +347,9 @@ var DeaggregationReportView = function (params) {
           continue;
         }
 
-        output.push('<h4>', summary[n].name, '</h4><dl class="summary">');
+        output.push('<div class="summary-values">',
+          '<h4>', summary[n].name, '</h4>',
+          '<dl class="summary-list">');
 
         for (var x = 0; x < data.length; x++) {
           output.push(
@@ -356,8 +359,10 @@ var DeaggregationReportView = function (params) {
           );
         }
 
-        output.push('</dl>');
+        output.push('</dl></div>');
       }
+
+      output.push('</div>');
     }
 
     return output.join('');
