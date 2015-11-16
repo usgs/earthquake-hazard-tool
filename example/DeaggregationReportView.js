@@ -21,6 +21,7 @@ var data = Xhr.ajax({
           'latitude': 34,
           'longitude': -118
         },
+        'imt': 'PGA',
         'region': 'COUS0P05',
         'deaggregation': Collection(data.response.map(DeaggResponse))
       });

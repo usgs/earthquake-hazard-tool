@@ -45,11 +45,11 @@ var DeaggregationReportView = function (params) {
     _reportEl.className = 'deaggregation-report';
 
     _this.el.classList.add('deaggregation-report-view');
-    _this.el.appendChild(_downloadEl);
     _this.el.appendChild(_reportEl);
 
     // bind event listeners
     _downloadEl.addEventListener('click', _onDownloadClick);
+    _this.model.on('change:imt', 'render', _this);
 
     _this.render();
   };
@@ -393,6 +393,8 @@ var DeaggregationReportView = function (params) {
   _this.render = function () {
     var responses;
 
+    _response = null;
+
     if (_this.model === null || _this.model.get('deaggregation') === null) {
       _this.el.innerHTML = '';
       return;
@@ -408,8 +410,17 @@ var DeaggregationReportView = function (params) {
       }
     }
 
-    // get HTML output
-    _reportEl.innerHTML = _this.getReportHtml();
+    // Add report with download button, or remove from view
+    if (_response) {
+      _this.el.insertBefore(_downloadEl, _reportEl);
+      _reportEl.innerHTML = _this.getReportHtml();
+    } else {
+      _reportEl.innerHTML = '';
+
+      if (_this.el.contains(_downloadEl)) {
+        _this.el.removeChild(_downloadEl);
+      }
+    }
   };
 
   _initialize(params);
