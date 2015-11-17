@@ -1,6 +1,6 @@
 'use strict';
 
-var Analysis = require('analysis'),
+var Analysis = require('Analysis'),
     SelectedCollectionView = require('mvc/SelectedCollectionView'),
     Formatter = require('util/Formatter'),
 
