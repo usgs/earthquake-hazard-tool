@@ -49,8 +49,6 @@ var TimeHorizonInputView = function (params) {
           });
         }
       }
-      _timeHorizonInput.focus();
-
     }
   };
 
