@@ -4,7 +4,6 @@
 @import 'd3/_D3LineView.scss';
 @import 'd3/_D3View.scss';
 
-@import 'leaflet.css';
 @import 'leaflet/control/_Control.scss';
 @import 'leaflet/control/_Fullscreen.scss';
 @import 'leaflet/control/_MousePosition.scss';
@@ -17,6 +16,9 @@
 @import 'locationview/LocationControl.scss';
 @import 'locationview/LocationView.scss';
 @import 'locationview/PointControl.scss';
+
+@import 'input/_InputView.scss';
+@import 'input/_Location.scss';
 
 @import '_ActionsView.scss';
 @import '_ApplicationView.scss';
