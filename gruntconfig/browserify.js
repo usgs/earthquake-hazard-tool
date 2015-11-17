@@ -81,6 +81,8 @@ addExports(config.src + '/htdocs/js', [
   'deagg/DeaggResponse',
   'deagg/DeaggregationGraphView',
 
+  'input/CustomSelectBox',
+  'input/InputView',
   'input/Location',
 
   'map/Layers',
