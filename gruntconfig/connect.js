@@ -127,6 +127,7 @@ var connect = {
   template: {
     options: {
       base: ['node_modules/hazdev-template/dist/htdocs'],
+      middleware: addMiddleware,
       port: config.templatePort
     }
   }
