@@ -1,11 +1,11 @@
 'use strict';
 
 var LocationInput = require('input/Location'),
-    CustomSelectBox = require('input/CustomSelectBox'),
     // TimeHorizonInputView = require('TimeHorizonInputView'),
     // TimeHorizonSliderView = require('TimeHorizonSliderView'),
 
     Collection = require('mvc/Collection'),
+    CollectionSelectBox = require('mvc/CollectionSelectBox'),
     SelectedCollectionView = require('mvc/SelectedCollectionView'),
 
     Util = require('util/Util');
@@ -37,6 +37,10 @@ var __intersection = function (arr1, arr2) {
 
 var __to_id = function (model) {
   return model.id;
+};
+
+var __to_display = function (model) {
+  return model.get('display');
 };
 
 var _DEFAULTS = {
@@ -188,29 +192,33 @@ var InputView = function (params) {
 
   _initSubViews = function () {
     // All editions are always valid, so default implementation works...
-    _editionInput = CustomSelectBox({
+    _editionInput = CollectionSelectBox({
       collection: _editions,
       el: _this.el.querySelector('.input-edition-view'),
+      format: __to_display,
       includeBlankOption: true,
       model: _this.model
     });
 
     _locationInput = LocationInput({
       el: _this.el.querySelector('.input-location-view'),
+      format: __to_display,
       model: _this.model
     });
 
-    _siteClassInput = CustomSelectBox({
+    _siteClassInput = CollectionSelectBox({
       collection: _siteClasses,
       el: _this.el.querySelector('.input-site-class-view'),
+      format: __to_display,
       getValidOptions: _getValidSiteClasses,
       includeBlankOption: true,
       model: _this.model
     });
 
-    _imtInput = CustomSelectBox({
+    _imtInput = CollectionSelectBox({
       collection: _imts,
       el: _this.el.querySelector('.input-imt-view'),
+      format: __to_display,
       getValidOptions: _getValidImts,
       includeBlankOption: true,
       model: _this.model
@@ -238,8 +246,6 @@ var InputView = function (params) {
       _imtInput.render();
     }
   };
-
-
 
 
   _this.destroy = Util.compose(function () {
