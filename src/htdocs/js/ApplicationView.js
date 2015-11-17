@@ -111,13 +111,17 @@ var ApplicationView = function (params) {
     el.className = 'application-container';
 
     el.innerHTML = [
+      '<h2 id="header-gis-hazard-layers">GIS Hazard Layers</h2>',
       '<section class="application-map"></section>',
-      '<h2>Input</h2>',
+
+      '<h2 id="header-input">Input</h2>',
       '<section class="input-view"></section>',
       '<div class="application-actions"></div>',
-      '<h2>Hazard Curve</h2>',
+
+      '<h2 id="header-curve">Hazard Curve</h2>',
       '<div class="row curve-output-view"></div>',
-      '<h2>Deaggregation</h2>',
+
+      '<h2 id="header-deaggregation">Deaggregation</h2>',
       '<div class="row deagg-output-view"></div>'
     ].join('');
 
