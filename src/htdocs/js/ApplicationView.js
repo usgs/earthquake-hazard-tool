@@ -2,7 +2,7 @@
 
 var ActionsView = require('ActionsView'),
     BasicInputsView = require('BasicInputsView'),
-    Calculator = require('Calculator'),
+    Calculator = require('CurveCalculator'),
     ComponentCurvesGraphView = require('ComponentCurvesGraphView'),
     ErrorsView = require('ErrorsView'),
     HazardCurveView = require('HazardCurveGraphView'),
