@@ -83,6 +83,7 @@ addExports(config.src + '/htdocs/js', [
 
   'input/InputView',
   'input/Location',
+  'input/TimeHorizonInput',
 
   'map/Layers',
   'map/LayerControl'
