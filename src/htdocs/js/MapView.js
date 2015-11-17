@@ -6,7 +6,6 @@ var FullscreenControl = require('leaflet/control/Fullscreen'),
 
     L = require('leaflet/Leaflet'),
 
-    LocationControl = require('locationview/LocationControl'),
 
     SelectedCollectionView = require('mvc/SelectedCollectionView'),
 
@@ -22,11 +21,7 @@ var MapView = function (options) {
       // variables
       _editions,
       _dependencyFactory,
-      _locationControl,
-      _map,
-
-      // methods
-      _onLocationChange;
+      _map;
 
   _this = SelectedCollectionView(options);
 
@@ -60,51 +55,9 @@ var MapView = function (options) {
       _map.addControl(L.control.attribution());
     }
 
-    // Add location control
-    _locationControl = new LocationControl({
-      el: el,
-      includeGeolocationControl: true,
-      includeGeocodeControl: true,
-      includeCoordinateControl: true,
-      includePointControl: true
-    });
-    _locationControl.on('location', _onLocationChange);
-    _map.addControl(_locationControl);
-
     _map.fitBounds([[24.6, -125.0], [50.0, -65.0]]);
-
-    if (_this.model) {
-      var location;
-
-      location = _this.model.get('location');
-
-      if (location) {
-        _locationControl.setLocation(location);
-      } else {
-        _locationControl.enable();
-      }
-    } else {
-      _locationControl.enable();
-    }
   };
 
-
-  _onLocationChange = function (changes) {
-    var location;
-
-    if (_this.model) {
-      // TODO :: Use model.update once it's implemented
-      //_this.model.update({'location': changes.location});
-
-      location = _this.model.get('location');
-
-      if (!location ||
-          location.latitude !== changes.location.latitude ||
-          location.longitude !== changes.location.longitude) {
-        _this.model.set({location: changes.location});
-      }
-    }
-  };
 
   /**
    * Return the Leaflet map
@@ -114,37 +67,22 @@ var MapView = function (options) {
   };
 
   _this.destroy = Util.compose(function () {
-    _locationControl.off('location', _onLocationChange);
-    _map.removeControl(_locationControl);
 
     // variables
-    _locationControl = null;
     _map = null;
-
-    // methods
-    _onLocationChange = null;
 
     _initialize = null;
     _this = null;
   }, _this.destroy);
 
   _this.render = function () {
-    var modelLocation,
-        controlLocation;
+    var modelLocation;
 
     if (_this.model) {
       modelLocation = _this.model.get('location');
-      controlLocation = _locationControl.getLocation();
 
-      if (modelLocation && (
-          !controlLocation ||
-          modelLocation.latitude !== controlLocation.latitude ||
-          modelLocation.longutde !== controlLocation.longtiude)) {
-        _locationControl.setLocation(modelLocation);
-        _locationControl.disable();
-      }
     } else {
-      _locationControl.setLocation(null);
+
     }
   };
 
