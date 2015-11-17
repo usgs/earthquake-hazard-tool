@@ -65,7 +65,8 @@ var DeaggregationReportView = function (params) {
    */
   _getTitle = function () {
     return [
-      '*** Deaggregation of Seismic Hazard at One Period of Spectral Accel. ***',
+      '*** Deaggregation of Seismic Hazard at One Period of Spectral ' +
+          'Acceleration ***',
       '*** Data from ' + _this.model.getEdition().get('display') + ' ****'
     ].join(_RETURN_CHARACTERS);
   };
@@ -96,16 +97,13 @@ var DeaggregationReportView = function (params) {
       'longitude: ' + Formatter.longitude(_this.model.get('location').longitude),
       'latitude: ' + Formatter.longitude(_this.model.get('location').latitude),
       'imt: ' + _this.model.getSpectralPeriod().get('display'),
-      'vs30 = ' + _this.model.getVs30().get('display') +
-          ' (some WUS atten. models use Site Class not Vs30).',
+      'vs30 = ' + _this.model.getVs30().get('display'),
       'return period: ' + _this.model.get('timeHorizon') + ' yrs.'
     );
 
     if (summaryMarkup.length !== 0) {
       output.push(summaryMarkup.join(_RETURN_CHARACTERS));
     }
-
-    output.push('NSHMP 2007-08 See USGS OFR 2008-1128. dM=0.2 below');
 
     return output.join(_RETURN_CHARACTERS);
   };
