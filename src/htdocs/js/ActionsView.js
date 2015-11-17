@@ -35,7 +35,6 @@ var ActionsView = function (params) {
       _validateOnRender,
 
       _createNewAnalysis,
-      _hasIncompleteCalculation,
       _onAnalysisRemove,
       _onCalculateClick,
       _onNewClick;
@@ -101,28 +100,6 @@ var ActionsView = function (params) {
   };
 
   /**
-   * Checks for an Analysis model in the collection with no calculated data.
-   *
-   * If any of the Analysis models in the collection do not have a data
-   * property defined then they are considered incomplete.
-   */
-  _hasIncompleteCalculation = function () {
-    var analyses = [],
-        i;
-
-    analyses = _this.collection.data();
-
-    for (i = 0; i < analyses.length; i++) {
-      // find an Analysis model with no calculated data
-      if (!analyses[i].get('curves')) {
-        return true;
-      }
-    }
-
-    return false;
-  };
-
-  /**
    * Checks if Analysis model was the last item in the collection, and
    * if the Analysis is incomplete. Then adds a new Analysis model to the
    * collection (if empty), and sets the "new" button disabled state.
@@ -130,16 +107,9 @@ var ActionsView = function (params) {
    * Triggered by a 'remove' event on the Collection.
    */
   _onAnalysisRemove = function () {
-
-    // if all analysis are complete, enable the "new" button
-    if (!_hasIncompleteCalculation()) {
-      _newButton.removeAttribute('disabled');
-    }
-
     // if collection is empty, add Analysis model and disable "new" button
     if (_this.collection.data().length === 0) {
       _createNewAnalysis();
-      _newButton.setAttribute('disabled', true);
     }
   };
 
@@ -159,7 +129,6 @@ var ActionsView = function (params) {
    */
   _onNewClick = function () {
     _createNewAnalysis();
-    _newButton.setAttribute('disabled', true);
   };
 
   /**
@@ -176,7 +145,6 @@ var ActionsView = function (params) {
     _collectionView.destroy();
 
     _createNewAnalysis = null;
-    _hasIncompleteCalculation = null;
     _onAnalysisRemove = null;
     _onCalculateClick = null;
     _onNewClick = null;
@@ -197,15 +165,7 @@ var ActionsView = function (params) {
    *
    * Called on Analysis model change.
    */
-  _this.render = function (changes) {
-    // check if Analysis.get('data') was updated
-    if (typeof changes !== 'undefined' && changes.hasOwnProperty('curves')) {
-      // if all analysis are complete, enable the "new" button
-      if (!_hasIncompleteCalculation()) {
-        _newButton.removeAttribute('disabled');
-      }
-    }
-
+  _this.render = function () {
     if (_validateOnRender) {
       // if already showing errors, rerun validation during render.
       _onCalculateClick();
