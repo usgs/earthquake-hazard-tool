@@ -114,7 +114,7 @@ var ActionsView = function (params) {
 
     for (i = 0; i < analyses.length; i++) {
       // find an Analysis model with no calculated data
-      if (!analyses[i].get('data')) {
+      if (!analyses[i].get('curves')) {
         return true;
       }
     }
@@ -199,7 +199,7 @@ var ActionsView = function (params) {
    */
   _this.render = function (changes) {
     // check if Analysis.get('data') was updated
-    if (typeof changes !== 'undefined' && changes.hasOwnProperty('data')) {
+    if (typeof changes !== 'undefined' && changes.hasOwnProperty('curves')) {
       // if all analysis are complete, enable the "new" button
       if (!_hasIncompleteCalculation()) {
         _newButton.removeAttribute('disabled');
