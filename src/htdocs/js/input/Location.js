@@ -61,7 +61,7 @@ var Location = function (params) {
       '<label for="input-longitude">',
         'Longitude',
         '<small class="input-help">',
-          'Decimal degrees. Use negative values for western longitudes.',
+          'Decimal degrees, negative values for western longitudes',
         '</small>',
         '<input type="text" id="input-longitude"/>',
       '</label>',
@@ -88,8 +88,11 @@ var Location = function (params) {
       // Ignore, validator will deal with this later...
     }
 
-    if (!(isNaN(latitudeVal) || isNaN(longitudeVal))) {
-
+    if (isNaN(latitudeVal) && isNaN(longitudeVal)) {
+      // Both are NaN, update model
+      _this.model.set({location: null});
+    } else if (!(isNaN(latitudeVal) || isNaN(longitudeVal))) {
+      // Neither is NaN, update model
       confidence = ConfidenceCalculator.computeFromCoordinates(
           latitudeVal, longitudeVal);
 
@@ -147,7 +150,22 @@ var Location = function (params) {
 
 
   _this.destroy = Util.compose(function () {
+    _latitude.removeEventListener('change', _onInputChange, _this);
+    _longitude.removeEventListener('change', _onInputChange, _this);
+    _usemap.removeEventListener('click', _onUseMapClick, _this);
 
+    _latitude = null;
+    _locationView = null;
+    _longitude = null;
+    _usemap = null;
+
+    _createViewSkeleton = null;
+    _onInputChange = null;
+    _onLocation = null;
+    _onUseMapClick = null;
+
+    _initialize = null;
+    _this = null;
   }, _this.destroy);
 
   _this.render = function () {
