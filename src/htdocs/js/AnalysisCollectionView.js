@@ -68,12 +68,11 @@ var AnalysisCollectionView = function (params) {
       model: analysis
     });
 
-    a = view.el.appendChild(document.createElement('a'));
+    a = view.el.querySelector('.analysis-view-title').appendChild(document.createElement('a'));
     a.setAttribute('href', '#');
     a.setAttribute('title', 'Delete');
-    a.classList.add('delete');
-    a.classList.add('material-icons');
-    a.innerHTML = 'close';
+    a.classList.add('analysis-delete-link');
+    a.innerHTML = 'Delete';
 
     return view;
   };
@@ -144,7 +143,7 @@ var AnalysisCollectionView = function (params) {
     }
 
     if (id !== null) {
-      if (element.classList.contains('delete')) {
+      if (element.classList.contains('analysis-delete-link')) {
         _collection.remove(_collection.get(id));
       } else {
         _collection.selectById(id);

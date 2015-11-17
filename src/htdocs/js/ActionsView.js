@@ -29,7 +29,6 @@ var ActionsView = function (params) {
 
       _accordion,
       _application,
-      _calculateButton,
       _collectionView,
       _newButton,
       _validateOnRender,
@@ -55,7 +54,7 @@ var ActionsView = function (params) {
     _this.el.classList.add('actions-view');
 
     toggleText = [
-      '<button class="actions-view-calculate">Calculate</button>',
+      '<h3 class="actions-view-title">History</h3>',
       '<button class="actions-view-new">New</button>'
     ].join('');
 
@@ -75,9 +74,6 @@ var ActionsView = function (params) {
         }
       ]
     });
-
-    _calculateButton = _this.el.querySelector('.actions-view-calculate');
-    _calculateButton.addEventListener('click', _onCalculateClick);
 
     _newButton = _this.el.querySelector('.actions-view-new');
     _newButton.addEventListener('click', _onNewClick);
@@ -136,7 +132,6 @@ var ActionsView = function (params) {
    */
   _this.destroy = Util.compose(function () {
 
-    _calculateButton.removeEventListener('click', _onCalculateClick);
     _newButton.removeEventListener('click', _onNewClick);
 
     _this.collection.off('remove', _onAnalysisRemove);
@@ -151,7 +146,6 @@ var ActionsView = function (params) {
 
     _application = null;
     _accordion = null;
-    _calculateButton = null;
     _collectionView = null;
     _newButton = null;
 
