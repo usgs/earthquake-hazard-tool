@@ -54,8 +54,8 @@ var ActionsView = function (params) {
     _this.el.classList.add('actions-view');
 
     toggleText = [
-      '<h3 class="actions-view-title">History</h3>',
-      '<button class="actions-view-new">New</button>'
+      '<button class="actions-view-new">New</button>',
+      '<h3 class="actions-view-title">History</h3>'
     ].join('');
 
     _collectionView = AnalysisCollectionView({
