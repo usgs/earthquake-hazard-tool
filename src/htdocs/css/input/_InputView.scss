@@ -1,3 +1,9 @@
+.input-view {
+  > ul {
+    list-style: none;
+  }
+}
+
 .input-help {
   color: #666;
   display: block;
