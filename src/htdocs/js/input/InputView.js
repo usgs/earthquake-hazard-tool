@@ -202,7 +202,6 @@ var InputView = function (params) {
 
     _locationInput = LocationInput({
       el: _this.el.querySelector('.input-location-view'),
-      format: __to_display,
       model: _this.model
     });
 
