@@ -1,6 +1,7 @@
 'use strict';
 
-var SelectedCollectionView = require('mvc/SelectedCollectionView'),
+var Analysis = require('analysis'),
+    SelectedCollectionView = require('mvc/SelectedCollectionView'),
     Formatter = require('util/Formatter'),
 
     Util = require('util/Util');
@@ -13,9 +14,10 @@ var DeaggregationReportView = function (params) {
   var _this,
       _initialize,
 
+      _analysis,
       _downloadEl,
+      _metadata,
       _reportEl,
-      _response,
 
       _calculateMean,
       _checkSummaryValues,
@@ -33,7 +35,9 @@ var DeaggregationReportView = function (params) {
   _this = SelectedCollectionView(params);
 
 
-  _initialize = function () {
+  _initialize = function (params) {
+
+    _analysis = params.analysis || Analysis();
 
     _downloadEl = document.createElement('a');
     _downloadEl.className = 'download-deaggregation-report';
@@ -49,7 +53,6 @@ var DeaggregationReportView = function (params) {
 
     // bind event listeners
     _downloadEl.addEventListener('click', _onDownloadClick);
-    _this.model.on('change:imt', 'render', _this);
 
     _this.render();
   };
@@ -67,7 +70,7 @@ var DeaggregationReportView = function (params) {
     return [
       '*** Deaggregation of Seismic Hazard at One Period of Spectral ' +
           'Acceleration ***',
-      '*** Data from ' + _this.model.getEdition().get('display') + ' ****'
+      '*** Data from ' + _analysis.getEdition().get('display') + ' ****'
     ].join(_RETURN_CHARACTERS);
   };
 
@@ -94,11 +97,11 @@ var DeaggregationReportView = function (params) {
     output.push(
       'PSHA Deaggregation. %contributions.',
       'site: Test',
-      'longitude: ' + Formatter.longitude(_this.model.get('location').longitude),
-      'latitude: ' + Formatter.longitude(_this.model.get('location').latitude),
-      'imt: ' + _this.model.getSpectralPeriod().get('display'),
-      'vs30 = ' + _this.model.getVs30().get('display'),
-      'return period: ' + _this.model.get('timeHorizon') + ' yrs.'
+      'longitude: ' + Formatter.longitude(_analysis.get('location').longitude),
+      'latitude: ' + Formatter.longitude(_analysis.get('location').latitude),
+      'imt: ' + _analysis.getSpectralPeriod().get('display'),
+      'vs30 = ' + _analysis.getVs30().get('display'),
+      'return period: ' + _analysis.get('timeHorizon') + ' yrs.'
     );
 
     if (summaryMarkup.length !== 0) {
@@ -159,7 +162,7 @@ var DeaggregationReportView = function (params) {
         output,
         summary;
 
-    output = ['Summary statistics for above PSHA PGA deaggregation, r=distance, ε=epsilon:'];
+    output = ['Summary statistics for PSHA PGA deaggregation, r=distance, ε=epsilon:'];
 
     for (var i = 0; i < summaries.length; i++) {
       summary = summaries[i];
@@ -213,7 +216,7 @@ var DeaggregationReportView = function (params) {
       row.push(data[i].r, data[i].m, _calculateMean(data[i].εdata));
 
       // edata values
-      for (var x = 0; x < _response.get('εbins').length; x++) {
+      for (var x = 0; x < _metadata.εbins.length; x++) {
         row.push(edata[x] ? edata[x].value.toFixed(3) : (0.000).toFixed(3));
       }
 
@@ -235,12 +238,12 @@ var DeaggregationReportView = function (params) {
         min,
         max;
 
-    ebins = _response.get('εbins');
+    ebins = _metadata.εbins;
     output = [];
-    output.push( _response.get('rlabel') + '\t' + _response.get('mlabel') + '\tALL_ε');
+    output.push( _metadata.rlabel + '\t' + _metadata.mlabel + '\tALL_ε');
 
     for (var i = (ebins.length - 1); i >= 0; i--) {
-      min = (ebins[i].min ? '>' +ebins[i].min : '');
+      min = (ebins[i].min ? '>' + ebins[i].min : '');
       max = (ebins[i].max ? ebins[i].max + '>' : '');
       output.push(max + 'ε' + min);
     }
@@ -296,13 +299,12 @@ var DeaggregationReportView = function (params) {
     var deaggregations,
         output;
 
-    deaggregations = _response.get('deaggregations').data();
-
     // start building report output
     output = [];
     output.push(_getTitle());
+    deaggregations = _this.collection.data();
 
-    // Loop over deaggregations in the deaggregation response
+    // Loop over deaggregations in the collection
     for (var i = 0; i < deaggregations.length; i++) {
       output.push(
         _getMetadata(deaggregations[i].get('summary')),
@@ -322,46 +324,41 @@ var DeaggregationReportView = function (params) {
    * download the report in its entirety. 
    */
   _this.getReportHtml = function () {
-    var deaggregations,
-        output,
+    var output,
         summary,
         data;
 
+    summary = _this.model.get('summary');
     output = [];
-    deaggregations = _response.get('deaggregations').data();
+    output.push('<h3>Summary statistics for, Deaggregation: ',
+        _this.model.get('component'), '</h3>',
+        '<div class="summary-group">');
 
-    // Loop over array of values in summary object
-    for (var i = 0; i < deaggregations.length; i++) {
-      summary = deaggregations[i].get('summary');
-      output.push('<h3>Summary statistics for, Deaggregation: ',
-          deaggregations[i].get('component'), '</h3>',
-          '<div class="summary-group">');
+    for (var i = 0; i < summary.length; i++) {
 
-      for (var n = 0; n < summary.length; n++) {
-        data = summary[n].data;
+      data = summary[i].data;
 
-        if (summary[n].display === false) {
-          // skip
-          continue;
-        }
-
-        output.push('<div class="summary-values">',
-          '<h4>', summary[n].name, '</h4>',
-          '<dl class="summary-list">');
-
-        for (var x = 0; x < data.length; x++) {
-          output.push(
-            '<dt>', data[x].name + '</dt>' +
-            '<dd>' + data[x].value +
-                (data[x].units ? ' ' + data[x].units : '') + '</dd>'
-          );
-        }
-
-        output.push('</dl></div>');
+      if (summary[i].display === false) {
+        // skip
+        continue;
       }
 
-      output.push('</div>');
+      output.push('<div class="summary-values">',
+        '<h4>', summary[i].name, '</h4>',
+        '<dl class="summary-list">');
+
+      for (var x = 0; x < data.length; x++) {
+        output.push(
+          '<dt>', data[x].name + '</dt>' +
+          '<dd>' + data[x].value +
+              (data[x].units ? ' ' + data[x].units : '') + '</dd>'
+        );
+      }
+
+      output.push('</dl></div>');
     }
+
+    output.push('</div>');
 
     return output.join('');
   };
@@ -384,9 +381,10 @@ var DeaggregationReportView = function (params) {
     _onDownloadClick = null;
     _setSummaries = null;
 
+    _analysis = null;
     _downloadEl = null;
+    _metadata = null;
     _reportEl = null;
-    _response = null;
 
     _initialize = null;
     _this =  null;
@@ -394,35 +392,19 @@ var DeaggregationReportView = function (params) {
 
 
   _this.render = function () {
-    var responses;
 
-    _response = null;
-
-    if (_this.model === null || _this.model.get('deaggregation') === null) {
-      _this.el.innerHTML = '';
-      return;
-    }
-
-    // set _response equal to the DeaggResponse that matches the imt
-    // of the currently selected analysis model
-    responses = _this.model.get('deaggregation').data();
-    for (var i = 0; i < responses.length; i++) {
-      if (responses[i].get('imt') === _this.model.get('imt')) {
-        _response = responses[i];
-        break;
-      }
-    }
-
-    // Add report with download button, or remove from view
-    if (_response) {
-      _this.el.insertBefore(_downloadEl, _reportEl);
-      _reportEl.innerHTML = _this.getReportHtml();
-    } else {
+    // If no deagg is selected remove download button & report
+    if (!_this.model) {
       _reportEl.innerHTML = '';
 
       if (_this.el.contains(_downloadEl)) {
         _this.el.removeChild(_downloadEl);
       }
+
+    } else {
+      _metadata = _this.model.get('metadata');
+      _this.el.insertBefore(_downloadEl, _reportEl);
+      _reportEl.innerHTML = _this.getReportHtml();
     }
   };
 

@@ -11,30 +11,36 @@ var Analysis = require('Analysis'),
 var data = Xhr.ajax({
   url: 'deagg.json',
   success: function (data) {
+    var collection,
+        deaggregations,
+        dependencyFactory,
+        response;
 
-    var dependencyFactory = DependencyFactory.getInstance();
+    dependencyFactory = DependencyFactory.getInstance();
+    response = DeaggResponse(data.response[0]);
+    collection = response.get('deaggregations');
+    collection.select(collection.data()[0]);
 
     dependencyFactory.whenReady(function () {
-      var analyses = Collection();
       var analysis = Analysis({
+        'edition': 'E2014R1',
+        'imt': 'PGA',
         'location': {
           'latitude': 34,
           'longitude': -118
         },
-        'imt': 'PGA',
         'region': 'COUS0P05',
-        'deaggregation': Collection(data.response.map(DeaggResponse))
+        'timeHorizon': 2475,
+        'vs30': '760'
       });
 
       // triggers Xhr, which populates _services in the dependencyFactory
       analysis.getEdition();
 
-      analyses.add(analysis);
-      analyses.select(analysis);
-
       DeaggregationReportView({
         el: document.querySelector('#example'),
-        collection: analyses
+        collection: collection,
+        analysis: analysis
       });
     });
 
