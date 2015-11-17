@@ -91,9 +91,9 @@ var connect = {
   example: {
     options: {
       base: [
+        config.example,
         config.build + '/' + config.src + '/htdocs',
         config.build + '/' + config.test,
-        config.example,
         config.etc
       ],
       livereload: config.liveReloadPort,
