@@ -135,7 +135,8 @@ try {
   }
 
   function getEditions ($edition) {
-    return get_metadata_with_support($edition, 'edition', array('region'));
+    return get_metadata_with_support($edition, 'edition',
+        array('region', 'imt', 'vs30'));
   }
 
   function getRegions ($region) {
