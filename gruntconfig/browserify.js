@@ -81,6 +81,8 @@ addExports(config.src + '/htdocs/js', [
   'deagg/DeaggResponse',
   'deagg/DeaggregationGraphView',
 
+  'input/Location',
+
   'map/Layers',
   'map/LayerControl'
 ]);
