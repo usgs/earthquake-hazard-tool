@@ -401,11 +401,13 @@ var DeaggregationReportView = function (params) {
         _this.el.removeChild(_downloadEl);
       }
 
-    } else {
-      _metadata = _this.model.get('metadata');
-      _this.el.insertBefore(_downloadEl, _reportEl);
-      _reportEl.innerHTML = _this.getReportHtml();
+      return;
     }
+
+    // build summary report with download link
+    _metadata = _this.model.get('metadata');
+    _this.el.insertBefore(_downloadEl, _reportEl);
+    _reportEl.innerHTML = _this.getReportHtml();
   };
 
   _initialize(params);
