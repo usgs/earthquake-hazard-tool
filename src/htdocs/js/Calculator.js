@@ -77,8 +77,6 @@ var Calculator = function (/*params*/) {
         }
       }
     });
-
-    return request;
   };
 
   return _this;
