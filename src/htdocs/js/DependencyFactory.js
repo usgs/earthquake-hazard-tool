@@ -458,13 +458,12 @@ var DependencyFactory = function (params) {
     return _services;
   };
 
-  _this.getService = function (editionId) {
+  _this.getService = function (editionId, serviceType) {
     var serviceName,
-        serviceType,
         service,
         services;
 
-    for (serviceType in _services) {
+    if (serviceType) {
       services = _services[serviceType];
 
       for (serviceName in services) {
@@ -474,6 +473,20 @@ var DependencyFactory = function (params) {
           return service;
         } else {
           service = null;
+        }
+      }
+    } else {
+      for (serviceType in _services) {
+        services = _services[serviceType];
+
+        for (serviceName in services) {
+          service = services[serviceName];
+
+          if (service.editions && service.editions.get(editionId)) {
+            return service;
+          } else {
+            service = null;
+          }
         }
       }
     }

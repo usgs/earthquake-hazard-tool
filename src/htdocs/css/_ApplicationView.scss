@@ -28,6 +28,7 @@
   z-index: 1;
 
   > p {
+    box-shadow: 0 4px 8px #999;
     margin-left: auto;
     margin-right: auto;
     max-width: 30em;
@@ -59,32 +60,4 @@
 
 .accordion-map > .accordion-content {
   padding: 0;
-}
-
-
-@media screen and (min-width: 960px) {
-
-  .flexible {
-    display: flex;
-  }
-
-  .application-basic-inputs {
-    flex-basis: main-value;
-    margin-right: 16px;
-    width: 304px;
-  }
-
-  .application-map {
-    flex-grow: 3;
-  }
-
-  .curve-output-mask {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    > p {
-      margin: 0;
-    }
-  }
 }
