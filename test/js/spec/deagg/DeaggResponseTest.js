@@ -3,7 +3,7 @@
 
 var DeaggResponse = require('deagg/DeaggResponse'),
 
-    rawResponse = require('etc/deagg').response[0];
+    rawResponse = require('etc/deagg/data').response[0];
 
 
 var expect = chai.expect;
