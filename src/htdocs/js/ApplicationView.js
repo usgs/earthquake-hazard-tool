@@ -48,6 +48,7 @@ var ApplicationView = function (params) {
       // methods
       _clearOutput,
       _initViewContainer,
+      _onCalculate,
       _onEditionChange,
       _onLocationChange,
       _onRegionChange,
@@ -99,6 +100,8 @@ var ApplicationView = function (params) {
       collection: _this.collection,
       el: _deaggOutputEl
     });
+
+    _curveOutputView.on('calculate', _onCalculate, _this);
   };
 
 
@@ -274,6 +277,30 @@ var ApplicationView = function (params) {
     }
 
     console.log(_this.model.get());
+  };
+
+  _onCalculate = function (data) {
+    var calculator,
+        request;
+
+    calculator = data.calculator;
+
+    if (!_queued && calculator) {
+      window.setTimeout(function () {
+        if (_this.model.get('edition') && _this.model.get('location') &&
+            _this.model.get('region') && _this.model.get('vs30')) {
+          request = calculator.getResult(
+              _dependencyFactory.getService(_this.model.get('edition')),
+              _this.model,
+              _loaderView.hide
+            );
+          _loaderView.show(request);
+        }
+        _queued = false;
+      }, 0);
+      _queued = true;
+    }
+
   };
 
 
