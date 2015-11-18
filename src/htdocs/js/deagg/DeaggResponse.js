@@ -51,7 +51,11 @@ var DeaggResponse = function (params) {
         {id: 'deagg-response-' + (_DEAGG_ID++)}, params);
 
     metadata = params.metadata;
-    deaggs = [];
+    deaggs = params.data.map(function (deagg) {
+      return Deaggregation(Util.extend({
+        metadata: metadata,
+      }, deagg));
+    });
 
     attributes = {
       imt: metadata.imt.value,
@@ -59,7 +63,7 @@ var DeaggResponse = function (params) {
       mlabel: metadata.mlabel,
       εlabel: metadata.εlabel,
       εbins: metadata.εbins,
-      deaggregations: Collection(params.data.map(Deaggregation))
+      deaggregations: Collection(deaggs)
     };
 
     // Should not have listeners yet, but silent anyway to short-circuit check
