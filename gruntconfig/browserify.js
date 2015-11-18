@@ -92,6 +92,7 @@ addExports(config.src + '/htdocs/js', [
 
 RESPONSE_HANDLERS.push('HazardResponse');
 RESPONSE_HANDLERS.push('DynamicHazardResponse');
+RESPONSE_HANDLERS.push('deagg/DeaggResponse');
 
 // Subsequent source files can then require "Class" with:
 // var Class = require('package/Class');
