@@ -174,18 +174,6 @@ var ApplicationView = function (params) {
   };
 
   _onTimeHorizonChange = function (/*changes*/) {
-    var timeHorizon;
-
-    if (_this.model) {
-      timeHorizon = _this.model.get('timeHorizon');
-
-      _hazardCurveView.model.set({
-        'timeHorizon': timeHorizon
-      });
-      _hazardSpectrumView.model.set({
-        'timeHorizon': timeHorizon
-      });
-    }
   };
 
   /**
