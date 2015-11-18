@@ -115,9 +115,7 @@ try {
   echo json_encode(array(
     'status' => 'success',
     'date' => date('c'),
-    'url' => sprintf("%s%s/%s/%s/%s/%s/%s/%s", $request,
-        $_SERVER['REQUEST_URI'], $editionInput, $regionInput, $longitude,
-        $latitude, $imtInput, $vs30Input),
+    'url' => sprintf("%s%s", $request, $_SERVER['REQUEST_URI']),
     'response' => $curves
   ));
 
