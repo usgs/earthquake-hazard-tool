@@ -2,6 +2,7 @@
 
 var autoprefixer = require('autoprefixer'),
     cssnano = require('cssnano'),
+    postcssCalc = require('postcss-calc'),
     postcssImport = require('postcss-import'),
     precss = require('precss');
 
@@ -32,6 +33,7 @@ var postcss = {
           ]
         }),
         precss(),
+        postcssCalc(),
         autoprefixer({'browsers': 'last 2 versions'})
       ]
     },

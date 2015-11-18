@@ -2,97 +2,114 @@
 @import 'd3/_D3LineView.scss';
 @import '_GraphVariables.scss';
 
-.D3View {
 
-  [data-index='0'] {
-    > .line { stroke: $graph_color_0; }
-    > .point { fill: $graph_color_0; }
+.TimeHorizonLineView,
+.HazardCurveLineView,
+.HazardCurveGraphView-legend > .D3LineView {
+  > .line {
+    stroke-width: $lineStroke;
   }
 
-  [data-index='1'] {
-    > .line { stroke: $graph_color_1; }
-    > .point { fill: $graph_color_1; }
+  > .point {
+    stroke-width: $pointStroke;
   }
 
-  [data-index='2'] {
-    > .line { stroke: $graph_color_2; }
-    > .point { fill: $graph_color_2; }
+  &.mouseover > .line,
+  &.mouseover > .point {
+    cursor: pointer;
   }
 
-  [data-index='3'] {
-    > .line { stroke: $graph_color_3; }
-    > .point { fill: $graph_color_3; }
+  &[data-index='0'] {
+    > .line, > .point { stroke: $graphColor0; }
+    > .point { fill: $graphColor0); }
   }
 
-  [data-index='4'] {
-    > .line { stroke: $graph_color_4; }
-    > .point { fill: $graph_color_4; }
+  &[data-index='1'] {
+    > .line, > .point { stroke: $graphColor1; }
+    > .point { fill: $graphColor1; }
   }
 
-  [data-index='5'] {
-    > .line { stroke: $graph_color_5; }
-    > .point { fill: $graph_color_5; }
+  &[data-index='2'] {
+    > .line, > .point { stroke: $graphColor2; }
+    > .point { fill: $graphColor2; }
   }
 
-  [data-index='6'] {
-    > .line { stroke: $graph_color_6; }
-    > .point { fill: $graph_color_6; }
+  &[data-index='3'] {
+    > .line, > .point { stroke: $graphColor3; }
+    > .point { fill: $graphColor3; }
   }
 
-  [data-index='7'] {
-    > .line { stroke: $graph_color_7; }
-    > .point { fill: $graph_color_7; }
+  &[data-index='4'] {
+    > .line, > .point { stroke: $graphColor4; }
+    > .point { fill: $graphColor4; }
   }
 
-  [data-index='8'] {
-    > .line { stroke: $graph_color_8; }
-    > .point { fill: $graph_color_8; }
+  &[data-index='5'] {
+    > .line, > .point { stroke: $graphColor5; }
+    > .point { fill: $graphColor5; }
   }
 
-  [data-index='9'] {
-    > .line { stroke: $graph_color_9; }
-    > .point { fill: $graph_color_9; }
+  &[data-index='6'] {
+    > .line, > .point { stroke: $graphColor6; }
+    > .point { fill: $graphColor6; }
   }
 
-  [data-index='10'] {
-    > .line { stroke: $graph_color_10; }
-    > .point { fill: $graph_color_10; }
+  &[data-index='7'] {
+    > .line, > .point { stroke: $graphColor7; }
+    > .point { fill: $graphColor7; }
   }
 
-  [data-index='11'] {
-    > .line { stroke: $graph_color_11; }
-    > .point { fill: $graph_color_11; }
+  &[data-index='8'] {
+    > .line, > .point { stroke: $graphColor8; }
+    > .point { fill: $graphColor8; }
   }
 
-  .mouseover {
-    cursor:pointer;
+  &[data-index='9'] {
+    > .line, > .point { stroke: $graphColor9; }
+    > .point { fill: $graphColor9; }
+  }
 
+  &[data-index='10'] {
+    > .line, > .point { stroke: $graphColor10; }
+    > .point { fill: $graphColor10; }
+  }
+
+  &[data-index='11'] {
+    > .line, > .point { stroke: $graph_color_11; }
+    > .point { fill: $graphColor11; }
+  }
+
+  &.selected {
     > .line {
-      stroke-width: 3;
+      stroke-width: calc($lineStroke + $selectedStrokeOffset);
+      stroke: $selectedGraphColor;
     }
-
     > .point {
-      stroke-width: 2;
+      stroke-width: calc($pointStroke + $selectedStrokeOffset);
+      stroke: $selectedGraphColor;
+      fill: $selectedGraphColor;
     }
   }
+}
 
-  .selected {
-    cursor: default;
-
-    > .line {
-      stroke-width: 5;
-    }
-
-    > .point {
-      stroke-width: 3;
-    }
-
-    > .text {
-      stroke-width: 1;
-    }
+.TimeHorizonLineView,
+.TimeHorizonLineView.selected,
+.HazardCurveGraphView-legend > .D3LineView.selected {
+  > .line {
+    stroke-width: $lineStroke;
   }
+}
 
-  .point.mouseover {
-    fill: #fff;
+.TimeHorizonLineView.mouseover > .line {
+  cursor: auto;
+}
+
+.HazardCurveGraphView-legend {
+  > .D3LineView > .text {
+    cursor: pointer;
+  }
+  > :first-child > .text {
+    font-weight: normal;
+    cursor: auto;
   }
 }

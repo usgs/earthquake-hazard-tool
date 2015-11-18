@@ -49,6 +49,8 @@ var HazardCurveGraphView = function (options) {
   }, options));
 
   _initialize = function (options) {
+    _this.el.classList.add('HazardCurveGraphView');
+
     _this.model.set({
       legendOffset: 10,
       legendPosition: 'bottomleft',
@@ -128,6 +130,7 @@ var HazardCurveGraphView = function (options) {
     if (_this.views.data().length === 0 && curves.length > 0) {
       _this.views.add(_timeHorizon);
     }
+
     curves.forEach(function (curve) {
       var view = HazardCurveLineView(Util.extend({
         view: _this
@@ -264,6 +267,17 @@ var HazardCurveGraphView = function (options) {
     _onViewDeselect = null;
     _this = null;
   }, _this.destroy);
+
+  _this.getLegendClass = function () {
+    return 'legend-content HazardCurveGraphView-legend';
+  };
+
+  _this.onClick = Util.compose(function (view) {
+    if (_this.model.get('clickToSelect') &&
+        view !== _timeHorizon) {
+      _this.views.select(view);
+    }
+  });
 
 
   _initialize(options);
