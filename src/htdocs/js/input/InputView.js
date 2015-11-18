@@ -1,6 +1,7 @@
 'use strict';
 
 var LocationInput = require('input/Location'),
+    TimeHorizonInput = require('input/TimeHorizonInput'),
     // TimeHorizonInputView = require('TimeHorizonInputView'),
     // TimeHorizonSliderView = require('TimeHorizonSliderView'),
 
@@ -59,6 +60,7 @@ var InputView = function (params) {
       _locationInput,
       _siteClassInput,
       _siteClasses,
+      _timeHorizonInput,
 
       _createViewSkeleton,
       _destroySubViews,
@@ -126,9 +128,13 @@ var InputView = function (params) {
   _destroySubViews = function () {
     _editionInput.destroy();
     _locationInput.destroy();
+    _imtInput.destroy();
+    _timeHorizonInput.destroy();
 
     _editionInput = null;
     _locationInput = null;
+    _imtInput = null;
+    _timeHorizonInput = null;
   };
 
   _getEdition = function () {
@@ -222,6 +228,11 @@ var InputView = function (params) {
       includeBlankOption: true,
       model: _this.model
     });
+
+    _timeHorizonInput = TimeHorizonInput({
+      el: _this.el.querySelector('.input-time-horizon-view'),
+      model: _this.model
+    });
   };
 
   _onEditionSelect = function () {
@@ -271,6 +282,17 @@ var InputView = function (params) {
   _this.onCollectionSelect = Util.compose(_this.onCollectionSelect,
       _initSubViews);
 
+  _this.render = function () {
+    if (_this.model) {
+      _editions.selectById(_this.model.get('edition'));
+      _siteClasses.selectById(_this.model.get('vs30'));
+      _imts.selectById(_this.model.get('imt'));
+    } else {
+      _editions.deselect();
+      _siteClasses.deselect();
+      _imts.deselect();
+    }
+  };
 
   _initialize(params);
   params = null;
