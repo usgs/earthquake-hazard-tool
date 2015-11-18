@@ -195,10 +195,6 @@ var InputView = function (params) {
       includeBlankOption: true,
       model: _this.model
     });
-    _siteClassInput.render = Util.compose(function (changes) {
-      console.log('HERE');
-      return changes;
-    }, _siteClassInput.render);
 
     _imtInput = CollectionSelectBox({
       collection: _imts,
@@ -222,7 +218,9 @@ var InputView = function (params) {
 
     if (_this.model) {
       _this.model.set({
-        edition: (edition ? edition.id : null)
+        edition: (edition ? edition.id : null),
+        curves: null,
+        deaggResponses: null
       });
     }
 
@@ -242,7 +240,9 @@ var InputView = function (params) {
 
     if (_this.model) {
       _this.model.set({
-        vs30: (siteClass ? siteClass.id : null)
+        vs30: (siteClass ? siteClass.id : null),
+        curves: null,
+        deaggResponses: null
       });
     }
   };
@@ -254,7 +254,8 @@ var InputView = function (params) {
 
     if (_this.model) {
       _this.model.set({
-        imt: (imt ? imt.id : null)
+        imt: (imt ? imt.id : null),
+        deaggResponses: null
       });
     }
   };

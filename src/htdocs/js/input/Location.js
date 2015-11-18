@@ -90,7 +90,11 @@ var Location = function (params) {
 
     if (isNaN(latitudeVal) && isNaN(longitudeVal)) {
       // Both are NaN, update model
-      _this.model.set({location: null});
+      _this.model.set({
+        location: null,
+        curves: null,
+        deaggResponses: null
+      });
     } else if (!(isNaN(latitudeVal) || isNaN(longitudeVal))) {
       // Neither is NaN, update model
       confidence = ConfidenceCalculator.computeFromCoordinates(
@@ -103,7 +107,9 @@ var Location = function (params) {
           longitude: longitudeVal,
           method: CoordinateControl.METHOD,
           confidence: confidence
-        }
+        },
+        curves: null,
+        deaggResponses: null
       });
     }
   };
@@ -116,7 +122,9 @@ var Location = function (params) {
    */
   _onLocation = function (location) {
     _this.model.set({
-      location: location
+      location: location,
+      curves: null,
+      deaggResponses: null
     });
   };
 
