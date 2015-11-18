@@ -1,41 +1,43 @@
 module.exports = {
   'status': 'usage',
-  'description': 'Retrieves hazard curve data for an input location',
-  'syntax': 'data.json?edition={edition}&region={region}&longitude={longitude}&latitude={latitude}&imt={imt}&vs30={vs30}',
+  'description': 'Deaggregate hazard at an input location',
+  'syntax': '/deagg/data.json',
   'parameters': {
+    'returnPeriod': {
+      'label': 'Return period (in years)',
+      'type': 'number',
+      'values': {
+        'minimum': 1.0,
+        'maximum': 4000.0
+      }
+    },
     'edition': {
       'label': 'Model edition',
       'type': 'string',
       'values': [
         {
-          'id': 3,
-          'value': 'E2008R3',
-          'display': 'USGS NSHM 2008 Rev. 3',
-          'displayorder': 3,
+          'id': 0,
+          'value': 'E2008',
+          'display': 'USGS NSHM 2008 Dynamic',
+          'displayorder': 100,
           'supports': {
             'region': [
-              'COUS0P05',
-              'WUS0P05',
-              'CEUS0P05'
-            ],
-            'contourType': [
-              1
+              'CEUS',
+              'WUS',
+              'COUS'
             ]
           }
         },
         {
-          'id': 4,
-          'value': 'E2014R1',
-          'display': 'USGS NSHM 2014 Rev. 1',
-          'displayorder': 4,
+          'id': 1,
+          'value': 'E2014',
+          'display': 'USGS NSHM 2014 Dynamic',
+          'displayorder': 0,
           'supports': {
             'region': [
-              'COUS0P05',
-              'WUS0P05',
-              'CEUS0P05'
-            ],
-            'contourType': [
-              1
+              'CEUS',
+              'WUS',
+              'COUS'
             ]
           }
         }
@@ -47,33 +49,42 @@ module.exports = {
       'values': [
         {
           'id': 0,
-          'value': 'COUS0P05',
-          'display': 'Conterminous US',
+          'value': 'CEUS',
+          'display': 'Central & Eastern US',
           'displayorder': 0,
           'minlatitude': 24.6,
-          'maxlatitude': 50,
-          'minlongitude': -118,
-          'maxlongitude': -65,
-          'gridspacing': 0.05,
+          'maxlatitude': 50.0,
+          'minlongitude': -115.0,
+          'maxlongitude': -65.0,
+          'uiminlatitude': 24.6,
+          'uimaxlatitude': 50.0,
+          'uiminlongitude': -110.0,
+          'uimaxlongitude': -65.0,
           'supports': {
             'imt': [
-              'PGA'
+              'PGA',
+              'SA0P2',
+              'SA1P0'
             ],
             'vs30': [
+              '2000',
               '760'
             ]
           }
         },
         {
           'id': 1,
-          'value': 'WUS0P05',
+          'value': 'WUS',
           'display': 'Western US',
           'displayorder': 1,
           'minlatitude': 24.6,
-          'maxlatitude': 50,
-          'minlongitude': -118,
-          'maxlongitude': -115,
-          'gridspacing': 0.05,
+          'maxlatitude': 50.0,
+          'minlongitude': -125.0,
+          'maxlongitude': -100.0,
+          'uiminlatitude': 24.6,
+          'uimaxlatitude': 50.0,
+          'uiminlongitude': -125.0,
+          'uimaxlongitude': -115.0,
           'supports': {
             'imt': [
               'PGA',
@@ -92,14 +103,17 @@ module.exports = {
         },
         {
           'id': 2,
-          'value': 'CEUS0P05',
-          'display': 'Central & Eastern US',
+          'value': 'COUS',
+          'display': 'Conterminous US',
           'displayorder': 2,
           'minlatitude': 24.6,
-          'maxlatitude': 50,
-          'minlongitude': -100,
-          'maxlongitude': -65,
-          'gridspacing': 0.05,
+          'maxlatitude': 50.0,
+          'minlongitude': -125.0,
+          'maxlongitude': -65.0,
+          'uiminlatitude': 24.6,
+          'uimaxlatitude': 50.0,
+          'uiminlongitude': -125.0,
+          'uimaxlongitude': -65.0,
           'supports': {
             'imt': [
               'PGA',
@@ -107,27 +121,26 @@ module.exports = {
               'SA1P0'
             ],
             'vs30': [
-              '2000',
               '760'
             ]
           }
         }
       ]
     },
-    'latitude': {
-      'label': 'Latitude (in decimal degrees)',
-      'type': 'number',
-      'values': {
-        'minimum': -90,
-        'maximum': 90
-      }
-    },
     'longitude': {
       'label': 'Longitude (in decimal degrees)',
       'type': 'number',
       'values': {
-        'minimum': -180,
-        'maximum': 360
+        'minimum': -180.0,
+        'maximum': 360.0
+      }
+    },
+    'latitude': {
+      'label': 'Latitude (in decimal degrees)',
+      'type': 'number',
+      'values': {
+        'minimum': -90.0,
+        'maximum': 90.0
       }
     },
     'imt': {
@@ -135,25 +148,22 @@ module.exports = {
       'type': 'string',
       'values': [
         {
-          'id': 1,
+          'id': 0,
           'value': 'PGA',
-          'display': 'Peak Ground Acceleration',
-          'displayorder': 1,
-          'supports': {}
+          'display': 'Peak ground acceleration',
+          'displayorder': 0
         },
         {
-          'id': 4,
+          'id': 22,
           'value': 'SA0P2',
-          'display': '0.20 Second Spectral Acceleration',
-          'displayorder': 4,
-          'supports': {}
+          'display': '0.2 sec spectral acceleration',
+          'displayorder': 22
         },
         {
-          'id': 8,
+          'id': 32,
           'value': 'SA1P0',
-          'display': '1.00 Second Spectral Acceleration',
-          'displayorder': 8,
-          'supports': {}
+          'display': '1.0 sec spectral acceleration',
+          'displayorder': 32
         }
       ]
     },
@@ -202,24 +212,6 @@ module.exports = {
           'value': '180',
           'display': '180 m/s (D/E boundary)',
           'displayorder': 6
-        }
-      ]
-    },
-    'contourType': {
-      'label': 'Contour Types',
-      'type': 'string',
-      'values': [
-        {
-          'id': 1,
-          'value': 'hazard',
-          'display': 'Gridded Hazard',
-          'displayorder': 1
-        },
-        {
-          'id': 1,
-          'value': 'Earthquake Probability',
-          'display': 'Earthquake Probability',
-          'displayorder': 1
         }
       ]
     }

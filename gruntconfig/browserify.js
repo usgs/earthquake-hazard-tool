@@ -27,7 +27,8 @@ var addExports = function (basedir, files) {
 
 EXPORTS.push(CWD + '/etc/data.js:etc/data');
 EXPORTS.push(CWD + '/etc/metadata.js:etc/metadata');
-EXPORTS.push(CWD + '/etc/deagg.js:etc/deagg');
+EXPORTS.push(CWD + '/etc/deagg/data.js:etc/deagg/data');
+EXPORTS.push(CWD + '/etc/deagg/metadata.js:etc/deagg/metadata');
 EXPORTS.push(NODE_MODULES + '/d3/d3.js:d3');
 
 // hazdev-webutils exports
