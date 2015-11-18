@@ -1,7 +1,6 @@
 'use strict';
 
-var Analysis = require('Analysis'),
-    SelectedCollectionView = require('mvc/SelectedCollectionView'),
+var SelectedCollectionView = require('mvc/SelectedCollectionView'),
     Formatter = require('util/Formatter'),
 
     Util = require('util/Util');
@@ -14,7 +13,6 @@ var DeaggregationReportView = function (params) {
   var _this,
       _initialize,
 
-      _analysis,
       _downloadEl,
       _metadata,
       _reportEl,
@@ -35,10 +33,7 @@ var DeaggregationReportView = function (params) {
   _this = SelectedCollectionView(params);
 
 
-  _initialize = function (params) {
-
-    _analysis = params.analysis || Analysis();
-
+  _initialize = function (/*params*/) {
     _downloadEl = document.createElement('a');
     _downloadEl.className = 'download-deaggregation-report';
     _downloadEl.innerHTML = 'Download Deaggregation Report';
@@ -58,7 +53,8 @@ var DeaggregationReportView = function (params) {
   };
 
   _onDownloadClick = function () {
-    _downloadEl.href = 'data:text/plain;charset=UTF-8,' + encodeURIComponent(_this.getReport());
+    _downloadEl.href = 'data:text/plain;charset=UTF-8,' +
+        encodeURIComponent(_this.getReport());
   };
 
 
@@ -66,11 +62,11 @@ var DeaggregationReportView = function (params) {
    * Get plain/text markup for the response metadata,
    * formatted with line endings
    */
-  _getTitle = function () {
+  _getTitle = function (edition) {
     return [
       '*** Deaggregation of Seismic Hazard at One Period of Spectral ' +
           'Acceleration ***',
-      '*** Data from ' + _analysis.getEdition().get('display') + ' ****'
+      '*** Data from ' + edition + ' ****'
     ].join(_RETURN_CHARACTERS);
   };
 
@@ -88,20 +84,22 @@ var DeaggregationReportView = function (params) {
    * formatted with line endings
    */
   _getMetadata = function (summary) {
-    var output,
+    var metadata,
+        output,
         summaryMarkup;
 
+    metadata = _this.model.get('metadata');
     output = [];
     summaryMarkup = _checkSummaryValues(summary);
 
     output.push(
       'PSHA Deaggregation. %contributions.',
       'site: Test',
-      'longitude: ' + Formatter.longitude(_analysis.get('location').longitude),
-      'latitude: ' + Formatter.longitude(_analysis.get('location').latitude),
-      'imt: ' + _analysis.getSpectralPeriod().get('display'),
-      'vs30 = ' + _analysis.getVs30().get('display'),
-      'return period: ' + _analysis.get('timeHorizon') + ' yrs.'
+      'longitude: ' + Formatter.longitude(metadata.longitude),
+      'latitude: ' + Formatter.longitude(metadata.latitude),
+      'imt: ' + metadata.imt.display,
+      'vs30 = ' + metadata.vs30.display,
+      'return period: ' + metadata.returnPeriod + ' yrs.'
     );
 
     if (summaryMarkup.length !== 0) {
@@ -154,7 +152,7 @@ var DeaggregationReportView = function (params) {
 
 
   /**
-   * Get plain/text markup for the deaggregation summary data, 
+   * Get plain/text markup for the deaggregation summary data,
    * formatted with line endings
    */
   _getSummary = function (summaries) {
@@ -297,11 +295,14 @@ var DeaggregationReportView = function (params) {
    */
   _this.getReport = function () {
     var deaggregations,
+        metadata,
         output;
+
+    metadata = _this.model.get('metadata');
 
     // start building report output
     output = [];
-    output.push(_getTitle());
+    output.push(_getTitle(metadata.edition.display));
     deaggregations = _this.collection.data();
 
     // Loop over deaggregations in the collection
@@ -321,7 +322,7 @@ var DeaggregationReportView = function (params) {
 
   /**
    * Get html markup for the entire deaggregation report, includes a link to
-   * download the report in its entirety. 
+   * download the report in its entirety.
    */
   _this.getReportHtml = function () {
     var output,
@@ -381,7 +382,6 @@ var DeaggregationReportView = function (params) {
     _onDownloadClick = null;
     _setSummaries = null;
 
-    _analysis = null;
     _downloadEl = null;
     _metadata = null;
     _reportEl = null;

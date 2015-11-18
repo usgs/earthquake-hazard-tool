@@ -1,8 +1,9 @@
 'use strict';
 
-var Calculator = require('Calculator'),
+var DeaggCalculator = require('deagg/DeaggCalculator'),
     DeaggGraphView = require('deagg/DeaggregationGraphView'),
     DeaggReportView = require('DeaggregationReportView'),
+    DependencyFactory = require('DependencyFactory'),
 
     Collection = require('mvc/Collection'),
     CollectionSelectBox = require('mvc/SelectView'),
@@ -43,10 +44,9 @@ var DeaggOutputView = function (params) {
   _initialize = function (/*params*/) {
     _this.el.classList.add('deagg-output-view');
 
-    _calculator = Calculator();
+    _calculator = DeaggCalculator();
 
     _deaggCollection = Collection();
-    _deaggCollection.on('select', 'onComponentSelect', _this);
 
     _createViewSkeleton();
     _initSubViews();
@@ -112,19 +112,27 @@ var DeaggOutputView = function (params) {
 
     _graphView = DeaggGraphView({
       collection: _deaggCollection,
-      el: _this.el.querySelector('.deagg-output-view-graph'),
-      model: _this.model
+      el: _this.el.querySelector('.deagg-output-view-graph')
     });
 
     _reportView = DeaggReportView({
+      analysis: _this.model,
       collection: _deaggCollection,
-      el: _this.el.querySelector('.deagg-output-view-report'),
-      model: _this.model
+      el: _this.el.querySelector('.deagg-output-view-report')
     });
+
+    if (!_deaggCollection.getSelected()) {
+      // Nothing was selected, so did not render by default, but we want
+      // a graph skeleton (axes etc...) so, call render anyway
+      _graphView.render();
+    }
   };
 
   _onCalculateClick = function () {
-    _this.trigger('calculate', {calculator: _calculator});
+    _this.trigger('calculate', {
+      calculator: _calculator,
+      serviceType: DependencyFactory.TYPE_DEAGG
+    });
   };
 
 
@@ -135,7 +143,6 @@ var DeaggOutputView = function (params) {
   _this.destroy = Util.compose(function () {
     _destroySubViews();
 
-    _deaggCollection.off('select', 'onComponentSelect', _this);
     _deaggCollection.destroy();
     _deaggCollection = null;
 
@@ -154,7 +161,7 @@ var DeaggOutputView = function (params) {
    */
   _this.onCollectionDeselect = Util.extend(function () {
     _deaggCollection.reset([]);
-    _destroySubViews();
+    // _destroySubViews();
   }, _this.onCollectionDeselect);
 
   /**
@@ -163,6 +170,10 @@ var DeaggOutputView = function (params) {
    *
    */
   _this.onCollectionSelect = Util.extend(_this.onCollectionSelect, function () {
+    // _initSubViews();
+  });
+
+  _this.render = function () {
     var deaggs,
         imt,
         response,
@@ -173,7 +184,7 @@ var DeaggOutputView = function (params) {
     responses = _this.model.get('deaggResponses');
 
     if (responses) {
-      responses.data.some(function (r) {
+      responses.data().some(function (r) {
         if (r.get('imt').value === imt.value) {
           response = r;
           return true;
@@ -182,7 +193,7 @@ var DeaggOutputView = function (params) {
     }
 
     if (response) {
-      deaggs = response.get('data');
+      deaggs = response.get('deaggregations').data().slice(0);
     }
 
     _deaggCollection.reset(deaggs);
@@ -190,9 +201,6 @@ var DeaggOutputView = function (params) {
     if (deaggs.length && !_deaggCollection.getSelected()) {
       _deaggCollection.select(deaggs[0]);
     }
-  });
-
-  _this.render = function () {
 
     if (_deaggCollection.data().length === 0) {
       _this.el.classList.remove('deagg-output-ready');

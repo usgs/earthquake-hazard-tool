@@ -2,6 +2,7 @@
 
 var ComponentCurvesGraphView = require('ComponentCurvesGraphView'),
     CurveCalculator = require('CurveCalculator'),
+    DependencyFactory = require('DependencyFactory'),
     HazardCurveGraphView = require('HazardCurveGraphView'),
     ResponseSpectrumGraphView = require('ResponseSpectrumGraphView'),
 
@@ -106,7 +107,10 @@ var CurveOutputView = function (params) {
   };
 
   _onCalculateClick = function () {
-    _this.trigger('calculate', {calculator: _calculator});
+    _this.trigger('calculate', {
+      calculator: _calculator,
+      serviceType: DependencyFactory.TYPE_CURVE
+    });
   };
 
 
@@ -175,7 +179,12 @@ var CurveOutputView = function (params) {
       if (curves) {
         xAxisLabel = curves.get('xlabel');
         yAxisLabel = curves.get('ylabel');
-        data = curves.get('curves').data();
+
+        try {
+          data = curves.get('curves').data();
+        } catch (e) {
+          // No data...ignore
+        }
       }
 
       timeHorizon = _this.model.get('timeHorizon');

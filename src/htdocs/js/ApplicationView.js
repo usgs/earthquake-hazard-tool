@@ -280,16 +280,19 @@ var ApplicationView = function (params) {
 
   _onCalculate = function (data) {
     var calculator,
-        request;
+        request,
+        serviceType;
 
     calculator = data.calculator;
+    serviceType = data.serviceType;
 
     if (!_queued && calculator) {
       window.setTimeout(function () {
         if (_this.model.get('edition') && _this.model.get('location') &&
             _this.model.get('region') && _this.model.get('vs30')) {
           request = calculator.getResult(
-              _dependencyFactory.getService(_this.model.get('edition')),
+              _dependencyFactory.getService(
+                  _this.model.get('edition'), serviceType),
               _this.model,
               _loaderView.hide
             );

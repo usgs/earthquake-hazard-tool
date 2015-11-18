@@ -12,30 +12,6 @@ var LocationInput = require('input/Location'),
     Util = require('util/Util');
 
 
-var __intersection = function (arr1, arr2) {
-  var result;
-
-  result = {};
-
-  try {
-    arr1.forEach(function (item) {
-      if (arr2.indexOf(item) !== -1) {
-        result[item] = true;
-      }
-    });
-
-    arr2.forEach(function (item) {
-      if (arr1.indexOf(item) !== -1) {
-        result[item] = true;
-      }
-    });
-  } catch (e) {
-    // Ignore ...
-  }
-
-  return Object.keys(result);
-};
-
 var __to_id = function (model) {
   return model.id;
 };
@@ -171,14 +147,12 @@ var InputView = function (params) {
   };
 
   _getValidImts = function () {
-    var editionSupport,
-        regionSupport;
+    var regionSupport;
 
     try {
-      editionSupport = _getEdition().get('supports').imt;
       regionSupport = _getRegionSupport('imt');
 
-      return __intersection(editionSupport, regionSupport);
+      return regionSupport;
     } catch (e) {
       // If anything goes wrong, everything is valid
       return _dependencyFactory.getAllSpectralPeriods().map(__to_id);
@@ -186,14 +160,12 @@ var InputView = function (params) {
   };
 
   _getValidSiteClasses = function () {
-    var editionSupport,
-        regionSupport;
+    var regionSupport;
 
     try {
-      editionSupport = _getEdition().get('supports').vs30;
       regionSupport = _getRegionSupport('vs30');
 
-      return __intersection(editionSupport, regionSupport);
+      return regionSupport;
     } catch (e) {
       // If anything goes wrong, everything is valid
       return _dependencyFactory.getAllSiteClasses().map(__to_id);
@@ -223,6 +195,10 @@ var InputView = function (params) {
       includeBlankOption: true,
       model: _this.model
     });
+    _siteClassInput.render = Util.compose(function (changes) {
+      console.log('HERE');
+      return changes;
+    }, _siteClassInput.render);
 
     _imtInput = CollectionSelectBox({
       collection: _imts,
