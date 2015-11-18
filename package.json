@@ -34,7 +34,7 @@
     "hazdev-accordion": "~0.1.0",
     "hazdev-d3": "~0.2.0",
     "hazdev-leaflet": "~0.1.0",
-    "hazdev-location-view": "~0.1.0",
+    "hazdev-location-view": "~0.1.2",
     "hazdev-tablist": "~0.1.0",
     "hazdev-template": "~0.2.0",
     "hazdev-webutils": "~0.1.3",
