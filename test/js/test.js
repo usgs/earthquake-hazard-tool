@@ -52,6 +52,7 @@ require('./spec/LocationInfoViewTest');
 
 require('./spec/deagg/DeaggregationTest');
 require('./spec/deagg/DeaggResponseTest');
+require('./spec/deagg/DeaggregationGraphViewTest');
 
 if (window.mochaPhantomJS) {
     window.mochaPhantomJS.run();

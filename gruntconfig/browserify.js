@@ -79,6 +79,7 @@ addExports(config.src + '/htdocs/js', [
 
   'deagg/Deaggregation',
   'deagg/DeaggResponse',
+  'deagg/DeaggregationGraphView',
 
   'map/Layers',
   'map/LayerControl'
@@ -91,7 +92,7 @@ RESPONSE_HANDLERS.push('DynamicHazardResponse');
 // var Class = require('package/Class');
 
 
-var browerify = {
+var browserify = {
   options: {
     browserifyOptions: {
       debug: true,
@@ -157,4 +158,4 @@ var browerify = {
 
 };
 
-module.exports = browerify;
+module.exports = browserify;
