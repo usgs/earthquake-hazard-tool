@@ -69,7 +69,9 @@ var InputView = function (params) {
       _getValidImts,
       _getValidSiteClasses,
       _initSubViews,
-      _onEditionSelect;
+      _onEditionSelect,
+      _onImtSelect,
+      _onSiteClassSelect;
 
 
   params = Util.extend({}, _DEFAULTS, params);
@@ -85,6 +87,8 @@ var InputView = function (params) {
     _imts = Collection(_dependencyFactory.getAllSpectralPeriods());
 
     _editions.on('select', _onEditionSelect);
+    _siteClasses.on('select', _onSiteClassSelect);
+    _imts.on('select', _onImtSelect);
 
     if (_this.model) {
       _initSubViews();
@@ -240,12 +244,10 @@ var InputView = function (params) {
 
     edition = _editions.getSelected();
 
-    if (edition && _this.model) {
-      if (_this.model) {
-        _this.model.set({
-          edition: edition.id
-        });
-      }
+    if (_this.model) {
+      _this.model.set({
+        edition: (edition ? edition.id : null)
+      });
     }
 
     if (_siteClassInput) {
@@ -254,6 +256,30 @@ var InputView = function (params) {
 
     if (_imtInput) {
       _imtInput.render();
+    }
+  };
+
+  _onSiteClassSelect = function () {
+    var siteClass;
+
+    siteClass = _siteClasses.getSelected();
+
+    if (_this.model) {
+      _this.model.set({
+        vs30: (siteClass ? siteClass.id : null)
+      });
+    }
+  };
+
+  _onImtSelect = function () {
+    var imt;
+
+    imt = _imts.getSelected();
+
+    if (_this.model) {
+      _this.model.set({
+        imt: (imt ? imt.id : null)
+      });
     }
   };
 
