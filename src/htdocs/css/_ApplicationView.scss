@@ -41,6 +41,18 @@
   display: none;
 }
 
+.application-header {
+  display: inline;
+}
+
+.application-map {
+  margin-top: 0;
+}
+
+.accordion-map > .accordion-content {
+  padding: 0;
+}
+
 
 @media screen and (min-width: 960px) {
 
