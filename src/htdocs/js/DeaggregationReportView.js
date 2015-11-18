@@ -19,7 +19,7 @@ var DeaggregationReportView = function (params) {
       _metadata,
       _reportEl,
 
-      _calculateMean,
+      _calculateSum,
       _checkSummaryValues,
       _getHeader,
       _getMetadata,
@@ -213,7 +213,7 @@ var DeaggregationReportView = function (params) {
       row = [];
 
       // distance, magnitude, and mean values
-      row.push(data[i].r, data[i].m, _calculateMean(data[i].εdata));
+      row.push(data[i].r, data[i].m, _calculateSum(data[i].εdata));
 
       // edata values
       for (var x = 0; x < _metadata.εbins.length; x++) {
@@ -278,7 +278,7 @@ var DeaggregationReportView = function (params) {
   /*
    * Calculate the mean from an array of values
    */
-  _calculateMean = function (values) {
+  _calculateSum = function (values) {
     var total;
 
     total = 0;
@@ -287,7 +287,7 @@ var DeaggregationReportView = function (params) {
       total += values[i].value;
     }
 
-    return (total / values.length).toFixed(3);
+    return (total).toFixed(3);
   };
 
 
@@ -368,7 +368,7 @@ var DeaggregationReportView = function (params) {
 
     _reportEl.removeEventListener('click', _onDownloadClick);
 
-    _calculateMean = null;
+    _calculateSum = null;
     _checkSummaryValues = null;
     _getHeader = null;
     _getMetadata = null;
