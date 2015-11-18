@@ -9,13 +9,26 @@ var Meta = require('Meta'),
     Xhr = require('util/Xhr');
 
 
+var _TYPE_CURVE = 'curve',
+    _TYPE_DEAGG = 'deaggregation';
+
 var _DEFAULTS = {
   services: {
-    'staticcurve': {
-      metaUrl: 'metadata.json',
-      urlStub: null,
-      params: null,
-      constructor: 'HazardResponse'
+    'curve': {
+      'staticcurve': {
+        metaUrl: 'metadata.json',
+        urlStub: null,
+        params: null,
+        constructor: 'HazardResponse'
+      }
+    },
+    'deaggregation': {
+      'dynamicdeagg': {
+        metaUrl: 'deagg/metadata.json',
+        urlStub: null,
+        params: null,
+        constructor: 'deagg/DeaggResponse'
+      }
     }
   }
 };
@@ -60,7 +73,9 @@ var DependencyFactory = function (params) {
   };
 
   _initialize = function (params) {
-    var serviceName;
+    var serviceName,
+        serviceType,
+        services;
 
     params = Util.extend({}, _DEFAULTS, params);
 
@@ -72,18 +87,20 @@ var DependencyFactory = function (params) {
     _callbacks = [];
     _isReady = false;
 
-    for (serviceName in _services) {
-      if (_services.hasOwnProperty(serviceName)) {
-        _fetchService(serviceName);
+    for (serviceType in _services) {
+      services = _services[serviceType];
+
+      for (serviceName in services) {
+          _fetchService(serviceName, serviceType);
       }
     }
   };
 
-  _fetchService = function (serviceName) {
+  _fetchService = function (serviceName, serviceType) {
     var service,
         url;
 
-    service = _services[serviceName];
+    service = _this.getServiceByName(serviceName, serviceType);
 
     if (service) {
       url = service.metaUrl;
@@ -96,7 +113,7 @@ var DependencyFactory = function (params) {
           _onComplete(serviceName);
         },
         success: function (data/*, xhr*/) {
-          _onSuccess(serviceName, data);
+          _onSuccess(serviceName, data, serviceType);
           _onComplete(serviceName);
         },
         url: url
@@ -128,11 +145,10 @@ var DependencyFactory = function (params) {
    * @param data {Object}
    *      Data returned from the service fetch request.
    */
-  _onSuccess = function (serviceName, data) {
+  _onSuccess = function (serviceName, data, serviceType) {
     var service;
 
-    // Note :: The "...|| {}" may result in data being tossed. Good.
-    service = _services[serviceName] || {};
+    service = _this.getServiceByName(serviceName, serviceType);
 
     service.params = data.parameters;
     service.urlStub = data.syntax;
@@ -183,20 +199,43 @@ var DependencyFactory = function (params) {
    *      of the given typeName across all services.
    */
   _getAllFromAll = function (typeName) {
-    var all;
+    var all,
+        data,
+        i,
+        len,
+        serviceName,
+        serviceType,
+        services;
 
     all = {};
 
     // Use an object to create a unique list
-    Object.keys(_services).forEach(function (serviceName) {
-      var collection;
+    for (serviceType in _services) {
+      services = _services[serviceType];
 
-      collection = _services[serviceName][typeName];
+      for (serviceName in services) {
+        data = services[serviceName][typeName].data();
+        len = data.length;
 
-      collection.data().forEach(function (model) {
-        all[model.id] = model;
-      });
-    });
+        for (i = 0; i < len; i++) {
+          all[data[i].id] = data[i];
+        }
+      }
+    }
+
+    // Object.keys(_services).forEach(function (serviceType) {
+    //   var services = _services[serviceType];
+
+    //   Object.keys(services).forEach(function (serviceName) {
+    //     var collection;
+
+    //     collection = _services[serviceName][typeName];
+
+    //     collection.data().forEach(function (model) {
+    //       all[model.id] = model;
+    //     });
+    //   });
+    // });
 
     // Now convert the object to an array
     return Object.keys(all).map(function (key) {
@@ -420,17 +459,42 @@ var DependencyFactory = function (params) {
   };
 
   _this.getService = function (editionId) {
-    var service;
+    var serviceName,
+        serviceType,
+        service,
+        services;
 
-    Object.keys(_services).some(function (name) {
-      service = _services[name];
+    for (serviceType in _services) {
+      services = _services[serviceType];
 
-      if (!(service.editions && service.editions.get(editionId))) {
-        service = null;
+      for (serviceName in services) {
+        service = services[serviceName];
+
+        if (service.editions && service.editions.get(editionId)) {
+          return service;
+        } else {
+          service = null;
+        }
       }
+    }
 
-      return service;
-    });
+    return service;
+  };
+
+  _this.getServiceByName = function (serviceName, serviceType) {
+    var service,
+        type;
+
+    if (serviceType && _services.hasOwnProperty(serviceType)) {
+      service = _services[serviceType][serviceName];
+    } else {
+      for (type in _services) {
+        service = _services[type][serviceName];
+        if (service) {
+          break;
+        }
+      }
+    }
 
     return service;
   };
@@ -539,10 +603,12 @@ var _getInstance = function (params) {
     _createInstance(params);
   }
 
-  // return an instance of the Dependancy Factory
+  // return an instance of the Dependency Factory
   return _INSTANCE;
 };
 
 module.exports = {
-  'getInstance': _getInstance
+  'getInstance': _getInstance,
+  'TYPE_CURVE': _TYPE_CURVE,
+  'TYPE_DEAGG': _TYPE_DEAGG
 };

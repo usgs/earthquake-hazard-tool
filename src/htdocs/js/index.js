@@ -1,4 +1,4 @@
-/* global CURVE_SERVICES */
+/* global CURVE_SERVICES, DEAGG_SERVICES */
 'use strict';
 
 var Analysis = require('Analysis'),
@@ -16,7 +16,8 @@ var analyses,
     dependencyFactory;
 
 dependencyFactory = DependencyFactory.getInstance({
-  services: CURVE_SERVICES
+  curveServices: CURVE_SERVICES,
+  deaggServices: DEAGG_SERVICES
 });
 
 dependencyFactory.whenReady(function () {
