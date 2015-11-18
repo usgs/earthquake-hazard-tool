@@ -58,6 +58,7 @@ addExports(config.src + '/htdocs/js', [
   'Calculator',
   'ContourTypeView',
   'DataExport',
+  'DeaggregationReportView',
   'DependencyFactory',
   'DynamicHazardResponse',
   'EditionView',

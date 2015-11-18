@@ -76,6 +76,10 @@ var Analysis = function (options) {
         _this.get('edition'));
   };
 
+  _this.getDeaggregation = function () {
+    return _this.get('deaggregation');
+  };
+
   _initialize(options);
   options = null;
   return _this;

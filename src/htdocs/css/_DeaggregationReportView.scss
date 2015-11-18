@@ -1,0 +1,36 @@
+.deaggregation-report-summary > :first-child {
+  margin: 1em 0 0;
+}
+
+.summary-group {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.summary-values {
+  flex: 1;
+  flex-direction: row;
+  margin-right: 1em;
+  min-width: 160px;
+}
+
+.summary-list {
+
+  > dt,
+  > dd {
+    display: inline;
+  }
+
+  > dd {
+    margin-left: 0.5em;
+  }
+
+  > dt:after {
+    content: ':';
+  }
+
+  > dt:before {
+    content: '';
+    display: block;
+  }
+}

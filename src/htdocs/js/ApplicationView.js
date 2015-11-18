@@ -338,6 +338,8 @@ var ApplicationView = function (params) {
         }
       });
     }
+
+    console.log(_this.model.get());
   };
 
 
