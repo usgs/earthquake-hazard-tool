@@ -1,0 +1,67 @@
+@import '_GraphVariables.scss';
+
+
+.D33dDeaggregationBin {
+
+  > g {
+    > path {
+      stroke: #666;
+      stroke-width: 0.5px;
+    }
+
+    > text {
+      fill: #666;
+      font-size: 0.7em;
+      line-height: 1;
+    }
+  }
+
+  [data-bin-index='0'] > path {
+    fill: $graph_color_0;
+  }
+
+  [data-bin-index='1'] > path {
+    fill: $graph_color_1;
+  }
+
+  [data-bin-index='2'] > path {
+    fill: $graph_color_2;
+  }
+
+  [data-bin-index='3'] > path {
+    fill: $graph_color_3;
+  }
+
+  [data-bin-index='4'] > path {
+    fill: $graph_color_4;
+  }
+
+  [data-bin-index='5'] > path {
+    fill: $graph_color_5;
+  }
+
+  [data-bin-index='6'] > path {
+    fill: $graph_color_6;
+  }
+
+  [data-bin-index='7'] > path {
+    fill: $graph_color_7;
+  }
+
+  [data-bin-index='8'] > path {
+    fill: $graph_color_8;
+  }
+
+  [data-bin-index='9'] > path {
+    fill: $graph_color_9;
+  }
+
+  [data-bin-index='10'] > path {
+    fill: $graph_color_10;
+  }
+
+  [data-bin-index='11'] > path {
+    fill: $graph_color_11;
+  }
+
+}
