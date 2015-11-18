@@ -131,6 +131,7 @@ var ApplicationView = function (params) {
     _mapEl = document.createElement('section');
     _inputEl = document.createElement('section');
     _curveOutputEl = document.createElement('section');
+    _deaggOutputEl = document.createElement('sectin'); //el.querySelector('.deagg-output-view');
 
     Accordion({
       el: el,
@@ -138,25 +139,29 @@ var ApplicationView = function (params) {
         {
           classes: 'accordion-map',
           content: _mapEl,
-          toggleText: '<h2 class="application-header ' +
-              'header-gis-hazard-layers">GIS Hazard Layers</h2>'
+          toggleText: '<h2 class="application-header" ' +
+              'id="header-gis-hazard-layers">GIS Hazard Layers</h2>'
         },
         {
           content: _inputEl,
-          toggleText: '<h2 class="application-header ' +
-              'header-input">Input</h2>'
+          toggleText: '<h2 class="application-header" ' +
+              'id="header-input">Input</h2>'
         },
         {
           content: _curveOutputEl,
-          toggleText: '<h2 class="application-header ' +
-              'header-curve">Hazard Curve</h2>'
+          toggleText: '<h2 class="application-header" ' +
+              'id="header-curve">Hazard Curve</h2>'
+        },
+        {
+          content: _deaggOutputEl,
+          toggleText: '<h2 class="application-header" ' +
+              'id="header-deagg">Deaggregation</h2>'
         }
       ]
     });
 
     // _inputEl = el.querySelector('.input-view');
     _actionsEl = document.createElement('section'); //el.querySelector('.application-actions');
-    _deaggOutputEl = document.createElement('sectin'); //el.querySelector('.deagg-output-view');
   };
 
   //
