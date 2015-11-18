@@ -29,13 +29,11 @@ var ActionsView = function (params) {
 
       _accordion,
       _application,
-      _calculateButton,
       _collectionView,
       _newButton,
       _validateOnRender,
 
       _createNewAnalysis,
-      _hasIncompleteCalculation,
       _onAnalysisRemove,
       _onCalculateClick,
       _onNewClick;
@@ -56,8 +54,8 @@ var ActionsView = function (params) {
     _this.el.classList.add('actions-view');
 
     toggleText = [
-      '<button class="actions-view-calculate">Calculate</button>',
-      '<button class="actions-view-new">New</button>'
+      '<button class="actions-view-new">New</button>',
+      '<h3 class="actions-view-title">History</h3>'
     ].join('');
 
     _collectionView = AnalysisCollectionView({
@@ -76,9 +74,6 @@ var ActionsView = function (params) {
         }
       ]
     });
-
-    _calculateButton = _this.el.querySelector('.actions-view-calculate');
-    _calculateButton.addEventListener('click', _onCalculateClick);
 
     _newButton = _this.el.querySelector('.actions-view-new');
     _newButton.addEventListener('click', _onNewClick);
@@ -101,28 +96,6 @@ var ActionsView = function (params) {
   };
 
   /**
-   * Checks for an Analysis model in the collection with no calculated data.
-   *
-   * If any of the Analysis models in the collection do not have a data
-   * property defined then they are considered incomplete.
-   */
-  _hasIncompleteCalculation = function () {
-    var analyses = [],
-        i;
-
-    analyses = _this.collection.data();
-
-    for (i = 0; i < analyses.length; i++) {
-      // find an Analysis model with no calculated data
-      if (!analyses[i].get('data')) {
-        return true;
-      }
-    }
-
-    return false;
-  };
-
-  /**
    * Checks if Analysis model was the last item in the collection, and
    * if the Analysis is incomplete. Then adds a new Analysis model to the
    * collection (if empty), and sets the "new" button disabled state.
@@ -130,16 +103,9 @@ var ActionsView = function (params) {
    * Triggered by a 'remove' event on the Collection.
    */
   _onAnalysisRemove = function () {
-
-    // if all analysis are complete, enable the "new" button
-    if (!_hasIncompleteCalculation()) {
-      _newButton.removeAttribute('disabled');
-    }
-
     // if collection is empty, add Analysis model and disable "new" button
     if (_this.collection.data().length === 0) {
       _createNewAnalysis();
-      _newButton.setAttribute('disabled', true);
     }
   };
 
@@ -159,7 +125,6 @@ var ActionsView = function (params) {
    */
   _onNewClick = function () {
     _createNewAnalysis();
-    _newButton.setAttribute('disabled', true);
   };
 
   /**
@@ -167,7 +132,6 @@ var ActionsView = function (params) {
    */
   _this.destroy = Util.compose(function () {
 
-    _calculateButton.removeEventListener('click', _onCalculateClick);
     _newButton.removeEventListener('click', _onNewClick);
 
     _this.collection.off('remove', _onAnalysisRemove);
@@ -176,14 +140,12 @@ var ActionsView = function (params) {
     _collectionView.destroy();
 
     _createNewAnalysis = null;
-    _hasIncompleteCalculation = null;
     _onAnalysisRemove = null;
     _onCalculateClick = null;
     _onNewClick = null;
 
     _application = null;
     _accordion = null;
-    _calculateButton = null;
     _collectionView = null;
     _newButton = null;
 
@@ -197,15 +159,7 @@ var ActionsView = function (params) {
    *
    * Called on Analysis model change.
    */
-  _this.render = function (changes) {
-    // check if Analysis.get('data') was updated
-    if (typeof changes !== 'undefined' && changes.hasOwnProperty('data')) {
-      // if all analysis are complete, enable the "new" button
-      if (!_hasIncompleteCalculation()) {
-        _newButton.removeAttribute('disabled');
-      }
-    }
-
+  _this.render = function () {
     if (_validateOnRender) {
       // if already showing errors, rerun validation during render.
       _onCalculateClick();
