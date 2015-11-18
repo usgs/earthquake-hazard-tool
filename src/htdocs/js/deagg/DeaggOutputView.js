@@ -1,7 +1,8 @@
 'use strict';
 
-var DeaggGraphView = require('mvc/View'),
-    DeaggReportView = require('mvc/View'),
+var Calculator = require('Calculator'),
+    DeaggGraphView = require('deagg/DeaggregationGraphView'),
+    DeaggReportView = require('DeaggregationReportView'),
 
     Collection = require('mvc/Collection'),
     CollectionSelectBox = require('mvc/SelectView'),
@@ -23,14 +24,17 @@ var DeaggOutputView = function (params) {
   var _this,
       _initialize,
 
-      _createViewSkeleton,
-      _destroySubViews,
-      _initSubViews,
-
+      _btnCalculate,
+      _calculator,
       _componentSelectView,
       _deaggCollection,
       _graphView,
-      _reportView;
+      _reportView,
+
+      _createViewSkeleton,
+      _destroySubViews,
+      _initSubViews,
+      _onCalculateClick;
 
 
   params = Util.extend({}, _DEFAULTS, params);
@@ -38,6 +42,8 @@ var DeaggOutputView = function (params) {
 
   _initialize = function (/*params*/) {
     _this.el.classList.add('deagg-output-view');
+
+    _calculator = Calculator();
 
     _deaggCollection = Collection();
     _deaggCollection.on('select', 'onComponentSelect', _this);
@@ -53,10 +59,23 @@ var DeaggOutputView = function (params) {
    */
   _createViewSkeleton = function () {
     _this.el.innerHTML = [
+      '<div class="deagg-output-mask">',
+        '<p class="alert info">',
+          'Please select &ldquo;Edition&rdquo;, &ldquo;Location&rdquo; ',
+          '&ldquo;Site Class&rdquo;, &ldquo;Spectral Period&rdquo; &amp; ',
+          '&ldquo;Time Horizon&ldquo; above to compute a deaggregation.',
+          '<br/><button class="deagg-output-calculate">',
+            'Compute Deaggregation',
+          '</button>',
+        '</p>',
+      '</div>',
       '<select class="deagg-component-select-view"></select>',
       '<div class="deagg-output-view-graph"></div>',
       '<div class="deagg-output-view-report"></div>'
     ].join('');
+
+    _btnCalculate = _this.el.querySelector('.deagg-output-calculate');
+    _btnCalculate.addEventListener('click', _onCalculateClick, _this);
   };
 
   /**
@@ -98,11 +117,16 @@ var DeaggOutputView = function (params) {
     });
 
     _reportView = DeaggReportView({
-      collection: _this.collection,
+      collection: _deaggCollection,
       el: _this.el.querySelector('.deagg-output-view-report'),
       model: _this.model
     });
   };
+
+  _onCalculateClick = function () {
+    _this.trigger('calculate', {calculator: _calculator});
+  };
+
 
   /**
    * Free resouces associated with this view.
@@ -139,10 +163,12 @@ var DeaggOutputView = function (params) {
    *
    */
   _this.onCollectionSelect = Util.extend(_this.onCollectionSelect, function () {
-    var imt,
+    var deaggs,
+        imt,
         response,
         responses;
 
+    deaggs = [];
     imt = _this.model.get('imt');
     responses = _this.model.get('deaggResponses');
 
@@ -155,8 +181,25 @@ var DeaggOutputView = function (params) {
       });
     }
 
-    _deaggCollection.reset(response ? response.get('data') : []);
+    if (response) {
+      deaggs = response.get('data');
+    }
+
+    _deaggCollection.reset(deaggs);
+
+    if (deaggs.length && !_deaggCollection.getSelected()) {
+      _deaggCollection.select(deaggs[0]);
+    }
   });
+
+  _this.render = function () {
+
+    if (_deaggCollection.data().length === 0) {
+      _this.el.classList.remove('deagg-output-ready');
+    } else {
+      _this.el.classList.add('deagg-output-ready');
+    }
+  };
 
 
   _initialize(params);

@@ -102,6 +102,7 @@ var ApplicationView = function (params) {
     });
 
     _curveOutputView.on('calculate', _onCalculate, _this);
+    _deaggOutputView.on('calculate', _onCalculate, _this);
   };
 
 
@@ -120,7 +121,7 @@ var ApplicationView = function (params) {
     _mapEl = document.createElement('section');
     _inputEl = document.createElement('section');
     _curveOutputEl = document.createElement('section');
-    _deaggOutputEl = document.createElement('sectin');
+    _deaggOutputEl = document.createElement('section');
     _actionsEl = document.createElement('section');
 
     // By providing "el" to the Accordion, the sub-view containers are
