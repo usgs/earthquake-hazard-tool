@@ -1,7 +1,7 @@
 module.exports = {
   'status': 'success',
   'date': '2015-11-03T09:25:48-07:00',
-  'url': 'http://localhost:8080/nshmp-haz-ws/deagg/E2008/WUS/-118/34/PGA/760/2475',
+  'url': 'deagg/data.json',
   'response': [
     {
       'metadata': {
