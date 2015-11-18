@@ -16,8 +16,7 @@ var AnalysisView = function (params) {
       _paramsEl,
       _titleEl,
 
-      _createViewSkeleton,
-      _onModelChange;
+      _createViewSkeleton;
 
 
   _this = View(params||{});
@@ -50,7 +49,6 @@ var AnalysisView = function (params) {
   };
 
   _this.destroy = Util.compose(_this.destroy, function () {
-    _model.off('change', _onModelChange);
 
     _locationEl = null;
     _model = null;
@@ -58,7 +56,6 @@ var AnalysisView = function (params) {
     _titleEl = null;
 
     _createViewSkeleton = null;
-    _onModelChange = null;
 
     _initialize = null;
     _this = null;

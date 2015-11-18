@@ -1,6 +1,8 @@
 'use strict';
 
-var ActionsView = require('ActionsView'),
+var Analysis = require('Analysis'),
+    ActionsView = require('ActionsView'),
+    AnalysisCollectionView = require('AnalysisCollectionView'),
     Calculator = require('CurveCalculator'),
     CurveOutputView = require('curve/CurveOutputView'),
     DeaggOutputView = require('deagg/DeaggOutputView'),
@@ -24,6 +26,8 @@ var ApplicationView = function (params) {
       _accordion,
       _actionsEl,
       _actionsView,
+      _analysisCollectionEl,
+      _analysisCollectionView,
       _inputEl,
       _inputView,
       _calculator,
@@ -40,6 +44,7 @@ var ApplicationView = function (params) {
       _hazardSpectrumEl,
       _hazardSpectrumView,
       _loaderView,
+      _newButton,
       _mapEl,
       _mapView,
       _queued,
@@ -51,6 +56,7 @@ var ApplicationView = function (params) {
       _onCalculate,
       _onEditionChange,
       _onLocationChange,
+      _onNewButtonClick,
       _onRegionChange,
       _onTimeHorizonChange,
       _onVs30Change,
@@ -101,6 +107,13 @@ var ApplicationView = function (params) {
       el: _deaggOutputEl
     });
 
+    _analysisCollectionView = AnalysisCollectionView({
+      collection: _this.collection,
+      el: _analysisCollectionEl
+    });
+
+
+
     _curveOutputView.on('calculate', _onCalculate, _this);
     _deaggOutputView.on('calculate', _onCalculate, _this);
   };
@@ -123,6 +136,7 @@ var ApplicationView = function (params) {
     _curveOutputEl = document.createElement('section');
     _deaggOutputEl = document.createElement('section');
     _actionsEl = document.createElement('section');
+    _analysisCollectionEl = document.createElement('section');
 
     // By providing "el" to the Accordion, the sub-view containers are
     // automatically appended to this view's "el".
@@ -149,9 +163,23 @@ var ApplicationView = function (params) {
           content: _deaggOutputEl,
           toggleText: '<h2 class="application-header" ' +
               'id="header-deagg">Deaggregation</h2>'
+        },
+        {
+          content: _analysisCollectionEl,
+          classes: 'analysis-collection-view',
+          toggleText: '<h2 class="application-header" ' +
+              'id="header-history">History</h2>' +
+              '<button class="analysis-collection-view-new">New</button>'
         }
       ]
     });
+
+    _newButton  = _this.el.querySelector('.analysis-collection-view-new');
+    _newButton.addEventListener('click', _onNewButtonClick);
+  };
+
+  _onNewButtonClick = function () {
+    _this.collection.add(Analysis());
   };
 
   //
@@ -309,6 +337,7 @@ var ApplicationView = function (params) {
   _this.destroy = Util.compose(_this.destroy, function () {
     _calculator.destroy();
 
+    _newButton.removeEventListener('click', _onNewButtonClick);
     _computeCurveBtn.removeEventListener('click', _this.queueCalculation,
         _this);
 
@@ -328,6 +357,8 @@ var ApplicationView = function (params) {
     _accordion = null;
     _actionsEl = null;
     _actionsView = null;
+    _analysisCollectionEl = null;
+    _analysisCollectionView = null;
     _inputEl = null;
     _inputView = null;
     _calculator = null;
@@ -344,6 +375,7 @@ var ApplicationView = function (params) {
     _loaderView = null;
     _mapEl = null;
     _mapView = null;
+    _newButton = null;
     _queued = null;
     _siteClasses = null;
 
@@ -352,6 +384,7 @@ var ApplicationView = function (params) {
     _initViewContainer = null;
     _onEditionChange = null;
     _onLocationChange = null;
+    _onNewButtonClick = null;
     _onRegionChange = null;
     _onTimeHorizonChange = null;
     _onVs30Change = null;

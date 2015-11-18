@@ -1,6 +1,7 @@
 'use strict';
 
-var AnalysisView = require('AnalysisView'),
+var Analysis = require('Analysis'),
+    AnalysisView = require('AnalysisView'),
 
     Collection = require('mvc/Collection'),
     View = require('mvc/View'),
@@ -101,6 +102,10 @@ var AnalysisCollectionView = function (params) {
       _views.remove(view);
       view.destroy();
     });
+
+    if (_views.data().length === 0) {
+      _collection.add(Analysis());
+    }
 
     _this.render();
   };

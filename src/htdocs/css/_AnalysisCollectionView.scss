@@ -1,4 +1,22 @@
 
+.analysis-collection-view {
+
+  > .accordion-toggle {
+    position: relative;
+  }
+
+  > .accordion-content {
+    padding: 0;
+  }
+}
+
+.analysis-collection-view-new {
+  padding: 0.75rem 2rem;
+  position: absolute;
+  right: 16px;
+  top: 6px;
+}
+
 .analysis-collection-list {
   margin: 0;
 
@@ -26,7 +44,7 @@
   }
 }
 
-.analysis-delete-link {
+.analysis-view-title > .analysis-delete-link {
   color: rgb(224, 43, 43);
   float: right;
   text-align: center;
