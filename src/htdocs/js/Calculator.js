@@ -7,13 +7,13 @@ var Xhr = require('util/Xhr');
 var Calculator = function (/*params*/) {
   var _this;
 
-
   _this = {
-    getResult: null
+    getResult: null,
+    parseInputs: null,
+    callXHR: null
   };
 
-
-  /**
+   /**
    * Interacts with the web service for the named service and upon receiving
    * results, sets the results to the serviceName property on the input
    * analysis.
@@ -27,13 +27,18 @@ var Calculator = function (/*params*/) {
    *      the name of the service, the input analysis, and the computed result.
    */
   _this.getResult = function (service, analysis, callback) {
-    var input,
-        paramName,
-        params,
-        url;
+    var url;
 
-    params = service.params;
-    url = service.urlStub;
+    url = _this.parseInputs(service.params, service.urlStub, analysis);
+    _this.callXHR(url, service, analysis, callback);
+  };
+
+  /**
+  * Uses the imt value while CurveCalculator uses a value of any
+  */
+  _this.parseInputs = function (params, url, analysis) {
+    var input,
+        paramName;
 
     if (url === null || params === null) {
       throw new Error('URL and Params must be set before using a service.');
@@ -43,8 +48,6 @@ var Calculator = function (/*params*/) {
       if (paramName === 'latitude' || paramName === 'longitude') {
         // these come off of the 'location'
         input = analysis.get('location')[paramName];
-      } else if (paramName === 'imt') {
-        input = 'any';
       } else {
         input = analysis.get(paramName);
       }
@@ -58,8 +61,11 @@ var Calculator = function (/*params*/) {
         url = url.replace('{' + paramName + '}', input);
       }
     }
+    return url;
+  };
 
-    var request = Xhr.ajax({
+  _this.callXHR = function (url, service, analysis, callback) {
+    Xhr.ajax({
       url: url,
       success: function (response) {
         analysis.set({
@@ -71,8 +77,6 @@ var Calculator = function (/*params*/) {
         }
       }
     });
-
-    return request;
   };
 
   return _this;
