@@ -12,9 +12,10 @@ var collection,
     view;
 
 response = DeaggResponse(rawResponse);
-collection = Collection();
-collection.add(response);
-collection.select(response);
+collection = response.get('deaggregations');
+if (collection.getSelected() === null) {
+  collection.select(collection.data()[0]);
+}
 
 view = DeaggregationGraphView({
   el: document.querySelector('#example'),
