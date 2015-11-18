@@ -1,6 +1,7 @@
 'use strict';
 
 var ComponentCurvesGraphView = require('ComponentCurvesGraphView'),
+    CurveCalculator = require('CurveCalculator'),
     HazardCurveGraphView = require('HazardCurveGraphView'),
     ResponseSpectrumGraphView = require('ResponseSpectrumGraphView'),
 
@@ -26,15 +27,16 @@ var CurveOutputView = function (params) {
   var _this,
       _initialize,
 
-      _createViewSkeleton,
-      _initSubViews,
-      _onCalculateClick,
-
       _btnCalculate,
+      _calculator,
       _componentView,
       _curves,
       _meanCurveView,
-      _spectrumView;
+      _spectrumView,
+
+      _createViewSkeleton,
+      _initSubViews,
+      _onCalculateClick;
 
 
   // Inherit from parent class
@@ -46,6 +48,8 @@ var CurveOutputView = function (params) {
    *
    */
   _initialize = function (/*params*/) {
+    _calculator = CurveCalculator();
+
     _curves = Collection([]);
     _curves.on('select', 'onCurvesSelect', _this);
     _curves.on('deselect', 'onCurvesDeselect', _this);
@@ -102,7 +106,7 @@ var CurveOutputView = function (params) {
   };
 
   _onCalculateClick = function () {
-    console.log('TODO :: Tell application to fetch curve data ...');
+    _this.trigger('calculate', {calculator: _calculator});
   };
 
 
@@ -115,6 +119,7 @@ var CurveOutputView = function (params) {
     _meanCurveView.destroy();
     _spectrumView.destroy();
 
+    _calculator = null;
     _btnCalculate = null;
     _componentView = null;
     _curves = null;
