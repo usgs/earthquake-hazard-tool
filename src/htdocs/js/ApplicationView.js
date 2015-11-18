@@ -21,6 +21,7 @@ var ApplicationView = function (params) {
       _initialize,
 
       // variables
+      _accordion,
       _actionsEl,
       _actionsView,
       _inputEl,
@@ -111,29 +112,17 @@ var ApplicationView = function (params) {
     el = _this.el;
 
     el.className = 'application-container';
-
-    el.innerHTML = [
-      // '<section class="application-map-wrapper">',
-      //   '<section class="application-map"></section>',
-      // '</section>',
-
-      // '<h2 id="header-input">Input</h2>',
-      // '<section class="input-view"></section>',
-      // '<div class="application-actions"></div>',
-
-      // '<h2 id="header-curve">Hazard Curve</h2>',
-      // '<div class="row curve-output-view"></div>',
-
-      // '<h2 id="header-deaggregation">Deaggregation</h2>',
-      // '<div class="row deagg-output-view"></div>'
-    ].join('');
+    el.innerHTML = '';
 
     _mapEl = document.createElement('section');
     _inputEl = document.createElement('section');
     _curveOutputEl = document.createElement('section');
-    _deaggOutputEl = document.createElement('sectin'); //el.querySelector('.deagg-output-view');
+    _deaggOutputEl = document.createElement('sectin');
+    _actionsEl = document.createElement('section');
 
-    Accordion({
+    // By providing "el" to the Accordion, the sub-view containers are
+    // automatically appended to this view's "el".
+    _accordion = Accordion({
       el: el,
       accordions: [
         {
@@ -159,9 +148,6 @@ var ApplicationView = function (params) {
         }
       ]
     });
-
-    // _inputEl = el.querySelector('.input-view');
-    _actionsEl = document.createElement('section'); //el.querySelector('.application-actions');
   };
 
   //
@@ -298,6 +284,7 @@ var ApplicationView = function (params) {
         _this);
 
     // sub-views
+    _accordion.destroy();
     _actionsView.destroy();
     _inputView.destroy();
     _curveOutputView.destroy();
@@ -309,6 +296,7 @@ var ApplicationView = function (params) {
     _siteClasses.destroy();
 
     // variables
+    _accordion = null;
     _actionsEl = null;
     _actionsView = null;
     _inputEl = null;
