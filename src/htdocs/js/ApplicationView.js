@@ -8,6 +8,8 @@ var ActionsView = require('ActionsView'),
     LoaderView = require('LoaderView'),
     MapView = require('MapView'),
 
+    Accordion = require('accordion/Accordion'),
+
     Collection = require('mvc/Collection'),
     SelectedCollectionView = require('mvc/SelectedCollectionView'),
 
@@ -111,25 +113,50 @@ var ApplicationView = function (params) {
     el.className = 'application-container';
 
     el.innerHTML = [
-      '<h2 id="header-gis-hazard-layers">GIS Hazard Layers</h2>',
-      '<section class="application-map"></section>',
+      // '<section class="application-map-wrapper">',
+      //   '<section class="application-map"></section>',
+      // '</section>',
 
-      '<h2 id="header-input">Input</h2>',
-      '<section class="input-view"></section>',
-      '<div class="application-actions"></div>',
+      // '<h2 id="header-input">Input</h2>',
+      // '<section class="input-view"></section>',
+      // '<div class="application-actions"></div>',
 
-      '<h2 id="header-curve">Hazard Curve</h2>',
-      '<div class="row curve-output-view"></div>',
+      // '<h2 id="header-curve">Hazard Curve</h2>',
+      // '<div class="row curve-output-view"></div>',
 
-      '<h2 id="header-deaggregation">Deaggregation</h2>',
-      '<div class="row deagg-output-view"></div>'
+      // '<h2 id="header-deaggregation">Deaggregation</h2>',
+      // '<div class="row deagg-output-view"></div>'
     ].join('');
 
-    _inputEl = el.querySelector('.input-view');
-    _mapEl = el.querySelector('.application-map');
-    _actionsEl = el.querySelector('.application-actions');
-    _curveOutputEl = el.querySelector('.curve-output-view');
-    _deaggOutputEl = el.querySelector('.deagg-output-view');
+    _mapEl = document.createElement('section');
+    _inputEl = document.createElement('section');
+    _curveOutputEl = document.createElement('section');
+
+    Accordion({
+      el: el,
+      accordions: [
+        {
+          classes: 'accordion-map',
+          content: _mapEl,
+          toggleText: '<h2 class="application-header ' +
+              'header-gis-hazard-layers">GIS Hazard Layers</h2>'
+        },
+        {
+          content: _inputEl,
+          toggleText: '<h2 class="application-header ' +
+              'header-input">Input</h2>'
+        },
+        {
+          content: _curveOutputEl,
+          toggleText: '<h2 class="application-header ' +
+              'header-curve">Hazard Curve</h2>'
+        }
+      ]
+    });
+
+    // _inputEl = el.querySelector('.input-view');
+    _actionsEl = document.createElement('section'); //el.querySelector('.application-actions');
+    _deaggOutputEl = document.createElement('sectin'); //el.querySelector('.deagg-output-view');
   };
 
   //
