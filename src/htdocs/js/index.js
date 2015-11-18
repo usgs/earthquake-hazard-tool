@@ -13,11 +13,16 @@ Util.detach(document.querySelector('noscript'));
 
 var analyses,
     analysis,
-    dependencyFactory;
+    dependencyFactory,
+    serviceConfig;
+
+serviceConfig = {};
+serviceConfig[DependencyFactory.TYPE_CURVE] = CURVE_SERVICES;
+serviceConfig[DependencyFactory.TYPE_DEAGG] = DEAGG_SERVICES;
+
 
 dependencyFactory = DependencyFactory.getInstance({
-  curveServices: CURVE_SERVICES,
-  deaggServices: DEAGG_SERVICES
+  services: serviceConfig
 });
 
 dependencyFactory.whenReady(function () {
