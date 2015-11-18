@@ -76,7 +76,7 @@ class RegionFactory extends MetadataFactory {
       WHERE
         EXISTS (SELECT * FROM dataset WHERE regionid = r.id)
       ORDER BY
-        displayorder DESC
+        displayorder ASC
     ');
     $this->queryAvailable->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE,
         'Region');

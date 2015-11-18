@@ -6,7 +6,7 @@ var DeaggCalculator = require('deagg/DeaggCalculator'),
     DependencyFactory = require('DependencyFactory'),
 
     Collection = require('mvc/Collection'),
-    CollectionSelectBox = require('mvc/SelectView'),
+    CollectionSelectBox = require('mvc/CollectionSelectBox'),
     SelectedCollectionView = require('mvc/SelectedCollectionView'),
 
     Util = require('util/Util');
@@ -69,7 +69,10 @@ var DeaggOutputView = function (params) {
           '</button>',
         '</p>',
       '</div>',
-      '<select class="deagg-component-select-view"></select>',
+      '<label>',
+        'Component',
+        '<select class="deagg-component-select-view"></select>',
+      '</label>',
       '<div class="deagg-output-view-graph"></div>',
       '<div class="deagg-output-view-report"></div>'
     ].join('');
@@ -107,6 +110,7 @@ var DeaggOutputView = function (params) {
     _componentSelectView = CollectionSelectBox({
       collection: _deaggCollection,
       el: _this.el.querySelector('.deagg-component-select-view'),
+      format: function (m) { return m.get('component'); },
       model: _this.model
     });
 
@@ -179,33 +183,39 @@ var DeaggOutputView = function (params) {
         response,
         responses;
 
-    deaggs = [];
-    imt = _this.model.get('imt');
-    responses = _this.model.get('deaggResponses');
+    try {
+      deaggs = [];
+      imt = _this.model.get('imt');
+      responses = _this.model.get('deaggResponses');
 
-    if (responses) {
-      responses.data().some(function (r) {
-        if (r.get('imt').value === imt.value) {
-          response = r;
-          return true;
-        }
-      });
-    }
+      if (responses) {
+        responses.data().some(function (r) {
+          if (r.get('imt').value === imt.value) {
+            response = r;
+            return true;
+          }
+        });
+      }
 
-    if (response) {
-      deaggs = response.get('deaggregations').data().slice(0);
-    }
+      if (response) {
+        deaggs = response.get('deaggregations').data().slice(0);
+      }
 
-    _deaggCollection.reset(deaggs);
+      _deaggCollection.reset(deaggs);
 
-    if (deaggs.length && !_deaggCollection.getSelected()) {
-      _deaggCollection.select(deaggs[0]);
-    }
+      if (deaggs.length && !_deaggCollection.getSelected()) {
+        _deaggCollection.select(deaggs[0]);
+      }
 
-    if (_deaggCollection.data().length === 0) {
-      _this.el.classList.remove('deagg-output-ready');
-    } else {
-      _this.el.classList.add('deagg-output-ready');
+    } catch (e) {
+      _deaggCollection.deselect();
+      _deaggCollection.reset([]);
+    } finally {
+      if (_deaggCollection.data().length === 0) {
+        _this.el.classList.remove('deagg-output-ready');
+      } else {
+        _this.el.classList.add('deagg-output-ready');
+      }
     }
   };
 
