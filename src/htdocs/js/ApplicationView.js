@@ -1,7 +1,6 @@
 'use strict';
 
 var Analysis = require('Analysis'),
-    ActionsView = require('ActionsView'),
     AnalysisCollectionView = require('AnalysisCollectionView'),
     Calculator = require('CurveCalculator'),
     CurveOutputView = require('curve/CurveOutputView'),
@@ -24,8 +23,6 @@ var ApplicationView = function (params) {
 
       // variables
       _accordion,
-      _actionsEl,
-      _actionsView,
       _analysisCollectionEl,
       _analysisCollectionView,
       _inputEl,
@@ -91,12 +88,6 @@ var ApplicationView = function (params) {
       el: _inputEl
     });
 
-    _actionsView = ActionsView({
-      collection: _this.collection,
-      el: _actionsEl,
-      application: _this
-    });
-
     _curveOutputView = CurveOutputView({
       collection: _this.collection,
       el: _curveOutputEl
@@ -135,7 +126,6 @@ var ApplicationView = function (params) {
     _inputEl = document.createElement('section');
     _curveOutputEl = document.createElement('section');
     _deaggOutputEl = document.createElement('section');
-    _actionsEl = document.createElement('section');
     _analysisCollectionEl = document.createElement('section');
 
     // By providing "el" to the Accordion, the sub-view containers are
@@ -343,7 +333,6 @@ var ApplicationView = function (params) {
 
     // sub-views
     _accordion.destroy();
-    _actionsView.destroy();
     _inputView.destroy();
     _curveOutputView.destroy();
     _deaggOutputView.destroy();
@@ -355,8 +344,6 @@ var ApplicationView = function (params) {
 
     // variables
     _accordion = null;
-    _actionsEl = null;
-    _actionsView = null;
     _analysisCollectionEl = null;
     _analysisCollectionView = null;
     _inputEl = null;

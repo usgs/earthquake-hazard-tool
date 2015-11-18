@@ -51,7 +51,6 @@ addExports('node_modules/hazdev-accordion/src', [
 
 // project exports
 addExports(config.src + '/htdocs/js', [
-  'ActionsView',
   'Analysis',
   'AnalysisCollectionView',
   'AnalysisView',

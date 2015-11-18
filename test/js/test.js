@@ -30,7 +30,6 @@ mocha.ui('bdd');
 //     df = require('DependencyFactory').getInstance(staticMeta);
 
 // Add each test class here as they are implemented
-require('./spec/ActionsViewTest');
 require('./spec/AnalysisViewTest');
 require('./spec/AnalysisCollectionViewTest');
 require('./spec/ApplicationViewTest');

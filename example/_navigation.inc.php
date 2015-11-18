@@ -7,7 +7,6 @@ echo navGroup('Input',
 );
 
 echo navGroup('Other',
-  navItem('/ActionsView.html', 'Actions View') .
   navItem('/AnalysisView.html', 'Analysis View') .
   navItem('/AnalysisCollectionView.html', 'Analysis Collection View') .
   navItem('/ContourTypeView.html', 'Contour Type View') .
