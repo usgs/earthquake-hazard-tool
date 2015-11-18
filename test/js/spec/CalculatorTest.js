@@ -125,7 +125,7 @@ describe('Calculator', function () {
             DependencyFactory.getInstance().getService('E2008R3'),
             analysis, function (result) {
           expect(result.analysis.get('curves').get('curves').data().length)
-              .to.equal(6);
+              .to.equal(3);
           done();
         });
     });
