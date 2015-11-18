@@ -25,10 +25,10 @@ var addExports = function (basedir, files) {
 // List individual modules here. Each listed module will be aliased in the
 // "bundle", and will be set as an external in "test"s and "example"s.
 
-EXPORTS.push(CWD + '/etc/data.js:etc/data');
-EXPORTS.push(CWD + '/etc/metadata.js:etc/metadata');
-EXPORTS.push(CWD + '/etc/deagg/data.js:etc/deagg/data');
-EXPORTS.push(CWD + '/etc/deagg/metadata.js:etc/deagg/metadata');
+EXPORTS.push(CWD + '/etc/curve/data.js:curve/data');
+EXPORTS.push(CWD + '/etc/curve/metadata.js:curve/metadata');
+EXPORTS.push(CWD + '/etc/deagg/data.js:deagg/data');
+EXPORTS.push(CWD + '/etc/deagg/metadata.js:deagg/metadata');
 EXPORTS.push(NODE_MODULES + '/d3/d3.js:d3');
 
 // hazdev-webutils exports

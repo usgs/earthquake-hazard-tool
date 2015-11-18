@@ -6,7 +6,7 @@ var Analysis = require('Analysis'),
     DependencyFactory = require('DependencyFactory'),
     HazardResponse = require('HazardResponse');
 
-var data = require('etc/data');
+var data = require('curve/data');
 
 DependencyFactory.getInstance().whenReady(function () {
   var collection,
