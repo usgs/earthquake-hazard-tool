@@ -69,7 +69,8 @@ var AnalysisCollectionView = function (params) {
       model: analysis
     });
 
-    a = view.el.querySelector('.analysis-view-title').appendChild(document.createElement('a'));
+    a = view.el.insertBefore(document.createElement('a'),
+        view.el.querySelector('.analysis-view-title'));
     a.setAttribute('href', '#');
     a.setAttribute('title', 'Delete');
     a.classList.add('analysis-delete-link');
