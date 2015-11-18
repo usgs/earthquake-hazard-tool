@@ -57,6 +57,7 @@ var CurveOutputView = function (params) {
 
   _createViewSkeleton = function () {
     _this.el.classList.add('curve-output-view');
+    _this.el.classList.add('row');
 
     _this.el.innerHTML = [
       '<div class="curve-output-mask">',
