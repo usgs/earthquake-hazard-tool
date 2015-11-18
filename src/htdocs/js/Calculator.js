@@ -30,7 +30,7 @@ var Calculator = function (/*params*/) {
     var url;
 
     url = _this.parseInputs(service.params, service.urlStub, analysis);
-    _this.callXHR(url, service, analysis, callback);
+    return _this.callXHR(url, service, analysis, callback);
   };
 
   /**
@@ -65,7 +65,7 @@ var Calculator = function (/*params*/) {
   };
 
   _this.callXHR = function (url, service, analysis, callback) {
-    Xhr.ajax({
+    return Xhr.ajax({
       url: url,
       success: function (response) {
         analysis.set({
