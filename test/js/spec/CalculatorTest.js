@@ -10,9 +10,9 @@ var Analysis = require('Analysis'),
     Xhr = require('util/Xhr');
 
 
-var data = require('etc/data'),
+var data = require('curve/data'),
     expect = chai.expect,
-    metadata = require('etc/metadata');
+    metadata = require('curve/metadata');
 
 var analysis,
     contourType,

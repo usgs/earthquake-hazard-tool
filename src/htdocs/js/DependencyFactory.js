@@ -16,7 +16,7 @@ var _DEFAULTS = {
   services: {
     'curve': {
       'staticcurve': {
-        metaUrl: 'metadata.json',
+        metaUrl: 'curve/metadata.json',
         urlStub: null,
         params: null,
         constructor: 'HazardResponse'
