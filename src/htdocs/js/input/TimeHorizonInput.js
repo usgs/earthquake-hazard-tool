@@ -94,7 +94,7 @@ var TimeHorizonInput = function (params) {
     var target,
         value;
 
-    target = evt.target;
+    target = Util.getParentNode(evt.target, 'BUTTON', _this.el);
 
     if (!target || target.nodeName.toUpperCase() !== 'BUTTON') {
       return;
