@@ -69,7 +69,7 @@ var ComponentCurvesGraphView = function (options) {
         label;
 
     label = 'Component Curves for ';
-    if (_this.model !== null) {
+    if (_this.model) {
       components = _this.model.get('components');
       label += _this.model.get('label');
       if (components !== null) {
