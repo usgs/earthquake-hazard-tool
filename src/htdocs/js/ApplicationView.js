@@ -1,14 +1,14 @@
 'use strict';
 
 var ActionsView = require('ActionsView'),
-    BasicInputsView = require('BasicInputsView'),
     Calculator = require('CurveCalculator'),
-    ComponentCurvesGraphView = require('ComponentCurvesGraphView'),
-    ErrorsView = require('ErrorsView'),
-    HazardCurveView = require('HazardCurveGraphView'),
-    HazardSpectrumView = require('ResponseSpectrumGraphView'),
+    CurveOutputView = require('curve/CurveOutputView'),
+    DeaggOutputView = require('deagg/DeaggOutputView'),
+    InputView = require('input/InputView'),
     LoaderView = require('LoaderView'),
     MapView = require('MapView'),
+
+    Accordion = require('accordion/Accordion'),
 
     Collection = require('mvc/Collection'),
     SelectedCollectionView = require('mvc/SelectedCollectionView'),
@@ -21,20 +21,20 @@ var ApplicationView = function (params) {
       _initialize,
 
       // variables
+      _accordion,
       _actionsEl,
       _actionsView,
-      _basicInputsEl,
-      _basicInputsView,
+      _inputEl,
+      _inputView,
       _calculator,
-      _componentCurveEl,
-      _componentCurveView,
       _computeCurveBtn,
-      _curves,
       _curveOutput,
+      _curveOutputEl,
+      _curveOutputView,
+      _deaggOutputEl,
+      _deaggOutputView,
       _dependencyFactory,
       _editions,
-      _errorsEl,
-      _errorsView,
       _hazardCurveEl,
       _hazardCurveView,
       _hazardSpectrumEl,
@@ -48,8 +48,7 @@ var ApplicationView = function (params) {
       // methods
       _clearOutput,
       _initViewContainer,
-      _onCurveDeselect,
-      _onCurveSelect,
+      _onCalculate,
       _onEditionChange,
       _onLocationChange,
       _onRegionChange,
@@ -73,23 +72,6 @@ var ApplicationView = function (params) {
     _siteClasses = Collection(_dependencyFactory.getAllSiteClasses());
     _editions = Collection(_dependencyFactory.getAllEditions());
 
-    _curves = Collection();
-    _curves.on('select', _onCurveSelect);
-    _curves.on('deselect', _onCurveDeselect);
-
-    _errorsView = ErrorsView({
-      collection: _this.collection,
-      el: _errorsEl,
-    });
-
-    _basicInputsView = BasicInputsView({
-      collection: _this.collection,
-      editions: _editions,
-      el: _basicInputsEl,
-      siteClasses: _siteClasses,
-      errorsView: _errorsView
-    });
-
     _mapView = MapView({
       collection: _this.collection,
       dependencyFactory: _dependencyFactory,
@@ -97,30 +79,30 @@ var ApplicationView = function (params) {
       el: _mapEl
     });
 
+    _inputView = InputView({
+      collection: _this.collection,
+      dependencyFactory: _dependencyFactory,
+      el: _inputEl
+    });
+
     _actionsView = ActionsView({
       collection: _this.collection,
       el: _actionsEl,
-      errorsView: _errorsView,
       application: _this
     });
 
-    _hazardCurveView = HazardCurveView({
-      curves: _curves,
-      el: _hazardCurveEl.appendChild(document.createElement('div')),
-      title: 'Hazard Curves'
+    _curveOutputView = CurveOutputView({
+      collection: _this.collection,
+      el: _curveOutputEl
     });
 
-    _hazardSpectrumView = HazardSpectrumView({
-      curves: _curves,
-      el: _hazardSpectrumEl.appendChild(document.createElement('div')),
-      title: 'Hazard Response Spectrum'
+    _deaggOutputView = DeaggOutputView({
+      collection: _this.collection,
+      el: _deaggOutputEl
     });
 
-    _componentCurveView = ComponentCurvesGraphView({
-      collection: _curves,
-      el: _componentCurveEl.appendChild(document.createElement('div')),
-      title: 'Hazard Curve Compoents'
-    });
+    _curveOutputView.on('calculate', _onCalculate, _this);
+    _deaggOutputView.on('calculate', _onCalculate, _this);
   };
 
 
@@ -134,74 +116,42 @@ var ApplicationView = function (params) {
     el = _this.el;
 
     el.className = 'application-container';
+    el.innerHTML = '';
 
-    el.innerHTML = [
-      '<div class="flexible">',
-        '<section class="application-basic-inputs"></section>',
-        '<section class="application-map"></section>',
-      '</div>',
-      '<div class="application-errors"></div>',
-      '<div class="application-actions"></div>',
-      '<div class="row curve-output">',
-        '<div class="curve-output-mask">',
-          '<p class="alert info">',
-            'Please select &ldquo;Edition&rdquo;, &ldquo;Location&rdquo; ',
-            '&amp; &ldquo;Site Class&rdquo; above to compute a hazard curve.',
-            '<br/><button class="curve-output-calculate">',
-              'Compute Hazard Curve',
-            '</button>',
-          '</p>',
-        '</div>',
-        '<section class="application-hazard-curve column one-of-two">',
-        '</section>',
-        '<section class="application-hazard-spectrum column one-of-two">',
-        '</section>',
-        '<section class="application-hazard-component column one-of-two">',
-        '</section>',
-      '</div>'
-    ].join('');
+    _mapEl = document.createElement('section');
+    _inputEl = document.createElement('section');
+    _curveOutputEl = document.createElement('section');
+    _deaggOutputEl = document.createElement('section');
+    _actionsEl = document.createElement('section');
 
-    _basicInputsEl = el.querySelector('.application-basic-inputs');
-    _mapEl = el.querySelector('.application-map');
-    _errorsEl = el.querySelector('.application-errors');
-    _actionsEl = el.querySelector('.application-actions');
-    _computeCurveBtn = el.querySelector('.curve-output-calculate');
-    _componentCurveEl = el.querySelector('.application-hazard-component');
-    _curveOutput = el.querySelector('.curve-output');
-    _hazardCurveEl = el.querySelector('.application-hazard-curve');
-    _hazardSpectrumEl = el.querySelector('.application-hazard-spectrum');
-
-    _computeCurveBtn.addEventListener('click', _this.queueCalculation, _this);
-  };
-
-  /**
-   * Called when a curve for the current model is deselected.
-   *
-   * Clears the "imt" and "period" values on the current model.
-   */
-  _onCurveDeselect = function () {
-    if (_this.model) {
-      _this.model.set({
-        imt: null,
-        period: null
-      });
-    }
-  };
-
-  /**
-   * Called whena curve for the current model is selected.
-   *
-   * Updates the "imt" and "period" values on the current model.
-   */
-  _onCurveSelect = function () {
-    var selected;
-    if (_this.model) {
-      selected = _curves.getSelected();
-      _this.model.set({
-        imt: selected.get('imt'),
-        period: selected.get('period')
-      });
-    }
+    // By providing "el" to the Accordion, the sub-view containers are
+    // automatically appended to this view's "el".
+    _accordion = Accordion({
+      el: el,
+      accordions: [
+        {
+          classes: 'accordion-map',
+          content: _mapEl,
+          toggleText: '<h2 class="application-header" ' +
+              'id="header-gis-hazard-layers">GIS Hazard Layers</h2>'
+        },
+        {
+          content: _inputEl,
+          toggleText: '<h2 class="application-header" ' +
+              'id="header-input">Input</h2>'
+        },
+        {
+          content: _curveOutputEl,
+          toggleText: '<h2 class="application-header" ' +
+              'id="header-curve">Hazard Curve</h2>'
+        },
+        {
+          content: _deaggOutputEl,
+          toggleText: '<h2 class="application-header" ' +
+              'id="header-deagg">Deaggregation</h2>'
+        }
+      ]
+    });
   };
 
   //
@@ -246,18 +196,6 @@ var ApplicationView = function (params) {
   };
 
   _onTimeHorizonChange = function (/*changes*/) {
-    var timeHorizon;
-
-    if (_this.model) {
-      timeHorizon = _this.model.get('timeHorizon');
-
-      _hazardCurveView.model.set({
-        'timeHorizon': timeHorizon
-      });
-      _hazardSpectrumView.model.set({
-        'timeHorizon': timeHorizon
-      });
-    }
   };
 
   /**
@@ -338,8 +276,33 @@ var ApplicationView = function (params) {
         }
       });
     }
+  };
 
-    console.log(_this.model.get());
+  _onCalculate = function (data) {
+    var calculator,
+        request,
+        serviceType;
+
+    calculator = data.calculator;
+    serviceType = data.serviceType;
+
+    if (!_queued && calculator) {
+      window.setTimeout(function () {
+        if (_this.model.get('edition') && _this.model.get('location') &&
+            _this.model.get('region') && _this.model.get('vs30')) {
+          request = calculator.getResult(
+              _dependencyFactory.getService(
+                  _this.model.get('edition'), serviceType),
+              _this.model,
+              _loaderView.hide
+            );
+          _loaderView.show(request);
+        }
+        _queued = false;
+      }, 0);
+      _queued = true;
+    }
+
   };
 
 
@@ -350,32 +313,30 @@ var ApplicationView = function (params) {
         _this);
 
     // sub-views
+    _accordion.destroy();
     _actionsView.destroy();
-    _basicInputsView.destroy();
-    _hazardCurveView.destroy();
-    _hazardSpectrumView.destroy();
+    _inputView.destroy();
+    _curveOutputView.destroy();
+    _deaggOutputView.destroy();
     _mapView.destroy();
 
     // models/collections
     _editions.destroy();
     _siteClasses.destroy();
 
-    _curves.off('select', _onCurveSelect);
-    _curves.off('deselect', _onCurveDeselect);
-    _curves.destroy();
-
     // variables
+    _accordion = null;
     _actionsEl = null;
     _actionsView = null;
-    _basicInputsEl = null;
-    _basicInputsView = null;
+    _inputEl = null;
+    _inputView = null;
     _calculator = null;
     _computeCurveBtn = null;
     _curveOutput = null;
+    _deaggOutputEl = null;
+    _deaggOutputView = null;
     _dependencyFactory = null;
     _editions = null;
-    _errorsEl = null;
-    _errorsView = null;
     _hazardCurveEl = null;
     _hazardCurveView = null;
     _hazardSpectrumEl = null;
@@ -389,8 +350,6 @@ var ApplicationView = function (params) {
     // methods
     _clearOutput = null;
     _initViewContainer = null;
-    _onCurveDeselect = null;
-    _onCurveSelect = null;
     _onEditionChange = null;
     _onLocationChange = null;
     _onRegionChange = null;
@@ -447,82 +406,7 @@ var ApplicationView = function (params) {
     }
   };
 
-  _this.render = function (changes) {
-    var curves,
-        data,
-        id,
-        imt,
-        timeHorizon,
-        xAxisLabel,
-        yAxisLabel;
-
-    // default labels, data, time horizon
-    xAxisLabel = 'Ground Motion (g)';
-    yAxisLabel = 'Annual Frequency of Exceedence';
-    data = [];
-    timeHorizon = 2475;
-    id = null;
-
-
-    if (_this.model && changes) {
-      _updateVs30();
-      _updateRegion();
-
-      curves = _this.model.get('curves');
-      if (curves) {
-        xAxisLabel = curves.get('xlabel');
-        yAxisLabel = curves.get('ylabel');
-        data = curves.get('curves').data();
-      }
-      timeHorizon = _this.model.get('timeHorizon');
-
-      // find model period, to select curve within collection
-      imt = _this.model.get('imt');
-      data.every(function (curve) {
-        if (curve.get('imt') === imt) {
-          id = curve.get('id');
-          return false;
-        }
-        return true;
-      });
-    }
-
-    // Update curve plotting
-    try {
-      _hazardCurveView.model.set({
-        'xLabel': xAxisLabel,
-        'yLabel': yAxisLabel,
-        'timeHorizon': timeHorizon
-      }, {silent: true});
-    } catch (e) {
-      if (console && console.error) {
-        console.error(e);
-      }
-    }
-
-    // Update spectra plotting
-    try {
-      _hazardSpectrumView.model.set({
-        'timeHorizon': timeHorizon
-      }, {silent: true});
-    } catch (e) {
-      if (console && console.error) {
-        console.error(e);
-      }
-    }
-
-    _curves.reset(data);
-
-    if (data.length === 0) {
-      // No curve data
-      _curveOutput.classList.remove('curve-output-ready');
-    } else {
-      _curveOutput.classList.add('curve-output-ready');
-    }
-
-    if (id !== null) {
-      _curves.selectById(id);
-    }
+  _this.render = function (/*changes*/) {
   };
 
 

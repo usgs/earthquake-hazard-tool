@@ -30,7 +30,8 @@ var Analysis = function (options) {
     timeHorizon: 2475,
     contourType: 'hazard',
 
-    curves: null
+    curves: null,
+    deaggResponses: null
   }, options));
 
   _initialize = function (/*options*/) {

@@ -10,9 +10,9 @@ var Analysis = require('Analysis'),
     Xhr = require('util/Xhr');
 
 
-var data = require('etc/data'),
+var data = require('curve/data'),
     expect = chai.expect,
-    metadata = require('etc/metadata');
+    metadata = require('curve/metadata');
 
 var analysis,
     contourType,
@@ -125,7 +125,7 @@ describe('Calculator', function () {
             DependencyFactory.getInstance().getService('E2008R3'),
             analysis, function (result) {
           expect(result.analysis.get('curves').get('curves').data().length)
-              .to.equal(6);
+              .to.equal(3);
           done();
         });
     });

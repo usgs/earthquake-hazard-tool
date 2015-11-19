@@ -7,7 +7,7 @@ var Analysis = require('Analysis'),
 
     Collection = require('mvc/Collection');
 
-var metadata = require('etc/metadata');
+var metadata = require('curve/metadata');
 
 var analyses = [],
     collection,

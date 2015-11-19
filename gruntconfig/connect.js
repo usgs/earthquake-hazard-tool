@@ -91,9 +91,9 @@ var connect = {
   example: {
     options: {
       base: [
+        config.example,
         config.build + '/' + config.src + '/htdocs',
         config.build + '/' + config.test,
-        config.example,
         config.etc
       ],
       livereload: config.liveReloadPort,
@@ -127,6 +127,7 @@ var connect = {
   template: {
     options: {
       base: ['node_modules/hazdev-template/dist/htdocs'],
+      middleware: addMiddleware,
       port: config.templatePort
     }
   }

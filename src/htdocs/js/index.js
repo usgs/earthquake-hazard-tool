@@ -1,4 +1,4 @@
-/* global CURVE_SERVICES */
+/* global CURVE_SERVICES, DEAGG_SERVICES */
 'use strict';
 
 var Analysis = require('Analysis'),
@@ -13,10 +13,16 @@ Util.detach(document.querySelector('noscript'));
 
 var analyses,
     analysis,
-    dependencyFactory;
+    dependencyFactory,
+    serviceConfig;
+
+serviceConfig = {};
+serviceConfig[DependencyFactory.TYPE_CURVE] = CURVE_SERVICES;
+serviceConfig[DependencyFactory.TYPE_DEAGG] = DEAGG_SERVICES;
+
 
 dependencyFactory = DependencyFactory.getInstance({
-  services: CURVE_SERVICES
+  services: serviceConfig
 });
 
 dependencyFactory.whenReady(function () {

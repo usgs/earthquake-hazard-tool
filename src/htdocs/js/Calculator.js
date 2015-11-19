@@ -68,15 +68,19 @@ var Calculator = function (/*params*/) {
     return Xhr.ajax({
       url: url,
       success: function (response) {
-        analysis.set({
-          'curves': require(service.constructor)(response.response)
-        });
-
-        if (callback) {
-          callback({analysis: analysis, service: service});
-        }
+        _this.onXhrSuccess(response, service, analysis, callback);
       }
     });
+  };
+
+  _this.onXhrSuccess = function (response, service, analysis, callback) {
+    analysis.set({
+      'curves': require(service.constructor)(response.response)
+    });
+
+    if (callback) {
+      callback({analysis: analysis, service: service});
+    }
   };
 
   return _this;

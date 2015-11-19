@@ -1,69 +1,38 @@
 .hazard-layer-control {
-  background-color: #fff;
+  position: relative;
+  z-index: 8;
+}
+
+.hazard-layer-control-toggle {
   background-image: url('../lib/leaflet/images/layers.png');
-  background-position: 2px 2px;
+  background-position: 0 -2px;
   background-repeat: no-repeat;
   background-size: 26px 26px;
-  border-radius: 4px;
+  border-radius: 2px;
   cursor: pointer;
   display: block;
-  height: 30px;
-  width: 30px;
+  height: 26px;
+  width: 26px;
 }
 
-.contour-layer-control {
+.hazard-layer-control-content {
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: 0 1px 1px #333;
   display: none;
-}
-
-.show-contour-layer-control > .contour-layer-control {
-  display: block;
-  font-size: 16px;
-  height: 400px;
-  margin: 0;
-  overflow: auto;
+  font-size: 1.7rem;
+  min-width: 20em;
   padding: 1em;
+  position: absolute;
+  right: -1px;
+  top: 0;
+  z-index: 1;
 
-  > label {
-    color: #777;
-    margin: 1em 0 0;
-    font-size: 0.88em;
-  }
-
-  > h3 {
-    border-top: 1px solid #eee;
-    padding: 16px 0 0;
-
-    &:first-child {
-      border: 0;
-      margin: 0;
-      padding: 0;
-    }
-  }
-
-  .collection-selectbox {
-    min-width: 222px;
+  > label + label {
+    margin-top: 1em;
   }
 }
 
-.leaflet-top.leaflet-right {
-  z-index: 1001;
-
-  > .hazard-layer-control {
-    z-index: 8;
-  }
-}
-
-input[type=checkbox]:checked+label:after {
-  top: 0.213em;
-  left: 0.882em;
-}
-
-
-@media screen and (min-width: 768px) {
-
-  .show-contour-layer-control > .contour-layer-control {
-    .collection-selectbox {
-      min-width: 285px;
-    }
-  }
+.show > .hazard-layer-control-content {
+  display: block;
 }
