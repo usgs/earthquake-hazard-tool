@@ -218,9 +218,7 @@ var InputView = function (params) {
 
     if (_this.model) {
       _this.model.set({
-        edition: (edition ? edition.id : null),
-        curves: null,
-        deaggResponses: null
+        edition: (edition ? edition.id : null)
       });
     }
 
@@ -240,9 +238,7 @@ var InputView = function (params) {
 
     if (_this.model) {
       _this.model.set({
-        vs30: (siteClass ? siteClass.id : null),
-        curves: null,
-        deaggResponses: null
+        vs30: (siteClass ? siteClass.id : null)
       });
     }
   };
@@ -254,8 +250,7 @@ var InputView = function (params) {
 
     if (_this.model) {
       _this.model.set({
-        imt: (imt ? imt.id : null),
-        deaggResponses: null
+        imt: (imt ? imt.id : null)
       });
     }
   };

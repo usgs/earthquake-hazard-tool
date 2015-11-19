@@ -37,6 +37,7 @@ var CurveOutputView = function (params) {
 
       _createViewSkeleton,
       _initSubViews,
+      _invalidateCurves,
       _onCalculateClick;
 
 
@@ -113,6 +114,11 @@ var CurveOutputView = function (params) {
     });
   };
 
+  _invalidateCurves = function () {
+    _this.model.set({
+      curves: null
+    });
+  };
 
   _this.destroy = Util.compose(function () {
     _btnCalculate.removeEventListener('click', _onCalculateClick, _this);
@@ -132,11 +138,38 @@ var CurveOutputView = function (params) {
 
     _createViewSkeleton = null;
     _initSubViews = null;
+    _invalidateCurves = null;
     _onCalculateClick = null;
 
     _initialize = null;
     _this = null;
   }, _this.destroy);
+
+  /**
+   * unset the event bindings for the model
+   */
+  _this.onCollectionDeselect = function () {
+    _this.model.off('change', 'render', _this);
+    _this.model.off('change:edition', _invalidateCurves);
+    _this.model.off('change:location', _invalidateCurves);
+    _this.model.off('change:vs30', _invalidateCurves);
+    _this.model.off('change:imt', _invalidateCurves);
+    _this.model = null;
+    _this.render({model: _this.model});
+  };
+
+  /**
+   * set event bindings for the model
+   */
+  _this.onCollectionSelect = function () {
+    _this.model = _this.collection.getSelected();
+    _this.model.on('change:edition', _invalidateCurves);
+    _this.model.on('change:location', _invalidateCurves);
+    _this.model.on('change:vs30', _invalidateCurves);
+    _this.model.on('change:imt', _invalidateCurves);
+    _this.model.on('change', 'render', _this);
+    _this.render({model: _this.model});
+  };
 
   _this.onCurvesDeselect = function () {
     if (_this.model) {

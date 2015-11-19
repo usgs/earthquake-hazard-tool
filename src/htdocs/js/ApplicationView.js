@@ -103,8 +103,6 @@ var ApplicationView = function (params) {
       el: _analysisCollectionEl
     });
 
-
-
     _curveOutputView.on('calculate', _onCalculate, _this);
     _deaggOutputView.on('calculate', _onCalculate, _this);
   };

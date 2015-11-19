@@ -35,6 +35,7 @@ var DeaggOutputView = function (params) {
       _createViewSkeleton,
       _destroySubViews,
       _initSubViews,
+      _invalidateDeaggregation,
       _onCalculateClick;
 
 
@@ -139,6 +140,11 @@ var DeaggOutputView = function (params) {
     });
   };
 
+  _invalidateDeaggregation = function () {
+    _this.model.set({
+      deaggResponses: null
+    });
+  };
 
   /**
    * Free resouces associated with this view.
@@ -152,30 +158,42 @@ var DeaggOutputView = function (params) {
 
     _createViewSkeleton = null;
     _destroySubViews = null;
+    _invalidateDeaggregation = null;
     _initSubViews = null;
 
     _initialize = null;
     _this = null;
   }, _this.destroy);
 
-  /**
-   * Destroys sub-views and then calls default implementation to unbind
-   * from _this.model.
-   *
-   */
-  _this.onCollectionDeselect = Util.extend(function () {
-    _deaggCollection.reset([]);
-    // _destroySubViews();
-  }, _this.onCollectionDeselect);
 
   /**
-   * Calls default implementation then initializes the sub-views with the new
-   * _this.model.
-   *
+   * unset the event bindings for the model
    */
-  _this.onCollectionSelect = Util.extend(_this.onCollectionSelect, function () {
-    // _initSubViews();
-  });
+  _this.onCollectionDeselect = function () {
+    _deaggCollection.reset([]);
+    _this.model.off('change', 'render', _this);
+    _this.model.off('change:edition', _invalidateDeaggregation);
+    _this.model.off('change:location', _invalidateDeaggregation);
+    _this.model.off('change:vs30', _invalidateDeaggregation);
+    _this.model.off('change:imt', _invalidateDeaggregation);
+    _this.model.off('change:timeHorizon', _invalidateDeaggregation);
+    _this.model = null;
+    _this.render({model: _this.model});
+  };
+
+  /**
+   * set event bindings for the model
+   */
+  _this.onCollectionSelect = function () {
+    _this.model = _this.collection.getSelected();
+    _this.model.on('change:edition', _invalidateDeaggregation);
+    _this.model.on('change:location', _invalidateDeaggregation);
+    _this.model.on('change:vs30', _invalidateDeaggregation);
+    _this.model.on('change:imt', _invalidateDeaggregation);
+    _this.model.on('change:timeHorizon', _invalidateDeaggregation);
+    _this.model.on('change', 'render', _this);
+    _this.render({model: _this.model});
+  };
 
   _this.render = function () {
     var deaggs,
