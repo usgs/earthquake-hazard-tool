@@ -3,7 +3,9 @@
 
 var DeaggregationGraphView = require('deagg/DeaggregationGraphView'),
     DeaggResponse = require('deagg/DeaggResponse'),
-    rawResponse = require('deagg/data').response[0];
+    rawResponse = require('deagg/data').response[0],
+
+    Collection = require('mvc/Collection');
 
 
 var collection,
