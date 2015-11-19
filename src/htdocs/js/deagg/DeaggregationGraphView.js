@@ -73,6 +73,8 @@ var DeaggregationGraphView = function (options) {
     _d33d.renderLegend = _renderLegend;
 
     _createAxes();
+
+    _this.render();
   };
 
   /**
@@ -350,12 +352,10 @@ var DeaggregationGraphView = function (options) {
    * Otherwise, any existing bins are destroyed and removed from the graph.
    */
   _this.render = function () {
-    var εbins;
+    var oldBins,
+        εbins;
 
-    // clean up old views
-    _bins.forEach(function (v) {
-      v.destroy();
-    });
+    oldBins = _bins;
 
     // create new views
     _bins = [];
@@ -378,6 +378,12 @@ var DeaggregationGraphView = function (options) {
     _d33d.views.reset([]
         .concat(_axes)
         .concat(_bins));
+
+    // clean up old views
+    oldBins.forEach(function (v) {
+      v.destroy();
+    });
+    oldBins = null;
   };
 
 
