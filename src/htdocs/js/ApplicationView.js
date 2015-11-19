@@ -166,8 +166,15 @@ var ApplicationView = function (params) {
     _newButton.addEventListener('click', _onNewButtonClick);
   };
 
+  /**
+   * Adds new analysis to the collection and selects the analysis
+   */
   _onNewButtonClick = function () {
-    _this.collection.add(Analysis());
+    var analysis;
+
+    analysis = Analysis();
+    _this.collection.add(analysis);
+    _this.collection.select(analysis);
   };
 
   //
