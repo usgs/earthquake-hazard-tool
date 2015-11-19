@@ -1,10 +1,9 @@
 'use strict';
 
 
-var Collection = require('mvc/Collection'),
-    DeaggregationGraphView = require('deagg/DeaggregationGraphView'),
+var DeaggregationGraphView = require('deagg/DeaggregationGraphView'),
     DeaggResponse = require('deagg/DeaggResponse'),
-    rawResponse = require('etc/deagg').response[0];
+    rawResponse = require('deagg/data').response[0];
 
 
 var collection,
