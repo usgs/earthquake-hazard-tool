@@ -5,6 +5,7 @@ var Analysis = require('Analysis'),
     Calculator = require('CurveCalculator'),
     CurveOutputView = require('curve/CurveOutputView'),
     DeaggOutputView = require('deagg/DeaggOutputView'),
+    ErrorsView = require('ErrorsView'),
     InputView = require('input/InputView'),
     LoaderView = require('LoaderView'),
     MapView = require('MapView'),
@@ -16,6 +17,18 @@ var Analysis = require('Analysis'),
 
     Util = require('util/Util');
 
+
+var ValidateInputs = function (type, analysis) {
+  console.log(type);
+  console.log(analysis);
+  analysis.set({
+    error: 'Errors'
+  });
+  console.log(analysis.get('error'));
+  console.log(analysis.getEdition());
+  ErrorsView({
+  });
+};
 
 var ApplicationView = function (params) {
   var _this,
@@ -309,8 +322,11 @@ var ApplicationView = function (params) {
         request,
         serviceType;
 
+
     calculator = data.calculator;
     serviceType = data.serviceType;
+
+    ValidateInputs(serviceType, _this.model);
 
     if (!_queued && calculator) {
       window.setTimeout(function () {
@@ -377,6 +393,7 @@ var ApplicationView = function (params) {
     // methods
     _clearOutput = null;
     _initViewContainer = null;
+    _onCalculate = null;
     _onEditionChange = null;
     _onLocationChange = null;
     _onNewButtonClick = null;

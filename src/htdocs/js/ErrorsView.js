@@ -79,7 +79,8 @@ var ErrorsView = function (params) {
 
     Message({
       classes: classes,
-      container: _this.el,
+      // container: _this.el,
+      container: document.body,
       content: markup
     });
   };
