@@ -63,8 +63,11 @@ var InputView = function (params) {
     _imts = Collection(_dependencyFactory.getAllSpectralPeriods());
 
     _editions.on('select', _onEditionSelect);
+    _editions.on('deselect', _onEditionSelect);
     _siteClasses.on('select', _onSiteClassSelect);
+    _siteClasses.on('deselect', _onSiteClassSelect);
     _imts.on('select', _onImtSelect);
+    _imts.on('deselect', _onImtSelect);
 
     if (_this.model) {
       _initSubViews();
