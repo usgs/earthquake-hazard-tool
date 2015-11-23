@@ -99,7 +99,7 @@ var DeaggregationReportView = function (params) {
       'latitude: ' + Formatter.longitude(metadata.latitude),
       'imt: ' + metadata.imt.display,
       'vs30 = ' + metadata.vs30.display,
-      'return period: ' + metadata.returnPeriod + ' yrs.'
+      'return period: ' + metadata.returnperiod + ' yrs.'
     );
 
     if (summaryMarkup.length !== 0) {

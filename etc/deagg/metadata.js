@@ -3,7 +3,7 @@ module.exports = {
   'description': 'Deaggregate hazard at an input location',
   'syntax': '/deagg/data.json',
   'parameters': {
-    'returnPeriod': {
+    'returnperiod': {
       'label': 'Return period (in years)',
       'type': 'number',
       'values': {
