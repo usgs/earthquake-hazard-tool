@@ -124,39 +124,48 @@ If an error occurred try running npm install again.
 
 ### Run Pre-Install
 1. Run pre-install Setup
+
 Mac / OS X
 ```
 $ src/lib/pre-install
 ```
+
 Windows:
 ```
 $ php src/lib/pre-install.php
 ```
+
 2. Option 'Url path to application'
 ```
 $ /hazardtool
 ```
+
 3. Option 'Comma-separated list of web services to configure'
 ```
 $ staticcurve
 ```
+
 4. Option 'Meta URL'
 ```
 $ hazws/staticcurve/1
 ```
+
 5. Option 'Configure additional curve services'
 > Note: If you would like to set up the dynamic curves select Yes.
 ```
 Y
 ```
+
 6. Option 'Name'
 ```
 dynamicCurve
 ```
+
 7. Option 'Meta URL'
 ```
 http://dev-earthquake.cr.usgs.gov/nshmp-haz-ws/hazard
 ```
+
 8. Option 'Response Handler'
 ```
 DynamicHazardResponse
