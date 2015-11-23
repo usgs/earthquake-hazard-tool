@@ -144,7 +144,23 @@ $ staticcurve
 ```
 $ hazws/staticcurve/1
 ```
-
+1. Option 'Configure additional curve services'
+> Note: If you would like to set up the dynamic curves select Yes.
+```
+Y
+```
+1. Option 'Name'
+```
+dynamicCurve
+```
+1. Option 'Meta URL'
+```
+http://dev-earthquake.cr.usgs.gov/nshmp-haz-ws/hazard
+```
+1. Option 'Response Handler'
+```
+DynamicHazardResponse
+```
   > The `pre-install` script will prompt you for several configuration values.
   > Values related to the database should match those that were used during the
   > "Create Database" step (above).
