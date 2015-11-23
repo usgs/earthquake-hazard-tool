@@ -30,36 +30,36 @@ bin\pg_ctl -D data stop
 #### Install/Setup PHP
 1. Install PHP, from zip.
   1. Download the appropriate zip file from http://windows.php.net/download/
-  1. Unzip the folder and copy the content into a new folder on your C:\ drive.
-  1. Open a terminal window
+  2. Unzip the folder and copy the content into a new folder on your C:\ drive.
+  3. Open a terminal window
   ```
   $ cd
   $ vi .bash_profile
   ```
-  1. add to this file.
-    ```
-    export PATH=$PATH:<PHP_directory>
-    export PATH=$PATH:<node_directory>
-    export PATH=$PATH:<PostgreSQL_directory>
-    ```
+  4. add to this file.
+  ```
+  export PATH=$PATH:<PHP_directory>
+  export PATH=$PATH:<node_directory>
+  export PATH=$PATH:<PostgreSQL_directory>
+  ```
 
-    You will need to replace the `<PHP_directory>`, `<node_directory>` and
-    `<PostgreSQL_directory>` with the correct path to each.
+  You will need to replace the `<PHP_directory>`, `<node_directory>` and
+  `<PostgreSQL_directory>` with the correct path to each.
 
-    Example:
-    ```
-    export PATH=$PATH:/c/php-5.6
-    export PAtH=$PATH:/c/Program\ Files/nodejs
-    export PATH=$PATH:/c/Program\ Files/PostgreSQL/9.2/bin
-    ```
+  Example:
+  ```
+  export PATH=$PATH:/c/php-5.6
+  export PAtH=$PATH:/c/Program\ Files/nodejs
+  export PATH=$PATH:/c/Program\ Files/PostgreSQL/9.2/bin
+  ```
 
-  1. Rename file in php dir from php.ini-development to php.ini and Edit this
+  5. Rename file in php dir from php.ini-development to php.ini and Edit this
      file by uncommenting these lines.
       1. extension_dir = “`<PHP_directory>`/ext”
-      1. extension=php_pdo_pqsql.dll
-      1. extension=php_curl.dll
-      1. extension=php_pdo_mysql.dll
-      1. extension=php_pdo_sqlite.dll
+      2. extension=php_pdo_pqsql.dll
+      3. extension=php_curl.dll
+      4. extension=php_pdo_mysql.dll
+      5. extension=php_pdo_sqlite.dll
 
 #### Setup Database
 1. If this is your first install, create a database with:
