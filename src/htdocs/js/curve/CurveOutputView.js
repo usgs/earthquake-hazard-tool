@@ -153,7 +153,6 @@ var CurveOutputView = function (params) {
     _this.model.off('change:edition', _invalidateCurves);
     _this.model.off('change:location', _invalidateCurves);
     _this.model.off('change:vs30', _invalidateCurves);
-    _this.model.off('change:imt', _invalidateCurves);
     _this.model = null;
     _this.render({model: _this.model});
   };
@@ -166,7 +165,6 @@ var CurveOutputView = function (params) {
     _this.model.on('change:edition', _invalidateCurves);
     _this.model.on('change:location', _invalidateCurves);
     _this.model.on('change:vs30', _invalidateCurves);
-    _this.model.on('change:imt', _invalidateCurves);
     _this.model.on('change', 'render', _this);
     _this.render({model: _this.model});
   };
