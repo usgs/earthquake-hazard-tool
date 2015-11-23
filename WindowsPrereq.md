@@ -59,37 +59,3 @@ $ bin\pg_ctl -D data stop
       3. extension=php_curl.dll
       4. extension=php_pdo_mysql.dll
       5. extension=php_pdo_sqlite.dll
-
-#### Setup Database
-1. If this is your first install, create a database with:
-  ```
-  $ initdb \
-  $ --pgdata=<db_directory> \
-  $ --encoding=UTF8 \
-  $ --username=<db_admin_username>
-  ```
-  You will need to replace the `<db_directory>` and `<db_admin_username>` with
-  actual values that make sense for your environment. The `<db_directory>` is a
-  fully-qualified path name to a directory. This directory is where data files
-  for the database installation will be located. The <db_admin_username> is the
-  name of the administrator for the database installation. This command will
-  prompt you to enter a password for the `<db_admin_username>`.
-
-  Note: We suggest defining a .data directory at the root level of this
-  application for the `<db_directory>`.
-
-1. Start/Stop PostgreSQL
-  1. After running the initdb command, you should see a success message. Use
-     the pg_ctl utility to start the database.
-     ```
-     $ pg_ctl -D <db_directory> start
-     ```
-1. Login
-  1. Login to the default postgres database with the user that created the
-     database.
-     ```
-     $ psql -U <db_admin_username> postgres
-     ```
-
-     Note: PostgreSQL will create the default database postgres, which you can
-     access with the same user that you used to create the database.
