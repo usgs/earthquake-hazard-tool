@@ -24,7 +24,6 @@ There are multiple dependencies that must be installed for this project:
 1. Open admin command promp and stop postgresSQL server.
 ```
 cd C:\Program Files\postgresSQL\
-
 bin\pg_ctl -D data stop
 ```
 
