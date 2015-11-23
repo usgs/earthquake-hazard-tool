@@ -23,7 +23,7 @@ There are multiple dependencies that must be installed for this project:
 1. Install PostgreSQL version 9.2.14 (http://www.postgresql.org/).
 1. Open admin command prompt and stop postgreSQL server.
 ```
-cd C:\Program Files\postgresSQL\
+cd C:\Program Files\postgresSQL\9.2
 bin\pg_ctl -D data stop
 ```
 
