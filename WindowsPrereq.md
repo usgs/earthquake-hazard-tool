@@ -8,7 +8,6 @@ There are multiple dependencies that must be installed for this project:
 1. Node
 1. PostgreSQL
 1. PHP
-1. Grunt
 
 #### Install Git Bash
 1. You will need a terminal tool for Windows. Git Bash
@@ -94,9 +93,3 @@ $ bin\pg_ctl -D data stop
 
      Note: PostgreSQL will create the default database postgres, which you can
      access with the same user that you used to create the database.
-
-#### Install Grunt
-1. Use npm to install grunt
-  ```
-  $ npm install -g grunt-cli
-  ```

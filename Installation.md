@@ -112,6 +112,12 @@ $ hazws/staticcurve/1
   > Values related to the database should match those that were used during the
   > "Create Database" step (above).
 
+### Install Grunt
+1. Use npm to install grunt
+```
+$ npm install -g grunt-cli
+```
+
 ### Preview in a Browser
 ```
 $ grunt

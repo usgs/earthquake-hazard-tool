@@ -10,7 +10,6 @@ There are multiple dependencies that must be installed for this project:
 1. Xcode
 1. HomeBrew
 1. Node
-1. Grunt
 1. PHP
 1. PostgreSQL
 
@@ -35,11 +34,6 @@ http://mxcl.github.io/homebrew/
 export PATH=$PATH:/usr/local/bin
 # npm installed binaries
 export PATH=$PATH:/usr/local/share/npm/bin
-```
-
-#### Install Grunt
-```
-$ sudo npm install -g grunt-cli
 ```
 
 #### Install PHP
