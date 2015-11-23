@@ -22,10 +22,11 @@ There are multiple dependencies that must be installed for this project:
 #### Install PostgreSQL
 1. Install PostgreSQL version 9.2.14 (http://www.postgresql.org/).
 1. Open admin command promp and stop postgresSQL server.
-  ```
-  cd C:\Program Files\postgresSQL\
-  bin\pg_ctl -D data stop
-  ```
+```
+cd C:\Program Files\postgresSQL\
+
+bin\pg_ctl -D data stop
+```
 
 #### Install/Setup PHP
 1. Install PHP, from zip.
