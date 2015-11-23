@@ -1,39 +1,27 @@
 .application-errors {
   bottom: 15px;
   color: black;
-  margin-right: 15px;
+  left: 15px;
   position: fixed;
+  right: 15px;
   z-index: 9999;
 
   > .error-list {
     margin: 1em 0 0;
   }
 
-  > .webutils-message-closeable {
-    padding-right: 2em;
+  > .webutils-message-close {
+    font-size: 1.5em;
+    margin: 0;
+    opacity: 0.75;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    transition: opacity 250ms ease;
 
-    > .webutils-message-close {
-      background: none;
-      border: none;
-      border-radius: 0;
-      box-shadow: none;
-      color: inherit;
-      cursor: pointer;
-      font-size: 1.5em;
-      height: auto;
-      line-height: 1;
-      margin: 0;
-      opacity: 0.75;
-      padding: 0.25em;
-      position: absolute;
-      right: 0;
-      text-shadow: none;
-      top: 0;
-      transition: opacity 250ms ease;
-
-      &:hover {
-        opacity: 0.99;
-      }
+    &:hover {
+      opacity: 0.99;
     }
   }
+
 }

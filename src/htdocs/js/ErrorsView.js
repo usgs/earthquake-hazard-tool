@@ -57,6 +57,7 @@ var ErrorsView = function (params) {
     // display errors
     classes.push('alert');
     classes.push('error');
+    classes.push('application-errors');
 
     markup.push('<b>Errors:</b>');
     markup.push('<ul class="error-list">');
