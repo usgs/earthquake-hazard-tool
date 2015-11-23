@@ -3,12 +3,10 @@
 var Analysis = require('Analysis'),
     AnalysisView = require('AnalysisView'),
     DependencyFactory = require('DependencyFactory'),
-    Meta = require('Meta'),
-    Region = require('Region'),
     Xhr = require('util/Xhr');
 
 Xhr.ajax({
-  url: 'data.json',
+  url: 'curve/data.json',
   success: function (data) {
     DependencyFactory.getInstance().whenReady(function () {
       AnalysisView({

@@ -1,24 +1,50 @@
 'use strict';
 
 
-var Collection = require('mvc/Collection'),
-    DeaggregationGraphView = require('deagg/DeaggregationGraphView'),
+var DeaggregationGraphView = require('deagg/DeaggregationGraphView'),
     DeaggResponse = require('deagg/DeaggResponse'),
-    rawResponse = require('etc/deagg').response[0];
+    rawResponse = require('deagg/data').response[0],
+
+    Collection = require('mvc/Collection');
 
 
 var collection,
+    deaggs,
+    el,
     response,
     view;
 
+el = document.querySelector('#example');
+
 response = DeaggResponse(rawResponse);
-collection = response.get('deaggregations');
-if (collection.getSelected() === null) {
-  collection.select(collection.data()[0]);
-}
+deaggs = response.get('deaggregations').data();
+
+collection = Collection(deaggs);
+collection.select(collection.data()[0]);
 
 view = DeaggregationGraphView({
-  el: document.querySelector('#example'),
+  el: el,
   collection: collection
 });
-view.render();
+
+
+var controls,
+    empty,
+    reset;
+
+controls = document.createElement('div');
+el.parentNode.appendChild(controls);
+controls.innerHTML = '<button class="empty">Empty</button>' +
+    '<button class="reset">Reset</button>';
+
+empty = controls.querySelector('.empty');
+reset = controls.querySelector('.reset');
+
+empty.addEventListener('click', function () {
+  collection.reset([]);
+});
+
+reset.addEventListener('click', function () {
+  collection.reset(deaggs);
+  collection.select(collection.data()[0]);
+});

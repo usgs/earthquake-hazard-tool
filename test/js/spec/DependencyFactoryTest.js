@@ -3,8 +3,6 @@
 
 var DependencyFactory = require('DependencyFactory');
 
-var metadata = require('etc/metadata');
-
 var expect = chai.expect;
 
 describe('DependencyFactory test suite.', function () {
@@ -47,7 +45,7 @@ describe('DependencyFactory test suite.', function () {
 
     it('can get all Editions', function () {
       allEditions = factory.getAllEditions();
-      expect(metadata.parameters.edition.values.length).to.equal(
+      expect(4).to.equal(
           allEditions.length);
     });
 
@@ -59,20 +57,18 @@ describe('DependencyFactory test suite.', function () {
 
     it('can get all Regions', function () {
       allRegions = factory.getAllRegions();
-      expect(metadata.parameters.region.values.length).to.equal(
-          allRegions.length);
+      console.log(allRegions.length);
+      expect(6).to.equal(allRegions.length);
     });
 
     it('can get all Site Classes', function () {
       allSiteClasses = factory.getAllSiteClasses();
-      expect(metadata.parameters.vs30.values.length).to.equal(
-          allSiteClasses.length);
+      expect(7).to.equal(allSiteClasses.length);
     });
 
     it('can get all Spectral Periods', function () {
       allSpectralPeriods = factory.getAllSpectralPeriods();
-      expect(metadata.parameters.imt.values.length).to.equal(
-          allSpectralPeriods.length);
+      expect(3).to.equal(allSpectralPeriods.length);
     });
 
   });

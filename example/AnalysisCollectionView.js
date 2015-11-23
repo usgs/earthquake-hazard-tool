@@ -10,7 +10,7 @@ var Analysis = require('Analysis'),
     Xhr = require('util/Xhr');
 
 Xhr.ajax({
-  url: 'data.json',
+  url: 'curve/data.json',
   success: function (data) {
     var analyses;
 

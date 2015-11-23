@@ -58,14 +58,14 @@ var DeaggregationGraphView = function (options) {
     _d33d = D33dView({
       el: _this.el.querySelector('.DeaggregationGraphView'),
       lookAt: [
-        35 * _xScale,
-        5 * _yScale,
-        10 * _zScale
+        70,
+        125,
+        20
       ],
       origin: [
-        140 * _xScale,
-        -5 * _yScale,
-        90 * _zScale
+        280,
+        -125,
+        180
       ],
       up: [0, 0, 1],
       zoom: 4
@@ -73,6 +73,8 @@ var DeaggregationGraphView = function (options) {
     _d33d.renderLegend = _renderLegend;
 
     _createAxes();
+
+    _this.render();
   };
 
   /**
@@ -101,15 +103,43 @@ var DeaggregationGraphView = function (options) {
         z1,
         zLabel;
 
+    x0 = 0;
+    x1 = 100;
+
     if (_this.model) {
       metadata = _this.model.get('metadata');
+      x0 = null;
+      x1 = null;
+
+      _this.model.get('data').forEach(function (bin) {
+        var binx;
+
+        binx = bin.r;
+
+        if (binx < x0) {
+          x0 = binx;
+        }
+
+        if (binx > x0) {
+          x1 = binx;
+        }
+      });
+
+      // round min/max down/up to an increment of 10
+      x0 = 10 * Math.floor(x0 / 10);
+      x1 = 10 * Math.ceil(x1 / 10);
+
     } else {
       metadata = {};
     }
-    x0 = 0;
-    x1 = 60 * _xScale;
+
+    _xScale = 100 / (x1 - x0);
+
+    x0 *= _xScale;
+    x1 *= _xScale;
+
     xLabel = metadata.rlabel;
-    xTicks = 6;
+    xTicks = 10;
     y0 = 5 * _yScale;
     y1 = 8 * _yScale;
     yLabel = metadata.mlabel;
@@ -129,7 +159,7 @@ var DeaggregationGraphView = function (options) {
       labelVector: [1, -5, 0],
       padding: 0,
       tickVector: [0, -1, 0],
-      ticks: 6,
+      ticks: xTicks,
       title: xLabel,
       titleAnchor: 'middle',
       titleDirection: extent,
@@ -147,7 +177,7 @@ var DeaggregationGraphView = function (options) {
       labelVector: [0, 2, 0],
       padding: 0,
       tickVector: [0, 1, 0],
-      ticks: 6,
+      ticks: xTicks,
       title: xLabel,
       titleAnchor: 'middle',
       titleDirection: extent,
@@ -165,7 +195,7 @@ var DeaggregationGraphView = function (options) {
       labelVector: [-2, 0, 0],
       padding: 0,
       tickVector: [-1, 0, 0],
-      ticks: 6,
+      ticks: 5,
       title: yLabel,
       titleAnchor: 'middle',
       titleDirection: extent,
@@ -350,14 +380,17 @@ var DeaggregationGraphView = function (options) {
    * Otherwise, any existing bins are destroyed and removed from the graph.
    */
   _this.render = function () {
-    var εbins;
+    var oldAxes,
+        oldBins,
+        εbins;
 
-    // clean up old views
-    _bins.forEach(function (v) {
-      v.destroy();
-    });
+    oldBins = _bins;
+    oldAxes = _axes;
 
     // create new views
+    _axes = [];
+    _createAxes();
+
     _bins = [];
     if (_this.model) {
       εbins = Collection(_this.model.get('metadata').εbins);
@@ -374,10 +407,23 @@ var DeaggregationGraphView = function (options) {
       });
     }
 
+
     // update plot
     _d33d.views.reset([]
         .concat(_axes)
         .concat(_bins));
+
+    // clean up old views
+    oldAxes.forEach(function (a) {
+      a.destroy();
+    });
+
+    oldBins.forEach(function (v) {
+      v.destroy();
+    });
+
+    oldAxes = null;
+    oldBins = null;
   };
 
 

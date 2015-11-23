@@ -1,6 +1,7 @@
 'use strict';
 
-var AnalysisView = require('AnalysisView'),
+var Analysis = require('Analysis'),
+    AnalysisView = require('AnalysisView'),
 
     Collection = require('mvc/Collection'),
     View = require('mvc/View'),
@@ -68,7 +69,8 @@ var AnalysisCollectionView = function (params) {
       model: analysis
     });
 
-    a = view.el.querySelector('.analysis-view-title').appendChild(document.createElement('a'));
+    a = view.el.insertBefore(document.createElement('a'),
+        view.el.querySelector('.analysis-view-title'));
     a.setAttribute('href', '#');
     a.setAttribute('title', 'Delete');
     a.classList.add('analysis-delete-link');
@@ -101,6 +103,10 @@ var AnalysisCollectionView = function (params) {
       _views.remove(view);
       view.destroy();
     });
+
+    if (_views.data().length === 0) {
+      _collection.add(Analysis());
+    }
 
     _this.render();
   };

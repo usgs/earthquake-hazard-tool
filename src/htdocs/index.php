@@ -2,7 +2,7 @@
 if (!isset($TEMPLATE)) {
   include_once '../conf/config.inc.php';
 
-  $TITLE = 'Hazard Tool';
+  $TITLE = 'Unified Hazard Tool';
 
   // If you want to include section navigation.
   // The nearest _navigation.inc.php file will be used by default
@@ -10,6 +10,7 @@ if (!isset($TEMPLATE)) {
 
   // Stuff that goes at the top of the page (in the <head>) (i.e. <link> tags)
   $HEAD = '
+    <link rel="stylesheet" href="lib/leaflet/leaflet.css"/>
     <link rel="stylesheet" href="css/index.css"/>
   ';
 

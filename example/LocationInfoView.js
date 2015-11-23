@@ -3,7 +3,7 @@
 var Analysis = require('Analysis'),
     Collection = require('mvc/Collection'),
     LocationInfoView = require('LocationInfoView'),
-    Data = require('etc/data');
+    Data = require('curve/data');
 
 var latitude = Data.response[0].metadata.latitude,
     longitude = Data.response[0].metadata.longitude;
