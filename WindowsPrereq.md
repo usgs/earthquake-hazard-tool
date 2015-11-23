@@ -8,6 +8,7 @@ There are multiple dependencies that must be installed for this project:
 1. Node
 1. PostgreSQL
 1. PHP
+1. Visual C++
 
 #### Install Git Bash
 1. You will need a terminal tool for Windows. Git Bash
@@ -59,3 +60,8 @@ $ bin\pg_ctl -D data stop
       3. extension=php_curl.dll
       4. extension=php_pdo_mysql.dll
       5. extension=php_pdo_sqlite.dll
+#### Install Visual C++
+1. If you see an error message for a missing MSVCR110.dll file install Visual C++
+```
+https://support.microsoft.com/en-us/kb/2977003
+```
