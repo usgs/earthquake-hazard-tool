@@ -9,7 +9,7 @@ Installation Page
 ### Clone the project
 1. Use git to clone the project from GitHub repository (if you haven't already).
 ```
-git clone <clone URL>
+$ git clone <clone URL>
 ```
 
 ### Start Database
@@ -83,29 +83,29 @@ If an error occurred try running npm install again.
 ### Windows only Edit PHP File
 1. Edit earthquake-hazard-tool/node_modules/hazdev-template/dist/conf/php.ini
   1. extension_dir = “`<Path to php dir>`\ext\”
-  1. extension=php_pdo_pgsql.dll
+  2. extension=php_pdo_pgsql.dll
 
 ### Run Pre-Install
 1. Run pre-install Setup
 Mac / OS X
 ```
-src/lib/pre-install
+$ src/lib/pre-install
 ```
 Windows:
 ```
-php src/lib/pre-install.php
+$ php src/lib/pre-install.php
 ```
 1. Option 'Url path to application'
 ```
-/hazardtool
+$ /hazardtool
 ```
 1. Option 'Comma-separated list of web services to configure'
 ```
-staticcurve
+$ staticcurve
 ```
 1. Option 'Meta URL'
 ```
-hazws/staticcurve/1
+$ hazws/staticcurve/1
 ```
 
   > The `pre-install` script will prompt you for several configuration values.
