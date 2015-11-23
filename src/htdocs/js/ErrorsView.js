@@ -24,7 +24,7 @@ var ErrorsView = function (params) {
    */
   _this.addErrors = function (e) {
     _errors[e.input] = e.messages;
-    _this.render();
+    // _this.render();
   };
 
   /**
@@ -34,7 +34,7 @@ var ErrorsView = function (params) {
     if (_errors[e.input]) {
       _errors[e.input] = null;
     }
-    _this.render();
+    // _this.render();
   };
 
   /**
@@ -49,7 +49,8 @@ var ErrorsView = function (params) {
     _this.el.innerHTML = '';
 
     // remove errors
-    if (!_errors.location && !_errors.siteClass && !_errors.timeHorizon) {
+    if (!_errors.edition && !_errors.location && !_errors.siteClass &&
+        !_errors.spectralPeriod && !_errors.timeHorizon) {
       return;
     }
 
@@ -61,6 +62,10 @@ var ErrorsView = function (params) {
     markup.push('<ul class="error-list">');
 
     // replicate the input order with the error output
+    if (_errors.edition) {
+      markup.push('<li>' + _errors.edition.join('</li><li>') + '</li>');
+    }
+
     if (_errors.location) {
       markup.push('<li>' + _errors.location.join('</li><li>') + '</li>');
     }
@@ -80,7 +85,6 @@ var ErrorsView = function (params) {
     Message({
       classes: classes,
       // container: _this.el,
-      container: document.body,
       content: markup
     });
   };

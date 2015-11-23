@@ -19,15 +19,127 @@ var Analysis = require('Analysis'),
 
 
 var ValidateInputs = function (type, analysis) {
-  console.log(type);
-  console.log(analysis);
-  analysis.set({
-    error: 'Errors'
-  });
-  console.log(analysis.get('error'));
-  console.log(analysis.getEdition());
-  ErrorsView({
-  });
+  var _this,
+      _initialize,
+
+      _errors,
+      _errorsView,
+
+      _validate;
+
+
+  _this = {};
+
+  _initialize = function () {
+    _errors = {};
+    _errorsView = ErrorsView();
+
+    _validate();
+  };
+
+  _validate = function () {
+    var editionError,
+        locationError,
+        siteClassError,
+        spectralPeriodError,
+        timeHorizonError;
+
+    editionError = {
+      input: 'edition',
+      messages: ['Must select an Edition.']
+    };
+
+    locationError = {
+      input: 'location',
+      messages: [
+                  'Latitude is required.',
+                  'Longitude is required.'
+                ]
+    };
+
+    siteClassError = {
+      input: 'siteClass',
+      messages: ['Must select a Site Class.']
+    };
+
+    spectralPeriodError = {
+      input: 'spectralPeriod',
+      messages: ['Must select a Spectral Period.']
+    };
+
+    timeHorizonError = {
+      input: 'timeHorizon',
+      messages: ['Time Horizon must be greater than 0.']
+    };
+
+    if (analysis.getEdition() === null) {
+      _errorsView.addErrors(editionError);
+      _this.addErrors(editionError);
+    } else {
+      _errorsView.removeErrors(editionError);
+      _this.removeErrors(editionError);
+    }
+
+    if (analysis.getLocation() === null) {
+      _errorsView.addErrors(locationError);
+      _this.addErrors(locationError);
+    } else {
+      _errorsView.removeErrors(locationError);
+      _this.removeErrors(locationError);
+    }
+
+    if (analysis.getVs30() === null) {
+      _errorsView.addErrors(siteClassError);
+      _this.addErrors(siteClassError);
+    } else {
+      _errorsView.removeErrors(siteClassError);
+      _this.removeErrors(siteClassError);
+    }
+
+    if (type === 'deaggregation') {
+      if (analysis.getSpectralPeriod() === null) {
+        _errorsView.addErrors(spectralPeriodError);
+        _this.addErrors(spectralPeriodError);
+      } else {
+        _errorsView.removeErrors(spectralPeriodError);
+        _this.removeErrors(spectralPeriodError);
+      }
+
+      if (analysis.get('timeHorizon') === null || analysis.get('timeHorizon') < 0) {
+        _errorsView.addErrors(timeHorizonError);
+        _this.addErrors(timeHorizonError);
+      } else {
+        _errorsView.removeErrors(timeHorizonError);
+        _this.removeErrors(timeHorizonError);
+      }
+    }
+
+    analysis.set({
+      errors: _errors
+    });
+
+    _errorsView.render();
+    console.log(analysis.get('errors'));
+  };
+
+  /**
+   * Build an input keyed object with an array of errors for each input.
+   */
+  _this.addErrors = function (e) {
+    _errors[e.input] = e.messages;
+  };
+
+  /**
+   * Remove errors from _errors for the input type passed in.
+   */
+  _this.removeErrors = function (e) {
+    if (_errors[e.input]) {
+      _errors[e.input] = null;
+    }
+  };
+
+  _initialize();
+  return _this;
 };
 
 var ApplicationView = function (params) {
