@@ -135,38 +135,38 @@ Windows:
 $ php src/lib/pre-install.php
 ```
 
-2. Option 'Url path to application'
+Option 'Url path to application'
 ```
 $ /hazardtool
 ```
 
-3. Option 'Comma-separated list of web services to configure'
+Option 'Comma-separated list of web services to configure'
 ```
 $ staticcurve
 ```
 
-4. Option 'Meta URL'
+Option 'Meta URL'
 ```
 $ hazws/staticcurve/1
 ```
 
-5. Option 'Configure additional curve services'
+Option 'Configure additional curve services'
 > Note: If you would like to set up the dynamic curves select Yes.
 ```
 Y
 ```
 
-6. Option 'Name'
+Option 'Name'
 ```
 dynamicCurve
 ```
 
-7. Option 'Meta URL'
+Option 'Meta URL'
 ```
 http://dev-earthquake.cr.usgs.gov/nshmp-haz-ws/hazard
 ```
 
-8. Option 'Response Handler'
+Option 'Response Handler'
 ```
 DynamicHazardResponse
 ```
