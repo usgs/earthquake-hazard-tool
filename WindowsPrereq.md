@@ -32,10 +32,10 @@ bin\pg_ctl -D data stop
   1. Download the appropriate zip file from http://windows.php.net/download/
   1. Unzip the folder and copy the content into a new folder on your C:\ drive.
   1. Open a terminal window
-    ```
-    $ cd
-    $ vi .bash_profile
-    ```
+```
+$ cd
+$ vi .bash_profile
+```
   1. add to this file.
     ```
     export PATH=$PATH:<PHP_directory>
