@@ -1,395 +1,209 @@
 'use strict';
 
-var EditionView = require('EditionView'),
-    ContourTypeView = require('ContourTypeView'),
-    SpectralPeriodView = require('SpectralPeriodView'),
-    TimeHorizonSelectView = require('TimeHorizonSelectView'),
+var L = require('leaflet/Leaflet');
 
-    L = require('leaflet/Leaflet'),
-
-    Collection = require('mvc/Collection'),
-    CollectionSelectBox = require('mvc/CollectionSelectBox'),
-    Model = require('mvc/Model'),
-    SelectedCollectionView = require('mvc/SelectedCollectionView'),
-
-    Util = require('util/Util');
-
-
-// --------------------------------------------------
-// Private inner class
-// --------------------------------------------------
-
-var LayerChooser = function (params) {
-  var _this,
-      _initialize,
-
-      _baseLayers,
-      _baseLayerView,
-      _baseLayerCollection,
-      _contourTypeView,
-      _datasets,
-      _dependencyFactory,
-      _editionView,
-      _editions,
-      _spectralPeriodView,
-      _map,
-      _overlays,
-      _timeHorizonSelectView,
-      _selectedOverlay,
-
-      _getSelectedOverlay,
-      _initCollections,
-      _initViews,
-      _onBaseLayerDeselect,
-      _onBaseLayerSelect,
-      _onDatasetChange,
-      _onOverlayDeselect,
-      _onOverlaySelect;
-
-
-  _this = SelectedCollectionView(params);
-
-  _initialize = function (params) {
-    params = Util.extend({
-      baseLayers: [
-        {
-          id: 1,
-          value: 'Nat Geo',
-          layer: L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/' +
-              'services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x};.jpg')
-        }
-      ],
-      overlays: [],
-      datasets: []
-    }, params);
-
-    _this.collection = params.collection || Collection();
-
-    _baseLayers = params.baseLayers;
-    _datasets = params.datasets;
-    _dependencyFactory = params.dependencyFactory;
-    _editions = params.editions;
-    _overlays = params.overlays;
-
-    _initCollections();
-    _initViews();
-
-    if (!_baseLayerCollection.getSelected()) {
-      _baseLayerCollection.select(_baseLayerCollection.data()[0]);
-    }
-  };
-
-  _getSelectedOverlay = function (edition, type, imt, period, vs30) {
-    var i,
-        len,
-        overlay;
-
-    if (!edition || !type || !imt || !period || !vs30) {
-      return null;
-    }
-
-    for (i = 0, len = _overlays.length; i < len; i++) {
-      overlay = _overlays[i];
-
-      if (overlay.edition === edition &&
-          overlay.type === type &&
-          overlay.imt === imt &&
-          overlay.period === _timeHorizonSelectView.getTimeHorizonId(period) &&
-          overlay.vs30 === vs30) {
-        return overlay;
-      }
-    }
-
-    return null;
-  };
-
-  _initCollections = function () {
-    _baseLayerCollection = Collection(_baseLayers.map(function (layer) {
-      return Model(layer);
-    }));
-
-    // Select first option in base layer collection
-    _baseLayerCollection.select(_baseLayerCollection.data()[0]);
-
-    // Bind listeners
-    _baseLayerCollection.on('select', _onBaseLayerSelect);
-    _baseLayerCollection.on('deselect', _onBaseLayerDeselect);
-  };
-
-  _initViews = function () {
-    var format,
-        fragment,
-        input,
-        label;
-
-    fragment = document.createDocumentFragment();
-    format = function (item) {
-      return item.get('value');
-    };
-
-    label = fragment.appendChild(document.createElement('h3'));
-    label.innerHTML = 'Base Layer';
-
-    label = fragment.appendChild(document.createElement('label'));
-    _baseLayerView = CollectionSelectBox({
-      el: fragment.appendChild(document.createElement('select')),
-      collection: _baseLayerCollection,
-      format: format
-    });
-
-    label = fragment.appendChild(document.createElement('h3'));
-    label.innerHTML = 'Overlays';
-
-    label = fragment.appendChild(document.createElement('label'));
-    label.innerHTML = 'Select data edition';
-    _editionView = EditionView({
-      el: fragment.appendChild(document.createElement('div')),
-      editions: _editions,
-      includeBlankOption: false
-    });
-
-    label = fragment.appendChild(document.createElement('label'));
-    label.innerHTML = 'Select Overlay Type';
-    _contourTypeView = ContourTypeView({
-      el: fragment.appendChild(document.createElement('div')),
-      collection: _this.collection,
-      includeBlankOption: true,
-      blankOption: {
-        'text': 'None',
-        'value': -1
-      }
-    });
-
-    label = fragment.appendChild(document.createElement('label'));
-    label.innerHTML = 'Select intensity measure type';
-    _spectralPeriodView = SpectralPeriodView({
-      el: fragment.appendChild(document.createElement('div')),
-      collection: _this.collection,
-      factory: _dependencyFactory,
-      includeBlankOption: false
-    });
-
-    label = fragment.appendChild(document.createElement('label'));
-    label.innerHTML = 'Select return period';
-    _timeHorizonSelectView = TimeHorizonSelectView({
-      el: fragment.appendChild(document.createElement('div')),
-      collection: _this.collection,
-      includeBlankOption: false
-    });
-
-    label = fragment.appendChild(document.createElement('h3'));
-    label.innerHTML = 'Datasets';
-
-    _datasets.forEach(function (dataset) {
-      input = fragment.appendChild(document.createElement('input'));
-      input.setAttribute('type', 'checkbox');
-      input.setAttribute('id', 'dataset-' + dataset.id);
-      input.setAttribute('value', dataset.value);
-
-      label = fragment.appendChild(document.createElement('label'));
-      label.setAttribute('for', 'dataset-' + dataset.id);
-      label.innerHTML = dataset.value;
-
-      dataset.input = input;
-      dataset.input.addEventListener('change', _onDatasetChange);
-    });
-
-    _this.el.classList.add('contour-layer-control');
-    _this.el.classList.add('leaflet-control');
-    _this.el.classList.add('vertical');
-    _this.el.appendChild(fragment);
-  };
-
-  _onBaseLayerDeselect = function (layer) {
-    var mapLayer = layer.get('layer');
-    if (_map) {
-      if (mapLayer._map) {
-        _map.removeLayer(mapLayer);
-      }
-    }
-  };
-
-  _onBaseLayerSelect = function (layer) {
-    var mapLayer = layer.get('layer');
-    if (_map) {
-      if (!mapLayer._map) {
-        _map.addLayer(mapLayer);
-      }
-    }
-  };
-
-  _onDatasetChange = function () {
-    var edition;
-
-    // read edition off selected item in the collection
-    if (_this.collection.getSelected()) {
-      edition = _this.collection.getSelected().get('edition');
-    }
-
-    if (_map && edition) {
-
-      _datasets.forEach(function (dataset) {
-        if (dataset.input.checked) {
-          // Make sure the corresponding layer is on the map
-          dataset.overlays.forEach(function (overlay) {
-            if (overlay.layer._map) {
-              if (overlay.edition !== edition) {
-                _map.removeLayer(overlay.layer);
-              }
-            } else {
-              if (overlay.edition === edition) {
-                _map.addLayer(overlay.layer);
-              }
-            }
-          });
-        } else {
-          // Make sure all layers are off the map
-          dataset.overlays.forEach(function (overlay) {
-            if (overlay.layer._map) {
-              _map.removeLayer(overlay.layer);
-            }
-          });
-        }
-      });
-    }
-  };
-
-  _onOverlayDeselect = function () {
-    // TODO :: Anything?
-  };
-
-  _onOverlaySelect = function () {
-    var selected,
-        selectedOverlay;
-
-    selected = _this.collection.getSelected();
-
-    if (_map && selected) {
-      selectedOverlay = _getSelectedOverlay(
-          selected.get('edition'),
-          selected.get('contourType'),
-          selected.get('imt'),
-          selected.get('timeHorizon'),
-          selected.get('vs30')
-        );
-
-      if (selectedOverlay === _selectedOverlay) {
-        // already selected, ignore
-        return;
-      } else {
-        if (_selectedOverlay) {
-          _map.removeLayer(_selectedOverlay.layer);
-          _selectedOverlay = null;
-        }
-
-        if (selectedOverlay) {
-          _selectedOverlay = selectedOverlay;
-          _map.addLayer(_selectedOverlay.layer);
-        }
-      }
-    }
-
-    // Update which overlays are shown by default
-    _onDatasetChange();
-  };
-
-
-  _this.destroy = Util.compose(_this.destroy, function () {
-    _this.setMap(null);
-
-    _getSelectedOverlay = null;
-    _initCollections = null;
-    _initViews = null;
-    _onBaseLayerDeselect = null;
-    _onBaseLayerSelect = null;
-    _onDatasetChange = null;
-    _onOverlayDeselect = null;
-    _onOverlaySelect = null;
-
-    _baseLayers = null;
-    _baseLayerView = null;
-    _baseLayerCollection = null;
-    _contourTypeView = null;
-    _datasets = null;
-    _dependencyFactory = null;
-    _editionView = null;
-    _spectralPeriodView = null;
-    _map = null;
-    _overlays = null;
-    _timeHorizonSelectView = null;
-    _selectedOverlay = null;
-
-    _initialize = null;
-    _this = null;
-  });
-
-  /**
-   * unset the event bindings for the collection
-   */
-  _this.onCollectionDeselect = function () {
-    _this.model.off('change', _onOverlaySelect);
-    _this.model = null;
-    _onOverlaySelect();
-  };
-
-  /**
-   * set event bindings for the collection
-   */
-  _this.onCollectionSelect = function () {
-    _this.model = _this.collection.getSelected();
-    _this.model.on('change', _onOverlaySelect);
-    _onOverlaySelect();
-  };
-
-  _this.setMap = function (map) {
-    _map = map;
-    _onBaseLayerSelect(_baseLayerCollection.getSelected());
-    _onOverlaySelect();
-  };
-
-  _initialize(params);
-  params = null;
-  return _this;
-};
-
+    // Util = require('util/Util');
 
 // --------------------------------------------------
 // Public class
 // --------------------------------------------------
 
+var Z_BASELAYER_INDEX = 0,
+    Z_OVERLAY_INDEX = 100,
+    Z_DATASET_INDEX = 1000;
+
 var LayerControl = L.Control.extend({
   options: {
-    position: 'topright'
+    position: 'topright',
+    baseLayers: {
+      'terrain':{
+        display: 'Terrain',
+        layer: L.esriTerrain({
+          zIndex: Z_BASELAYER_INDEX + 1
+        })
+      },
+      'greyscale': {
+        display: 'Grayscale',
+        layer: L.esriGrayscale({
+          zIndex: Z_BASELAYER_INDEX + 2
+        })
+      },
+      'street': {
+        display: 'Street',
+        layer: L.openStreetMap({
+          zIndex: Z_BASELAYER_INDEX + 3
+        })
+      },
+      'aerial': {
+        display: 'Aerial',
+        layer: L.openAerialMap({
+          zIndex: Z_BASELAYER_INDEX + 4
+        })
+      }
+    },
+    overlays: {
+      'E2014R1': {
+        display: 'USGS NSHM 2014 Rev. 1',
+        layers: {
+          'PGA-2P50-760': {
+            display: 'PGA, 2% in 50 Years, 760 m/s',
+            layer: L.tileLayer('http://geohazards.cr.usgs.gov/arcgis/rest/' +
+                'services/USpga250_2014/MapServer/tile/{z}/{y}/{x}', {
+              zIndex: Z_OVERLAY_INDEX + 1,
+              attribution: 'USGS - NSHMP'
+            })
+          },
+          'SA0P2-2P50-760': {
+            display: '0.2s, 2% in 50 Years, 760 m/s',
+            layer: L.tileLayer('http://geohazards.cr.usgs.gov/arcgis/rest/' +
+                'services/US5hz250_2014/MapServer/tile/{z}/{y}/{x}', {
+              zIndex: Z_OVERLAY_INDEX + 2,
+              attribution: 'USGS - NSHMP'
+            })
+          },
+          'SA1P0-2P50-760': {
+            display: '1.0s, 2% in 50 Years, 760 m/s',
+            layer: L.tileLayer('http://geohazards.cr.usgs.gov/arcgis/rest/' +
+                'services/US1hz250_2014/MapServer/tile/{z}/{y}/{x}', {
+              zIndex: Z_OVERLAY_INDEX + 3,
+              attribution: 'USGS - NSHMP'
+            })
+          },
+          'PGA-10P50-760': {
+            display: 'PGA, 10% in 50 Years, 760 m/s',
+            layer: L.tileLayer('http://geohazards.cr.usgs.gov/arcgis/rest/' +
+                'services/USpga050_2014/MapServer/tile/{z}/{y}/{x}', {
+              zIndex: Z_OVERLAY_INDEX + 4,
+              attribution: 'USGS - NSHMP'
+            })
+          },
+          'SA0P2-10P50-760': {
+            display: '0.2s, 10% in 50 Years, 760 m/s',
+            layer: L.tileLayer('http://geohazards.cr.usgs.gov/arcgis/rest/' +
+                'services/US5hz050_2014/MapServer/tile/{z}/{y}/{x}', {
+              zIndex: Z_OVERLAY_INDEX + 5,
+              attribution: 'USGS - NSHMP'
+            })
+          },
+          'SA1P0-10P50-760': {
+            display: '1.0s, 10% in 50 Years, 760 m/s',
+            layer: L.tileLayer('http://geohazards.cr.usgs.gov/arcgis/rest/' +
+                'services/US1hz050_2014/MapServer/tile/{z}/{y}/{x}', {
+              zIndex: Z_OVERLAY_INDEX + 6,
+              attribution: 'USGS - NSHMP'
+            })
+          }
+        }
+      },
+      'E2008R3': {
+        display: 'USGS NSHM 2008 Rev. 3',
+        layers: {
+          'PGA-2P50-760': {
+            display: 'PGA, 2% in 50 Years, 760 m/s',
+            layer: L.tileLayer('http://geohazards.usgs.gov/arcgis/rest/' +
+                'services/USpga250_2008/MapServer/tile/{z}/{y}/{x}', {
+              zIndex: Z_OVERLAY_INDEX + 7,
+              attribution: 'USGS - NSHMP'
+            })
+          },
+          'SA0P2-2P50-760': {
+            display: '0.2s, 2% in 50 Years, 760 m/s',
+            layer: L.tileLayer('http://geohazards.usgs.gov/arcgis/rest/' +
+                'services/US5hz250_2008/MapServer/tile/{z}/{y}/{x}', {
+              zIndex: Z_OVERLAY_INDEX + 8,
+              attribution: 'USGS - NSHMP'
+            })
+          },
+          'SA1P0-2P50-760': {
+            display: '1.0s, 2% in 50 Years, 760 m/s',
+            layer: L.tileLayer('http://geohazards.usgs.gov/arcgis/rest/' +
+                'services/US1hz250_2008/MapServer/tile/{z}/{y}/{x}', {
+              zIndex: Z_OVERLAY_INDEX + 9,
+              attribution: 'USGS - NSHMP'
+            })
+          },
+          'PGA-10P50-760': {
+            display: 'PGA, 10% in 50 Years, 760 m/s',
+            layer: L.tileLayer('http://geohazards.usgs.gov/arcgis/rest/' +
+                'services/USpga050_2008/MapServer/tile/{z}/{y}/{x}', {
+              zIndex: Z_OVERLAY_INDEX + 10,
+              attribution: 'USGS - NSHMP'
+            })
+          },
+          'SA0P2-10P50-760': {
+            display: '0.2s, 10% in 50 Years, 760 m/s',
+            layer: L.tileLayer('http://geohazards.usgs.gov/arcgis/rest/' +
+                'services/US5hz050_2008/MapServer/tile/{z}/{y}/{x}', {
+              zIndex: Z_OVERLAY_INDEX + 11,
+              attribution: 'USGS - NSHMP'
+            })
+          },
+          'SA1P0-10P50-760': {
+            display: '1.0s, 10% in 50 Years, 760 m/s',
+            layer: L.tileLayer('http://geohazards.usgs.gov/arcgis/rest/' +
+                'services/US1hz050_2008/MapServer/tile/{z}/{y}/{x}', {
+              zIndex: Z_OVERLAY_INDEX + 12,
+              attribution: 'USGS - NSHMP'
+            })
+          }
+        }
+      }
+    },
+    faults: {
+      'E2014R1': {
+        display: 'USGS NSHM 2014 Rev. 1',
+        layer: L.HazardFault2014({
+          clickable: true,
+          zIndex: Z_DATASET_INDEX
+        })
+      },
+      'E2008R3': {
+        display: 'USGS NSHM 2008 Rev. 3',
+        layer: L.HazardFault2008({
+          clickable: true,
+          zIndex: Z_DATASET_INDEX + 1
+        })
+      }
+    }
   },
 
-  initialize: function (params) {
-    this._layerChooser = LayerChooser(params);
+  initialize: function (/*params*/) {
+
   },
 
   onAdd: function (map) {
-    var container;
+    var button,
+        container,
+        content;
 
     this._map = map;
-    this._layerChooser.setMap(map);
 
     container = L.DomUtil.create('div', 'hazard-layer-control');
     container.setAttribute('title', 'Select Overlays');
 
+    button = L.DomUtil.create('a', 'hazard-layer-control-toggle', container);
+    content = L.DomUtil.create('div', 'hazard-layer-control-content', container);
+
     L.DomEvent
         .on(container, 'mousedown dblclick', L.DomEvent.stopPropagation)
-        .on(container, 'click', L.DomEvent.stopPropagation)
-        .on(container, 'click', this._onClick, this);
+        .on(container, 'click', L.DomEvent.stopPropagation);
+
+    L.DomEvent
+        .on(button, 'click', this._onClick, this);
+
 
     this._container = container;
-    this._container.appendChild(this._layerChooser.el);
+    this._button = button;
+    this._content = content;
+
+    this._createControlContent();
+    this._onBaselayerChange();
 
     return container;
   },
 
   onRemove: function (/*map*/) {
     var container;
-
-    this._layerChooser.setMap(null);
 
     container = this._container;
 
@@ -401,9 +215,158 @@ var LayerControl = L.Control.extend({
     this._map = null;
   },
 
+
+
+  _createBaseLayerOptions: function () {
+    var baseLayersInfo;
+
+    baseLayersInfo = this.options.baseLayers;
+
+    return this._layerOptionLoop(baseLayersInfo);
+
+
+  },
+
+  _createControlContent: function () {
+    this._content.innerHTML = [
+      '<label>',
+        'Base Layer',
+        '<select class="layer-control-base-layer">',
+          this._createBaseLayerOptions(),
+        '</select>',
+      '</label>',
+      '<label>',
+        'Overlays',
+        '<select class="layer-control-overlays">',
+          '<option label="None"></option>',
+          this._createOverlayersOptions(),
+        '</select>',
+      '</label>',
+      '<label>',
+        'Faults',
+        '<select class="layer-control-faults">',
+          '<option label="None"></option>',
+          this._createFaultsLayersOptions(),
+        '</select>',
+      '</label>'
+    ].join('');
+
+    this._baselayers = this._content.querySelector('.layer-control-base-layer');
+    this._overlays = this._content.querySelector('.layer-control-overlays');
+    this._faults = this._content.querySelector('.layer-control-faults');
+
+    L.DomEvent.on(this._baselayers, 'change', this._onBaselayerChange, this);
+    L.DomEvent.on(this._overlays, 'change', this._onOverlayChange, this);
+    L.DomEvent.on(this._faults, 'change', this._onFaultsChange, this);
+  },
+
+  _createFaultsLayersOptions: function () {
+    var faultLayersInfo;
+
+    faultLayersInfo = this.options.faults;
+
+    return this._layerOptionLoop(faultLayersInfo);
+  },
+
+  _createOverlayersOptions: function () {
+    var index,
+        layersInfo,
+        overlayInfo,
+        overlayLayersInfo;
+
+    overlayInfo = [];
+    overlayLayersInfo = this.options.overlays;
+
+    for (index in overlayLayersInfo) {
+      layersInfo = overlayLayersInfo[index];
+
+      overlayInfo.push([
+        '<optgroup label="',layersInfo.display,'" data-value="',index,'">',
+          this._layerOptionLoop(layersInfo.layers),
+        '</optgroup>'
+      ].join(''));
+    }
+
+    return overlayInfo;
+  },
+
+  _layerOptionLoop: function (layers) {
+    var key,
+        layerInfo;
+
+    layerInfo = [];
+
+    for (key in layers) {
+      layerInfo.push([
+        '<option value="',key,'">',
+          layers[key].display,
+        '</option>'
+      ].join(''));
+    }
+
+    return layerInfo.join('');
+  },
+
+  _onBaselayerChange: function () {
+    var layer,
+        value;
+
+    value = this._baselayers.value;
+    layer = this.options.baseLayers[value];
+
+    if (this._currentBaselayer) {
+      this._map.removeLayer(this._currentBaselayer);
+    }
+
+    this._currentBaselayer = layer.layer;
+    this._map.addLayer(this._currentBaselayer);
+  },
+
+  _onFaultsChange: function () {
+    var layer,
+        value;
+
+    value = this._faults.value;
+    layer = this.options.faults[value];
+
+    if (value === '') {
+      this._map.removeLayer(this._currentFaultsLayer);
+    } else {
+      if (this._currentFaultsLayer) {
+        this._map.removeLayer(this._currentFaultsLayer);
+      }
+
+      this._currentFaultsLayer = layer.layer;
+      this._map.addLayer(this._currentFaultsLayer);
+    }
+  },
+
+  _onOverlayChange: function (evt) {
+    var layer,
+        layerGroupValue,
+        value;
+
+    value = this._overlays.value;
+
+    if (value === '') {
+      this._map.removeLayer(this._currentOverlay);
+    } else {
+      layerGroupValue = evt.target.querySelector('[value="'+value+'"]')
+          .parentNode.getAttribute('data-value');
+      layer = this.options.overlays[layerGroupValue].layers[value];
+
+      if (this._currentOverlay) {
+        this._map.removeLayer(this._currentOverlay);
+      }
+
+      this._currentOverlay = layer.layer;
+      this._map.addLayer(this._currentOverlay);
+    }
+  },
+
   _onClick: function (/*evt*/) {
 
-    this._container.classList.add('show-contour-layer-control');
+    this._container.classList.add('show');
 
     L.DomEvent
         .on(this._container, 'mousedown dblclick', L.DomEvent.stopPropagation)
@@ -413,7 +376,7 @@ var LayerControl = L.Control.extend({
 
   _onMapClick: function (/*evt*/) {
 
-    this._container.classList.remove('show-contour-layer-control');
+    this._container.classList.remove('show');
 
     L.DomEvent
         .off(this._container, 'mousedown dblclick', L.DomEvent.stopPropagation)
