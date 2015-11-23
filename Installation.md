@@ -123,7 +123,6 @@ If an error occurred try running npm install again.
   2. extension=php_pdo_pgsql.dll
 
 ### Run Pre-Install
-1. Run pre-install Setup
 
 Mac / OS X
 ```
