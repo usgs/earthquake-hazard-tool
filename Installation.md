@@ -36,7 +36,7 @@ $ git clone <clone URL>
      ```
      $ pg_ctl -D <db_directory> start
      ```
-2. Login
+3. Login
   1. Login to the default postgres database with the user that created the
      database.
      ```
