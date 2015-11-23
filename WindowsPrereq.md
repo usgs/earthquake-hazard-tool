@@ -5,10 +5,10 @@ Windows Prerequisites
 There are multiple dependencies that must be installed for this project:
 
 1. Git Bash or Cygwin (Git Bash was used for this installation)
-1. Node
-1. PostgreSQL
-1. PHP
-1. Visual C++
+2. Node
+3. PostgreSQL
+4. PHP
+5. Visual C++
 
 #### Install Git Bash
 1. You will need a terminal tool for Windows. Git Bash
@@ -21,7 +21,7 @@ There are multiple dependencies that must be installed for this project:
 
 #### Install PostgreSQL
 1. Install PostgreSQL version 9.2.14 (http://www.postgresql.org/).
-1. Open admin command prompt and stop postgreSQL server.
+2. Open admin command prompt and stop postgreSQL server.
 ```
 $ cd C:\Program Files\postgresSQL\9.2f
 $ bin\pg_ctl -D data stop

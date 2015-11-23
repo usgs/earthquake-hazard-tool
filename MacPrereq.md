@@ -8,10 +8,10 @@ On OS X, we recommend using `homebrew` to install application dependencies.
 There are multiple dependencies that must be installed for this project:
 
 1. Xcode
-1. HomeBrew
-1. Node
-1. PHP
-1. PostgreSQL
+2. HomeBrew
+3. Node
+4. PHP
+5. PostgreSQL
 
 #### Install Xcode
 ```
@@ -25,8 +25,8 @@ http://mxcl.github.io/homebrew/
 
 #### Install Node and NPM
 1. nodejs.org
-1. Download v4.2.2
-1. Update paths as needed in your ~/.bash_profile: (If you use a tool other
+2. Download v4.2.2
+3. Update paths as needed in your ~/.bash_profile: (If you use a tool other
    than brew to install these dependencies, you may need to modify these paths
    to point to the install directories.)
 ```
@@ -54,7 +54,7 @@ PostgreSQL database locally.
   After running `brew install postgresql`, the terminal will output directions
   that you will use to get your installation up and running.
 
-1. Create/Upgrade a Database
+2. Create/Upgrade a Database
 
   If this is your first install, create a database with:
   ```

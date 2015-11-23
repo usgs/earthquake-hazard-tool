@@ -30,13 +30,13 @@ $ git clone <clone URL>
   Note: We suggest defining a .data directory at the root level of this
   application for the `<db_directory>`.
 
-1. Start/Stop PostgreSQL
+2. Start/Stop PostgreSQL
   1. After running the initdb command, you should see a success message. Use
      the pg_ctl utility to start the database.
      ```
      $ pg_ctl -D <db_directory> start
      ```
-1. Login
+2. Login
   1. Login to the default postgres database with the user that created the
      database.
      ```
@@ -62,7 +62,7 @@ $ git clone <clone URL>
   `PGDATA` environment variable to this value and you will not need to specify
   the `-D <db_directory>` flag.
 
-1. Login
+2. Login
 
   Login to the default `postgres` database with the user that created the
   database.
@@ -132,32 +132,32 @@ Windows:
 ```
 $ php src/lib/pre-install.php
 ```
-1. Option 'Url path to application'
+2. Option 'Url path to application'
 ```
 $ /hazardtool
 ```
-1. Option 'Comma-separated list of web services to configure'
+3. Option 'Comma-separated list of web services to configure'
 ```
 $ staticcurve
 ```
-1. Option 'Meta URL'
+4. Option 'Meta URL'
 ```
 $ hazws/staticcurve/1
 ```
-1. Option 'Configure additional curve services'
+5. Option 'Configure additional curve services'
 > Note: If you would like to set up the dynamic curves select Yes.
 ```
 Y
 ```
-1. Option 'Name'
+6. Option 'Name'
 ```
 dynamicCurve
 ```
-1. Option 'Meta URL'
+7. Option 'Meta URL'
 ```
 http://dev-earthquake.cr.usgs.gov/nshmp-haz-ws/hazard
 ```
-1. Option 'Response Handler'
+8. Option 'Response Handler'
 ```
 DynamicHazardResponse
 ```
