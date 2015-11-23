@@ -1,16 +1,16 @@
 Installation Page
 =============
 
+### Install / Setup Prerequisites
+[Mac / OS X Prerequisites](MacPrereq.md)
+
+[Windows Prerequisites](WindowsPrereq.md)
+
 ### Clone the project
 1. Use git to clone the project from GitHub repository (if you haven't already).
 ```
 git clone <clone URL>
 ```
-
-### Install / Setup Prerequisites
-[Mac / OS X Prerequisites](MacPrereq.md)
-
-[Windows Prerequisites](WindowsPrereq.md)
 
 ### Start Database
 1. Start/Stop PostgreSQL
