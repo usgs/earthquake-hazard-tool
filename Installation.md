@@ -107,6 +107,8 @@ $
   > `<db_name>`) with the actual value that makes sense in your environment. You
   > will need to use most of these same values again during the `pre-install`
   > script that gets run (below).
+  > When creating tablespace during windows installation use.
+  > `C:...Path_to_app<data_dir><db_name>`
 
 ### Install NPM Dependencies
 From the root of the project directory.
