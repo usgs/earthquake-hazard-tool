@@ -32,26 +32,26 @@ $ bin\pg_ctl -D data stop
   1. Download the appropriate zip file from http://windows.php.net/download/
   2. Unzip the folder and copy the content into a new folder on your C:\ drive.
   3. Open a terminal window
-  ```
-  $ cd
-  $ vi .bash_profile
-  ```
+    ```
+    $ cd
+    $ vi .bash_profile
+    ```
   4. add to this file.
-  ```
-  export PATH=$PATH:<PHP_directory>
-  export PATH=$PATH:<node_directory>
-  export PATH=$PATH:<PostgreSQL_directory>
-  ```
+    ```
+    export PATH=$PATH:<PHP_directory>
+    export PATH=$PATH:<node_directory>
+    export PATH=$PATH:<PostgreSQL_directory>
+    ```
 
-  You will need to replace the `<PHP_directory>`, `<node_directory>` and
-  `<PostgreSQL_directory>` with the correct path to each.
+    You will need to replace the `<PHP_directory>`, `<node_directory>` and
+    `<PostgreSQL_directory>` with the correct path to each.
 
-  Example:
-  ```
-  export PATH=$PATH:/c/php-5.6
-  export PAtH=$PATH:/c/Program\ Files/nodejs
-  export PATH=$PATH:/c/Program\ Files/PostgreSQL/9.2/bin
-  ```
+    Example:
+    ```
+    export PATH=$PATH:/c/php-5.6
+    export PAtH=$PATH:/c/Program\ Files/nodejs
+    export PATH=$PATH:/c/Program\ Files/PostgreSQL/9.2/bin
+    ```
 
   5. Rename file in php dir from php.ini-development to php.ini and Edit this
      file by uncommenting these lines.
