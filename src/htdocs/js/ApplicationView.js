@@ -195,7 +195,8 @@ var ApplicationView = function (params) {
       _onTimeHorizonChange,
       _onVs30Change,
       _updateRegion,
-      _updateVs30;
+      _updateVs30,
+      _validateInputs;
 
 
   _this = SelectedCollectionView(params);
@@ -471,6 +472,32 @@ var ApplicationView = function (params) {
 
   };
 
+  _validateInputs = function () {
+    var editionLabel,
+        editionView,
+        errors;
+
+    errors = _this.model.get('errors');
+    console.log(errors);
+    if (errors.edition) {
+      editionView = _inputEl.querySelector('#edition');
+      editionView.classList.add('usa-select-error');
+
+      editionLabel = editionView.querySelector('label');
+      editionLabel.classList.add('usa-select-error-label');
+    } else {
+      editionView = _inputEl.querySelector('#edition');
+      if (editionView.classList.contains('usa-select-error')) {
+        editionView.classList.remove('usa-select-error');
+      }
+
+      editionLabel = editionView.querySelector('label');
+      if (editionLabel.classList.contains('usa-select-error-label')) {
+        editionLabel.classList.remove('usa-select-error-label');
+      }
+    }
+  };
+
 
   _this.destroy = Util.compose(_this.destroy, function () {
     _calculator.destroy();
@@ -526,6 +553,7 @@ var ApplicationView = function (params) {
     _onVs30Change = null;
     _updateRegion = null;
     _updateVs30 = null;
+    _validateInputs = null;
 
     _initialize = null;
     _this = null;
@@ -533,6 +561,7 @@ var ApplicationView = function (params) {
 
   _this.onCollectionDeselect = function () {
     _this.model.off('change:edition', _onEditionChange);
+    _this.model.off('change:errors', _validateInputs);
     _this.model.off('change:location', _onLocationChange);
     _this.model.off('change:region', _onRegionChange);
     _this.model.off('change:vs30', _onVs30Change);
@@ -547,6 +576,7 @@ var ApplicationView = function (params) {
     _this.model = _this.collection.getSelected();
 
     _this.model.on('change:edition', _onEditionChange);
+    _this.model.on('change:errors', _validateInputs);
     _this.model.on('change:location', _onLocationChange);
     _this.model.on('change:region', _onRegionChange);
     _this.model.on('change:vs30', _onVs30Change);

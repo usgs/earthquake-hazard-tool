@@ -80,7 +80,7 @@ var InputView = function (params) {
     _this.el.classList.add('row');
     _this.el.innerHTML = [
       '<ul class="column one-of-three">',
-        '<li>',
+        '<li id="edition">',
           '<label>',
             'Edition',
             '<select class="input-edition-view"></select>',
@@ -221,7 +221,9 @@ var InputView = function (params) {
 
     if (_this.model) {
       _this.model.set({
-        edition: (edition ? edition.id : null)
+        edition: (edition ? edition.id : null),
+        curves: null,
+        deaggResponses: null
       });
     }
 
@@ -241,7 +243,9 @@ var InputView = function (params) {
 
     if (_this.model) {
       _this.model.set({
-        vs30: (siteClass ? siteClass.id : null)
+        vs30: (siteClass ? siteClass.id : null),
+        curves: null,
+        deaggResponses: null
       });
     }
   };
@@ -253,7 +257,8 @@ var InputView = function (params) {
 
     if (_this.model) {
       _this.model.set({
-        imt: (imt ? imt.id : null)
+        imt: (imt ? imt.id : null),
+        deaggResponses: null
       });
     }
   };
