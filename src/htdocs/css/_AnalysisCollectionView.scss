@@ -49,6 +49,10 @@
   float: right;
   text-align: center;
   width: 4.5em;
+
+  &:active {
+    color: rgb(120,43,43);
+  }
 }
 
 .analysis-view-metadata {
