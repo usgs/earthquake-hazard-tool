@@ -23,9 +23,7 @@ var ValidateInputs = function (type, analysis) {
       _initialize,
 
       _errors,
-      _errorsView,
-
-      _validate;
+      _errorsView;
 
 
   _this = {};
@@ -34,92 +32,10 @@ var ValidateInputs = function (type, analysis) {
     _errors = {};
     _errorsView = ErrorsView();
 
-    _validate();
-  };
-
-  _validate = function () {
-    var editionError,
-        locationError,
-        siteClassError,
-        spectralPeriodError,
-        timeHorizonError;
-
-    _errors = {};
-
-    editionError = {
-      input: 'edition',
-      messages: ['Please select an Edition.']
-    };
-
-    siteClassError = {
-      input: 'siteClass',
-      messages: ['Please select a Site Class.']
-    };
-
-    if (analysis.getEdition() === null) {
-      _errorsView.addErrors(editionError);
-      _this.addErrors(editionError);
-    } else {
-      _errorsView.removeErrors(editionError);
-      _this.removeErrors(editionError);
-
-      if (analysis.getVs30() === null) {
-        _errorsView.addErrors(siteClassError);
-        _this.addErrors(siteClassError);
-      } else {
-        _errorsView.removeErrors(siteClassError);
-        _this.removeErrors(siteClassError);
-      }
+    if (type !== undefined && type !== null &&
+        analysis !== undefined && analysis !== null) {
+      _this.validate();
     }
-
-    locationError = {
-      input: 'location',
-      messages: [
-        'Location is required. The "Chose location using a map" link can assist you.'
-      ]
-    };
-
-    if (analysis.getLocation() === null) {
-      _errorsView.addErrors(locationError);
-      _this.addErrors(locationError);
-    } else {
-      _errorsView.removeErrors(locationError);
-      _this.removeErrors(locationError);
-    }
-
-    if (type === 'deaggregation') {
-      spectralPeriodError = {
-        input: 'spectralPeriod',
-        messages: ['Please select a Spectral Period.']
-      };
-
-      if (analysis.getSpectralPeriod() === null) {
-        _errorsView.addErrors(spectralPeriodError);
-        _this.addErrors(spectralPeriodError);
-      } else {
-        _errorsView.removeErrors(spectralPeriodError);
-        _this.removeErrors(spectralPeriodError);
-      }
-    }
-
-    timeHorizonError = {
-      input: 'timeHorizon',
-      messages: ['Time Horizon must be a non-negative integer.']
-    };
-
-    if (analysis.get('timeHorizon') === null || analysis.get('timeHorizon') < 0) {
-      _errorsView.addErrors(timeHorizonError);
-      _this.addErrors(timeHorizonError);
-    } else {
-      _errorsView.removeErrors(timeHorizonError);
-      _this.removeErrors(timeHorizonError);
-    }
-
-    analysis.set({
-      errors: _errors
-    });
-
-    _errorsView.render();
   };
 
   /**
@@ -134,9 +50,6 @@ var ValidateInputs = function (type, analysis) {
     _errors = null;
     _errorsView = null;
 
-    // methods
-    _validate = null;
-
     _initialize = null;
     _this = null;
   });
@@ -148,6 +61,118 @@ var ValidateInputs = function (type, analysis) {
       _errors[e.input] = null;
     }
   };
+
+  _this.validate = function () {
+    _errors = {};
+
+    _this.validateEdition(analysis.getEdition());
+
+    _this.validateLocation(analysis.getLocation());
+
+    _this.validateSiteClass(analysis.getVs30(), analysis.getEdition());
+
+    _this.validateSpectralPeriod(type, analysis.getSpectralPeriod());
+
+    _this.validateTimeHorizon(analysis.get('timeHorizon'));
+
+    analysis.set({
+      errors: _errors
+    });
+  };
+
+  _this.validateEdition = function (edition) {
+    var editionError;
+
+    editionError = {
+      input: 'edition',
+      messages: ['Please select an Edition.']
+    };
+
+    if (edition === null) {
+      _errorsView.addErrors(editionError);
+      _this.addErrors(editionError);
+      return false;
+    } else {
+      _errorsView.removeErrors(editionError);
+      _this.removeErrors(editionError);
+      return true;
+    }
+  };
+
+  _this.validateLocation = function (location) {
+    var locationError;
+
+    locationError = {
+      input: 'location',
+      messages: [
+        'Location is required. The "Chose location using a map" link can assist you.'
+      ]
+    };
+
+    if (location === null) {
+      _errorsView.addErrors(locationError);
+      _this.addErrors(locationError);
+    } else {
+      _errorsView.removeErrors(locationError);
+      _this.removeErrors(locationError);
+    }
+  };
+
+  _this.validateSiteClass = function (siteClass, edition) {
+    var siteClassError;
+
+    siteClassError = {
+      input: 'siteClass',
+      messages: ['Please select a Site Class.']
+    };
+
+    if (_this.validateEdition(edition)) {
+      if (siteClass === null) {
+        _errorsView.addErrors(siteClassError);
+        _this.addErrors(siteClassError);
+      } else {
+        _errorsView.removeErrors(siteClassError);
+        _this.removeErrors(siteClassError);
+      }
+    }
+  };
+
+  _this.validateSpectralPeriod = function (type, spectralPeriod) {
+    var spectralPeriodError;
+
+    spectralPeriodError = {
+      input: 'spectralPeriod',
+      messages: ['Please select a Spectral Period.']
+    };
+
+    if (type === 'deaggregation') {
+      if (spectralPeriod === null) {
+        _errorsView.addErrors(spectralPeriodError);
+        _this.addErrors(spectralPeriodError);
+      } else {
+        _errorsView.removeErrors(spectralPeriodError);
+        _this.removeErrors(spectralPeriodError);
+      }
+    }
+  };
+
+  _this.validateTimeHorizon = function (timeHorizon) {
+    var timeHorizonError;
+
+    timeHorizonError = {
+      input: 'timeHorizon',
+      messages: ['Time Horizon must be a non-negative integer.']
+    };
+
+    if (timeHorizon === null || timeHorizon < 0) {
+      _errorsView.addErrors(timeHorizonError);
+      _this.addErrors(timeHorizonError);
+    } else {
+      _errorsView.removeErrors(timeHorizonError);
+      _this.removeErrors(timeHorizonError);
+    }
+  };
+
 
   _initialize();
   return _this;
@@ -198,7 +223,8 @@ var ApplicationView = function (params) {
       _setErrorSelect,
       _setInputErrors,
       _updateRegion,
-      _updateVs30;
+      _updateVs30,
+      _validateInputs;
 
 
   _this = SelectedCollectionView(params);
@@ -242,6 +268,8 @@ var ApplicationView = function (params) {
       collection: _this.collection,
       el: _analysisCollectionEl
     });
+
+    _validateInputs = ValidateInputs(_serviceType, _this.model);
 
     _curveOutputView.on('calculate', _onCalculate, _this);
     _deaggOutputView.on('calculate', _onCalculate, _this);
@@ -345,7 +373,7 @@ var ApplicationView = function (params) {
     _updateRegion();
     _clearOutput();
 
-    ValidateInputs(_serviceType, _this.model);
+    _validateInputs.validateEdition(_this.model.getEdition());
   };
 
   _onLocationChange = function (/*changes*/) {
@@ -353,24 +381,22 @@ var ApplicationView = function (params) {
     _updateRegion();
     _clearOutput();
 
-    ValidateInputs(_serviceType, _this.model);
+    _validateInputs.validateLocation(_this.model.getLocation());
   };
 
   _onRegionChange = function (/*changes*/) {
     _clearOutput();
-
-    ValidateInputs(_serviceType, _this.model);
   };
 
   _onVs30Change = function (/*changes*/) {
     _updateRegion();
     _clearOutput();
 
-    ValidateInputs(_serviceType, _this.model);
+    _validateInputs.validateSiteClass(_this.model.getVs30(), _this.model.getEdition());
   };
 
   _onTimeHorizonChange = function (/*changes*/) {
-    ValidateInputs(_serviceType, _this.model);
+    _validateInputs.validateTimeHorizon(_this.model.get('timeHorizon'));
   };
 
   /**
@@ -461,7 +487,7 @@ var ApplicationView = function (params) {
     calculator = data.calculator;
     _serviceType = data.serviceType;
 
-    ValidateInputs(_serviceType, _this.model);
+    _validateInputs = ValidateInputs(_serviceType, _this.model);
 
     if (!_queued && calculator) {
       window.setTimeout(function () {
@@ -616,6 +642,7 @@ var ApplicationView = function (params) {
     _setInputErrors = null;
     _updateRegion = null;
     _updateVs30 = null;
+    _validateInputs = null;
 
     _initialize = null;
     _this = null;
