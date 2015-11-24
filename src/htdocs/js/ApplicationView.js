@@ -181,6 +181,7 @@ var ApplicationView = function (params) {
       _mapEl,
       _mapView,
       _queued,
+      _serviceType,
       _siteClasses,
 
       // methods
@@ -193,6 +194,8 @@ var ApplicationView = function (params) {
       _onRegionChange,
       _onTimeHorizonChange,
       _onVs30Change,
+      _setErrorInput,
+      _setErrorSelect,
       _setInputErrors,
       _updateRegion,
       _updateVs30;
@@ -341,24 +344,33 @@ var ApplicationView = function (params) {
     _updateVs30();
     _updateRegion();
     _clearOutput();
+
+    ValidateInputs(_serviceType, _this.model);
   };
 
   _onLocationChange = function (/*changes*/) {
     _updateVs30();
     _updateRegion();
     _clearOutput();
+
+    ValidateInputs(_serviceType, _this.model);
   };
 
   _onRegionChange = function (/*changes*/) {
     _clearOutput();
+
+    ValidateInputs(_serviceType, _this.model);
   };
 
   _onVs30Change = function (/*changes*/) {
     _updateRegion();
     _clearOutput();
+
+    ValidateInputs(_serviceType, _this.model);
   };
 
   _onTimeHorizonChange = function (/*changes*/) {
+    ValidateInputs(_serviceType, _this.model);
   };
 
   /**
@@ -443,14 +455,13 @@ var ApplicationView = function (params) {
 
   _onCalculate = function (data) {
     var calculator,
-        request,
-        serviceType;
+        request;
 
 
     calculator = data.calculator;
-    serviceType = data.serviceType;
+    _serviceType = data.serviceType;
 
-    ValidateInputs(serviceType, _this.model);
+    ValidateInputs(_serviceType, _this.model);
 
     if (!_queued && calculator) {
       window.setTimeout(function () {
@@ -458,7 +469,7 @@ var ApplicationView = function (params) {
             _this.model.get('region') && _this.model.get('vs30')) {
           request = calculator.getResult(
               _dependencyFactory.getService(
-                  _this.model.get('edition'), serviceType),
+                  _this.model.get('edition'), _serviceType),
               _this.model,
               _loaderView.hide
             );
@@ -469,6 +480,38 @@ var ApplicationView = function (params) {
       _queued = true;
     }
 
+  };
+
+  _setErrorInput = function (errors, view, label) {
+    if (errors) {
+      view.classList.add('usa-input-error');
+
+      label.classList.add('usa-input-error-label');
+    } else {
+      if (view.classList.contains('usa-input-error')) {
+        view.classList.remove('usa-input-error');
+      }
+
+      if (label.classList.contains('usa-input-error-label')) {
+        label.classList.remove('usa-input-error-label');
+      }
+    }
+  };
+
+  _setErrorSelect = function (errors, view, label) {
+    if (errors) {
+      view.classList.add('usa-select-error');
+
+      label.classList.add('usa-select-error-label');
+    } else {
+      if (view.classList.contains('usa-select-error')) {
+        view.classList.remove('usa-select-error');
+      }
+
+      if (label.classList.contains('usa-select-error-label')) {
+        label.classList.remove('usa-select-error-label');
+      }
+    }
   };
 
   _setInputErrors = function () {
@@ -501,80 +544,17 @@ var ApplicationView = function (params) {
     timeHorizonView = _inputEl.querySelector('.input-time-horizon-view');
     timeHorizonLabel = timeHorizonView.querySelector('label');
 
-    if (errors.edition) {
-      editionView.classList.add('usa-select-error');
+    _setErrorSelect(errors.edition, editionView, editionLabel);
 
-      editionLabel.classList.add('usa-select-error-label');
-    } else {
-      if (editionView.classList.contains('usa-select-error')) {
-        editionView.classList.remove('usa-select-error');
-      }
+    _setErrorSelect(errors.location, locationView, locationLabels[0]);
+    _setErrorSelect(errors.location, locationView, locationLabels[1]);
 
-      if (editionLabel.classList.contains('usa-select-error-label')) {
-        editionLabel.classList.remove('usa-select-error-label');
-      }
-    }
+    _setErrorSelect(errors.siteClass, siteClassView, siteClassLabel);
 
-    if (errors.location) {
-      locationView.classList.add('usa-input-error');
+    _setErrorSelect(errors.spectralPeriod, spectralPeriodView,
+        spectralPeriodLabel);
 
-      locationLabels[0].classList.add('usa-input-error-label');
-      locationLabels[1].classList.add('usa-input-error-label');
-    } else {
-      if (locationView.classList.contains('usa-input-error')) {
-        locationView.classList.remove('usa-input-error');
-      }
-
-      if (locationLabels[0].classList.contains('usa-input-error-label')) {
-        locationLabels[0].classList.remove('usa-input-error-label');
-      }
-      if (locationLabels[1].classList.contains('usa-input-error-label')) {
-        locationLabels[1].classList.remove('usa-input-error-label');
-      }
-    }
-
-    if (errors.siteClass) {
-      siteClassView.classList.add('usa-select-error');
-
-      siteClassLabel.classList.add('usa-select-error-label');
-    } else {
-      if (siteClassView.classList.contains('usa-select-error')) {
-        siteClassView.classList.remove('usa-select-error');
-      }
-
-      if (siteClassLabel.classList.contains('usa-select-error-label')) {
-        siteClassLabel.classList.remove('usa-select-error-label');
-      }
-    }
-
-    if (errors.spectralPeriod) {
-      spectralPeriodView.classList.add('usa-select-error');
-
-      spectralPeriodLabel.classList.add('usa-select-error-label');
-    } else {
-      if (spectralPeriodView.classList.contains('usa-select-error')) {
-        spectralPeriodView.classList.remove('usa-select-error');
-      }
-
-      if (spectralPeriodLabel.classList.contains('usa-select-error-label')) {
-        spectralPeriodLabel.classList.remove('usa-select-error-label');
-      }
-    }
-
-    if (errors.timeHorizon) {
-      timeHorizonView.classList.add('usa-input-error');
-
-      timeHorizonLabel.classList.add('usa-input-error-label');
-      timeHorizonLabel.classList.add('usa-input-error-label');
-    } else {
-      if (timeHorizonView.classList.contains('usa-input-error')) {
-        timeHorizonView.classList.remove('usa-input-error');
-      }
-
-      if (timeHorizonLabel.classList.contains('usa-input-error-label')) {
-        timeHorizonLabel.classList.remove('usa-input-error-label');
-      }
-    }
+    _setErrorInput(errors.timeHorizon, timeHorizonView, timeHorizonLabel);
   };
 
 
@@ -618,6 +598,7 @@ var ApplicationView = function (params) {
     _mapView = null;
     _newButton = null;
     _queued = null;
+    _serviceType = null;
     _siteClasses = null;
 
     // methods
@@ -630,6 +611,8 @@ var ApplicationView = function (params) {
     _onRegionChange = null;
     _onTimeHorizonChange = null;
     _onVs30Change = null;
+    _setErrorInput = null;
+    _setErrorSelect = null;
     _setInputErrors = null;
     _updateRegion = null;
     _updateVs30 = null;
