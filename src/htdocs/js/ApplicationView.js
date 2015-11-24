@@ -46,30 +46,33 @@ var ValidateInputs = function (type, analysis) {
 
     editionError = {
       input: 'edition',
-      messages: ['Must select an Edition.']
+      messages: ['Please select an Edition.']
     };
 
     locationError = {
       input: 'location',
+      // messages: [
+      //             'Latitude is required.',
+      //             'Longitude is required.'
+      //           ]
       messages: [
-                  'Latitude is required.',
-                  'Longitude is required.'
-                ]
+        'Location is required. The "Chose location using a map" link can assist you.'
+      ]
     };
 
     siteClassError = {
       input: 'siteClass',
-      messages: ['Must select a Site Class.']
+      messages: ['Please select a Site Class.']
     };
 
     spectralPeriodError = {
       input: 'spectralPeriod',
-      messages: ['Must select a Spectral Period.']
+      messages: ['Please select a Spectral Period.']
     };
 
     timeHorizonError = {
       input: 'timeHorizon',
-      messages: ['Time Horizon must be greater than 0.']
+      messages: ['Time Horizon must be a non-negative integer.']
     };
 
     _errors = {};
@@ -80,6 +83,14 @@ var ValidateInputs = function (type, analysis) {
     } else {
       _errorsView.removeErrors(editionError);
       _this.removeErrors(editionError);
+
+      if (analysis.getVs30() === null) {
+        _errorsView.addErrors(siteClassError);
+        _this.addErrors(siteClassError);
+      } else {
+        _errorsView.removeErrors(siteClassError);
+        _this.removeErrors(siteClassError);
+      }
     }
 
     if (analysis.getLocation() === null) {
@@ -90,14 +101,6 @@ var ValidateInputs = function (type, analysis) {
       _this.removeErrors(locationError);
     }
 
-    if (analysis.getVs30() === null) {
-      _errorsView.addErrors(siteClassError);
-      _this.addErrors(siteClassError);
-    } else {
-      _errorsView.removeErrors(siteClassError);
-      _this.removeErrors(siteClassError);
-    }
-
     if (type === 'deaggregation') {
       if (analysis.getSpectralPeriod() === null) {
         _errorsView.addErrors(spectralPeriodError);
@@ -106,14 +109,14 @@ var ValidateInputs = function (type, analysis) {
         _errorsView.removeErrors(spectralPeriodError);
         _this.removeErrors(spectralPeriodError);
       }
+    }
 
-      if (analysis.get('timeHorizon') === null || analysis.get('timeHorizon') < 0) {
-        _errorsView.addErrors(timeHorizonError);
-        _this.addErrors(timeHorizonError);
-      } else {
-        _errorsView.removeErrors(timeHorizonError);
-        _this.removeErrors(timeHorizonError);
-      }
+    if (analysis.get('timeHorizon') === null || analysis.get('timeHorizon') < 0) {
+      _errorsView.addErrors(timeHorizonError);
+      _this.addErrors(timeHorizonError);
+    } else {
+      _errorsView.removeErrors(timeHorizonError);
+      _this.removeErrors(timeHorizonError);
     }
 
     analysis.set({
@@ -475,25 +478,106 @@ var ApplicationView = function (params) {
   _validateInputs = function () {
     var editionLabel,
         editionView,
-        errors;
+        errors,
+        locationLabels,
+        locationView,
+        siteClassLabel,
+        siteClassView,
+        spectralPeriodLabel,
+        spectralPeriodView,
+        timeHorizonLabel,
+        timeHorizonView;
 
     errors = _this.model.get('errors');
+
+    editionView = _inputEl.querySelector('.edition');
+    editionLabel = editionView.querySelector('label');
+
+    locationView = _inputEl.querySelector('.input-location-view');
+    locationLabels = locationView.querySelectorAll('label');
+
+    siteClassView = _inputEl.querySelector('.site-class');
+    siteClassLabel = siteClassView.querySelector('label');
+
+    spectralPeriodView = _inputEl.querySelector('.spectral-period');
+    spectralPeriodLabel = spectralPeriodView.querySelector('label');
+
+    timeHorizonView = _inputEl.querySelector('.input-time-horizon-view');
+    timeHorizonLabel = timeHorizonView.querySelector('label');
+
     console.log(errors);
     if (errors.edition) {
-      editionView = _inputEl.querySelector('#edition');
       editionView.classList.add('usa-select-error');
 
-      editionLabel = editionView.querySelector('label');
       editionLabel.classList.add('usa-select-error-label');
     } else {
-      editionView = _inputEl.querySelector('#edition');
       if (editionView.classList.contains('usa-select-error')) {
         editionView.classList.remove('usa-select-error');
       }
 
-      editionLabel = editionView.querySelector('label');
       if (editionLabel.classList.contains('usa-select-error-label')) {
         editionLabel.classList.remove('usa-select-error-label');
+      }
+    }
+
+    if (errors.location) {
+      locationView.classList.add('usa-input-error');
+
+      locationLabels[0].classList.add('usa-input-error-label');
+      locationLabels[1].classList.add('usa-input-error-label');
+    } else {
+      if (locationView.classList.contains('usa-input-error')) {
+        locationView.classList.remove('usa-input-error');
+      }
+
+      if (locationLabels[0].classList.contains('usa-input-error-label')) {
+        locationLabels[0].classList.remove('usa-input-error-label');
+      }
+      if (locationLabels[1].classList.contains('usa-input-error-label')) {
+        locationLabels[1].classList.remove('usa-input-error-label');
+      }
+    }
+
+    if (errors.siteClass) {
+      siteClassView.classList.add('usa-select-error');
+
+      siteClassLabel.classList.add('usa-select-error-label');
+    } else {
+      if (siteClassView.classList.contains('usa-select-error')) {
+        siteClassView.classList.remove('usa-select-error');
+      }
+
+      if (siteClassLabel.classList.contains('usa-select-error-label')) {
+        siteClassLabel.classList.remove('usa-select-error-label');
+      }
+    }
+
+    if (errors.spectralPeriod) {
+      spectralPeriodView.classList.add('usa-select-error');
+
+      spectralPeriodLabel.classList.add('usa-select-error-label');
+    } else {
+      if (spectralPeriodView.classList.contains('usa-select-error')) {
+        spectralPeriodView.classList.remove('usa-select-error');
+      }
+
+      if (spectralPeriodLabel.classList.contains('usa-select-error-label')) {
+        spectralPeriodLabel.classList.remove('usa-select-error-label');
+      }
+    }
+
+    if (errors.timeHorizon) {
+      timeHorizonView.classList.add('usa-input-error');
+
+      timeHorizonLabel.classList.add('usa-input-error-label');
+      timeHorizonLabel.classList.add('usa-input-error-label');
+    } else {
+      if (timeHorizonView.classList.contains('usa-input-error')) {
+        timeHorizonView.classList.remove('usa-input-error');
+      }
+
+      if (timeHorizonLabel.classList.contains('usa-input-error-label')) {
+        timeHorizonLabel.classList.remove('usa-input-error-label');
       }
     }
   };

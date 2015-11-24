@@ -1,6 +1,11 @@
 .input-view {
   > ul {
     list-style: none;
+    margin-left: .5em;
+    
+    > li {
+      margin-top: 0;
+    }
   }
 }
 
