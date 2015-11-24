@@ -72,6 +72,8 @@ var ValidateInputs = function (type, analysis) {
       messages: ['Time Horizon must be greater than 0.']
     };
 
+    _errors = {};
+
     if (analysis.getEdition() === null) {
       _errorsView.addErrors(editionError);
       _this.addErrors(editionError);
@@ -119,7 +121,6 @@ var ValidateInputs = function (type, analysis) {
     });
 
     _errorsView.render();
-    console.log(analysis.get('errors'));
   };
 
   /**
@@ -129,6 +130,17 @@ var ValidateInputs = function (type, analysis) {
     _errors[e.input] = e.messages;
   };
 
+  _this.destroy = Util.compose(_this.destroy, function () {
+    // variables
+    _errors = null;
+    _errorsView = null;
+
+    // methods
+    _validate = null;
+
+    _initialize = null;
+    _this = null;
+  });
   /**
    * Remove errors from _errors for the input type passed in.
    */

@@ -24,7 +24,7 @@ var ErrorsView = function (params) {
    */
   _this.addErrors = function (e) {
     _errors[e.input] = e.messages;
-    // _this.render();
+    _this.render();
   };
 
   /**
@@ -34,7 +34,7 @@ var ErrorsView = function (params) {
     if (_errors[e.input]) {
       _errors[e.input] = null;
     }
-    // _this.render();
+    _this.render();
   };
 
   /**
@@ -85,7 +85,6 @@ var ErrorsView = function (params) {
 
     Message({
       classes: classes,
-      // container: _this.el,
       content: markup
     });
   };
