@@ -44,38 +44,17 @@ var ValidateInputs = function (type, analysis) {
         spectralPeriodError,
         timeHorizonError;
 
+    _errors = {};
+
     editionError = {
       input: 'edition',
       messages: ['Please select an Edition.']
-    };
-
-    locationError = {
-      input: 'location',
-      // messages: [
-      //             'Latitude is required.',
-      //             'Longitude is required.'
-      //           ]
-      messages: [
-        'Location is required. The "Chose location using a map" link can assist you.'
-      ]
     };
 
     siteClassError = {
       input: 'siteClass',
       messages: ['Please select a Site Class.']
     };
-
-    spectralPeriodError = {
-      input: 'spectralPeriod',
-      messages: ['Please select a Spectral Period.']
-    };
-
-    timeHorizonError = {
-      input: 'timeHorizon',
-      messages: ['Time Horizon must be a non-negative integer.']
-    };
-
-    _errors = {};
 
     if (analysis.getEdition() === null) {
       _errorsView.addErrors(editionError);
@@ -93,6 +72,13 @@ var ValidateInputs = function (type, analysis) {
       }
     }
 
+    locationError = {
+      input: 'location',
+      messages: [
+        'Location is required. The "Chose location using a map" link can assist you.'
+      ]
+    };
+
     if (analysis.getLocation() === null) {
       _errorsView.addErrors(locationError);
       _this.addErrors(locationError);
@@ -102,6 +88,11 @@ var ValidateInputs = function (type, analysis) {
     }
 
     if (type === 'deaggregation') {
+      spectralPeriodError = {
+        input: 'spectralPeriod',
+        messages: ['Please select a Spectral Period.']
+      };
+
       if (analysis.getSpectralPeriod() === null) {
         _errorsView.addErrors(spectralPeriodError);
         _this.addErrors(spectralPeriodError);
@@ -110,6 +101,11 @@ var ValidateInputs = function (type, analysis) {
         _this.removeErrors(spectralPeriodError);
       }
     }
+
+    timeHorizonError = {
+      input: 'timeHorizon',
+      messages: ['Time Horizon must be a non-negative integer.']
+    };
 
     if (analysis.get('timeHorizon') === null || analysis.get('timeHorizon') < 0) {
       _errorsView.addErrors(timeHorizonError);
@@ -197,9 +193,9 @@ var ApplicationView = function (params) {
       _onRegionChange,
       _onTimeHorizonChange,
       _onVs30Change,
+      _setInputErrors,
       _updateRegion,
-      _updateVs30,
-      _validateInputs;
+      _updateVs30;
 
 
   _this = SelectedCollectionView(params);
@@ -475,7 +471,7 @@ var ApplicationView = function (params) {
 
   };
 
-  _validateInputs = function () {
+  _setInputErrors = function () {
     var editionLabel,
         editionView,
         errors,
@@ -505,7 +501,6 @@ var ApplicationView = function (params) {
     timeHorizonView = _inputEl.querySelector('.input-time-horizon-view');
     timeHorizonLabel = timeHorizonView.querySelector('label');
 
-    console.log(errors);
     if (errors.edition) {
       editionView.classList.add('usa-select-error');
 
@@ -635,9 +630,9 @@ var ApplicationView = function (params) {
     _onRegionChange = null;
     _onTimeHorizonChange = null;
     _onVs30Change = null;
+    _setInputErrors = null;
     _updateRegion = null;
     _updateVs30 = null;
-    _validateInputs = null;
 
     _initialize = null;
     _this = null;
@@ -645,7 +640,7 @@ var ApplicationView = function (params) {
 
   _this.onCollectionDeselect = function () {
     _this.model.off('change:edition', _onEditionChange);
-    _this.model.off('change:errors', _validateInputs);
+    _this.model.off('change:errors', _setInputErrors);
     _this.model.off('change:location', _onLocationChange);
     _this.model.off('change:region', _onRegionChange);
     _this.model.off('change:vs30', _onVs30Change);
@@ -660,7 +655,7 @@ var ApplicationView = function (params) {
     _this.model = _this.collection.getSelected();
 
     _this.model.on('change:edition', _onEditionChange);
-    _this.model.on('change:errors', _validateInputs);
+    _this.model.on('change:errors', _setInputErrors);
     _this.model.on('change:location', _onLocationChange);
     _this.model.on('change:region', _onRegionChange);
     _this.model.on('change:vs30', _onVs30Change);
