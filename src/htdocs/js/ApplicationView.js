@@ -76,13 +76,9 @@ var ValidateInputs = function (type, analysis) {
     _errors = {};
 
     _this.validateEdition(analysis);
-
     _this.validateLocation(analysis);
-
     _this.validateSiteClass(analysis);
-
     _this.validateSpectralPeriod(type, analysis);
-
     _this.validateTimeHorizon(analysis);
   };
 
@@ -101,6 +97,7 @@ var ValidateInputs = function (type, analysis) {
 
       validEdition = false;
     } else {
+
       _errorsView.removeErrors(editionError);
       _this.removeErrors(editionError);
 
@@ -118,7 +115,8 @@ var ValidateInputs = function (type, analysis) {
     locationError = {
       input: 'location',
       messages: [
-        'Location is required. The "Chose location using a map" link can assist you.'
+        'Location is required. The "Chose location using a map" link' +
+        ' can assist you.'
       ]
     };
 
@@ -243,8 +241,13 @@ var ApplicationView = function (params) {
       _onRegionChange,
       _onTimeHorizonChange,
       _onVs30Change,
+      _setErrorEdition,
       _setErrorInput,
+      _setErrorLocation,
       _setErrorSelect,
+      _setErrorSiteClass,
+      _setErrorSpectralPeriod,
+      _setErrorTimeHorizon,
       _setInputErrors,
       _updateRegion,
       _updateVs30,
@@ -398,6 +401,7 @@ var ApplicationView = function (params) {
     _clearOutput();
 
     _validateInputs.validateEdition(_this.model);
+    _setErrorEdition();
   };
 
   _onLocationChange = function (/*changes*/) {
@@ -406,6 +410,7 @@ var ApplicationView = function (params) {
     _clearOutput();
 
     _validateInputs.validateLocation(_this.model);
+    _setErrorLocation();
   };
 
   _onRegionChange = function (/*changes*/) {
@@ -417,10 +422,12 @@ var ApplicationView = function (params) {
     _clearOutput();
 
     _validateInputs.validateSiteClass(_this.model);
+    _setErrorSiteClass();
   };
 
   _onTimeHorizonChange = function (/*changes*/) {
     _validateInputs.validateTimeHorizon(_this.model);
+    _setErrorTimeHorizon();
   };
 
   /**
@@ -507,7 +514,6 @@ var ApplicationView = function (params) {
     var calculator,
         request;
 
-
     calculator = data.calculator;
     _serviceType = data.serviceType;
 
@@ -532,6 +538,19 @@ var ApplicationView = function (params) {
 
   };
 
+  _setErrorEdition = function () {
+    var editionLabel,
+        editionView,
+        errors;
+
+    errors = _this.model.get('errors');
+
+    editionView = _inputEl.querySelector('.edition');
+    editionLabel = editionView.querySelector('label');
+
+    _setErrorSelect(errors.edition, editionView, editionLabel);
+  };
+
   _setErrorInput = function (errors, view, label) {
     if (errors) {
       view.classList.add('usa-input-error');
@@ -548,6 +567,20 @@ var ApplicationView = function (params) {
     }
   };
 
+  _setErrorLocation = function () {
+    var errors,
+        locationLabels,
+        locationView;
+
+    errors = _this.model.get('errors');
+
+    locationView = _inputEl.querySelector('.input-location-view');
+    locationLabels = locationView.querySelectorAll('label');
+
+    _setErrorSelect(errors.location, locationView, locationLabels[0]);
+    _setErrorSelect(errors.location, locationView, locationLabels[1]);
+  };
+
   _setErrorSelect = function (errors, view, label) {
     if (errors) {
       view.classList.add('usa-select-error');
@@ -562,6 +595,46 @@ var ApplicationView = function (params) {
         label.classList.remove('usa-select-error-label');
       }
     }
+  };
+
+  _setErrorSiteClass = function () {
+    var errors,
+        siteClassLabel,
+        siteClassView;
+
+    errors = _this.model.get('errors');
+
+    siteClassView = _inputEl.querySelector('.site-class');
+    siteClassLabel = siteClassView.querySelector('label');
+
+    _setErrorSelect(errors.siteClass, siteClassView, siteClassLabel);
+  };
+
+  _setErrorSpectralPeriod = function () {
+    var errors,
+        spectralPeriodLabel,
+        spectralPeriodView;
+
+    errors = _this.model.get('errors');
+
+    spectralPeriodView = _inputEl.querySelector('.spectral-period');
+    spectralPeriodLabel = spectralPeriodView.querySelector('label');
+
+    _setErrorSelect(errors.spectralPeriod, spectralPeriodView,
+        spectralPeriodLabel);
+  };
+
+  _setErrorTimeHorizon = function () {
+    var errors,
+        timeHorizonLabel,
+        timeHorizonView;
+
+    errors = _this.model.get('errors');
+
+    timeHorizonView = _inputEl.querySelector('.input-time-horizon-view');
+    timeHorizonLabel = timeHorizonView.querySelector('label');
+
+    _setErrorInput(errors.timeHorizon, timeHorizonView, timeHorizonLabel);
   };
 
   _setInputErrors = function () {
@@ -582,27 +655,27 @@ var ApplicationView = function (params) {
     editionView = _inputEl.querySelector('.edition');
     editionLabel = editionView.querySelector('label');
 
+    _setErrorSelect(errors.edition, editionView, editionLabel);
+
     locationView = _inputEl.querySelector('.input-location-view');
     locationLabels = locationView.querySelectorAll('label');
-
-    siteClassView = _inputEl.querySelector('.site-class');
-    siteClassLabel = siteClassView.querySelector('label');
-
-    spectralPeriodView = _inputEl.querySelector('.spectral-period');
-    spectralPeriodLabel = spectralPeriodView.querySelector('label');
-
-    timeHorizonView = _inputEl.querySelector('.input-time-horizon-view');
-    timeHorizonLabel = timeHorizonView.querySelector('label');
-
-    _setErrorSelect(errors.edition, editionView, editionLabel);
 
     _setErrorSelect(errors.location, locationView, locationLabels[0]);
     _setErrorSelect(errors.location, locationView, locationLabels[1]);
 
+    siteClassView = _inputEl.querySelector('.site-class');
+    siteClassLabel = siteClassView.querySelector('label');
+
     _setErrorSelect(errors.siteClass, siteClassView, siteClassLabel);
+
+    spectralPeriodView = _inputEl.querySelector('.spectral-period');
+    spectralPeriodLabel = spectralPeriodView.querySelector('label');
 
     _setErrorSelect(errors.spectralPeriod, spectralPeriodView,
         spectralPeriodLabel);
+
+    timeHorizonView = _inputEl.querySelector('.input-time-horizon-view');
+    timeHorizonLabel = timeHorizonView.querySelector('label');
 
     _setErrorInput(errors.timeHorizon, timeHorizonView, timeHorizonLabel);
   };
@@ -661,8 +734,13 @@ var ApplicationView = function (params) {
     _onRegionChange = null;
     _onTimeHorizonChange = null;
     _onVs30Change = null;
+    _setErrorEdition = null;
     _setErrorInput = null;
+    _setErrorLocation = null;
     _setErrorSelect = null;
+    _setErrorSiteClass = null;
+    _setErrorTimeHorizon = null;
+    _setErrorSpectralPeriod = null;
     _setInputErrors = null;
     _updateRegion = null;
     _updateVs30 = null;
