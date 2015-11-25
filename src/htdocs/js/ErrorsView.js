@@ -10,7 +10,9 @@ var ErrorsView = function (params) {
   var _this,
       _initialize,
 
-      _errors;
+      _errors,
+
+      _message;
 
   _this = View(params);
 
@@ -51,6 +53,10 @@ var ErrorsView = function (params) {
     // remove errors
     if (!_errors.edition && !_errors.location && !_errors.siteClass &&
         !_errors.spectralPeriod && !_errors.timeHorizon) {
+      if(_message) {
+        _message.hide(true);
+        _message = null;
+      }
       return;
     }
 
@@ -83,7 +89,7 @@ var ErrorsView = function (params) {
 
     markup = markup.join('');
 
-    Message({
+    _message = Message({
       classes: classes,
       content: markup
     });
