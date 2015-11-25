@@ -1,7 +1,27 @@
 .application-errors {
-  margin: 1em 0 0;
+  bottom: 15px;
+  color: black;
+  left: 15px;
+  position: fixed;
+  right: 15px;
+  z-index: 9999;
 
   > .error-list {
     margin: 1em 0 0;
   }
+
+  > .webutils-message-close {
+    font-size: 1.5em;
+    margin: 0;
+    opacity: 0.75;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    transition: opacity 250ms ease;
+
+    &:hover {
+      opacity: 0.99;
+    }
+  }
+
 }

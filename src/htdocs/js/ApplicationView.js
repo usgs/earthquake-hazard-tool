@@ -5,6 +5,7 @@ var Analysis = require('Analysis'),
     Calculator = require('CurveCalculator'),
     CurveOutputView = require('curve/CurveOutputView'),
     DeaggOutputView = require('deagg/DeaggOutputView'),
+    ErrorsView = require('ErrorsView'),
     InputView = require('input/InputView'),
     LoaderView = require('LoaderView'),
     MapView = require('MapView'),
@@ -16,6 +17,188 @@ var Analysis = require('Analysis'),
 
     Util = require('util/Util');
 
+
+var ValidateInputs = function (type, analysis) {
+  var _this,
+      _initialize,
+
+      _errors,
+      _errorsView,
+
+      _updateAnalysis;
+
+
+  _this = {};
+
+  _initialize = function () {
+    _errors = {};
+    _errorsView = ErrorsView();
+
+    if (type !== undefined && type !== null &&
+        analysis !== undefined && analysis !== null) {
+      _this.validate();
+    }
+  };
+
+  _updateAnalysis = function (analysis) {
+    analysis.set({
+      errors: _errors
+    });
+  };
+  /**
+   * Build an input keyed object with an array of errors for each input.
+   */
+  _this.addErrors = function (e) {
+    _errors[e.input] = e.messages;
+  };
+
+  _this.destroy = Util.compose(_this.destroy, function () {
+    // methods
+    _updateAnalysis = null;
+
+    // variables
+    _errors = null;
+    _errorsView = null;
+
+    _initialize = null;
+    _this = null;
+  });
+  /**
+   * Remove errors from _errors for the input type passed in.
+   */
+  _this.removeErrors = function (e) {
+    if (_errors[e.input]) {
+      _errors[e.input] = null;
+    }
+  };
+
+  _this.validate = function () {
+    _errors = {};
+
+    _this.validateEdition(analysis);
+    _this.validateLocation(analysis);
+    _this.validateSiteClass(analysis);
+    _this.validateSpectralPeriod(type, analysis);
+    _this.validateTimeHorizon(analysis);
+  };
+
+  _this.validateEdition = function (analysis) {
+    var editionError,
+        validEdition;
+
+    editionError = {
+      input: 'edition',
+      messages: ['Please select an Edition.']
+    };
+
+    if (analysis.getEdition() === null) {
+      _errorsView.addErrors(editionError);
+      _this.addErrors(editionError);
+
+      validEdition = false;
+    } else {
+
+      _errorsView.removeErrors(editionError);
+      _this.removeErrors(editionError);
+
+      validEdition = true;
+    }
+
+    _updateAnalysis(analysis);
+
+    return validEdition;
+  };
+
+  _this.validateLocation = function (analysis) {
+    var locationError;
+
+    locationError = {
+      input: 'location',
+      messages: [
+        'Location is required. The "Chose location using a map" link' +
+        ' can assist you.'
+      ]
+    };
+
+    if (analysis.getLocation() === null) {
+      _errorsView.addErrors(locationError);
+      _this.addErrors(locationError);
+    } else {
+      _errorsView.removeErrors(locationError);
+      _this.removeErrors(locationError);
+    }
+
+    _updateAnalysis(analysis);
+  };
+
+  _this.validateSiteClass = function (analysis) {
+    var siteClassError;
+
+    siteClassError = {
+      input: 'siteClass',
+      messages: ['Please select a Site Class.']
+    };
+
+    if (_this.validateEdition(analysis)) {
+      if (analysis.getVs30() === null) {
+        _errorsView.addErrors(siteClassError);
+        _this.addErrors(siteClassError);
+      } else {
+        _errorsView.removeErrors(siteClassError);
+        _this.removeErrors(siteClassError);
+      }
+    }
+
+    _updateAnalysis(analysis);
+  };
+
+  _this.validateSpectralPeriod = function (type, analysis) {
+    var spectralPeriodError;
+
+    spectralPeriodError = {
+      input: 'spectralPeriod',
+      messages: ['Please select a Spectral Period.']
+    };
+
+    if (type === 'deaggregation') {
+      if (analysis.getSpectralPeriod() === null) {
+        _errorsView.addErrors(spectralPeriodError);
+        _this.addErrors(spectralPeriodError);
+      } else {
+        _errorsView.removeErrors(spectralPeriodError);
+        _this.removeErrors(spectralPeriodError);
+      }
+    }
+
+    _updateAnalysis(analysis);
+  };
+
+  _this.validateTimeHorizon = function (analysis) {
+    var timeHorizon,
+        timeHorizonError;
+
+    timeHorizon = analysis.get('timeHorizon');
+
+    timeHorizonError = {
+      input: 'timeHorizon',
+      messages: ['Time Horizon must be a non-negative integer.']
+    };
+
+    if (timeHorizon === null || timeHorizon < 0) {
+      _errorsView.addErrors(timeHorizonError);
+      _this.addErrors(timeHorizonError);
+    } else {
+      _errorsView.removeErrors(timeHorizonError);
+      _this.removeErrors(timeHorizonError);
+    }
+
+    _updateAnalysis(analysis);
+  };
+
+
+  _initialize();
+  return _this;
+};
 
 var ApplicationView = function (params) {
   var _this,
@@ -45,6 +228,7 @@ var ApplicationView = function (params) {
       _mapEl,
       _mapView,
       _queued,
+      _serviceType,
       _siteClasses,
 
       // methods
@@ -57,8 +241,17 @@ var ApplicationView = function (params) {
       _onRegionChange,
       _onTimeHorizonChange,
       _onVs30Change,
+      _setErrorEdition,
+      _setErrorInput,
+      _setErrorLocation,
+      _setErrorSelect,
+      _setErrorSiteClass,
+      _setErrorSpectralPeriod,
+      _setErrorTimeHorizon,
+      _setInputErrors,
       _updateRegion,
-      _updateVs30;
+      _updateVs30,
+      _validateInputs;
 
 
   _this = SelectedCollectionView(params);
@@ -102,6 +295,8 @@ var ApplicationView = function (params) {
       collection: _this.collection,
       el: _analysisCollectionEl
     });
+
+    _validateInputs = ValidateInputs(_serviceType, _this.model);
 
     _curveOutputView.on('calculate', _onCalculate, _this);
     _deaggOutputView.on('calculate', _onCalculate, _this);
@@ -204,12 +399,18 @@ var ApplicationView = function (params) {
     _updateVs30();
     _updateRegion();
     _clearOutput();
+
+    _validateInputs.validateEdition(_this.model);
+    _setErrorEdition();
   };
 
   _onLocationChange = function (/*changes*/) {
     _updateVs30();
     _updateRegion();
     _clearOutput();
+
+    _validateInputs.validateLocation(_this.model);
+    _setErrorLocation();
   };
 
   _onRegionChange = function (/*changes*/) {
@@ -219,9 +420,14 @@ var ApplicationView = function (params) {
   _onVs30Change = function (/*changes*/) {
     _updateRegion();
     _clearOutput();
+
+    _validateInputs.validateSiteClass(_this.model);
+    _setErrorSiteClass();
   };
 
   _onTimeHorizonChange = function (/*changes*/) {
+    _validateInputs.validateTimeHorizon(_this.model);
+    _setErrorTimeHorizon();
   };
 
   /**
@@ -306,11 +512,12 @@ var ApplicationView = function (params) {
 
   _onCalculate = function (data) {
     var calculator,
-        request,
-        serviceType;
+        request;
 
     calculator = data.calculator;
-    serviceType = data.serviceType;
+    _serviceType = data.serviceType;
+
+    _validateInputs = ValidateInputs(_serviceType, _this.model);
 
     if (!_queued && calculator) {
       window.setTimeout(function () {
@@ -318,7 +525,7 @@ var ApplicationView = function (params) {
             _this.model.get('region') && _this.model.get('vs30')) {
           request = calculator.getResult(
               _dependencyFactory.getService(
-                  _this.model.get('edition'), serviceType),
+                  _this.model.get('edition'), _serviceType),
               _this.model,
               _loaderView.hide
             );
@@ -329,6 +536,148 @@ var ApplicationView = function (params) {
       _queued = true;
     }
 
+  };
+
+  _setErrorEdition = function () {
+    var editionLabel,
+        editionView,
+        errors;
+
+    errors = _this.model.get('errors');
+
+    editionView = _inputEl.querySelector('.edition');
+    editionLabel = editionView.querySelector('label');
+
+    _setErrorSelect(errors.edition, editionView, editionLabel);
+  };
+
+  _setErrorInput = function (errors, view, label) {
+    if (errors) {
+      view.classList.add('usa-input-error');
+
+      label.classList.add('usa-input-error-label');
+    } else {
+      if (view.classList.contains('usa-input-error')) {
+        view.classList.remove('usa-input-error');
+      }
+
+      if (label.classList.contains('usa-input-error-label')) {
+        label.classList.remove('usa-input-error-label');
+      }
+    }
+  };
+
+  _setErrorLocation = function () {
+    var errors,
+        locationLabels,
+        locationView;
+
+    errors = _this.model.get('errors');
+
+    locationView = _inputEl.querySelector('.input-location-view');
+    locationLabels = locationView.querySelectorAll('label');
+
+    _setErrorSelect(errors.location, locationView, locationLabels[0]);
+    _setErrorSelect(errors.location, locationView, locationLabels[1]);
+  };
+
+  _setErrorSelect = function (errors, view, label) {
+    if (errors) {
+      view.classList.add('usa-select-error');
+
+      label.classList.add('usa-select-error-label');
+    } else {
+      if (view.classList.contains('usa-select-error')) {
+        view.classList.remove('usa-select-error');
+      }
+
+      if (label.classList.contains('usa-select-error-label')) {
+        label.classList.remove('usa-select-error-label');
+      }
+    }
+  };
+
+  _setErrorSiteClass = function () {
+    var errors,
+        siteClassLabel,
+        siteClassView;
+
+    errors = _this.model.get('errors');
+
+    siteClassView = _inputEl.querySelector('.site-class');
+    siteClassLabel = siteClassView.querySelector('label');
+
+    _setErrorSelect(errors.siteClass, siteClassView, siteClassLabel);
+  };
+
+  _setErrorSpectralPeriod = function () {
+    var errors,
+        spectralPeriodLabel,
+        spectralPeriodView;
+
+    errors = _this.model.get('errors');
+
+    spectralPeriodView = _inputEl.querySelector('.spectral-period');
+    spectralPeriodLabel = spectralPeriodView.querySelector('label');
+
+    _setErrorSelect(errors.spectralPeriod, spectralPeriodView,
+        spectralPeriodLabel);
+  };
+
+  _setErrorTimeHorizon = function () {
+    var errors,
+        timeHorizonLabel,
+        timeHorizonView;
+
+    errors = _this.model.get('errors');
+
+    timeHorizonView = _inputEl.querySelector('.input-time-horizon-view');
+    timeHorizonLabel = timeHorizonView.querySelector('label');
+
+    _setErrorInput(errors.timeHorizon, timeHorizonView, timeHorizonLabel);
+  };
+
+  _setInputErrors = function () {
+    var editionLabel,
+        editionView,
+        errors,
+        locationLabels,
+        locationView,
+        siteClassLabel,
+        siteClassView,
+        spectralPeriodLabel,
+        spectralPeriodView,
+        timeHorizonLabel,
+        timeHorizonView;
+
+    errors = _this.model.get('errors');
+
+    editionView = _inputEl.querySelector('.edition');
+    editionLabel = editionView.querySelector('label');
+
+    _setErrorSelect(errors.edition, editionView, editionLabel);
+
+    locationView = _inputEl.querySelector('.input-location-view');
+    locationLabels = locationView.querySelectorAll('label');
+
+    _setErrorSelect(errors.location, locationView, locationLabels[0]);
+    _setErrorSelect(errors.location, locationView, locationLabels[1]);
+
+    siteClassView = _inputEl.querySelector('.site-class');
+    siteClassLabel = siteClassView.querySelector('label');
+
+    _setErrorSelect(errors.siteClass, siteClassView, siteClassLabel);
+
+    spectralPeriodView = _inputEl.querySelector('.spectral-period');
+    spectralPeriodLabel = spectralPeriodView.querySelector('label');
+
+    _setErrorSelect(errors.spectralPeriod, spectralPeriodView,
+        spectralPeriodLabel);
+
+    timeHorizonView = _inputEl.querySelector('.input-time-horizon-view');
+    timeHorizonLabel = timeHorizonView.querySelector('label');
+
+    _setErrorInput(errors.timeHorizon, timeHorizonView, timeHorizonLabel);
   };
 
 
@@ -372,19 +721,30 @@ var ApplicationView = function (params) {
     _mapView = null;
     _newButton = null;
     _queued = null;
+    _serviceType = null;
     _siteClasses = null;
 
     // methods
     _clearOutput = null;
     _initViewContainer = null;
+    _onCalculate = null;
     _onEditionChange = null;
     _onLocationChange = null;
     _onNewButtonClick = null;
     _onRegionChange = null;
     _onTimeHorizonChange = null;
     _onVs30Change = null;
+    _setErrorEdition = null;
+    _setErrorInput = null;
+    _setErrorLocation = null;
+    _setErrorSelect = null;
+    _setErrorSiteClass = null;
+    _setErrorTimeHorizon = null;
+    _setErrorSpectralPeriod = null;
+    _setInputErrors = null;
     _updateRegion = null;
     _updateVs30 = null;
+    _validateInputs = null;
 
     _initialize = null;
     _this = null;
@@ -392,6 +752,7 @@ var ApplicationView = function (params) {
 
   _this.onCollectionDeselect = function () {
     _this.model.off('change:edition', _onEditionChange);
+    _this.model.off('change:errors', _setInputErrors);
     _this.model.off('change:location', _onLocationChange);
     _this.model.off('change:region', _onRegionChange);
     _this.model.off('change:vs30', _onVs30Change);
@@ -406,6 +767,7 @@ var ApplicationView = function (params) {
     _this.model = _this.collection.getSelected();
 
     _this.model.on('change:edition', _onEditionChange);
+    _this.model.on('change:errors', _setInputErrors);
     _this.model.on('change:location', _onLocationChange);
     _this.model.on('change:region', _onRegionChange);
     _this.model.on('change:vs30', _onVs30Change);

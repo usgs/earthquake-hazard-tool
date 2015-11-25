@@ -1,6 +1,8 @@
 'use strict';
 
 var View = require('mvc/View'),
+
+    Message = require('util/Message'),
     Util = require('util/Util');
 
 var ErrorsView = function (params) {
@@ -8,7 +10,9 @@ var ErrorsView = function (params) {
   var _this,
       _initialize,
 
-      _errors;
+      _errors,
+
+      _message;
 
   _this = View(params);
 
@@ -39,26 +43,36 @@ var ErrorsView = function (params) {
    * Render the error output
    */
   _this.render = function () {
-    var markup;
+    var classes,
+        markup;
 
+    classes = [];
     markup = [];
+    _this.el.innerHTML = '';
 
     // remove errors
-    if (!_errors.location && !_errors.siteClass && !_errors.timeHorizon) {
-      _this.el.innerHTML = '';
-      _this.el.classList.remove('alert');
-      _this.el.classList.remove('error');
+    if (!_errors.edition && !_errors.location && !_errors.siteClass &&
+        !_errors.spectralPeriod && !_errors.timeHorizon) {
+      if(_message) {
+        _message.hide(true);
+        _message = null;
+      }
       return;
     }
 
     // display errors
-    _this.el.classList.add('alert');
-    _this.el.classList.add('error');
+    classes.push('alert');
+    classes.push('error');
+    classes.push('application-errors');
 
     markup.push('<b>Errors:</b>');
     markup.push('<ul class="error-list">');
 
     // replicate the input order with the error output
+    if (_errors.edition) {
+      markup.push('<li>' + _errors.edition.join('</li><li>') + '</li>');
+    }
+
     if (_errors.location) {
       markup.push('<li>' + _errors.location.join('</li><li>') + '</li>');
     }
@@ -73,7 +87,12 @@ var ErrorsView = function (params) {
 
     markup.push('</ul>');
 
-    _this.el.innerHTML = markup.join('');
+    markup = markup.join('');
+
+    _message = Message({
+      classes: classes,
+      content: markup
+    });
   };
 
   _this.destroy = Util.compose(function () {

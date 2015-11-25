@@ -63,8 +63,11 @@ var InputView = function (params) {
     _imts = Collection(_dependencyFactory.getAllSpectralPeriods());
 
     _editions.on('select', _onEditionSelect);
+    _editions.on('deselect', _onEditionSelect);
     _siteClasses.on('select', _onSiteClassSelect);
+    _siteClasses.on('deselect', _onSiteClassSelect);
     _imts.on('select', _onImtSelect);
+    _imts.on('deselect', _onImtSelect);
 
     if (_this.model) {
       _initSubViews();
@@ -77,14 +80,14 @@ var InputView = function (params) {
     _this.el.classList.add('row');
     _this.el.innerHTML = [
       '<ul class="column one-of-three">',
-        '<li>',
+        '<li class="edition">',
           '<label>',
             'Edition',
             '<select class="input-edition-view"></select>',
           '</label>',
         '</li>',
         '<li class="input-location-view"></li>',
-        '<li>',
+        '<li class="site-class">',
           '<label>',
             'Site Class',
             '<select class="input-site-class-view"></select>',
@@ -92,7 +95,7 @@ var InputView = function (params) {
         '</li>',
       '</ul>',
       '<ul class="column one-of-three">',
-        '<li>',
+        '<li class="spectral-period">',
           '<label>',
             'Spectral Period',
             '<select class="input-imt-view"></select>',
@@ -218,7 +221,9 @@ var InputView = function (params) {
 
     if (_this.model) {
       _this.model.set({
-        edition: (edition ? edition.id : null)
+        edition: (edition ? edition.id : null),
+        curves: null,
+        deaggResponses: null
       });
     }
 
@@ -238,7 +243,9 @@ var InputView = function (params) {
 
     if (_this.model) {
       _this.model.set({
-        vs30: (siteClass ? siteClass.id : null)
+        vs30: (siteClass ? siteClass.id : null),
+        curves: null,
+        deaggResponses: null
       });
     }
   };
@@ -250,7 +257,8 @@ var InputView = function (params) {
 
     if (_this.model) {
       _this.model.set({
-        imt: (imt ? imt.id : null)
+        imt: (imt ? imt.id : null),
+        deaggResponses: null
       });
     }
   };
