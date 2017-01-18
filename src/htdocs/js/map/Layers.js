@@ -1,6 +1,13 @@
+/* global L */
 'use strict';
 
-var L = require('leaflet/Leaflet');
+var Grayscale = require('leaflet/layer/Grayscale'),
+    HazardFault2008 = require('leaflet/layer/HazardFault2008'),
+    HazardFault2014 = require('leaflet/layer/HazardFault2014'),
+    Satellite = require('leaflet/layer/Satellite'),
+    Street = require('leaflet/layer/Street'),
+    Terrain = require('leaflet/layer/Terrain');
+
 
 var Z_BASELAYER_INDEX = 0,
     Z_OVERLAY_INDEX = 100,
@@ -11,28 +18,28 @@ module.exports = {
     {
       id: 1,
       value: 'Terrain',
-      layer: L.esriTerrain({
+      layer: Terrain({
         zIndex: Z_BASELAYER_INDEX + 1
       })
     },
     {
       id: 2,
       value: 'Grayscale',
-      layer: L.esriGrayscale({
+      layer: Grayscale({
         zIndex: Z_BASELAYER_INDEX + 2
       })
     },
     {
       id: 3,
       value: 'Street',
-      layer: L.openStreetMap({
+      layer: Street({
         zIndex: Z_BASELAYER_INDEX + 3
       })
     },
     {
       id: 4,
       value: 'Aerial',
-      layer: L.openAerialMap({
+      layer: Satellite({
         zIndex: Z_BASELAYER_INDEX + 4
       })
     }
@@ -206,14 +213,14 @@ module.exports = {
       overlays: [
         {
           edition: 'E2014R1',
-          layer: L.HazardFault2014({
+          layer: HazardFault2014({
             clickable: true,
             zIndex: Z_DATASET_INDEX
           })
         },
         {
           edition: 'E2008R3',
-          layer: L.HazardFault2008({
+          layer: HazardFault2008({
             clickable: true,
             zIndex: Z_DATASET_INDEX + 1
           })

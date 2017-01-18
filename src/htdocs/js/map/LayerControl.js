@@ -1,8 +1,14 @@
+/* global L */
 'use strict';
 
-var L = require('leaflet/Leaflet');
 
-    // Util = require('util/Util');
+var Grayscale = require('leaflet/layer/Grayscale'),
+    HazardFault2008 = require('leaflet/layer/HazardFault2008'),
+    HazardFault2014 = require('leaflet/layer/HazardFault2014'),
+    Satellite = require('leaflet/layer/Satellite'),
+    Street = require('leaflet/layer/Street'),
+    Terrain = require('leaflet/layer/Terrain');
+
 
 // --------------------------------------------------
 // Public class
@@ -18,25 +24,25 @@ var LayerControl = L.Control.extend({
     baseLayers: {
       'terrain':{
         display: 'Terrain',
-        layer: L.esriTerrain({
+        layer: Terrain({
           zIndex: Z_BASELAYER_INDEX + 1
         })
       },
       'greyscale': {
         display: 'Grayscale',
-        layer: L.esriGrayscale({
+        layer: Grayscale({
           zIndex: Z_BASELAYER_INDEX + 2
         })
       },
       'street': {
         display: 'Street',
-        layer: L.openStreetMap({
+        layer: Street({
           zIndex: Z_BASELAYER_INDEX + 3
         })
       },
       'aerial': {
         display: 'Aerial',
-        layer: L.openAerialMap({
+        layer: Satellite({
           zIndex: Z_BASELAYER_INDEX + 4
         })
       }
@@ -152,14 +158,14 @@ var LayerControl = L.Control.extend({
     faults: {
       'E2014R1': {
         display: 'USGS NSHM 2014 Rev. 1',
-        layer: L.HazardFault2014({
+        layer: HazardFault2014({
           clickable: true,
           zIndex: Z_DATASET_INDEX
         })
       },
       'E2008R3': {
         display: 'USGS NSHM 2008 Rev. 3',
-        layer: L.HazardFault2008({
+        layer: HazardFault2008({
           clickable: true,
           zIndex: Z_DATASET_INDEX + 1
         })

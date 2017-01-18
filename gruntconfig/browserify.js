@@ -148,19 +148,7 @@ var browserify = {
       require: RESPONSE_HANDLERS,
       external: EXPORTS.concat(['leaflet'])
     }
-  },
-
-  // bundle leaflet externally
-  leaflet: {
-    src: [],
-    dest: config.build + '/' + config.src + '/htdocs/lib/leaflet/leaflet.js',
-    options: {
-      alias: [
-        NODE_MODULES + '/leaflet/dist/leaflet-src.js:leaflet'
-      ]
-    }
   }
-
 };
 
 module.exports = browserify;

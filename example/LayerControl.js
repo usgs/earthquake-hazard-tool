@@ -1,3 +1,4 @@
+/* global L */
 'use strict';
 
 var Analysis = require('Analysis'),
@@ -9,9 +10,7 @@ var Analysis = require('Analysis'),
 
     Collection = require('mvc/Collection'),
 
-    Util = require('util/Util'),
-
-    L = require('leaflet');
+    Util = require('util/Util');
 
 var metadata = require('etc/metadata');
 
@@ -124,7 +123,7 @@ analyses.push(Analysis({
   })
 }));
 
-// select the first item in the collection 
+// select the first item in the collection
 collection = Collection(analyses);
 collection.select(analyses[0]);
 
