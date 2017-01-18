@@ -53,7 +53,7 @@ module.exports = {
       imt: 'PGA',
       period: '2P50',
       vs30: '760',
-      layer: L.tileLayer('http://geohazards.cr.usgs.gov/arcgis/rest/' +
+      layer: L.tileLayer('https://geohazards.cr.usgs.gov/arcgis/rest/' +
           'services/USpga250_2014/MapServer/tile/{z}/{y}/{x}', {
         zIndex: Z_OVERLAY_INDEX + 1,
         attribution: 'USGS - NSHMP'
@@ -66,7 +66,7 @@ module.exports = {
       imt: 'SA0P2',
       period: '2P50',
       vs30: '760',
-      layer: L.tileLayer('http://geohazards.cr.usgs.gov/arcgis/rest/' +
+      layer: L.tileLayer('https://geohazards.cr.usgs.gov/arcgis/rest/' +
           'services/US5hz250_2014/MapServer/tile/{z}/{y}/{x}', {
         zIndex: Z_OVERLAY_INDEX + 2,
         attribution: 'USGS - NSHMP'
@@ -79,7 +79,7 @@ module.exports = {
       imt: 'SA1P0',
       period: '2P50',
       vs30: '760',
-      layer: L.tileLayer('http://geohazards.cr.usgs.gov/arcgis/rest/' +
+      layer: L.tileLayer('https://geohazards.cr.usgs.gov/arcgis/rest/' +
           'services/US1hz250_2014/MapServer/tile/{z}/{y}/{x}', {
         zIndex: Z_OVERLAY_INDEX + 3,
         attribution: 'USGS - NSHMP'
@@ -92,7 +92,7 @@ module.exports = {
       imt: 'PGA',
       period: '10P50',
       vs30: '760',
-      layer: L.tileLayer('http://geohazards.cr.usgs.gov/arcgis/rest/' +
+      layer: L.tileLayer('https://geohazards.cr.usgs.gov/arcgis/rest/' +
           'services/USpga050_2014/MapServer/tile/{z}/{y}/{x}', {
         zIndex: Z_OVERLAY_INDEX + 4,
         attribution: 'USGS - NSHMP'
@@ -105,7 +105,7 @@ module.exports = {
       imt: 'SA0P2',
       period: '10P50',
       vs30: '760',
-      layer: L.tileLayer('http://geohazards.cr.usgs.gov/arcgis/rest/' +
+      layer: L.tileLayer('https://geohazards.cr.usgs.gov/arcgis/rest/' +
           'services/US5hz050_2014/MapServer/tile/{z}/{y}/{x}', {
         zIndex: Z_OVERLAY_INDEX + 5,
         attribution: 'USGS - NSHMP'
@@ -118,7 +118,7 @@ module.exports = {
       imt: 'SA1P0',
       period: '10P50',
       vs30: '760',
-      layer: L.tileLayer('http://geohazards.cr.usgs.gov/arcgis/rest/' +
+      layer: L.tileLayer('https://geohazards.cr.usgs.gov/arcgis/rest/' +
           'services/US1hz050_2014/MapServer/tile/{z}/{y}/{x}', {
         zIndex: Z_OVERLAY_INDEX + 6,
         attribution: 'USGS - NSHMP'
@@ -133,7 +133,7 @@ module.exports = {
       imt: 'PGA',
       period: '2P50',
       vs30: '760',
-      layer: L.tileLayer('http://geohazards.usgs.gov/arcgis/rest/' +
+      layer: L.tileLayer('https://geohazards.usgs.gov/arcgis/rest/' +
           'services/USpga250_2008/MapServer/tile/{z}/{y}/{x}', {
         zIndex: Z_OVERLAY_INDEX + 7,
         attribution: 'USGS - NSHMP'
@@ -146,7 +146,7 @@ module.exports = {
       imt: 'SA0P2',
       period: '2P50',
       vs30: '760',
-      layer: L.tileLayer('http://geohazards.usgs.gov/arcgis/rest/' +
+      layer: L.tileLayer('https://geohazards.usgs.gov/arcgis/rest/' +
           'services/US5hz250_2008/MapServer/tile/{z}/{y}/{x}', {
         zIndex: Z_OVERLAY_INDEX + 8,
         attribution: 'USGS - NSHMP'
@@ -159,7 +159,7 @@ module.exports = {
       imt: 'SA1P0',
       period: '2P50',
       vs30: '760',
-      layer: L.tileLayer('http://geohazards.usgs.gov/arcgis/rest/' +
+      layer: L.tileLayer('https://geohazards.usgs.gov/arcgis/rest/' +
           'services/US1hz250_2008/MapServer/tile/{z}/{y}/{x}', {
         zIndex: Z_OVERLAY_INDEX + 9,
         attribution: 'USGS - NSHMP'
@@ -173,7 +173,7 @@ module.exports = {
       imt: 'PGA',
       period: '10P50',
       vs30: '760',
-      layer: L.tileLayer('http://geohazards.usgs.gov/arcgis/rest/' +
+      layer: L.tileLayer('https://geohazards.usgs.gov/arcgis/rest/' +
           'services/USpga050_2008/MapServer/tile/{z}/{y}/{x}', {
         zIndex: Z_OVERLAY_INDEX + 10,
         attribution: 'USGS - NSHMP'
@@ -186,7 +186,7 @@ module.exports = {
       imt: 'SA0P2',
       period: '10P50',
       vs30: '760',
-      layer: L.tileLayer('http://geohazards.usgs.gov/arcgis/rest/' +
+      layer: L.tileLayer('https://geohazards.usgs.gov/arcgis/rest/' +
           'services/US5hz050_2008/MapServer/tile/{z}/{y}/{x}', {
         zIndex: Z_OVERLAY_INDEX + 11,
         attribution: 'USGS - NSHMP'
@@ -199,7 +199,7 @@ module.exports = {
       imt: 'SA1P0',
       period: '10P50',
       vs30: '760',
-      layer: L.tileLayer('http://geohazards.usgs.gov/arcgis/rest/' +
+      layer: L.tileLayer('https://geohazards.usgs.gov/arcgis/rest/' +
           'services/US1hz050_2008/MapServer/tile/{z}/{y}/{x}', {
         zIndex: Z_OVERLAY_INDEX + 12,
         attribution: 'USGS - NSHMP'

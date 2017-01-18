@@ -186,7 +186,7 @@
    *      $flags). Files can be anywhere in the directory tree contained by
    *      the given $basedir.
    *
-   * @see http://php.net/manual/en/function.glob.php
+   * @see https://php.net/manual/en/function.glob.php
    */
   function recursiveGlob ($basedir, $pattern, $flags = 0) {
     $dirs = globDirs($basedir);
