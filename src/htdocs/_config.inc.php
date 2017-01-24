@@ -1,6 +1,6 @@
 <?php
 
-$livesite = 'http://earthquake.usgs.gov';
+$livesite = 'https://earthquake.usgs.gov';
 
 $SITE_COMMONNAV =
     navItem($livesite . '/', 'Home') .

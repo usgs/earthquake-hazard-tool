@@ -21,7 +21,7 @@ var postcss = {
       processors: [
         postcssImport({
           path: [
-            CWD + '/' + config.src,
+            CWD + '/' + config.src + '/htdocs/css',
             CWD + '/node_modules/hazdev-accordion/src',
             CWD + '/node_modules/hazdev-d3/src',
             CWD + '/node_modules/leaflet/dist',

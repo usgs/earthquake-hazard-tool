@@ -1,8 +1,14 @@
+/* global L */
 'use strict';
 
-var L = require('leaflet/Leaflet');
 
-    // Util = require('util/Util');
+var Grayscale = require('leaflet/layer/Grayscale'),
+    HazardFault2008 = require('leaflet/layer/HazardFault2008'),
+    HazardFault2014 = require('leaflet/layer/HazardFault2014'),
+    Satellite = require('leaflet/layer/Satellite'),
+    Street = require('leaflet/layer/Street'),
+    Terrain = require('leaflet/layer/Terrain');
+
 
 // --------------------------------------------------
 // Public class
@@ -18,25 +24,25 @@ var LayerControl = L.Control.extend({
     baseLayers: {
       'terrain':{
         display: 'Terrain',
-        layer: L.esriTerrain({
+        layer: Terrain({
           zIndex: Z_BASELAYER_INDEX + 1
         })
       },
       'greyscale': {
         display: 'Grayscale',
-        layer: L.esriGrayscale({
+        layer: Grayscale({
           zIndex: Z_BASELAYER_INDEX + 2
         })
       },
       'street': {
         display: 'Street',
-        layer: L.openStreetMap({
+        layer: Street({
           zIndex: Z_BASELAYER_INDEX + 3
         })
       },
       'aerial': {
         display: 'Aerial',
-        layer: L.openAerialMap({
+        layer: Satellite({
           zIndex: Z_BASELAYER_INDEX + 4
         })
       }
@@ -47,7 +53,7 @@ var LayerControl = L.Control.extend({
         layers: {
           'PGA-2P50-760': {
             display: 'PGA, 2% in 50 Years, 760 m/s',
-            layer: L.tileLayer('http://geohazards.cr.usgs.gov/arcgis/rest/' +
+            layer: L.tileLayer('https://geohazards.cr.usgs.gov/arcgis/rest/' +
                 'services/USpga250_2014/MapServer/tile/{z}/{y}/{x}', {
               zIndex: Z_OVERLAY_INDEX + 1,
               attribution: 'USGS - NSHMP'
@@ -55,7 +61,7 @@ var LayerControl = L.Control.extend({
           },
           'SA0P2-2P50-760': {
             display: '0.2s, 2% in 50 Years, 760 m/s',
-            layer: L.tileLayer('http://geohazards.cr.usgs.gov/arcgis/rest/' +
+            layer: L.tileLayer('https://geohazards.cr.usgs.gov/arcgis/rest/' +
                 'services/US5hz250_2014/MapServer/tile/{z}/{y}/{x}', {
               zIndex: Z_OVERLAY_INDEX + 2,
               attribution: 'USGS - NSHMP'
@@ -63,7 +69,7 @@ var LayerControl = L.Control.extend({
           },
           'SA1P0-2P50-760': {
             display: '1.0s, 2% in 50 Years, 760 m/s',
-            layer: L.tileLayer('http://geohazards.cr.usgs.gov/arcgis/rest/' +
+            layer: L.tileLayer('https://geohazards.cr.usgs.gov/arcgis/rest/' +
                 'services/US1hz250_2014/MapServer/tile/{z}/{y}/{x}', {
               zIndex: Z_OVERLAY_INDEX + 3,
               attribution: 'USGS - NSHMP'
@@ -71,7 +77,7 @@ var LayerControl = L.Control.extend({
           },
           'PGA-10P50-760': {
             display: 'PGA, 10% in 50 Years, 760 m/s',
-            layer: L.tileLayer('http://geohazards.cr.usgs.gov/arcgis/rest/' +
+            layer: L.tileLayer('https://geohazards.cr.usgs.gov/arcgis/rest/' +
                 'services/USpga050_2014/MapServer/tile/{z}/{y}/{x}', {
               zIndex: Z_OVERLAY_INDEX + 4,
               attribution: 'USGS - NSHMP'
@@ -79,7 +85,7 @@ var LayerControl = L.Control.extend({
           },
           'SA0P2-10P50-760': {
             display: '0.2s, 10% in 50 Years, 760 m/s',
-            layer: L.tileLayer('http://geohazards.cr.usgs.gov/arcgis/rest/' +
+            layer: L.tileLayer('https://geohazards.cr.usgs.gov/arcgis/rest/' +
                 'services/US5hz050_2014/MapServer/tile/{z}/{y}/{x}', {
               zIndex: Z_OVERLAY_INDEX + 5,
               attribution: 'USGS - NSHMP'
@@ -87,7 +93,7 @@ var LayerControl = L.Control.extend({
           },
           'SA1P0-10P50-760': {
             display: '1.0s, 10% in 50 Years, 760 m/s',
-            layer: L.tileLayer('http://geohazards.cr.usgs.gov/arcgis/rest/' +
+            layer: L.tileLayer('https://geohazards.cr.usgs.gov/arcgis/rest/' +
                 'services/US1hz050_2014/MapServer/tile/{z}/{y}/{x}', {
               zIndex: Z_OVERLAY_INDEX + 6,
               attribution: 'USGS - NSHMP'
@@ -100,7 +106,7 @@ var LayerControl = L.Control.extend({
         layers: {
           'PGA-2P50-760': {
             display: 'PGA, 2% in 50 Years, 760 m/s',
-            layer: L.tileLayer('http://geohazards.usgs.gov/arcgis/rest/' +
+            layer: L.tileLayer('https://geohazards.usgs.gov/arcgis/rest/' +
                 'services/USpga250_2008/MapServer/tile/{z}/{y}/{x}', {
               zIndex: Z_OVERLAY_INDEX + 7,
               attribution: 'USGS - NSHMP'
@@ -108,7 +114,7 @@ var LayerControl = L.Control.extend({
           },
           'SA0P2-2P50-760': {
             display: '0.2s, 2% in 50 Years, 760 m/s',
-            layer: L.tileLayer('http://geohazards.usgs.gov/arcgis/rest/' +
+            layer: L.tileLayer('https://geohazards.usgs.gov/arcgis/rest/' +
                 'services/US5hz250_2008/MapServer/tile/{z}/{y}/{x}', {
               zIndex: Z_OVERLAY_INDEX + 8,
               attribution: 'USGS - NSHMP'
@@ -116,7 +122,7 @@ var LayerControl = L.Control.extend({
           },
           'SA1P0-2P50-760': {
             display: '1.0s, 2% in 50 Years, 760 m/s',
-            layer: L.tileLayer('http://geohazards.usgs.gov/arcgis/rest/' +
+            layer: L.tileLayer('https://geohazards.usgs.gov/arcgis/rest/' +
                 'services/US1hz250_2008/MapServer/tile/{z}/{y}/{x}', {
               zIndex: Z_OVERLAY_INDEX + 9,
               attribution: 'USGS - NSHMP'
@@ -124,7 +130,7 @@ var LayerControl = L.Control.extend({
           },
           'PGA-10P50-760': {
             display: 'PGA, 10% in 50 Years, 760 m/s',
-            layer: L.tileLayer('http://geohazards.usgs.gov/arcgis/rest/' +
+            layer: L.tileLayer('https://geohazards.usgs.gov/arcgis/rest/' +
                 'services/USpga050_2008/MapServer/tile/{z}/{y}/{x}', {
               zIndex: Z_OVERLAY_INDEX + 10,
               attribution: 'USGS - NSHMP'
@@ -132,7 +138,7 @@ var LayerControl = L.Control.extend({
           },
           'SA0P2-10P50-760': {
             display: '0.2s, 10% in 50 Years, 760 m/s',
-            layer: L.tileLayer('http://geohazards.usgs.gov/arcgis/rest/' +
+            layer: L.tileLayer('https://geohazards.usgs.gov/arcgis/rest/' +
                 'services/US5hz050_2008/MapServer/tile/{z}/{y}/{x}', {
               zIndex: Z_OVERLAY_INDEX + 11,
               attribution: 'USGS - NSHMP'
@@ -140,7 +146,7 @@ var LayerControl = L.Control.extend({
           },
           'SA1P0-10P50-760': {
             display: '1.0s, 10% in 50 Years, 760 m/s',
-            layer: L.tileLayer('http://geohazards.usgs.gov/arcgis/rest/' +
+            layer: L.tileLayer('https://geohazards.usgs.gov/arcgis/rest/' +
                 'services/US1hz050_2008/MapServer/tile/{z}/{y}/{x}', {
               zIndex: Z_OVERLAY_INDEX + 12,
               attribution: 'USGS - NSHMP'
@@ -152,14 +158,14 @@ var LayerControl = L.Control.extend({
     faults: {
       'E2014R1': {
         display: 'USGS NSHM 2014 Rev. 1',
-        layer: L.HazardFault2014({
+        layer: HazardFault2014({
           clickable: true,
           zIndex: Z_DATASET_INDEX
         })
       },
       'E2008R3': {
         display: 'USGS NSHM 2008 Rev. 3',
-        layer: L.HazardFault2008({
+        layer: HazardFault2008({
           clickable: true,
           zIndex: Z_DATASET_INDEX + 1
         })

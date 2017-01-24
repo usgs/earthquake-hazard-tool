@@ -1,7 +1,6 @@
+/* global L */
 'use strict';
 
-
-var L = require('leaflet');
 
 require('map/Fullscreen');
 
@@ -17,7 +16,7 @@ initialize = function () {
     zoom: 3,
     layers: [
       L.tileLayer(
-        'http://{s}.arcgisonline.com/arcgis/rest/services/' +
+        'https://{s}.arcgisonline.com/arcgis/rest/services/' +
             'NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}',
         {
           subdomains: ['server', 'services']

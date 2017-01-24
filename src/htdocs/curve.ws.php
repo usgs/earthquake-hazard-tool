@@ -46,8 +46,11 @@ $vs30Factory = new MetadataFactory($DB, 'vs30');
 $datasetFactory = new DatasetFactory($DB);
 $curveFactory = new CurveFactory($DB);
 
-$request = (($_SERVER['HTTPS'] == 'On') ? 'https://' : 'http://') .
-    $_SERVER['HTTP_HOST'];
+$forwarded_https = (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
+    $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+
+$request = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'Off') ||
+    $forwarded_https) ? 'https://' : 'http://';
 
 try {
   $curves = array();

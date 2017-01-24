@@ -81,7 +81,7 @@ var HazardCurveGraphView = function (options) {
     _this.views.on('deselect', _onViewDeselect);
 
     _timeHorizon = new TimeHorizonLineView({
-      el: document.createElementNS('http://www.w3.org/2000/svg', 'g'),
+      el: document.createElementNS('https://www.w3.org/2000/svg', 'g'),
       view: _this
     });
     _this.curves.reset(_this.curves.data());

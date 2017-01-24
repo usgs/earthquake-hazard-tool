@@ -1,11 +1,9 @@
+/* global L */
 'use strict';
 
 var FullscreenControl = require('leaflet/control/Fullscreen'),
     Layers = require('map/Layers'),
     LayerControl = require('map/LayerControl'),
-
-    L = require('leaflet/Leaflet'),
-
 
     SelectedCollectionView = require('mvc/SelectedCollectionView'),
 

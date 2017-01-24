@@ -44,7 +44,6 @@ module.exports = function (grunt) {
     'jshint:dev',
     'browserify:index',
     'browserify:bundle',
-    'browserify:leaflet',
     'copy:dev',
     'copy:leaflet',
     'copy:locationview',
