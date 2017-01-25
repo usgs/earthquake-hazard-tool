@@ -160,7 +160,7 @@ try {
     'status' => 'usage',
     'description' => 'Retrieves hazard curve data for an input location',
     'syntax' => $request . $_SERVER['REQUEST_URI'] .
-        '{edition}/{region}/{longitude}/{latitude}/{imt}/{vs30}',
+        '/{edition}/{region}/{longitude}/{latitude}/{imt}/{vs30}',
     'parameters' => array(
       'edition' => array(
         'label' => 'Model edition',
