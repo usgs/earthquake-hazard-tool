@@ -49,8 +49,8 @@ $curveFactory = new CurveFactory($DB);
 $forwarded_https = (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
     $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
 
-$request = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'Off') ||
-    $forwarded_https) ? 'https://' : 'http://';
+$request = (((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'Off') ||
+    $forwarded_https) ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'];
 
 try {
   $curves = array();
