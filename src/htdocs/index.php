@@ -2,7 +2,7 @@
 if (!isset($TEMPLATE)) {
   include_once '../conf/config.inc.php';
 
-  $TITLE = 'Unified Hazard Tool';
+  $TITLE = 'Beta - Unified Hazard Tool';
 
   // If you want to include section navigation.
   // The nearest _navigation.inc.php file will be used by default
