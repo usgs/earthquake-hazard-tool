@@ -4,15 +4,20 @@ $selectedStrokeOffset: 3;
 
 $selectedGraphColor: #444;
 
-$graphColor0: #999;
-$graphColor1: #1f78b4;
-$graphColor2: #33a02c;
-$graphColor3: #e31a1c;
-$graphColor4: #b2df8a;
-$graphColor5: #fb9a99;
-$graphColor6: #fdbf6f;
-$graphColor7: #ff7f00;
-$graphColor8: #cab2d6;
-$graphColor9: #6a3d9a;
-$graphColor10: #ffff99;
-$graphColor11: #b15928;
+/*
+ * Using a diverging (red-yellow-blue) color scheme from:
+ * http://colorbrewer2.org/#type=diverging&scheme=RdYlBu&n=11
+ */
+
+$graphColor0: #a50026;
+$graphColor1: #d73027;
+$graphColor2: #f46d43;
+$graphColor3: #fdae61;
+$graphColor4: #fee090;
+$graphColor5: #ffffbf;
+$graphColor6: #e0f3f8;
+$graphColor7: #abd9e9;
+$graphColor8: #74add1;
+$graphColor9: #4575b4;
+$graphColor10: #313695;
+$graphColor11: #081d58;
