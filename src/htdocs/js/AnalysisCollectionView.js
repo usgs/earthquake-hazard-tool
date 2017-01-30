@@ -108,6 +108,11 @@ var AnalysisCollectionView = function (params) {
       _collection.add(Analysis());
     }
 
+    // if selected analysis was deleted, select newest model in the collection
+    if (!_collection.getSelected()) {
+      _collection.select(_collection.data()[_collection.data().length - 1]);
+    }
+
     _this.render();
   };
 
@@ -194,11 +199,9 @@ var AnalysisCollectionView = function (params) {
   }, _this.destroy);
 
   _this.render = function () {
-    var fragment,
-        selected;
+    var fragment;
 
     fragment = document.createDocumentFragment();
-    selected = _collection.getSelected;
 
     _collection.data().forEach(function (analysis) {
       var view = _views.get(analysis.id);
