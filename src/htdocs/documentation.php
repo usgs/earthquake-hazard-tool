@@ -24,6 +24,12 @@ if (!isset($TEMPLATE)) {
     Unified Hazard Tool
   </p>
 
+  <h3>Earthquake Hazard and Probability Maps</h3>
+  <p>
+    This section allows you to view all of the hazard and fault overlays
+    on a map. Click on the layer chooser (upper right-hand of map) to view
+    your overlay options.
+  </p>
 
   <h3>Hazard Curve</h3>
   <p>To compute a hazard curve, the following inputs are required:</p>
