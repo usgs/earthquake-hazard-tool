@@ -38,7 +38,6 @@ if (!isset($TEMPLATE)) {
     <li>Location (Latitude/ Longitude)</li>
     <li>Site Class</li>
   </ul>
-  </ul>
   <p>
     Once you have entered all of the requisite inputs, scroll down
     to the &ldquo;Hazard Curve&rdquo; section and click the button
