@@ -117,6 +117,15 @@ var Location = function (params) {
    *
    */
   _onLocation = function (location) {
+    // Round to only 3 decimals for locations not directly typed
+    if (location.method !== CoordinateControl.METHOD) {
+      location.latitude = Math.round(location.latitude * 1000) / 1000;
+      location.longitude = Math.round(location.longitude * 1000) / 1000;
+      location.confidence = Math.min(location.confidence,
+          ConfidenceCalculator.computeFromCoordinates(
+              location.latitude.toFixed(3), location.longitude.toFixed(3)));
+    }
+
     _this.model.set({
       location: location
     });
