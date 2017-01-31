@@ -29,10 +29,12 @@ $vs30s = array(
 );
 
 $editions = array(
-  new Metadata(null, 'E2014R1', 'USGS NSHM 2014 Rev. 1', 10),
-  new Metadata(null, 'E2008R3', 'USGS NSHM 2008 Rev. 3', 108),
-  new Metadata(null, 'E2008R2', 'USGS NSHM 2008 Rev. 2', 109),
-  new Metadata(null, 'E2008R1', 'USGS NSHM 2008 Rev. 1', 110)
+  new Metadata(null, 'E2014R1', 'Conterminous U.S. 2014 (v4.0.x)', 10),
+  new Metadata(null, 'E2008R3', 'Conterminous U.S. 2008 (v3.2.x)', 108),
+  new Metadata(null, 'E2008R2', 'Conterminous U.S. 2008 (v3.1.x)', 109),
+  new Metadata(null, 'E2008R1', 'Conterminous U.S. 2008 (v3.0.x)', 110),
+  new Metadata(null, 'E2007R1', 'Alaska 2007 (v2.0.x)', 210),
+  new Metadata(null, 'E1998R1', 'Hawaii 1998 (v1.0.x)', 310)
 );
 
 $regions = array(
@@ -41,5 +43,9 @@ $regions = array(
   new Region(null, 'WUS0P05', 'Western U.S. w/ 0.05 Grid', 2, 24.6,
       50.0, -125.0, -100.0, 24.6, 50.0, -125.0, -115.0, 0.05),
   new Region(null, 'CEUS0P10', 'Central and Eastern U.S. w/ 0.10 Grid', 3, 24.6,
-      50.0, -115.0, -65.0, 24.6, 50.0, -100.0, -65.0, 0.10)
+      50.0, -115.0, -65.0, 24.6, 50.0, -100.0, -65.0, 0.10),
+  new Region(null, 'AK0P10', 'Alaska w/ 0.10 Grid', 4, 48.0, 72.0, -200.0,
+      -125.0, 48.0, 72.0, -200.0, -125.0,0.10),
+  new Region(null, 'HI0P02', 'Hawaii w/ 0.02 Grid', 5, 18.0, 23.0, -161.0,
+      -154.0,  18.0, 23.0, -161.0, -154.0,0.02)
 );
