@@ -14,6 +14,18 @@ include_once 'connect.admin.db.php'; // Provides $db
 // EDITION_REGION_IMT_VS30_Curves.tgz
 //
 $dataFiles = array(
+  'E1998R1_HI0P02_PGA_760_Curves.tar.gz',
+  'E1998R1_HI0P02_SA0P2_760_Curves.tar.gz',
+  'E1998R1_HI0P02_SA0P3_760_Curves.tar.gz',
+  'E1998R1_HI0P02_SA1P0_760_Curves.tar.gz',
+
+  'E2007R1_AK0P10_PGA_760_Curves.tar.gz',
+  'E2007R1_AK0P10_SA0P1_760_Curves.tar.gz',
+  'E2007R1_AK0P10_SA0P2_760_Curves.tar.gz',
+  'E2007R1_AK0P10_SA0P5_760_Curves.tar.gz',
+  'E2007R1_AK0P10_SA1P0_760_Curves.tar.gz',
+  'E2007R1_AK0P10_SA2P0_760_Curves.tar.gz',
+
   'E2008R2_COUS0P05_PGA_760_Curves.tar.gz',
   'E2008R2_COUS0P05_SA0P1_760_Curves.tar.gz',
   'E2008R2_COUS0P05_SA0P2_760_Curves.tar.gz',
