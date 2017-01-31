@@ -2,6 +2,7 @@
 
 var ConfidenceCalculator = require('locationview/ConfidenceCalculator'),
     CoordinateControl = require('locationview/CoordinateControl'),
+    DependencyFactory = require('../DependencyFactory'),
     LocationView = require('locationview/LocationView'),
 
     View = require('mvc/View'),
@@ -18,6 +19,7 @@ var Location = function (params) {
   var _this,
       _initialize,
 
+      _dependencyFactory,
       _latitude,
       _locationView,
       _longitude,
@@ -26,7 +28,8 @@ var Location = function (params) {
       _createViewSkeleton,
       _onInputChange,
       _onLocation,
-      _onUseMapClick;
+      _onUseMapClick,
+      _validateRegion;
 
 
   params = Util.extend({}, _DEFAULTS, params);
@@ -42,6 +45,8 @@ var Location = function (params) {
     _locationView = LocationView({
       callback: _onLocation
     });
+
+    _dependencyFactory = DependencyFactory();
 
     _latitude.addEventListener('change', _onInputChange, _this);
     _longitude.addEventListener('change', _onInputChange, _this);
@@ -107,7 +112,28 @@ var Location = function (params) {
           confidence: confidence
         }
       });
+
+      _validateRegion();
     }
+  };
+
+  _validateRegion = function () {
+    var location,
+        region;
+
+    location = _this.model.get('location');
+
+    if (location !== null) {
+      region = _dependencyFactory.getRegionByEdition(
+          _this.model.get('edition'),location);
+
+      if (!region) {
+        // Location is not within region
+        console.log('Location is not within region');
+      }
+    }
+
+
   };
 
   /**
@@ -167,6 +193,7 @@ var Location = function (params) {
     _longitude.removeEventListener('change', _onInputChange, _this);
     _usemap.removeEventListener('click', _onUseMapClick, _this);
 
+    _dependencyFactory = null;
     _latitude = null;
     _locationView = null;
     _longitude = null;
@@ -176,6 +203,7 @@ var Location = function (params) {
     _onInputChange = null;
     _onLocation = null;
     _onUseMapClick = null;
+    _validateRegion = null;
 
     _initialize = null;
     _this = null;
