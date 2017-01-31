@@ -132,7 +132,7 @@ var ApplicationView = function (params) {
       el: el,
       accordions: [
         {
-          classes: 'accordion-map',
+          classes: 'accordion-closed accordion-map',
           content: _mapEl,
           toggleText: '<h2 class="application-header" ' +
               'id="header-gis-hazard-layers">GIS Hazard Layers</h2>'
