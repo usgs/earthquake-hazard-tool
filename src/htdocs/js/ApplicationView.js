@@ -135,7 +135,8 @@ var ApplicationView = function (params) {
           classes: 'accordion-map',
           content: _mapEl,
           toggleText: '<h2 class="application-header" ' +
-              'id="header-gis-hazard-layers">GIS Hazard Layers</h2>'
+              'id="header-gis-hazard-layers">Earthquake Hazard and ' +
+              'Probability Maps</h2>'
         },
         {
           content: _inputEl,
