@@ -28,6 +28,8 @@ var DeaggOutputView = function (params) {
       _btnCalculate,
       _calculator,
       _componentSelectView,
+      _createAlertEl,
+      _dependencyFactory,
       _deaggCollection,
       _graphView,
       _reportView,
@@ -42,12 +44,13 @@ var DeaggOutputView = function (params) {
   params = Util.extend({}, _DEFAULTS, params);
   _this = SelectedCollectionView(params);
 
-  _initialize = function (/*params*/) {
+  _initialize = function (params) {
     _this.el.classList.add('deagg-output-view');
 
     _calculator = DeaggCalculator();
 
     _deaggCollection = Collection();
+    _dependencyFactory = params.dependencyFactory;
 
     _createViewSkeleton();
     _initSubViews();
@@ -60,16 +63,7 @@ var DeaggOutputView = function (params) {
    */
   _createViewSkeleton = function () {
     _this.el.innerHTML = [
-      '<div class="deagg-output-mask">',
-        '<p class="alert info">',
-          'Please select &ldquo;Edition&rdquo;, &ldquo;Location&rdquo; ',
-          '&ldquo;Site Class&rdquo;, &ldquo;Spectral Period&rdquo; &amp; ',
-          '&ldquo;Time Horizon&ldquo; above to compute a deaggregation.',
-          '<br/><button class="deagg-output-calculate">',
-            'Compute Deaggregation',
-          '</button>',
-        '</p>',
-      '</div>',
+      '<div class="deagg-output-mask"></div>',
       '<label>',
         'Component',
         '<select class="deagg-component-select-view"></select>',
@@ -77,9 +71,50 @@ var DeaggOutputView = function (params) {
       '<div class="deagg-output-view-graph"></div>',
       '<div class="deagg-output-view-report"></div>'
     ].join('');
+  };
 
-    _btnCalculate = _this.el.querySelector('.deagg-output-calculate');
-    _btnCalculate.addEventListener('click', _onCalculateClick, _this);
+  /**
+   * Displays info message for supported and unsupported deagg calculations
+   *
+   */
+  _createAlertEl = function () {
+    var el,
+        isSupported;
+
+    el = _this.el.querySelector('.deagg-output-mask');
+
+    // check if edition supports a deagg calculation
+    isSupported = _dependencyFactory.isSupportedEdition(
+        _this.model.get('edition'));
+
+    if (isSupported) {
+      // expand the accordion section
+      _this.el.parentElement.parentElement.classList.remove('accordion-closed');
+      // add info
+      el.innerHTML = ['<p class="alert info">',
+          'Please select &ldquo;Edition&rdquo;, &ldquo;Location&rdquo; ',
+          '&ldquo;Site Class&rdquo;, &ldquo;Spectral Period&rdquo; &amp; ',
+          '&ldquo;Time Horizon&ldquo; above to compute a deaggregation.',
+          '<br/><button class="deagg-output-calculate">',
+            'Compute Deaggregation',
+          '</button>',
+        '</p>'
+      ].join('');
+      // add calculate button
+      _btnCalculate = _this.el.querySelector('.deagg-output-calculate');
+      _btnCalculate.addEventListener('click', _onCalculateClick, _this);
+    } else {
+      // Collapse the accordion section
+      _this.el.parentElement.parentElement.classList.add('accordion-closed');
+      // Add warning, without calculate button
+      el.innerHTML = ['<p class="alert warning">',
+          'Deaggregation calculations are not available for the selected edition.',
+        '</p>'].join('');
+      // if button exists, remove event listener
+      if (_btnCalculate) {
+        _btnCalculate.removeEventListener('click', _onCalculateClick, _this);
+      }
+    }
   };
 
   /**
@@ -156,8 +191,10 @@ var DeaggOutputView = function (params) {
     _deaggCollection.destroy();
     _deaggCollection = null;
 
+    _createAlertEl = null;
     _createViewSkeleton = null;
     _destroySubViews = null;
+    _dependencyFactory = null;
     _invalidateDeaggregation = null;
     _initSubViews = null;
 
@@ -200,6 +237,9 @@ var DeaggOutputView = function (params) {
         imt,
         response,
         responses;
+
+    // Update deaggregation alert info/warning
+    _createAlertEl();
 
     try {
       deaggs = [];
