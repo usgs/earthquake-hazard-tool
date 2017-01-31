@@ -121,6 +121,8 @@ var Location = function (params) {
     if (location.method !== CoordinateControl.METHOD) {
       location.latitude = Math.round(location.latitude * 1000) / 1000;
       location.longitude = Math.round(location.longitude * 1000) / 1000;
+      // We don't want the 3 decimal rounding to somehow _increase_ precision
+      // in terms of the confidence placed on the location
       location.confidence = Math.min(location.confidence,
           ConfidenceCalculator.computeFromCoordinates(
               location.latitude.toFixed(3), location.longitude.toFixed(3)));
