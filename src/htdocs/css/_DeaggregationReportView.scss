@@ -5,13 +5,19 @@
 .summary-group {
   display: flex;
   flex-wrap: wrap;
+  margin-right: -1em; /* offset by padding on .summary-values */
 }
 
 .summary-values {
-  flex: 1;
+  flex: 0 1 100%;
   flex-direction: row;
-  margin-right: 1em;
-  min-width: 160px;
+  padding: 1em 1em 0 0;
+}
+
+.summary-values > h4 {
+  border-bottom: 1px solid #ddd;
+  margin: 1em 0 0;
+  padding: 1em 0;
 }
 
 .summary-list {
@@ -32,5 +38,23 @@
   > dt:before {
     content: '';
     display: block;
+  }
+}
+
+@media screen and (min-width: 500px) {
+  .summary-values {
+    flex-basis: 50%;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .summary-values {
+    flex-basis: 33%;
+  }
+}
+
+@media screen and (min-width: 1500px) {
+  .summary-values {
+    flex-basis: 25%;
   }
 }
