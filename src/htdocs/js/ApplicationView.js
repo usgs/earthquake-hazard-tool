@@ -135,37 +135,37 @@ var ApplicationView = function (params) {
         {
           classes: 'accordion-closed accordion-map',
           content: _mapEl,
-          toggleText: '<h2 class="application-header" ' +
-              'id="header-gis-hazard-layers">Earthquake Hazard and ' +
-              'Probability Maps</h2>'
+          toggleText: 'Probability Maps'
         },
         {
           content: _inputEl,
-          toggleText: '<h2 class="application-header" ' +
-              'id="header-input">Input</h2>'
+          toggleText: 'Input'
         },
         {
           content: _curveOutputEl,
-          toggleText: '<h2 class="application-header" ' +
-              'id="header-curve">Hazard Curve</h2>'
+          toggleText: 'Hazard Curve'
         },
         {
           content: _deaggOutputEl,
-          toggleText: '<h2 class="application-header" ' +
-              'id="header-deagg">Deaggregation</h2>'
+          toggleText: 'Deaggregation'
         },
         {
           content: _analysisCollectionEl,
           classes: 'analysis-collection-view',
-          toggleText: '<h2 class="application-header" ' +
-              'id="header-history">History</h2>' +
-              '<button class="analysis-collection-view-new">New</button>'
+          toggleText: 'History'
         }
       ]
     });
 
-    _newButton  = _this.el.querySelector('.analysis-collection-view-new');
+    // history button
+    _newButton = document.createElement('button');
+    _newButton.className = 'analysis-collection-view-new';
+    _newButton.innerHTML = 'New';
     _newButton.addEventListener('click', _onNewButtonClick);
+
+    // append button to history section toggle
+    _this.el.querySelector('.analysis-collection-view > .accordion-toggle').
+        appendChild(_newButton);
   };
 
   /**

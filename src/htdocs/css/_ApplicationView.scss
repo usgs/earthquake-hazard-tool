@@ -50,14 +50,14 @@
   display: none;
 }
 
-.application-header {
-  display: inline;
-}
-
 .application-map {
   margin-top: 0;
 }
 
 .accordion-map > .accordion-content {
   padding: 0;
+}
+
+.application-container > .accordion > .accordion-toggle {
+  font-size: 1.1em
 }
