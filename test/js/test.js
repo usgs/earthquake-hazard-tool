@@ -42,6 +42,7 @@ require('./spec/MapViewTest');
 require('./spec/HazardCurveTest');
 require('./spec/HazardCurveGraphViewTest');
 require('./spec/HazardUtilTest');
+require('./spec/LocationTest');
 require('./spec/SiteClassViewTest');
 require('./spec/SpectralPeriodViewTest');
 require('./spec/TimeHorizonInputViewTest');
