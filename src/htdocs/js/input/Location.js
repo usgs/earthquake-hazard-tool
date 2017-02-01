@@ -19,7 +19,6 @@ var Location = function (params) {
   var _this,
       _initialize,
 
-      _dependencyFactory,
       _errorMessage,
       _inputLatitude,
       _inputLongitude,
@@ -48,7 +47,7 @@ var Location = function (params) {
       callback: _onLocation
     });
 
-    _dependencyFactory = DependencyFactory.getInstance();
+    _this.dependencyFactory = DependencyFactory.getInstance();
 
     _latitude.addEventListener('change', _onInputChange, _this);
     _longitude.addEventListener('change', _onInputChange, _this);
@@ -189,7 +188,7 @@ var Location = function (params) {
 
     edition = _this.model.get('edition');
     location = _this.model.get('location');
-    checkLocation = _dependencyFactory.getRegionByEdition(edition, location);
+    checkLocation = _this.dependencyFactory.getRegionByEdition(edition, location);
 
     if (checkLocation === null) {
       _this.displayErrorMessage(edition);
@@ -211,7 +210,6 @@ var Location = function (params) {
       _usemap.removeEventListener('click', _onUseMapClick, _this);
     }
 
-    _dependencyFactory = null;
     _errorMessage = null;
     _inputLatitude = null;
     _inputLongitude = null;
@@ -234,7 +232,7 @@ var Location = function (params) {
         regions,
         regionText;
 
-    regions = _dependencyFactory.getAllRegions(edition);
+    regions = _this.dependencyFactory.getAllRegions(edition);
 
     regionText = '';
     regionText += '<h3>Selected location is outside the allowed bounds' +
