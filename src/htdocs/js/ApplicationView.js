@@ -95,7 +95,8 @@ var ApplicationView = function (params) {
 
     _deaggOutputView = DeaggOutputView({
       collection: _this.collection,
-      el: _deaggOutputEl
+      el: _deaggOutputEl,
+      dependencyFactory: _dependencyFactory
     });
 
     _analysisCollectionView = AnalysisCollectionView({

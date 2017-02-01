@@ -73,5 +73,34 @@ describe('DependencyFactory test suite.', function () {
 
   });
 
+  describe('isSupportedEdition', function () {
+    var factory,
+        allEditions;
+
+
+    before(function (done) {
+      factory = DependencyFactory.getInstance();
+      factory.whenReady(done);
+    });
+
+    it('does not support deaggregation calculations for all editions',
+        function () {
+      var supportedCount;
+
+      supportedCount = 0;
+
+      allEditions = factory.getAllEditions();
+      allEditions.forEach(function (edition) {
+        if (factory.isSupportedEdition(edition.id)) {
+          supportedCount++;
+        }
+      });
+
+      expect(supportedCount).to.equal(2);
+    });
+
+  });
+
+
 });
 

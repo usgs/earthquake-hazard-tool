@@ -577,6 +577,28 @@ var DependencyFactory = function (params) {
   };
 
   /**
+   * Checks if the edition supports deaggregation calculations
+   *
+   * @param id {String}
+   *        Edition ID (i.e. E2008, E2016)
+   *
+   * @return {Boolean}
+   *        A boolean indicating whether or not a deaggregation
+   *        calculation is supported.
+   */
+  _this.isSupportedEdition = function (id) {
+    var service;
+
+    service = _this.getService(id, _TYPE_DEAGG);
+
+    if (service && service.editions.get(id)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  /**
    * Build an array of callbacks to be executed when the
    * Xhr request is returned.
    *
