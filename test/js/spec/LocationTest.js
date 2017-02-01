@@ -6,11 +6,7 @@ var Location = require('input/Location'),
 
 var expect = chai.expect;
 
-var edition,
-    locationFail,
-    locationPass;
-
-edition = 'E2014R1';
+var locationFail;
 
 locationFail = {
   edition: 'E2014R1',
@@ -21,14 +17,6 @@ locationFail = {
     method: 'coordinate',
     place: ''
   }
-};
-
-locationPass = {
-  confidence: -1,
-  latitude: 38,
-  longitude: -118,
-  method: 'coordinate',
-  place: ''
 };
 
 describe('LocationTest', function () {
