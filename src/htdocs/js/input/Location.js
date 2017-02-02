@@ -263,12 +263,14 @@ var Location = function (params) {
     _errorMessage.innerHTML = regionText;
     _inputLatitude.parentElement.classList.add('usa-input-error-label');
     _inputLongitude.parentElement.classList.add('usa-input-error-label');
+    _errorMessage.parentElement.classList.add('usa-input-error');
   };
 
   _this.removeErrorMessage = function () {
     _errorMessage.innerHTML = '';
     _inputLatitude.parentElement.classList.remove('usa-input-error-label');
     _inputLongitude.parentElement.classList.remove('usa-input-error-label');
+    _errorMessage.parentElement.classList.remove('usa-input-error');
   };
 
   _this.render = function () {
