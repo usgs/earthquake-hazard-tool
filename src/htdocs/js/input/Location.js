@@ -186,8 +186,15 @@ var Location = function (params) {
         edition,
         location;
 
-    edition = _this.model.get('edition');
     location = _this.model.get('location');
+
+    if (location === null) {
+      _this.removeErrorMessage();
+      return;
+    }
+
+    edition = _this.model.get('edition');
+
     checkLocation =
         _this.dependencyFactory.getRegionByEdition(edition, location);
 
