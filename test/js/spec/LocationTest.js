@@ -6,13 +6,25 @@ var Location = require('input/Location'),
 
 var expect = chai.expect;
 
-var locationFail;
+var locationFail,
+    locationPass;
 
 locationFail = {
   edition: 'E2014R1',
   location: {
     confidence: -1,
     latitude: 3,
+    longitude: -118,
+    method: 'coordinate',
+    place: ''
+  }
+};
+
+locationPass = {
+  edition: 'E2014R1',
+  location: {
+    confidence: -1,
+    latitude: 38,
     longitude: -118,
     method: 'coordinate',
     place: ''
@@ -41,7 +53,7 @@ describe('LocationTest', function () {
     var view;
 
     view = Location({
-        model: Model(locationFail)
+      model: Model(locationFail)
     });
 
     it('shows error message', function () {
@@ -75,7 +87,9 @@ describe('LocationTest', function () {
       var stub,
           view;
 
-      view = Location();
+      view = Location({
+        model: Model(locationPass)
+      });
 
       stub = sinon.stub(view.dependencyFactory, 'getRegionByEdition',
           function () {
@@ -95,7 +109,9 @@ describe('LocationTest', function () {
           stub2,
           view;
 
-      view = Location();
+      view = Location({
+        model: Model(locationFail)
+      });
 
       stub = sinon.stub(view.dependencyFactory, 'getRegionByEdition',
           function () {
@@ -114,7 +130,7 @@ describe('LocationTest', function () {
       view.destroy();
     });
 
-    it('calls getRegionByEdition', function () {
+    it('calls removeErrorMessage', function () {
       var stub,
           stub2,
           view;
