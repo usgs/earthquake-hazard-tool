@@ -138,7 +138,7 @@ var ApplicationView = function (params) {
         {
           classes: 'accordion-map',
           content: _mapEl,
-          toggleText: 'Probability Maps'
+          toggleText: 'Earthquake Hazard and Probability Maps'
         },
         {
           content: _inputEl,
