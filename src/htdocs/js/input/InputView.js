@@ -76,7 +76,7 @@ var InputView = function (params) {
     _this.el.classList.add('input-view');
     _this.el.classList.add('row');
     _this.el.innerHTML = [
-      '<ul class="column one-of-three">',
+      '<ul class="column one-of-two">',
         '<li>',
           '<label>',
             'Edition',
@@ -91,7 +91,7 @@ var InputView = function (params) {
           '</label>',
         '</li>',
       '</ul>',
-      '<ul class="column one-of-three">',
+      '<ul class="column one-of-two">',
         '<li>',
           '<label>',
             'Spectral Period',
@@ -100,7 +100,6 @@ var InputView = function (params) {
         '</li>',
         '<li class="input-time-horizon-view"></li>',
       '</ul>',
-      '<ul class="column one-of-three">',
       '</ul>'
     ].join('');
   };
