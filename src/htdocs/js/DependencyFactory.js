@@ -344,22 +344,24 @@ var DependencyFactory = function (params) {
   };
 
   _this.getAllRegions = function (editionId) {
-    var all,
-        service;
+    var dependencyFactory,
+        edition,
+        regions;
+
+    dependencyFactory = _this;
 
     if (editionId) {
-      service = _this.getService(editionId);
+      edition = _this.getEdition(editionId);
+      regions = edition.get('supports').region || [];
 
-      if (service) {
-        all = service.regions.data();
-      } else {
-        all = [];
-      }
+      regions = regions.map(function (regionId) {
+        return dependencyFactory.getRegion(regionId, editionId);
+      });
     } else {
-      all = _getAllFromAll('regions');
+      regions = _getAllFromAll('regions');
     }
 
-    return all;
+    return regions;
   };
 
   // Site class methods ...
