@@ -4,6 +4,15 @@
 // has access to various (imt, vs30, edition, region) factories as well as a
 // database connection (db).
 
+// Define this here if not already defined this way the load script can be run
+// directly from the command line outside the normal pre-install process. In
+// this case it is assumed the loading is being done interactively...
+if (!defined('NON_INTERACTIVE')) {
+  define('NON_INTERACTIVE', false);
+}
+
+date_default_timezone_set('UTC');
+
 include_once 'DataLoader.class.php';
 include_once 'connect.admin.db.php'; // Provides $db
 
