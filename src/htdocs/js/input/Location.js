@@ -246,12 +246,12 @@ var Location = function (params) {
         '<ul>' +
           '<span class="min-max">' +
             '<li>' +
-              'Latitude ( ' + regions[i].get('minlatitude') + ', ' +
-                  regions[i].get('maxlatitude') + ' )' +
+              'Latitude [' + regions[i].get('minlatitude') + ', ' +
+                  regions[i].get('maxlatitude') + ']' +
             '</li>' +
             '<li>' +
-              'Longitude ( ' + regions[i].get('minlongitude') + ', ' +
-                  regions[i].get('maxlongitude') + ' )' +
+              'Longitude [' + regions[i].get('minlongitude') + ', ' +
+                  regions[i].get('maxlongitude') + ']' +
             '</li>' +
           '</span>' +
         '</ul>' +
