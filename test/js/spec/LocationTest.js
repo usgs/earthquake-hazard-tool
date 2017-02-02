@@ -54,7 +54,8 @@ describe('LocationTest', function () {
       view.displayErrorMessage();
 
       expect(stub.callCount).to.equal(1);
-      expect(view.el.querySelectorAll('.usa-input-error-label').length).to.not.equal(0);
+      expect(view.el.querySelectorAll('.usa-input-error-label').length).
+          to.not.equal(0);
 
       stub.restore();
     });
@@ -62,7 +63,8 @@ describe('LocationTest', function () {
     it('removes error message', function () {
       view.removeErrorMessage();
 
-      expect(view.el.querySelectorAll('.usa-input-error-label').length).to.equal(0);
+      expect(view.el.querySelectorAll('.usa-input-error-label').length).
+          to.equal(0);
 
       view.destroy();
     });
@@ -75,7 +77,8 @@ describe('LocationTest', function () {
 
       view = Location();
 
-      stub = sinon.stub(view.dependencyFactory, 'getRegionByEdition', function () {
+      stub = sinon.stub(view.dependencyFactory, 'getRegionByEdition',
+          function () {
         return null;
       });
 
@@ -94,7 +97,8 @@ describe('LocationTest', function () {
 
       view = Location();
 
-      stub = sinon.stub(view.dependencyFactory, 'getRegionByEdition', function () {
+      stub = sinon.stub(view.dependencyFactory, 'getRegionByEdition',
+          function () {
         return null;
       });
 
@@ -117,7 +121,8 @@ describe('LocationTest', function () {
 
       view = Location();
 
-      stub = sinon.stub(view.dependencyFactory, 'getRegionByEdition', function () {
+      stub = sinon.stub(view.dependencyFactory, 'getRegionByEdition',
+          function () {
         return true;
       });
 
