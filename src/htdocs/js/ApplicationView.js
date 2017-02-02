@@ -82,6 +82,9 @@ var ApplicationView = function (params) {
       el: _mapEl
     });
 
+    // render map before closing the accordion, no need to invalidateSize
+    _this.el.querySelector('.accordion-map').classList.add('accordion-closed');
+
     _inputView = InputView({
       collection: _this.collection,
       dependencyFactory: _dependencyFactory,
@@ -133,7 +136,7 @@ var ApplicationView = function (params) {
       el: el,
       accordions: [
         {
-          classes: 'accordion-closed accordion-map',
+          classes: 'accordion-map',
           content: _mapEl,
           toggleText: 'Probability Maps'
         },
