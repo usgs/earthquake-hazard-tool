@@ -24,7 +24,7 @@ locationPass = {
   edition: 'E2014R1',
   location: {
     confidence: -1,
-    latitude: 3,
+    latitude: 38,
     longitude: -118,
     method: 'coordinate',
     place: ''
