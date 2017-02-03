@@ -218,6 +218,9 @@ var Location = function (params) {
       _usemap.removeEventListener('click', _onUseMapClick, _this);
     }
 
+    _this.model.off('change:location', _this.checkLocation);
+    _this.model.off('change:edition', _this.checkLocation);
+
     _errorMessage = null;
     _inputLatitude = null;
     _inputLongitude = null;
