@@ -55,7 +55,12 @@ var Location = function (params) {
     _this.model.on('change:location', _this.checkLocation);
     _this.model.on('change:edition', _this.checkLocation);
 
-    _this.render(); // Render initially to reflect model state
+    // Render initially to reflect model state
+    _this.render();
+
+    // Bindings are removed and readded, so the events above will not
+    // trigger when switching between analyses in the collection
+    _this.checkLocation();
   };
 
 
