@@ -211,6 +211,10 @@ var Location = function (params) {
   };
 
   _this.destroy = Util.compose(function () {
+    if (_this ===  null) {
+      return; // already destroyed
+    }
+
     if (_latitude) {
       _latitude.removeEventListener('change', _onInputChange, _this);
     }
