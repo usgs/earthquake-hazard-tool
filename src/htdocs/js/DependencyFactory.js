@@ -352,6 +352,9 @@ var DependencyFactory = function (params) {
 
     if (editionId) {
       edition = _this.getEdition(editionId);
+      if (!edition) {
+        return [];
+      }
       regions = edition.get('supports').region || [];
 
       regions = regions.map(function (regionId) {

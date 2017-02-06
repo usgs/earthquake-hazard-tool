@@ -55,7 +55,12 @@ var Location = function (params) {
     _this.model.on('change:location', _this.checkLocation);
     _this.model.on('change:edition', _this.checkLocation);
 
-    _this.render(); // Render initially to reflect model state
+    // Render initially to reflect model state
+    _this.render();
+
+    // Bindings are removed and readded, so the events above will not
+    // trigger when switching between analyses in the collection
+    _this.checkLocation();
   };
 
 
@@ -206,6 +211,10 @@ var Location = function (params) {
   };
 
   _this.destroy = Util.compose(function () {
+    if (_this ===  null) {
+      return; // already destroyed
+    }
+
     if (_latitude) {
       _latitude.removeEventListener('change', _onInputChange, _this);
     }
@@ -217,6 +226,9 @@ var Location = function (params) {
     if(_usemap) {
       _usemap.removeEventListener('click', _onUseMapClick, _this);
     }
+
+    _this.model.off('change:location', _this.checkLocation);
+    _this.model.off('change:edition', _this.checkLocation);
 
     _errorMessage = null;
     _inputLatitude = null;

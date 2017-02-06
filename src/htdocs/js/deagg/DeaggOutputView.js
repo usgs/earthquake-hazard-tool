@@ -83,6 +83,11 @@ var DeaggOutputView = function (params) {
 
     el = _this.el.querySelector('.deagg-output-mask');
 
+
+    if (!_this.model) {
+      return;
+    }
+
     // check if edition supports a deagg calculation
     isSupported = _dependencyFactory.isSupportedEdition(
         _this.model.get('edition'));
