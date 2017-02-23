@@ -4,6 +4,10 @@ if (!isset($TEMPLATE)) {
 
   $TITLE = 'Beta - Unified Hazard Tool';
 
+  $CONTACT = 'pmpowers@usgs.gov';
+  $CONTACT_URL = 'mailto:{CONTACT}?subject=' .
+      rawurlencode(html_entity_decode($TITLE));
+
   // If you want to include section navigation.
   // The nearest _navigation.inc.php file will be used by default
   $NAVIGATION = true;
@@ -50,6 +54,14 @@ if (!isset($TEMPLATE)) {
   include 'template.inc.php';
 }
 ?>
+
+<p class="alert warning">
+  Please do not use this tool to obtain ground motion parameter values for the
+  design code reference documents covered by the
+  <a href="/hazards/designmaps/usdesign.php">U.S. Seismic Design Maps web
+  application</a> (e.g., the International Building Code and the ASCE 7 or 41
+  Standard). The values returned by the two applications are not identical.
+</p>
 
 <div class="application">
   <noscript>
