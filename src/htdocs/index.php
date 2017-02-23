@@ -57,10 +57,10 @@ if (!isset($TEMPLATE)) {
 
 <p class="alert warning">
   Please do not use this tool to obtain ground motion parameter values for the
-  design code reference documents covered by the
-  <a href="/hazards/designmaps/usdesign.php">U.S. Seismic Design Maps web
-  application</a> (e.g., the International Building Code and the ASCE 7 or 41
-  Standard). The values returned by the two applications are not identical.
+  design code reference documents covered by the <a href="/hazards/designmaps/"
+  >U.S. Seismic Design Maps web tools</a> (e.g., the International
+  Building Code and the ASCE 7 or 41 Standard). The values returned by the two
+  applications are not identical.
 </p>
 
 <div class="application">
