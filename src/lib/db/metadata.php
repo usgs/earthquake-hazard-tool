@@ -35,7 +35,7 @@ $editions = array(
   new Metadata(null, 'E2008R1', 'Conterminous U.S. 2008 (v3.0.x)', 110),
   new Metadata(null, 'E2007R1', 'Alaska 2007 (v2.0.x)', 210),
   new Metadata(null, 'E1998R1', 'Hawaii 1998 (v1.0.x)', 310),
-  new Metadata(null, 'E2003R1', 'Puerto Rico &amp; U.S. Virgin Islands ' +
+  new Metadata(null, 'E2003R1', 'Puerto Rico &amp; U.S. Virgin Islands ' .
       '(v1.0.x)', 410),
   new Metadata(null, 'E2012R1', 'Guam (v1.0.x)', 510),
   new Metadata(null, 'E2012R2', 'American Samoa (v1.0.x)', 610)
@@ -67,7 +67,7 @@ $regions = array(
       18.0, 23.0, -161.0, -154.0,
       0.02
     ),
-  new Region(null, 'PRVI0P01', 'Puerto Rico &amp; U.S. Virgin Islands ' +
+  new Region(null, 'PRVI0P01', 'Puerto Rico &amp; U.S. Virgin Islands ' .
       'w/ 0.01 Grid', 6,
       17.5, 19.0, -67.5, -64.5,
       17.5, 19.0, -67.5, -64.5,
@@ -78,7 +78,7 @@ $regions = array(
       9.0, 23.0, 139.0, 151.0,
       0.10
     ),
-  new Region(null, 'AMSAM0P05', 'American Samoa', 8,
+  new Region(null, 'AMSAM0P05', 'American Samoa w/ 0.05 Grid', 8,
       -33.0, -11.0, -195.0, -165.0,
       -33.0, -11.0, -195.0, -165.0,
       0.05
