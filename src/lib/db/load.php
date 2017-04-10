@@ -28,9 +28,14 @@ $dataFiles = array(
   'E1998R1_HI0P02_SA0P3_760_Curves.tar.gz',
   'E1998R1_HI0P02_SA1P0_760_Curves.tar.gz',
 
+  'E2003R1_PRVI0P01_PGA_760_Curves.tar.gz',
+  'E2003R1_PRVI0P01_SA0P2_760_Curves.tar.gz',
+  'E2003R1_PRVI0P01_SA1P0_760_Curves.tar.gz',
+
   'E2007R1_AK0P10_PGA_760_Curves.tar.gz',
   'E2007R1_AK0P10_SA0P1_760_Curves.tar.gz',
   'E2007R1_AK0P10_SA0P2_760_Curves.tar.gz',
+  'E2007R1_AK0P10_SA0P3_760_Curves.tar.gz',
   'E2007R1_AK0P10_SA0P5_760_Curves.tar.gz',
   'E2007R1_AK0P10_SA1P0_760_Curves.tar.gz',
   'E2007R1_AK0P10_SA2P0_760_Curves.tar.gz',
@@ -123,6 +128,12 @@ $dataFiles = array(
   'E2008R3_WUS0P05_SA5P0_360_Curves.tar.gz',
   'E2008R3_WUS0P05_SA5P0_537_Curves.tar.gz',
   'E2008R3_WUS0P05_SA5P0_760_Curves.tar.gz',
+
+  'E2012R1_GNMI0P10_SA0P2_760_Curves.tar.gz',
+  'E2012R1_GNMI0P10_SA1P0_760_Curves.tar.gz',
+
+  'E2012R2_AMSAM0P05_SA0P2_760_Curves.tar.gz',
+  'E2012R2_AMSAM0P05_SA1P0_760_Curves.tar.gz',
 
   'E2014R1_COUS0P05_PGA_760_Curves.tar.gz',
   'E2014R1_COUS0P05_SA0P2_760_Curves.tar.gz',

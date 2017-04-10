@@ -34,18 +34,53 @@ $editions = array(
   new Metadata(null, 'E2008R2', 'Conterminous U.S. 2008 (v3.1.x)', 109),
   new Metadata(null, 'E2008R1', 'Conterminous U.S. 2008 (v3.0.x)', 110),
   new Metadata(null, 'E2007R1', 'Alaska 2007 (v2.0.x)', 210),
-  new Metadata(null, 'E1998R1', 'Hawaii 1998 (v1.0.x)', 310)
+  new Metadata(null, 'E1998R1', 'Hawaii 1998 (v1.0.x)', 310),
+  new Metadata(null, 'E2003R1', 'Puerto Rico &amp; U.S. Virgin Islands ' .
+      '(v1.0.x)', 410),
+  new Metadata(null, 'E2012R1', 'Guam (v1.0.x)', 510),
+  new Metadata(null, 'E2012R2', 'American Samoa (v1.0.x)', 610)
 );
 
 $regions = array(
-  new Region(null, 'COUS0P05', 'Conterminous U.S. w/ 0.05 Grid', 1, 24.6,
-      50.0, -125.0, -65.0, 24.6, 50.0, -125, -65.0, 0.05),
-  new Region(null, 'WUS0P05', 'Western U.S. w/ 0.05 Grid', 2, 24.6,
-      50.0, -125.0, -100.0, 24.6, 50.0, -125.0, -115.0, 0.05),
-  new Region(null, 'CEUS0P10', 'Central and Eastern U.S. w/ 0.10 Grid', 3, 24.6,
-      50.0, -115.0, -65.0, 24.6, 50.0, -100.0, -65.0, 0.10),
-  new Region(null, 'AK0P10', 'Alaska w/ 0.10 Grid', 4, 48.0, 72.0, -200.0,
-      -125.0, 48.0, 72.0, -200.0, -125.0,0.10),
-  new Region(null, 'HI0P02', 'Hawaii w/ 0.02 Grid', 5, 18.0, 23.0, -161.0,
-      -154.0,  18.0, 23.0, -161.0, -154.0,0.02)
+  new Region(null, 'COUS0P05', 'Conterminous U.S. w/ 0.05 Grid', 1,
+      24.6, 50.0, -125.0, -65.0,
+      24.6, 50.0, -125.0, -65.0,
+      0.05
+    ),
+  new Region(null, 'WUS0P05', 'Western U.S. w/ 0.05 Grid', 2,
+      24.6, 50.0, -125.0, -100.0,
+      24.6, 50.0, -125.0, -115.0,
+      0.05
+    ),
+  new Region(null, 'CEUS0P10', 'Central and Eastern U.S. w/ 0.10 Grid', 3,
+      24.6, 50.0, -115.0, -65.0,
+      24.6, 50.0, -100.0, -65.0,
+      0.10
+    ),
+  new Region(null, 'AK0P10', 'Alaska w/ 0.10 Grid', 4,
+      48.0, 72.0, -200.0, -125.0,
+      48.0, 72.0, -200.0, -125.0,
+      0.10
+    ),
+  new Region(null, 'HI0P02', 'Hawaii w/ 0.02 Grid', 5,
+      18.0, 23.0, -161.0, -154.0,
+      18.0, 23.0, -161.0, -154.0,
+      0.02
+    ),
+  new Region(null, 'PRVI0P01', 'Puerto Rico &amp; U.S. Virgin Islands ' .
+      'w/ 0.01 Grid', 6,
+      17.5, 19.0, -67.5, -64.5,
+      17.5, 19.0, -67.5, -64.5,
+      0.01
+    ),
+  new Region(null, 'GNMI0P10', 'Guam w/ 0.10 Grid', 7,
+      9.0, 23.0, 139.0, 151.0,
+      9.0, 23.0, 139.0, 151.0,
+      0.10
+    ),
+  new Region(null, 'AMSAM0P05', 'American Samoa w/ 0.05 Grid', 8,
+      -33.0, -11.0, -195.0, -165.0,
+      -33.0, -11.0, -195.0, -165.0,
+      0.05
+    )
 );
