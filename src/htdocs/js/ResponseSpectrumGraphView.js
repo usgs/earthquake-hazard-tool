@@ -116,10 +116,10 @@ var ResponseSpectrumGraphView = function (options) {
         data.push([x, y, c.get('imt')]);
       }
 
-      // Use smallest x-value and x-value corresponding to 5000 year return
+      // Use smallest x-value and x-value corresponding to 10000 year return
       // period for yExtent
       yExtent.push(c.get('data')[0][0]);
-      yExtent.push(c.getX(0.0002));
+      yExtent.push(c.getX(0.0001));
     });
 
     // sort by period.
