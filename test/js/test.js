@@ -54,6 +54,8 @@ require('./spec/deagg/DeaggregationTest');
 require('./spec/deagg/DeaggResponseTest');
 require('./spec/deagg/DeaggregationGraphViewTest');
 
+require('./spec/input/TimeHorizonInputTest');
+
 if (window.mochaPhantomJS) {
     window.mochaPhantomJS.run();
 } else {
