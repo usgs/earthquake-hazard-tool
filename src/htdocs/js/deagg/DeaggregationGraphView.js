@@ -112,6 +112,7 @@ var DeaggregationGraphView = function (options) {
       _formatX,
       _formatY,
       _formatZ,
+      _getBounds,
       _renderLegend;
 
 
@@ -132,13 +133,13 @@ var DeaggregationGraphView = function (options) {
     _d33d = D33dView({
       el: _this.el.querySelector('.DeaggregationGraphView'),
       lookAt: [
-        70,
+        60,
         125,
-        20
+        10
       ],
       origin: [
         280,
-        -125,
+        -150,
         180
       ],
       up: [0, 0, 1],
@@ -159,7 +160,8 @@ var DeaggregationGraphView = function (options) {
    * the current lookAt, origin, and zoom, combination.
    */
   _createAxes = function () {
-    var extent,
+    var bounds,
+        extent,
         metadata,
         x,
         x0,
@@ -175,52 +177,44 @@ var DeaggregationGraphView = function (options) {
         yTicks,
         z0,
         z1,
-        zLabel;
+        zLabel,
+        zTicks;
 
-    x0 = 0;
-    x1 = 100;
+
+    bounds = _getBounds();
+    x0 = bounds[0][0];
+    x1 = bounds[1][0];
+    y0 = bounds[0][1];
+    y1 = bounds[1][1];
+    z0 = bounds[0][2];
+    z1 = bounds[1][2];
 
     if (_this.model) {
       metadata = _this.model.get('metadata');
-      x0 = null;
-      x1 = null;
-
-      _this.model.get('data').forEach(function (bin) {
-        var binx;
-
-        binx = bin.r;
-
-        if (binx < x0) {
-          x0 = binx;
-        }
-
-        if (binx > x0) {
-          x1 = binx;
-        }
-      });
-
-      // round min/max down/up to an increment of 10
-      x0 = 10 * Math.floor(x0 / 10);
-      x1 = 10 * Math.ceil(x1 / 10);
-
     } else {
       metadata = {};
     }
 
     _xScale = 100 / (x1 - x0);
-
-    x0 *= _xScale;
-    x1 *= _xScale;
+    //_yScale = 100 / (y1 - y0);
+    //_zScale = 100 / (z1 - z0);
 
     xLabel = metadata.rlabel;
-    xTicks = 10;
-    y0 = 5 * _yScale;
-    y1 = 8 * _yScale;
+    xTicks = ((x1 - x0) / 5);
+    if (xTicks > 10) {
+      xTicks = xTicks / 2;
+    }
     yLabel = metadata.mlabel;
-    yTicks = 6;
-    z0 = 0;
-    z1 = 35 * _zScale;
+    yTicks = ((y1 - y0) / 0.5);
     zLabel = metadata.εlabel;
+    zTicks = ((z1 - z0) / 5);
+
+    x0 = x0 * _xScale;
+    x1 = x1 * _xScale;
+    y0 = y0 * _yScale;
+    y1 = y1 * _yScale;
+    z0 = z0 * _zScale;
+    z1 = z1 * _zScale;
 
     // x axis at y0
     extent = [[x0, y0, z0], [x1, y0, z0]];
@@ -269,7 +263,7 @@ var DeaggregationGraphView = function (options) {
       labelVector: [-2, 0, 0],
       padding: 0,
       tickVector: [-1, 0, 0],
-      ticks: 5,
+      ticks: yTicks,
       title: yLabel,
       titleAnchor: 'middle',
       titleDirection: extent,
@@ -287,7 +281,7 @@ var DeaggregationGraphView = function (options) {
       labelVector: [5, -2, 0],
       padding: 0,
       tickVector: [1, 0, 0],
-      ticks: 6,
+      ticks: yTicks,
       title: yLabel,
       titleAnchor: 'middle',
       titleDirection: extent,
@@ -305,7 +299,7 @@ var DeaggregationGraphView = function (options) {
       labelVector: [-1.5, 0, 0],
       padding: 0,
       tickVector: [-1, 0, 0],
-      ticks: 7,
+      ticks: zTicks,
       title: zLabel,
       titleAnchor: 'middle',
       titleDirection: extent,
@@ -347,7 +341,7 @@ var DeaggregationGraphView = function (options) {
     if (x === 0) {
       return '';
     }
-    return '' + x;
+    return '' + Number(x.toPrecision(3));
   };
 
   /**
@@ -364,7 +358,7 @@ var DeaggregationGraphView = function (options) {
     if (y === 0) {
       return '';
     }
-    return '' + y;
+    return '' + Number(y.toPrecision(3));
   };
 
   /**
@@ -381,7 +375,62 @@ var DeaggregationGraphView = function (options) {
     if (z === 0) {
       return '';
     }
-    return '' + z;
+    return '' + Number(z.toPrecision(3));
+  };
+
+  /**
+   * Get data bounds for plotting.
+   *
+   * @return {Array<Array<x0,y0,z0>, Array<x1,y1,z1>}
+   *         bounds of deaggregation data.
+   *         Array contains two sub arrays,
+   *         containing minimum and maximum values for each axis.
+   */
+  _getBounds = function () {
+    var bounds,
+        x0,
+        x1,
+        y0,
+        y1,
+        z0,
+        z1;
+
+    // default bounds
+    x0 = 0;
+    x1 = 100;
+    y0 = 5;
+    y1 = 8;
+    z0 = 0;
+    z1 = 35;
+
+    if (_this.model) {
+      bounds = _this.model.get('bounds');
+      if (!bounds) {
+        bounds = __calculateBounds(_this.model.get('data'));
+      }
+
+      x0 = bounds[0][0];
+      x1 = bounds[1][0];
+      y0 = bounds[0][1];
+      y1 = bounds[1][1];
+      z0 = bounds[0][2];
+      z1 = bounds[1][2];
+
+      // round min/max down/up to an increment of 10
+      x0 = 10 * Math.floor(x0 / 10);
+      x1 = 10 * Math.ceil(x1 / 10);
+
+      // round min/max down/up to next whole unit
+      y0 = Math.floor(y0) - 0.5;
+      y1 = Math.ceil(y1) + 0.5;
+
+      // always use 0
+      z0 = 0;
+      // round up to increment of 10
+      z1 = 10 * Math.ceil(z1 / 10.0);
+    }
+
+    return [[x0, y0, z0], [x1, y1, z1]];
   };
 
   /**
