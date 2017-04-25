@@ -178,8 +178,8 @@ var DeaggregationGraphView = function (options) {
         z0,
         z1,
         zLabel,
+        zTickSpacing,
         zTicks;
-
 
     bounds = _getBounds();
     x0 = bounds[0][0];
@@ -200,14 +200,18 @@ var DeaggregationGraphView = function (options) {
     //_zScale = 100 / (z1 - z0);
 
     xLabel = metadata.rlabel;
-    xTicks = ((x1 - x0) / 5);
+    xTickSpacing = 5;
+    xTicks = ((x1 - x0) / xTickSpacing);
     if (xTicks > 10) {
       xTicks = xTicks / 2;
+      xTickSpacing = 10;
     }
     yLabel = metadata.mlabel;
-    yTicks = ((y1 - y0) / 0.5);
+    yTickSpacing = 0.5;
+    yTicks = ((y1 - y0) / yTickSpacing);
     zLabel = metadata.εlabel;
-    zTicks = ((z1 - z0) / 5);
+    zTickSpacing = 5;
+    zTicks = ((z1 - z0) / zTickSpacing);
 
     x0 = x0 * _xScale;
     x1 = x1 * _xScale;
@@ -308,7 +312,6 @@ var DeaggregationGraphView = function (options) {
 
 
     // grid lines
-    xTickSpacing = (x1 - x0) / xTicks;
     for (x = x0 + xTickSpacing; x < x1; x += xTickSpacing) {
       _axes.push(D33dPath({
         className: 'grid-line',
@@ -317,7 +320,6 @@ var DeaggregationGraphView = function (options) {
       }));
     }
 
-    yTickSpacing = (y1 - y0) / yTicks;
     for (y = y0 + yTickSpacing; y < y1; y += yTickSpacing) {
       _axes.push(D33dPath({
         className: 'grid-line',
