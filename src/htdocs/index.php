@@ -2,7 +2,7 @@
 if (!isset($TEMPLATE)) {
   include_once '../conf/config.inc.php';
 
-  $TITLE = 'Beta - Unified Hazard Tool';
+  $TITLE = 'Unified Hazard Tool';
 
   $CONTACT = 'pmpowers@usgs.gov';
   $CONTACT_URL = 'mailto:{CONTACT}?subject=' .
