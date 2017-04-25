@@ -96,7 +96,7 @@ var CurveOutputView = function (params) {
       curves: _curves,
       el: _this.el.querySelector('.curve-output-view-spectrum')
           .appendChild(document.createElement('div')),
-      title: 'Response Spectrum'
+      title: 'Uniform Hazard Response Spectrum'
     });
 
     _componentView = ComponentCurvesGraphView({
