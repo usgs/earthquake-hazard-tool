@@ -16,10 +16,16 @@ var TIME_HORIZONS = [
     'displayorder': 0
   },
   {
+    'id': '5P50',
+    'value': 975,
+    'display': '5% in 50 years',
+    'displayorder': 1
+  },
+  {
     'id': '10P50',
     'value': 475,
     'display': '10% in 50 years',
-    'displayorder': 1
+    'displayorder': 2
   }
 ];
 
