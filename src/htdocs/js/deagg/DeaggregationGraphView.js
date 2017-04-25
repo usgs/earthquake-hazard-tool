@@ -350,7 +350,7 @@ var DeaggregationGraphView = function (options) {
 
       text = 'ε = ' +
           (bin.min === null ? '(-∞' : '[' + bin.min) +
-          ', ' +
+          ' .. ' +
           (bin.max === null ? '+∞' : bin.max) + ')';
 
       binEl = el.append('g')
