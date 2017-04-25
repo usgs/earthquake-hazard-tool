@@ -15,6 +15,80 @@ var _DEFAULTS = {};
 
 
 /**
+ * Calculate deaggregation data bounds.
+ *
+ * @param bindata {Array<Bin>}
+ *     array of deaggregation bins
+ *     where Bin is an Object:
+ *       bin.r {Number}
+ *             distance to bin (x-axis)
+ *       bin.m {Number}
+ *             magnitude of bin (y-axis)
+ *       bin.εdata {Array<Object>}
+ *             array of epsilon data for bin (z-axis)
+ *             Each Object has properties:
+ *               εdata.value {Number}
+ *                           % contribution to hazard
+ *               εdata.εbin {Number}
+ *                          id of epsilon bin.
+ *
+ * @return {Array<Array<x0,y0,z0>, Array<x1,y1,z1>}
+ *         bounds of deaggregation data.
+ *         Array contains two sub arrays,
+ *         containing minimum and maximum values for each axis.
+ */
+var __calculateBounds = function (bindata) {
+  var x0,
+      x1,
+      y0,
+      y1,
+      z0,
+      z1;
+
+  // start with values that will always be smaller/larger than actual values
+  x0 = y0 = z0 = Number.POSITIVE_INFINITY;
+  x1 = y1 = z1 = Number.NEGATIVE_INFINITY;
+
+  bindata.forEach(function (bin) {
+    var binx,
+        biny,
+        binz;
+
+    binx = bin.r;
+    biny = bin.m;
+    // sum values for z
+    binz = 0;
+    bin.εdata.forEach(function (εval) {
+      binz = binz + εval.value;
+    });
+
+    // track min/max
+    if (binx < x0) {
+      x0 = binx;
+    }
+    if (binx > x1) {
+      x1 = binx;
+    }
+    if (biny < y0) {
+      y0 = biny;
+    }
+    if (biny > y1) {
+      y1 = biny;
+    }
+    if (binz < z0) {
+      z0 = binz;
+    }
+    if (binz > z1) {
+      z1 = binz;
+    }
+  });
+
+  // return bounds
+  return [[x0, y0, z0], [x1, y1, z1]];
+};
+
+
+/**
  * A deaggregation distance/magnitude plot.
  *
  * @param options {Object}
@@ -431,6 +505,9 @@ var DeaggregationGraphView = function (options) {
   options = null;
   return _this;
 };
+
+
+DeaggregationGraphView.calculateBounds = __calculateBounds;
 
 
 module.exports = DeaggregationGraphView;
