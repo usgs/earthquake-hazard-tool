@@ -97,7 +97,7 @@ var ResponseSpectrumGraphView = function (options) {
         timeHorizon,
         yExtent;
 
-    imt = _this.model.get('curves').getSelected();
+    imt = _curves.getSelected();
     if (imt !== null) {
       imt = imt.get('imt');
     }
