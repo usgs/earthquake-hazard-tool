@@ -53,48 +53,48 @@ var LayerControl = L.Control.extend({
         layers: {
           'PGA-2P50-760': {
             display: 'PGA, 2% in 50 Years, 760 m/s',
-            layer: L.tileLayer('https://geohazards.cr.usgs.gov/arcgis/rest/' +
-                'services/USpga250_2014/MapServer/tile/{z}/{y}/{x}', {
+            layer: L.tileLayer('https://earthquake.usgs.gov/arcgis/rest/' +
+                'services/haz/USpga250_2014/MapServer/tile/{z}/{y}/{x}', {
               zIndex: Z_OVERLAY_INDEX + 1,
               attribution: 'USGS - NSHMP'
             })
           },
           'SA0P2-2P50-760': {
             display: '0.2s, 2% in 50 Years, 760 m/s',
-            layer: L.tileLayer('https://geohazards.cr.usgs.gov/arcgis/rest/' +
-                'services/US5hz250_2014/MapServer/tile/{z}/{y}/{x}', {
+            layer: L.tileLayer('https://earthquake.usgs.gov/arcgis/rest/' +
+                'services/haz/US5hz250_2014/MapServer/tile/{z}/{y}/{x}', {
               zIndex: Z_OVERLAY_INDEX + 2,
               attribution: 'USGS - NSHMP'
             })
           },
           'SA1P0-2P50-760': {
             display: '1.0s, 2% in 50 Years, 760 m/s',
-            layer: L.tileLayer('https://geohazards.cr.usgs.gov/arcgis/rest/' +
-                'services/US1hz250_2014/MapServer/tile/{z}/{y}/{x}', {
+            layer: L.tileLayer('https://earthquake.usgs.gov/arcgis/rest/' +
+                'services/haz/US1hz250_2014/MapServer/tile/{z}/{y}/{x}', {
               zIndex: Z_OVERLAY_INDEX + 3,
               attribution: 'USGS - NSHMP'
             })
           },
           'PGA-10P50-760': {
             display: 'PGA, 10% in 50 Years, 760 m/s',
-            layer: L.tileLayer('https://geohazards.cr.usgs.gov/arcgis/rest/' +
-                'services/USpga050_2014/MapServer/tile/{z}/{y}/{x}', {
+            layer: L.tileLayer('https://earthquake.usgs.gov/arcgis/rest/' +
+                'services/haz/USpga050_2014/MapServer/tile/{z}/{y}/{x}', {
               zIndex: Z_OVERLAY_INDEX + 4,
               attribution: 'USGS - NSHMP'
             })
           },
           'SA0P2-10P50-760': {
             display: '0.2s, 10% in 50 Years, 760 m/s',
-            layer: L.tileLayer('https://geohazards.cr.usgs.gov/arcgis/rest/' +
-                'services/US5hz050_2014/MapServer/tile/{z}/{y}/{x}', {
+            layer: L.tileLayer('https://earthquake.usgs.gov/arcgis/rest/' +
+                'services/haz/US5hz050_2014/MapServer/tile/{z}/{y}/{x}', {
               zIndex: Z_OVERLAY_INDEX + 5,
               attribution: 'USGS - NSHMP'
             })
           },
           'SA1P0-10P50-760': {
             display: '1.0s, 10% in 50 Years, 760 m/s',
-            layer: L.tileLayer('https://geohazards.cr.usgs.gov/arcgis/rest/' +
-                'services/US1hz050_2014/MapServer/tile/{z}/{y}/{x}', {
+            layer: L.tileLayer('https://earthquake.usgs.gov/arcgis/rest/' +
+                'services/haz/US1hz050_2014/MapServer/tile/{z}/{y}/{x}', {
               zIndex: Z_OVERLAY_INDEX + 6,
               attribution: 'USGS - NSHMP'
             })
@@ -106,48 +106,48 @@ var LayerControl = L.Control.extend({
         layers: {
           'PGA-2P50-760': {
             display: 'PGA, 2% in 50 Years, 760 m/s',
-            layer: L.tileLayer('https://geohazards.usgs.gov/arcgis/rest/' +
-                'services/USpga250_2008/MapServer/tile/{z}/{y}/{x}', {
+            layer: L.tileLayer('https://earthquake.usgs.gov/arcgis/rest/' +
+                'services/haz/USpga250_2008/MapServer/tile/{z}/{y}/{x}', {
               zIndex: Z_OVERLAY_INDEX + 7,
               attribution: 'USGS - NSHMP'
             })
           },
           'SA0P2-2P50-760': {
             display: '0.2s, 2% in 50 Years, 760 m/s',
-            layer: L.tileLayer('https://geohazards.usgs.gov/arcgis/rest/' +
-                'services/US5hz250_2008/MapServer/tile/{z}/{y}/{x}', {
+            layer: L.tileLayer('https://earthquake.usgs.gov/arcgis/rest/' +
+                'services/haz/US5hz250_2008/MapServer/tile/{z}/{y}/{x}', {
               zIndex: Z_OVERLAY_INDEX + 8,
               attribution: 'USGS - NSHMP'
             })
           },
           'SA1P0-2P50-760': {
             display: '1.0s, 2% in 50 Years, 760 m/s',
-            layer: L.tileLayer('https://geohazards.usgs.gov/arcgis/rest/' +
-                'services/US1hz250_2008/MapServer/tile/{z}/{y}/{x}', {
+            layer: L.tileLayer('https://earthquake.usgs.gov/arcgis/rest/' +
+                'services/haz/US1hz250_2008/MapServer/tile/{z}/{y}/{x}', {
               zIndex: Z_OVERLAY_INDEX + 9,
               attribution: 'USGS - NSHMP'
             })
           },
           'PGA-10P50-760': {
             display: 'PGA, 10% in 50 Years, 760 m/s',
-            layer: L.tileLayer('https://geohazards.usgs.gov/arcgis/rest/' +
-                'services/USpga050_2008/MapServer/tile/{z}/{y}/{x}', {
+            layer: L.tileLayer('https://earthquake.usgs.gov/arcgis/rest/' +
+                'services/haz/USpga050_2008/MapServer/tile/{z}/{y}/{x}', {
               zIndex: Z_OVERLAY_INDEX + 10,
               attribution: 'USGS - NSHMP'
             })
           },
           'SA0P2-10P50-760': {
             display: '0.2s, 10% in 50 Years, 760 m/s',
-            layer: L.tileLayer('https://geohazards.usgs.gov/arcgis/rest/' +
-                'services/US5hz050_2008/MapServer/tile/{z}/{y}/{x}', {
+            layer: L.tileLayer('https://earthquake.usgs.gov/arcgis/rest/' +
+                'services/haz/US5hz050_2008/MapServer/tile/{z}/{y}/{x}', {
               zIndex: Z_OVERLAY_INDEX + 11,
               attribution: 'USGS - NSHMP'
             })
           },
           'SA1P0-10P50-760': {
             display: '1.0s, 10% in 50 Years, 760 m/s',
-            layer: L.tileLayer('https://geohazards.usgs.gov/arcgis/rest/' +
-                'services/US1hz050_2008/MapServer/tile/{z}/{y}/{x}', {
+            layer: L.tileLayer('https://earthquake.usgs.gov/arcgis/rest/' +
+                'services/haz/US1hz050_2008/MapServer/tile/{z}/{y}/{x}', {
               zIndex: Z_OVERLAY_INDEX + 12,
               attribution: 'USGS - NSHMP'
             })
