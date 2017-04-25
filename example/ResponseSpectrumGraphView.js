@@ -1,19 +1,24 @@
 'use strict';
 
-var HazardResponse = require('HazardResponse'),
+var Collection = require('mvc/Collection'),
+    HazardResponse = require('HazardResponse'),
     ResponseSpectrumGraphView = require('ResponseSpectrumGraphView'),
     Xhr = require('util/Xhr');
 
 
-var el,
+var curvesCollection,
+    el,
     view;
 
 el = document.querySelector('#example');
 el.innerHTML = '<div class="graph"></div>' +
     '<div class="controls"></div>';
 
+curvesCollection = Collection([]);
+
 // create view
 view = ResponseSpectrumGraphView({
+  curves: curvesCollection,
   el: el.querySelector('.graph'),
   title: 'Example ResponseSpectrumGraphView',
   xAxisLabel: 'Period',
@@ -27,14 +32,14 @@ view = ResponseSpectrumGraphView({
 });
 
 // example of selected curve
-view.curves.on('select', function (curve) {
+curvesCollection.on('select', function (curve) {
   console.log('selected curve');
   console.log(curve.get());
 });
 
 // load curves
 Xhr.ajax({
-  url: 'data.json',
+  url: '/curve/data.json',
   success: function (data) {
     var curves = [];
     var i = 0;
@@ -50,7 +55,7 @@ Xhr.ajax({
       yAxisLabel: response.get('ylabel')
     });
 
-    view.curves.reset(curves);
+    curvesCollection.reset(curves);
   }
 });
 
