@@ -28,14 +28,18 @@ view = DeaggregationGraphView({
 });
 
 
-var controls,
+var auto,
+    controls,
     empty,
+    fixed,
     reset;
 
 controls = document.createElement('div');
 el.parentNode.appendChild(controls);
 controls.innerHTML = '<button class="empty">Empty</button>' +
-    '<button class="reset">Reset</button>';
+    '<button class="reset">Reset</button>' +
+    '<br/><button class="fixed">Fixed Scale</button>' +
+    '<button class="auto">Auto Scale</button>';
 
 empty = controls.querySelector('.empty');
 reset = controls.querySelector('.reset');
@@ -48,3 +52,19 @@ reset.addEventListener('click', function () {
   collection.reset(deaggs);
   collection.select(collection.data()[0]);
 });
+
+
+auto = controls.querySelector('.auto');
+fixed = controls.querySelector('.fixed');
+
+auto.addEventListener('click', function () {
+  view.model.set({
+    'bounds': null
+  });
+});
+
+fixed.addEventListener('click', function () {
+  view.model.set({
+    bounds: [[0, 5, 0], [100, 7.5, 40]]
+  });
+})
