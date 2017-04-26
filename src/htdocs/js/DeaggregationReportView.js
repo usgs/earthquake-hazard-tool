@@ -1,6 +1,8 @@
 'use strict';
 
-var SelectedCollectionView = require('mvc/SelectedCollectionView'),
+var Collection = require('mvc/Collection'),
+    CollectionTable = require('mvc/CollectionTable'),
+    SelectedCollectionView = require('mvc/SelectedCollectionView'),
     Formatter = require('util/Formatter'),
 
     Util = require('util/Util');
@@ -19,6 +21,8 @@ var DeaggregationReportView = function (params) {
 
       _calculateSum,
       _checkSummaryValues,
+      _collection,
+      _collectionTable,
       _getHeader,
       _getMetadata,
       _getSources,
@@ -48,6 +52,7 @@ var DeaggregationReportView = function (params) {
 
     // bind event listeners
     _downloadEl.addEventListener('click', _onDownloadClick);
+
 
     _this.render();
   };
@@ -364,6 +369,89 @@ var DeaggregationReportView = function (params) {
     return output.join('');
   };
 
+  _this.getSources = function () {
+
+    _collection = Collection(_this.model.get('sources'));
+    _collectionTable = CollectionTable({
+      className: 'contributing-sources',
+      collection: _collection,
+      columns: [
+        {
+          className: 'azimuth',
+          format: function (item) {
+            return item.azimuth;
+          },
+          title: 'Azimuth'
+        },
+        {
+          className: 'contributor',
+          format: function (item) {
+            return item.contributor;
+          },
+          title: 'contributor'
+        },
+        {
+          className: 'id',
+          format: function (item) {
+            return item.id;
+          },
+          title: 'id'
+        },
+        {
+          className: 'latitude',
+          format: function (item) {
+            return item.latitude;
+          },
+          title: 'latitude'
+        },
+        {
+          className: 'longitude',
+          format: function (item) {
+            return item.longitude;
+          },
+          title: 'longitude'
+        },
+        {
+          className: 'm',
+          format: function (item) {
+            return item.m;
+          },
+          title: 'm'
+        },
+        {
+          className: 'name',
+          format: function (item) {
+            return item.name;
+          },
+          title: 'name'
+        },
+        {
+          className: 'r',
+          format: function (item) {
+            return item.r;
+          },
+          title: 'r'
+        },
+        {
+          className: 'type',
+          format: function (item) {
+            return item.type;
+          },
+          title: 'type'
+        },
+        {
+          className: 'epsilon',
+          format: function (item) {
+            return item.ε;
+          },
+          title: 'ε'
+        },
+
+      ]
+    });
+    _collectionTable.el.classList.add('horizontal-scrolling');
+    _reportEl.appendChild(_collectionTable.el);
+  };
 
   _this.destroy = Util.compose(function () {
 
@@ -408,6 +496,8 @@ var DeaggregationReportView = function (params) {
     _metadata = _this.model.get('metadata');
     _this.el.insertBefore(_downloadEl, _reportEl);
     _reportEl.innerHTML = _this.getReportHtml();
+    _this.getSources();
+    _collectionTable.render();
   };
 
   _initialize(params);
