@@ -56,6 +56,7 @@ var ApplicationView = function (params) {
       _onEditionChange,
       _onLocationChange,
       _onNewButtonClick,
+      _onRawData,
       _onRegionChange,
       _onTimeHorizonChange,
       _onVs30Change,
@@ -112,6 +113,8 @@ var ApplicationView = function (params) {
 
     _curveOutputView.on('calculate', _onCalculate, _this);
     _deaggOutputView.on('calculate', _onCalculate, _this);
+
+    _curveOutputView.on('rawdata', _onRawData, _this);
   };
 
 
@@ -421,8 +424,43 @@ var ApplicationView = function (params) {
     return true;
   };
 
+  /**
+   * Callback executed when the 'rawdata' event is fired. This event indicates
+   * the user would like to view the raw data for the current analysis. This
+   * proceeds in much the same way as the `_onCalculate` method, but rather
+   * than firing an XHR request, simply opens a new window with the correct URL.
+   *
+   * @param data {Object}
+   * @param data.calculator {Calculator}
+   *     The calculator used to parse the analysis and generate a url.
+   * @param data.serviceType {String}
+   *     The service type for which to generate data.
+   */
+  _onRawData = function (data) {
+    var calculator,
+        service,
+        serviceType,
+        url;
+
+    calculator = data.calculator;
+    serviceType = data.serviceType;
+
+    if (serviceType && calculator &&
+        _this.model.get('edition') && _this.model.get('location') &&
+        _this.model.get('region') && _this.model.get('vs30')) {
+      service = _dependencyFactory.getService(
+          _this.model.get('edition'), serviceType);
+      url = calculator.parseInputs(service.params, service.urlStub,
+          _this.model);
+
+      window.open(url, 'unified_hazard_tool_data');
+    }
+  };
+
 
   _this.destroy = Util.compose(_this.destroy, function () {
+    _curveOutputView.off('rawdata', _onRawData, _this);
+
     _calculator.destroy();
 
     _newButton.removeEventListener('click', _onNewButtonClick);
