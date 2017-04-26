@@ -18,63 +18,63 @@
   }
 
   &[data-index='0'] {
-    > .line, > .point { stroke: $graphColor0; }
-    > .point { fill: $graphColor0); }
+    > .line, > .point { stroke: $curveColor0; }
+    > .point { fill: $curveColor0); }
   }
 
   &[data-index='1'] {
-    > .line, > .point { stroke: $graphColor1; }
-    > .point { fill: $graphColor1; }
+    > .line, > .point { stroke: $curveColor1; }
+    > .point { fill: $curveColor1; }
   }
 
   &[data-index='2'] {
-    > .line, > .point { stroke: $graphColor2; }
-    > .point { fill: $graphColor2; }
+    > .line, > .point { stroke: $curveColor2; }
+    > .point { fill: $curveColor2; }
   }
 
   &[data-index='3'] {
-    > .line, > .point { stroke: $graphColor3; }
-    > .point { fill: $graphColor3; }
+    > .line, > .point { stroke: $curveColor3; }
+    > .point { fill: $curveColor3; }
   }
 
   &[data-index='4'] {
-    > .line, > .point { stroke: $graphColor4; }
-    > .point { fill: $graphColor4; }
+    > .line, > .point { stroke: $curveColor4; }
+    > .point { fill: $curveColor4; }
   }
 
   &[data-index='5'] {
-    > .line, > .point { stroke: $graphColor5; }
-    > .point { fill: $graphColor5; }
+    > .line, > .point { stroke: $curveColor5; }
+    > .point { fill: $curveColor5; }
   }
 
   &[data-index='6'] {
-    > .line, > .point { stroke: $graphColor6; }
-    > .point { fill: $graphColor6; }
+    > .line, > .point { stroke: $curveColor6; }
+    > .point { fill: $curveColor6; }
   }
 
   &[data-index='7'] {
-    > .line, > .point { stroke: $graphColor7; }
-    > .point { fill: $graphColor7; }
+    > .line, > .point { stroke: $curveColor7; }
+    > .point { fill: $curveColor7; }
   }
 
   &[data-index='8'] {
-    > .line, > .point { stroke: $graphColor8; }
-    > .point { fill: $graphColor8; }
+    > .line, > .point { stroke: $curveColor8; }
+    > .point { fill: $curveColor8; }
   }
 
   &[data-index='9'] {
-    > .line, > .point { stroke: $graphColor9; }
-    > .point { fill: $graphColor9; }
+    > .line, > .point { stroke: $curveColor9; }
+    > .point { fill: $curveColor9; }
   }
 
   &[data-index='10'] {
-    > .line, > .point { stroke: $graphColor10; }
-    > .point { fill: $graphColor10; }
+    > .line, > .point { stroke: $curveColor10; }
+    > .point { fill: $curveColor10; }
   }
 
   &[data-index='11'] {
     > .line, > .point { stroke: $graph_color_11; }
-    > .point { fill: $graphColor11; }
+    > .point { fill: $curveColor11; }
   }
 
   &.selected {
