@@ -13,10 +13,16 @@ var _DEFAULTS = {
       displayOrider: 0
     },
     {
+      id: '5P50',
+      value: 975,
+      display: '5% in 50 years<small>(975 years)</small>',
+      displayorder: 1
+    },
+    {
       id: '10P50',
       value: 475,
       display: '10% in 50 years<small>(475 years)</small>',
-      displayOrider: 1
+      displayOrider: 2
     }
   ]
 };
@@ -125,8 +131,16 @@ var TimeHorizonInput = function (params) {
 
 
   _this.destroy = Util.compose(function () {
+    _yearsInput.removeEventListener('change', _onYearsInputChange);
     _timeHorizonButtons.removeEventListener('click', _onTimeHorizonButtonClick);
-    // TODO
+
+    _createButtonMarkup = null;
+    _createViewSkeleton = null;
+    _onTimeHorizonButtonClick = null;
+    _onYearsInputChange = null;
+
+    _initialize = null;
+    _this = null;
   }, _this.destroy);
 
   _this.render = function () {
