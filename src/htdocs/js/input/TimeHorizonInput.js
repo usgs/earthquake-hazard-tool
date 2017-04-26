@@ -36,11 +36,13 @@ var TimeHorizonInput = function (params) {
       _horizons,
       _timeHorizonButtons, // button group wrapper
       _yearsInput,
+      _yearsLabel,
 
       _createButtonMarkup,
       _createViewSkeleton,
       _onTimeHorizonButtonClick,
-      _onYearsInputChange;
+      _onYearsInputChange,
+      _setErrorState;
 
 
   params = Util.extend({}, _DEFAULTS, params);
@@ -51,6 +53,7 @@ var TimeHorizonInput = function (params) {
 
     _createViewSkeleton();
 
+    _yearsLabel = _this.el.querySelector('label');
     _yearsInput = _this.el.querySelector('.input-time-horizon-years');
     _timeHorizonButtons = _this.el.querySelector('.input-time-horizon-buttons');
     _buttons = _timeHorizonButtons.querySelectorAll('button');
@@ -89,11 +92,16 @@ var TimeHorizonInput = function (params) {
         'Time Horizon',
         '<small class="input-help">Return period in years</small>',
         '<input type="text" class="input-time-horizon-years"/>',
+        '<small class="usa-input-error-message">',
+          'Time horizon must be between 0 and 10,000 years.',
+        '</small>',
         '<div class="input-time-horizon-buttons button-group">',
           _horizons.map(_createButtonMarkup).join(''),
         '</div>',
       '</label>'
     ].join('');
+
+    _this.el.classList.add('time-horizon-input');
   };
 
   _onTimeHorizonButtonClick = function (evt) {
@@ -123,9 +131,25 @@ var TimeHorizonInput = function (params) {
     value = parseInt(_yearsInput.value, 10);
 
     if (_this.model && !isNaN(value)) {
+      // Limit time-horizon input to [0 .. 10000] years
+      if (value < 0 || value > 10000) {
+        // Value is out of range, use `null` to clear it
+        value = null;
+      }
+
       _this.model.set({
         timeHorizon: value
       });
+    }
+  };
+
+  _setErrorState = function (show) {
+    if (show) {
+      _this.el.classList.add('usa-input-error');
+      _yearsLabel.classList.add('usa-input-error-label');
+    } else {
+      _this.el.classList.remove('usa-input-error');
+      _yearsLabel.classList.remove('usa-input-error-label');
     }
   };
 
@@ -155,7 +179,9 @@ var TimeHorizonInput = function (params) {
     }
 
     // Set input field
-    _yearsInput.value = value;
+    if (value !== null) {
+      _yearsInput.value = value;
+    }
 
     // Highlight corresponding button, if exists
     Array.prototype.forEach.call(_buttons, function (button) {
@@ -165,6 +191,14 @@ var TimeHorizonInput = function (params) {
         button.classList.remove('selected');
       }
     });
+
+    // Set appropriate error state based on current value
+    value = parseInt(value, 10); // null --> NaN, '' --> NaN
+    _setErrorState(
+      isNaN(value) ||
+      value < 0 ||
+      value > 10000
+    );
   };
 
 
