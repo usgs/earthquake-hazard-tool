@@ -1,3 +1,11 @@
+.time-horizon-input > label > .usa-input-error-message {
+  display: none;
+}
+
+.time-horizon-input.usa-input-error > label > .usa-input-error-message {
+  display: block;
+}
+
 .input-time-horizon-buttons {
   margin-top: 1em;
 }

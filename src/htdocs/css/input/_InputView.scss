@@ -11,3 +11,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.column .usa-input-error:before {
+  display: none;
+}
