@@ -131,8 +131,13 @@ var TimeHorizonInput = function (params) {
 
 
   _this.destroy = Util.compose(function () {
+    _yearsInput.removeEventListener('change', _onYearsInputChange);
     _timeHorizonButtons.removeEventListener('click', _onTimeHorizonButtonClick);
-    // TODO
+
+    _createButtonMarkup = null;
+    _createViewSkeleton = null;
+    _onTimeHorizonButtonClick = null;
+    _onYearsInputChange = null;
 
     _initialize = null;
     _this = null;
