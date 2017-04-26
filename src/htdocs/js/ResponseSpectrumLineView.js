@@ -73,6 +73,28 @@ var ResponseSpectrumLineView = function (params) {
     return y.toFixed(4);
   };
 
+  /**
+   * @Override `D3LineView.onPointOut`
+   *
+   * Overrides the parent implementation. This view shows the tooltip
+   * of the currently selected point and hover interaction is not required.
+   *
+   */
+  _this.onPointOut = function () {
+    // Do nothing.
+  };
+
+  /**
+   * @Override `D3LineView.onPointOver`
+   *
+   * Overrides the parent implementation. This view shows the tooltip
+   * of the currently selected point and hover interaction is not required.
+   *
+   */
+  _this.onPointOver = function () {
+    // Do nothing
+  };
+
   _this.plotPoints = function (points) {
     points.enter()
         .append('svg:circle')
