@@ -116,6 +116,48 @@ var ResponseSpectrumLineView = function (params) {
         .remove();
   };
 
+  /**
+   * Extend the `D3LineView.render` method. Do everything done in parent class
+   * (via composition), but then also look at current IMT, find corresponding
+   * point, and show the tooltip for that point.
+   *
+   */
+  _this.render = Util.compose(_this.render, function () {
+    var data,
+        i,
+        imt,
+        info,
+        point;
+
+    data = _this.model.get('data');
+    imt = _this.model.get('imt');
+
+    if (!imt) {
+      return;
+    }
+
+    for (i = 0; i < data.length; i++) {
+      point = data[i];
+      if (_getImt(point) === imt) {
+        break;
+      }
+    }
+
+    info = [
+      {text: _this.model.get('label')},
+      [
+        {class: 'label', text: _this.view.model.get('xLabel') + ': '},
+        {class: 'value', text: _this.formatX(point[0])}
+      ],
+      [
+        {class: 'label', text: _this.view.model.get('yLabel') + ': '},
+        {class: 'value', text: _this.formatY(point[1])}
+      ]
+    ];
+
+    _this.view.showTooltip(point, info);
+  });
+
 
   _initialize(params);
   params = null;
