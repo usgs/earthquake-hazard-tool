@@ -66,7 +66,10 @@ var CurveOutputView = function (params) {
       '</div>',
       '<div class="curve-output-view-mean column one-of-two"></div>',
       '<div class="curve-output-view-spectrum column one-of-two"></div>',
-      '<div class="curve-output-view-component column one-of-two"></div>'
+      '<div class="curve-output-view-component column one-of-two"></div>',
+      '<div class="curve-output-view-raw-data column one-of-one">',
+        '<a href="javascript:void(null);" class="rawdata">View Raw Data</a>',
+      '</div>',
     ].join('');
 
     _this.btnCalculate = _this.el.querySelector('.curve-output-calculate');
