@@ -12,63 +12,63 @@
     stroke-width: $pointStroke;
 
     &[data-index='0'] {
-      stroke: $graphColor0;
-      fill: $graphColor0);
+      stroke: $curveColor0;
+      fill: $curveColor0);
     }
 
     &[data-index='1'] {
-      stroke: $graphColor1;
-      fill: $graphColor1;
+      stroke: $curveColor1;
+      fill: $curveColor1;
     }
 
     &[data-index='2'] {
-      stroke: $graphColor2;
-      fill: $graphColor2;
+      stroke: $curveColor2;
+      fill: $curveColor2;
     }
 
     &[data-index='3'] {
-      stroke: $graphColor3;
-      fill: $graphColor3;
+      stroke: $curveColor3;
+      fill: $curveColor3;
     }
 
     &[data-index='4'] {
-      stroke: $graphColor4;
-      fill: $graphColor4;
+      stroke: $curveColor4;
+      fill: $curveColor4;
     }
 
     &[data-index='5'] {
-      stroke: $graphColor5;
-      fill: $graphColor5;
+      stroke: $curveColor5;
+      fill: $curveColor5;
     }
 
     &[data-index='6'] {
-      stroke: $graphColor6;
-      fill: $graphColor6;
+      stroke: $curveColor6;
+      fill: $curveColor6;
     }
 
     &[data-index='7'] {
-      stroke: $graphColor7;
-      fill: $graphColor7;
+      stroke: $curveColor7;
+      fill: $curveColor7;
     }
 
     &[data-index='8'] {
-      stroke: $graphColor8;
-      fill: $graphColor8;
+      stroke: $curveColor8;
+      fill: $curveColor8;
     }
 
     &[data-index='9'] {
-      stroke: $graphColor9;
-      fill: $graphColor9;
+      stroke: $curveColor9;
+      fill: $curveColor9;
     }
 
     &[data-index='10'] {
-      stroke: $graphColor10;
-      fill: $graphColor10;
+      stroke: $curveColor10;
+      fill: $curveColor10;
     }
 
     &[data-index='11'] {
-      stroke: $graphColor11;
-      fill: $graphColor11;
+      stroke: $curveColor11;
+      fill: $curveColor11;
     }
 
     &.selected {
