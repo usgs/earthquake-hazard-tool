@@ -1,8 +1,6 @@
 'use strict';
 
-var Collection = require('mvc/Collection'),
-    CollectionTable = require('mvc/CollectionTable'),
-    SelectedCollectionView = require('mvc/SelectedCollectionView'),
+var SelectedCollectionView = require('mvc/SelectedCollectionView'),
     Formatter = require('util/Formatter'),
 
     Util = require('util/Util');
@@ -21,8 +19,6 @@ var DeaggregationReportView = function (params) {
 
       _calculateSum,
       _checkSummaryValues,
-      _collection,
-      _collectionTable,
       _getHeader,
       _getMetadata,
       _getSources,
@@ -52,7 +48,6 @@ var DeaggregationReportView = function (params) {
 
     // bind event listeners
     _downloadEl.addEventListener('click', _onDownloadClick);
-
 
     _this.render();
   };
@@ -366,91 +361,97 @@ var DeaggregationReportView = function (params) {
 
     output.push('</div>');
 
+    // get contributing sources
+    output.push(
+      '<div class="contributors-section">',
+        '<h4>Deaggregation Contributors</h4>',
+        _this.getSources(),
+      '</div>');
+
     return output.join('');
   };
 
+  /**
+   * [getSources description]
+   *
+   * @return {[type]} [description]
+   */
   _this.getSources = function () {
+    var buf,
+        i,
+        len,
+        source,
+        sources;
 
-    _collection = Collection(_this.model.get('sources'));
-    _collectionTable = CollectionTable({
-      className: 'contributing-sources',
-      collection: _collection,
-      columns: [
-        {
-          className: 'azimuth',
-          format: function (item) {
-            return item.azimuth;
-          },
-          title: 'Azimuth'
-        },
-        {
-          className: 'contributor',
-          format: function (item) {
-            return item.contributor;
-          },
-          title: 'contributor'
-        },
-        {
-          className: 'id',
-          format: function (item) {
-            return item.id;
-          },
-          title: 'id'
-        },
-        {
-          className: 'latitude',
-          format: function (item) {
-            return item.latitude;
-          },
-          title: 'latitude'
-        },
-        {
-          className: 'longitude',
-          format: function (item) {
-            return item.longitude;
-          },
-          title: 'longitude'
-        },
-        {
-          className: 'm',
-          format: function (item) {
-            return item.m;
-          },
-          title: 'm'
-        },
-        {
-          className: 'name',
-          format: function (item) {
-            return item.name;
-          },
-          title: 'name'
-        },
-        {
-          className: 'r',
-          format: function (item) {
-            return item.r;
-          },
-          title: 'r'
-        },
-        {
-          className: 'type',
-          format: function (item) {
-            return item.type;
-          },
-          title: 'type'
-        },
-        {
-          className: 'epsilon',
-          format: function (item) {
-            return item.ε;
-          },
-          title: 'ε'
-        },
+    // all contributing sources from deagg response
+    sources = _this.model.get('sources');
 
-      ]
-    });
-    _collectionTable.el.classList.add('horizontal-scrolling');
-    _reportEl.appendChild(_collectionTable.el);
+    buf = [
+      '<table class="contributing-sources">',
+        '<thead>',
+          '<tr>',
+            '<th>Source Set <i class="material-icons down-arrow">&#xE5DA;</i>',
+              ' Source</th>',
+            '<th>Type</th>',
+            '<th title="distance (km)">r</th>',
+            '<th title="magnitude">m</th>',
+            '<th title="epsilon (mean values)">ε<sub>0</sub></th>',
+            '<th title="longitude">lon</th>',
+            '<th title="latitude">lat</th>',
+            '<th title="azimuth">az</th>',
+            '<th title="percent contributed" title="">%</th>',
+          '</tr>',
+        '</thead>',
+        '<tbody>'
+    ];
+
+    for (i = 0, len = sources.length; i < len; i++) {
+      source = sources[i];
+      buf.push(_this.createSourceSetRow(source));
+    }
+
+    buf.push(
+        '</tbody>',
+      '</table>'
+    );
+
+    return '<div class="horizontal-scrolling">' + buf.join('') + '</div>';
+  };
+
+  _this.createSourceSetRow = function (source) {
+    var buf,
+        type;
+
+    buf = [];
+    type = source.type;
+
+    if (type.toUpperCase() === 'MULTI') {
+      buf.push(
+        '<tr class="contributor-set">',
+          '<td>', source.name, '</td>',
+          // TODO, remove once the type is changed by pmpowers
+          '<td>', (source.sourcetype ? source.sourcetype : type), '</td>',
+          '<td colspan="6"></td>',
+          '<td>', Formatter.number(source.contribution, 2), '</td>',
+        '</tr>'
+      );
+    } else {
+      buf.push(
+        '<tr>',
+          '<td class="indent-name">', source.name, '</td>',
+          '<td></td>', // empty row for type
+          '<td>', Formatter.number(source.r, 2), '</td>',
+          '<td>', Formatter.number(source.m, 2), '</td>',
+          '<td>', Formatter.number(source.ε, 2), '</td>',
+          '<td>', Formatter.longitude(source.longitude), '</td>',
+          '<td>', Formatter.latitude(source.latitude), '</td>',
+          '<td>', Formatter.number(source.azimuth, 2), '</td>',
+          '<td>', Formatter.number(source.contribution, 2), '</td>',
+        '</tr>'
+      );
+    }
+
+    return buf.join('');
   };
 
   _this.destroy = Util.compose(function () {
@@ -496,8 +497,6 @@ var DeaggregationReportView = function (params) {
     _metadata = _this.model.get('metadata');
     _this.el.insertBefore(_downloadEl, _reportEl);
     _reportEl.innerHTML = _this.getReportHtml();
-    _this.getSources();
-    _collectionTable.render();
   };
 
   _initialize(params);
