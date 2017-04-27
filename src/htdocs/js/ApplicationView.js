@@ -141,20 +141,23 @@ var ApplicationView = function (params) {
           toggleText: 'Earthquake Hazard and Probability Maps'
         },
         {
+          classes: 'accordion-input',
           content: _inputEl,
           toggleText: 'Input'
         },
         {
+          classes: 'accordion-curve',
           content: _curveOutputEl,
           toggleText: 'Hazard Curve'
         },
         {
+          classes: 'accordion-deagg',
           content: _deaggOutputEl,
           toggleText: 'Deaggregation'
         },
         {
-          content: _analysisCollectionEl,
           classes: 'analysis-collection-view',
+          content: _analysisCollectionEl,
           toggleText: 'History'
         }
       ]
