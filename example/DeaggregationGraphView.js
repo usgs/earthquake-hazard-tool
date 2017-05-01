@@ -65,6 +65,6 @@ auto.addEventListener('click', function () {
 
 fixed.addEventListener('click', function () {
   view.model.set({
-    bounds: [[0, 5, 0], [100, 7.5, 40]]
+    bounds: [[5, 5, 5], [95, 9, 45]]
   });
 })
