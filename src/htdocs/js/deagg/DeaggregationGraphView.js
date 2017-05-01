@@ -419,6 +419,10 @@ var DeaggregationGraphView = function (options) {
 
     // grid lines
     gridSpacing = _xTickSpacing * _xScale;
+    while ((x1 - x0) / gridSpacing > 10) {
+      gridSpacing = gridSpacing * 2;
+    }
+
     for (x = x0 + gridSpacing; x < x1; x += gridSpacing) {
       _axes.push(D33dPath({
         className: 'grid-line',
