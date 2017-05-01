@@ -66,9 +66,6 @@ var Location = function (params) {
 
   _createViewSkeleton = function () {
     _this.el.innerHTML = [
-      '<h2>Location</h2>',
-      '<span class="usa-input-error-message" id="input-error-message"',
-          'role="alert"></span>',
       '<label for="input-latitude">',
         'Latitude',
         '<small class="input-help">Decimal degrees</small>',
@@ -81,9 +78,11 @@ var Location = function (params) {
         '</small>',
         '<input type="text" id="input-longitude"/>',
       '</label>',
-      '<a href="javascript:void(null);" id="input-usemap">',
+      '<span class="usa-input-error-message" id="input-error-message"',
+          'role="alert"></span>',
+      '<button id="input-usemap">',
         'Choose location using a map',
-      '</a>'
+      '</button>'
     ].join('');
 
     _errorMessage = _this.el.querySelector('#input-error-message');
