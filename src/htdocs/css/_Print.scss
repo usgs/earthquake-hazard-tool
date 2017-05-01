@@ -1,0 +1,41 @@
+@media print {
+  .accordion-closed,
+  .accordion-map,
+  .analysis-collection-view,
+  .download-deaggregation-report,
+  .input-time-horizon-buttons,
+  #input-usemap {
+    display: none;
+  }
+
+  .accordion-curve,
+  .accordion-deagg,
+  .deaggregation-report-summary,
+  .contributors-section {
+    page-break-before: always;
+
+    &.accordion-closed {
+      page-break-before: avoid;
+    }
+  }
+
+  .summary-values {
+    -ms-flex-preferred-size: 50%;
+    flex-basis: 50%;
+  }
+
+  .summary-values,
+  .summary-list {
+    font-size: 0.88em;
+  }
+
+  .horizontal-scrolling > .contributing-sources {
+    border-spacing: 0;
+    width: 100%;
+
+    & th,
+    & td {
+      font-size: 11px;
+    }
+  }
+}
