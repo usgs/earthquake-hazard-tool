@@ -361,9 +361,98 @@ var DeaggregationReportView = function (params) {
 
     output.push('</div>');
 
+    // get contributing sources
+    output.push(
+      '<div class="contributors-section">',
+        '<h4>Deaggregation Contributors</h4>',
+        _this.getSources(),
+      '</div>');
+
     return output.join('');
   };
 
+  /**
+   * [getSources description]
+   *
+   * @return {[type]} [description]
+   */
+  _this.getSources = function () {
+    var buf,
+        i,
+        len,
+        source,
+        sources;
+
+    // all contributing sources from deagg response
+    sources = _this.model.get('sources');
+
+    buf = [
+      '<table class="contributing-sources">',
+        '<thead>',
+          '<tr>',
+            '<th>Source Set <i class="material-icons down-arrow">&#xE5DA;</i>',
+              ' Source</th>',
+            '<th>Type</th>',
+            '<th title="distance (km)">r</th>',
+            '<th title="magnitude">m</th>',
+            '<th title="epsilon (mean values)">ε<sub>0</sub></th>',
+            '<th title="longitude">lon</th>',
+            '<th title="latitude">lat</th>',
+            '<th title="azimuth">az</th>',
+            '<th title="percent contributed" title="">%</th>',
+          '</tr>',
+        '</thead>',
+        '<tbody>'
+    ];
+
+    for (i = 0, len = sources.length; i < len; i++) {
+      source = sources[i];
+      buf.push(_this.createSourceSetRow(source));
+    }
+
+    buf.push(
+        '</tbody>',
+      '</table>'
+    );
+
+    return '<div class="horizontal-scrolling">' + buf.join('') + '</div>';
+  };
+
+  _this.createSourceSetRow = function (source) {
+    var buf,
+        type;
+
+    buf = [];
+    type = source.type;
+
+    if (type.toUpperCase() === 'MULTI') {
+      buf.push(
+        '<tr class="contributor-set">',
+          '<td>', source.name, '</td>',
+          // TODO, remove once the type is changed by pmpowers
+          '<td>', (source.sourcetype ? source.sourcetype : type), '</td>',
+          '<td colspan="6"></td>',
+          '<td>', Formatter.number(source.contribution, 2), '</td>',
+        '</tr>'
+      );
+    } else {
+      buf.push(
+        '<tr>',
+          '<td class="indent-name">', source.name, '</td>',
+          '<td></td>', // empty row for type
+          '<td>', Formatter.number(source.r, 2), '</td>',
+          '<td>', Formatter.number(source.m, 2), '</td>',
+          '<td>', Formatter.number(source.ε, 2), '</td>',
+          '<td>', Formatter.longitude(source.longitude), '</td>',
+          '<td>', Formatter.latitude(source.latitude), '</td>',
+          '<td>', Formatter.number(source.azimuth, 2), '</td>',
+          '<td>', Formatter.number(source.contribution, 2), '</td>',
+        '</tr>'
+      );
+    }
+
+    return buf.join('');
+  };
 
   _this.destroy = Util.compose(function () {
 
