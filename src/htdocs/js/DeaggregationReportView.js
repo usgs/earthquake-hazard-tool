@@ -425,11 +425,12 @@ var DeaggregationReportView = function (params) {
     buf = [];
     type = source.type;
 
-    if (type.toUpperCase() === 'MULTI') {
+    // TODO, remove reference to 'MULTI' once the nshmp_haz_ws is updated
+    if (type.toUpperCase() === 'MULTI' || type.toUpperCase() === 'SET') {
       buf.push(
         '<tr class="contributor-set">',
           '<td>', source.name, '</td>',
-          // TODO, remove once the type is changed by pmpowers
+          // TODO, remove reference to 'type' once the nshmp_haz_ws is updated
           '<td>', (source.sourcetype ? source.sourcetype : type), '</td>',
           '<td colspan="6"></td>',
           '<td>', Formatter.number(source.contribution, 2), '</td>',
