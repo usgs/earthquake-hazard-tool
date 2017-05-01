@@ -15,6 +15,80 @@ var _DEFAULTS = {};
 
 
 /**
+ * Calculate deaggregation data bounds.
+ *
+ * @param bindata {Array<Bin>}
+ *     array of deaggregation bins
+ *     where Bin is an Object:
+ *       bin.r {Number}
+ *             distance to bin (x-axis)
+ *       bin.m {Number}
+ *             magnitude of bin (y-axis)
+ *       bin.εdata {Array<Object>}
+ *             array of epsilon data for bin (z-axis)
+ *             Each Object has properties:
+ *               εdata.value {Number}
+ *                           % contribution to hazard
+ *               εdata.εbin {Number}
+ *                          id of epsilon bin.
+ *
+ * @return {Array<Array<x0,y0,z0>, Array<x1,y1,z1>}
+ *         bounds of deaggregation data.
+ *         Array contains two sub arrays,
+ *         containing minimum and maximum values for each axis.
+ */
+var __calculateBounds = function (bindata) {
+  var x0,
+      x1,
+      y0,
+      y1,
+      z0,
+      z1;
+
+  // start with values that will always be smaller/larger than actual values
+  x0 = y0 = z0 = Number.POSITIVE_INFINITY;
+  x1 = y1 = z1 = Number.NEGATIVE_INFINITY;
+
+  bindata.forEach(function (bin) {
+    var binx,
+        biny,
+        binz;
+
+    binx = bin.r;
+    biny = bin.m;
+    // sum values for z
+    binz = 0;
+    bin.εdata.forEach(function (εval) {
+      binz = binz + εval.value;
+    });
+
+    // track min/max
+    if (binx < x0) {
+      x0 = binx;
+    }
+    if (binx > x1) {
+      x1 = binx;
+    }
+    if (biny < y0) {
+      y0 = biny;
+    }
+    if (biny > y1) {
+      y1 = biny;
+    }
+    if (binz < z0) {
+      z0 = binz;
+    }
+    if (binz > z1) {
+      z1 = binz;
+    }
+  });
+
+  // return bounds
+  return [[x0, y0, z0], [x1, y1, z1]];
+};
+
+
+/**
  * A deaggregation distance/magnitude plot.
  *
  * @param options {Object}
@@ -31,13 +105,18 @@ var DeaggregationGraphView = function (options) {
       _bins,
       _d33d,
       _xScale,
+      _xTickSpacing,
       _yScale,
+      _yTickSpacing,
       _zScale,
+      _zTickSpacing,
       // methods
+      _centerView,
       _createAxes,
       _formatX,
       _formatY,
       _formatZ,
+      _getBounds,
       _renderLegend;
 
 
@@ -55,26 +134,134 @@ var DeaggregationGraphView = function (options) {
     _yScale = 25;
     _zScale = 2;
 
+    _xTickSpacing = 5;
+    _yTickSpacing = 0.5;
+    _zTickSpacing = 5;
+
     _d33d = D33dView({
       el: _this.el.querySelector('.DeaggregationGraphView'),
       lookAt: [
-        70,
+        60,
         125,
-        20
+        10
       ],
       origin: [
         280,
-        -125,
+        -150,
         180
       ],
       up: [0, 0, 1],
-      zoom: 4
+      zoom: 3.5
     });
     _d33d.renderLegend = _renderLegend;
 
-    _createAxes();
-
     _this.render();
+  };
+
+
+  /**
+   * Use data extents to set view lookAt, origin, and zoom so plot is
+   * roughly centered within view plot area.
+   */
+  _centerView = function () {
+    var bounds,
+        lookAt,
+        origin,
+        projectedBounds,
+        projectedWidth,
+        projectedHeight,
+        x0,
+        x1,
+        y0,
+        y1,
+        z0,
+        z1,
+        zoom;
+
+    // get current view
+    lookAt = _d33d.model.get('lookAt');
+    origin = _d33d.model.get('origin');
+    zoom = _d33d.model.get('zoom');
+
+    // compute projected bounds
+    bounds = _getBounds();
+    _xScale = 100 / (bounds[1][0] - bounds[0][0]);
+    _yScale = 70 / (bounds[1][1] - bounds[0][1]);
+    _zScale = 50 / (bounds[1][2] - bounds[0][2]);
+    x0 = bounds[0][0] * _xScale;
+    x1 = bounds[1][0] * _xScale;
+    y0 = bounds[0][1] * _yScale;
+    y1 = bounds[1][1] * _yScale;
+    z0 = bounds[0][2] * _zScale;
+    z1 = bounds[1][2] * _zScale;
+
+    projectedBounds = [
+      [x0, y0, z0],
+      [x0, y1, z0],
+      [x1, y1, z0],
+      [x1, y0, z0],
+      [x0, y0, z1],
+      [x0, y1, z1],
+      [x1, y1, z1],
+      [x1, y0, z1]
+    ].map(_d33d.project).reduce(function (bounds, point) {
+      var x,
+          y,
+          z;
+
+      x = point[0];
+      y = point[1];
+      z = point[2];
+
+      if (x < bounds[0][0]) {
+        bounds[0][0] = x;
+      }
+      if (x > bounds[1][0]) {
+        bounds[1][0] = x;
+      }
+      if (y < bounds[0][1]) {
+        bounds[0][1] = y;
+      }
+      if (y > bounds[1][1]) {
+        bounds[1][1] = y;
+      }
+      if (z < bounds[0][2]) {
+        bounds[0][2] = z;
+      }
+      if (z > bounds[1][2]) {
+        bounds[1][2] = z;
+      }
+
+      return bounds;
+    }, [
+      [Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY],
+      [Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY]
+    ]);
+
+    projectedWidth = (projectedBounds[1][0] - projectedBounds[0][0]);
+    projectedHeight = (projectedBounds[1][1] - projectedBounds[0][1]);
+
+    // look at x/y center at z=z0
+    lookAt = [
+      0.95 * (x1 + x0) / 2,
+      0.95 * (y1 + y0) / 2,
+      -5 * _zScale
+    ];
+    origin = [
+      lookAt[0] + 1000,
+      lookAt[1] - 1000,
+      lookAt[2] + 1000
+    ];
+    zoom = Math.min(
+        480 * zoom / projectedWidth,
+        480 * zoom / projectedHeight
+    );
+
+    _d33d.model.set({
+      'lookAt': lookAt,
+      'origin': origin,
+      'zoom': zoom
+    });
   };
 
   /**
@@ -85,68 +272,59 @@ var DeaggregationGraphView = function (options) {
    * the current lookAt, origin, and zoom, combination.
    */
   _createAxes = function () {
-    var extent,
+    var bounds,
+        extent,
+        gridSpacing,
         metadata,
         x,
         x0,
         x1,
         xLabel,
-        xTickSpacing,
         xTicks,
         y,
         y0,
         y1,
         yLabel,
-        yTickSpacing,
         yTicks,
         z0,
         z1,
-        zLabel;
+        zLabel,
+        zTicks;
 
-    x0 = 0;
-    x1 = 100;
+    bounds = _getBounds();
+    x0 = bounds[0][0];
+    x1 = bounds[1][0];
+    y0 = bounds[0][1];
+    y1 = bounds[1][1];
+    z0 = bounds[0][2];
+    z1 = bounds[1][2];
 
     if (_this.model) {
       metadata = _this.model.get('metadata');
-      x0 = null;
-      x1 = null;
-
-      _this.model.get('data').forEach(function (bin) {
-        var binx;
-
-        binx = bin.r;
-
-        if (binx < x0) {
-          x0 = binx;
-        }
-
-        if (binx > x0) {
-          x1 = binx;
-        }
-      });
-
-      // round min/max down/up to an increment of 10
-      x0 = 10 * Math.floor(x0 / 10);
-      x1 = 10 * Math.ceil(x1 / 10);
-
     } else {
       metadata = {};
     }
 
-    _xScale = 100 / (x1 - x0);
-
-    x0 *= _xScale;
-    x1 *= _xScale;
+    //_yScale = 100 / (y1 - y0);
+    //_zScale = 100 / (z1 - z0);
 
     xLabel = metadata.rlabel;
-    xTicks = 10;
-    y0 = 5 * _yScale;
-    y1 = 8 * _yScale;
+    xTicks = ((x1 - x0) / _xTickSpacing);
+    while (xTicks > 10) {
+      xTicks = xTicks / 2;
+    }
+
     yLabel = metadata.mlabel;
-    yTicks = 6;
-    z0 = 0;
-    z1 = 35 * _zScale;
+    yTicks = ((y1 - y0) / _yTickSpacing);
     zLabel = metadata.εlabel;
+    zTicks = ((z1 - z0) / _zTickSpacing);
+
+    x0 = x0 * _xScale;
+    x1 = x1 * _xScale;
+    y0 = y0 * _yScale;
+    y1 = y1 * _yScale;
+    z0 = z0 * _zScale;
+    z1 = z1 * _zScale;
 
     // x axis at y0
     extent = [[x0, y0, z0], [x1, y0, z0]];
@@ -195,7 +373,7 @@ var DeaggregationGraphView = function (options) {
       labelVector: [-2, 0, 0],
       padding: 0,
       tickVector: [-1, 0, 0],
-      ticks: 5,
+      ticks: yTicks,
       title: yLabel,
       titleAnchor: 'middle',
       titleDirection: extent,
@@ -213,7 +391,7 @@ var DeaggregationGraphView = function (options) {
       labelVector: [5, -2, 0],
       padding: 0,
       tickVector: [1, 0, 0],
-      ticks: 6,
+      ticks: yTicks,
       title: yLabel,
       titleAnchor: 'middle',
       titleDirection: extent,
@@ -231,7 +409,7 @@ var DeaggregationGraphView = function (options) {
       labelVector: [-1.5, 0, 0],
       padding: 0,
       tickVector: [-1, 0, 0],
-      ticks: 7,
+      ticks: zTicks,
       title: zLabel,
       titleAnchor: 'middle',
       titleDirection: extent,
@@ -240,8 +418,12 @@ var DeaggregationGraphView = function (options) {
 
 
     // grid lines
-    xTickSpacing = (x1 - x0) / xTicks;
-    for (x = x0 + xTickSpacing; x < x1; x += xTickSpacing) {
+    gridSpacing = _xTickSpacing * _xScale;
+    while ((x1 - x0) / gridSpacing > 10) {
+      gridSpacing = gridSpacing * 2;
+    }
+
+    for (x = x0 + gridSpacing; x < x1; x += gridSpacing) {
       _axes.push(D33dPath({
         className: 'grid-line',
         close: false,
@@ -249,8 +431,8 @@ var DeaggregationGraphView = function (options) {
       }));
     }
 
-    yTickSpacing = (y1 - y0) / yTicks;
-    for (y = y0 + yTickSpacing; y < y1; y += yTickSpacing) {
+    gridSpacing = _yTickSpacing * _yScale;
+    for (y = y0 + gridSpacing; y < y1; y += gridSpacing) {
       _axes.push(D33dPath({
         className: 'grid-line',
         close: false,
@@ -273,7 +455,7 @@ var DeaggregationGraphView = function (options) {
     if (x === 0) {
       return '';
     }
-    return '' + x;
+    return '' + Number(x.toPrecision(3));
   };
 
   /**
@@ -290,7 +472,7 @@ var DeaggregationGraphView = function (options) {
     if (y === 0) {
       return '';
     }
-    return '' + y;
+    return '' + Number(y.toPrecision(3));
   };
 
   /**
@@ -307,7 +489,63 @@ var DeaggregationGraphView = function (options) {
     if (z === 0) {
       return '';
     }
-    return '' + z;
+    return '' + Number(z.toPrecision(3));
+  };
+
+  /**
+   * Get data bounds for plotting.
+   *
+   * @return {Array<Array<x0,y0,z0>, Array<x1,y1,z1>}
+   *         bounds of deaggregation data.
+   *         Array contains two sub arrays,
+   *         containing minimum and maximum values for each axis.
+   */
+  _getBounds = function () {
+    var bounds,
+        x0,
+        x1,
+        y0,
+        y1,
+        z0,
+        z1;
+
+    // default bounds
+    x0 = 0;
+    x1 = 100;
+    y0 = 5;
+    y1 = 8;
+    z0 = 0;
+    z1 = 35;
+
+    if (_this.model) {
+      bounds = _this.model.get('bounds');
+      if (!bounds) {
+        bounds = __calculateBounds(_this.model.get('data'));
+      }
+
+      x0 = bounds[0][0];
+      x1 = bounds[1][0];
+      y0 = bounds[0][1];
+      y1 = bounds[1][1];
+      z0 = bounds[0][2];
+      z1 = bounds[1][2];
+    }
+
+    // round min/max down/up to an increment of 10
+    x0 = _xTickSpacing * Math.floor(x0 / _xTickSpacing) - _xTickSpacing;
+    x1 = _xTickSpacing * Math.ceil(x1 / _xTickSpacing) + _xTickSpacing;
+
+    // round min/max down/up to next whole unit
+    y0 = _yTickSpacing * Math.floor(y0 / _yTickSpacing) - _yTickSpacing;
+    y1 = _yTickSpacing * Math.ceil(y1 / _yTickSpacing) + _yTickSpacing;
+
+    // always use 0
+    z0 = 0;
+    // round up to increment of 10
+    z1 = _zTickSpacing * Math.ceil(z1 / _zTickSpacing) + _zTickSpacing;
+
+
+    return [[x0, y0, z0], [x1, y1, z1]];
   };
 
   /**
@@ -350,7 +588,7 @@ var DeaggregationGraphView = function (options) {
 
       text = 'ε = ' +
           (bin.min === null ? '(-∞' : '[' + bin.min) +
-          ', ' +
+          ' .. ' +
           (bin.max === null ? '+∞' : bin.max) + ')';
 
       binEl = el.append('g')
@@ -386,6 +624,8 @@ var DeaggregationGraphView = function (options) {
 
     oldBins = _bins;
     oldAxes = _axes;
+
+    _centerView();
 
     // create new views
     _axes = [];
@@ -431,6 +671,9 @@ var DeaggregationGraphView = function (options) {
   options = null;
   return _this;
 };
+
+
+DeaggregationGraphView.calculateBounds = __calculateBounds;
 
 
 module.exports = DeaggregationGraphView;
