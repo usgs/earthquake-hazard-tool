@@ -105,9 +105,13 @@ var DeaggregationGraphView = function (options) {
       _bins,
       _d33d,
       _xScale,
+      _xTickSpacing,
       _yScale,
+      _yTickSpacing,
       _zScale,
+      _zTickSpacing,
       // methods
+      _centerView,
       _createAxes,
       _formatX,
       _formatY,
@@ -130,6 +134,10 @@ var DeaggregationGraphView = function (options) {
     _yScale = 25;
     _zScale = 2;
 
+    _xTickSpacing = 5;
+    _yTickSpacing = 0.5;
+    _zTickSpacing = 5;
+
     _d33d = D33dView({
       el: _this.el.querySelector('.DeaggregationGraphView'),
       lookAt: [
@@ -143,13 +151,117 @@ var DeaggregationGraphView = function (options) {
         180
       ],
       up: [0, 0, 1],
-      zoom: 4
+      zoom: 3.5
     });
     _d33d.renderLegend = _renderLegend;
 
-    _createAxes();
-
     _this.render();
+  };
+
+
+  /**
+   * Use data extents to set view lookAt, origin, and zoom so plot is
+   * roughly centered within view plot area.
+   */
+  _centerView = function () {
+    var bounds,
+        lookAt,
+        origin,
+        projectedBounds,
+        projectedWidth,
+        projectedHeight,
+        x0,
+        x1,
+        y0,
+        y1,
+        z0,
+        z1,
+        zoom;
+
+    // get current view
+    lookAt = _d33d.model.get('lookAt');
+    origin = _d33d.model.get('origin');
+    zoom = _d33d.model.get('zoom');
+
+    // compute projected bounds
+    bounds = _getBounds();
+    _xScale = 100 / (bounds[1][0] - bounds[0][0]);
+    _yScale = 70 / (bounds[1][1] - bounds[0][1]);
+    _zScale = 50 / (bounds[1][2] - bounds[0][2]);
+    x0 = bounds[0][0] * _xScale;
+    x1 = bounds[1][0] * _xScale;
+    y0 = bounds[0][1] * _yScale;
+    y1 = bounds[1][1] * _yScale;
+    z0 = bounds[0][2] * _zScale;
+    z1 = bounds[1][2] * _zScale;
+
+    projectedBounds = [
+      [x0, y0, z0],
+      [x0, y1, z0],
+      [x1, y1, z0],
+      [x1, y0, z0],
+      [x0, y0, z1],
+      [x0, y1, z1],
+      [x1, y1, z1],
+      [x1, y0, z1]
+    ].map(_d33d.project).reduce(function (bounds, point) {
+      var x,
+          y,
+          z;
+
+      x = point[0];
+      y = point[1];
+      z = point[2];
+
+      if (x < bounds[0][0]) {
+        bounds[0][0] = x;
+      }
+      if (x > bounds[1][0]) {
+        bounds[1][0] = x;
+      }
+      if (y < bounds[0][1]) {
+        bounds[0][1] = y;
+      }
+      if (y > bounds[1][1]) {
+        bounds[1][1] = y;
+      }
+      if (z < bounds[0][2]) {
+        bounds[0][2] = z;
+      }
+      if (z > bounds[1][2]) {
+        bounds[1][2] = z;
+      }
+
+      return bounds;
+    }, [
+      [Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY],
+      [Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY]
+    ]);
+
+    projectedWidth = (projectedBounds[1][0] - projectedBounds[0][0]);
+    projectedHeight = (projectedBounds[1][1] - projectedBounds[0][1]);
+
+    // look at x/y center at z=z0
+    lookAt = [
+      0.95 * (x1 + x0) / 2,
+      0.95 * (y1 + y0) / 2,
+      -5 * _zScale
+    ];
+    origin = [
+      lookAt[0] + 1000,
+      lookAt[1] - 1000,
+      lookAt[2] + 1000
+    ];
+    zoom = Math.min(
+        480 * zoom / projectedWidth,
+        480 * zoom / projectedHeight
+    );
+
+    _d33d.model.set({
+      'lookAt': lookAt,
+      'origin': origin,
+      'zoom': zoom
+    });
   };
 
   /**
@@ -162,23 +274,21 @@ var DeaggregationGraphView = function (options) {
   _createAxes = function () {
     var bounds,
         extent,
+        gridSpacing,
         metadata,
         x,
         x0,
         x1,
         xLabel,
-        xTickSpacing,
         xTicks,
         y,
         y0,
         y1,
         yLabel,
-        yTickSpacing,
         yTicks,
         z0,
         z1,
         zLabel,
-        zTickSpacing,
         zTicks;
 
     bounds = _getBounds();
@@ -195,23 +305,19 @@ var DeaggregationGraphView = function (options) {
       metadata = {};
     }
 
-    _xScale = 100 / (x1 - x0);
     //_yScale = 100 / (y1 - y0);
     //_zScale = 100 / (z1 - z0);
 
     xLabel = metadata.rlabel;
-    xTickSpacing = 5;
-    xTicks = ((x1 - x0) / xTickSpacing);
-    if (xTicks > 10) {
+    xTicks = ((x1 - x0) / _xTickSpacing);
+    while (xTicks > 10) {
       xTicks = xTicks / 2;
-      xTickSpacing = 10;
     }
+
     yLabel = metadata.mlabel;
-    yTickSpacing = 0.5;
-    yTicks = ((y1 - y0) / yTickSpacing);
+    yTicks = ((y1 - y0) / _yTickSpacing);
     zLabel = metadata.εlabel;
-    zTickSpacing = 5;
-    zTicks = ((z1 - z0) / zTickSpacing);
+    zTicks = ((z1 - z0) / _zTickSpacing);
 
     x0 = x0 * _xScale;
     x1 = x1 * _xScale;
@@ -312,7 +418,8 @@ var DeaggregationGraphView = function (options) {
 
 
     // grid lines
-    for (x = x0 + xTickSpacing; x < x1; x += xTickSpacing) {
+    gridSpacing = _xTickSpacing * _xScale;
+    for (x = x0 + gridSpacing; x < x1; x += gridSpacing) {
       _axes.push(D33dPath({
         className: 'grid-line',
         close: false,
@@ -320,7 +427,8 @@ var DeaggregationGraphView = function (options) {
       }));
     }
 
-    for (y = y0 + yTickSpacing; y < y1; y += yTickSpacing) {
+    gridSpacing = _yTickSpacing * _yScale;
+    for (y = y0 + gridSpacing; y < y1; y += gridSpacing) {
       _axes.push(D33dPath({
         className: 'grid-line',
         close: false,
@@ -417,20 +525,21 @@ var DeaggregationGraphView = function (options) {
       y1 = bounds[1][1];
       z0 = bounds[0][2];
       z1 = bounds[1][2];
-
-      // round min/max down/up to an increment of 10
-      x0 = 10 * Math.floor(x0 / 10);
-      x1 = 10 * Math.ceil(x1 / 10);
-
-      // round min/max down/up to next whole unit
-      y0 = Math.floor(y0) - 0.5;
-      y1 = Math.ceil(y1) + 0.5;
-
-      // always use 0
-      z0 = 0;
-      // round up to increment of 10
-      z1 = 10 * Math.ceil(z1 / 10.0);
     }
+
+    // round min/max down/up to an increment of 10
+    x0 = _xTickSpacing * Math.floor(x0 / _xTickSpacing) - _xTickSpacing;
+    x1 = _xTickSpacing * Math.ceil(x1 / _xTickSpacing) + _xTickSpacing;
+
+    // round min/max down/up to next whole unit
+    y0 = _yTickSpacing * Math.floor(y0 / _yTickSpacing) - _yTickSpacing;
+    y1 = _yTickSpacing * Math.ceil(y1 / _yTickSpacing) + _yTickSpacing;
+
+    // always use 0
+    z0 = 0;
+    // round up to increment of 10
+    z1 = _zTickSpacing * Math.ceil(z1 / _zTickSpacing) + _zTickSpacing;
+
 
     return [[x0, y0, z0], [x1, y1, z1]];
   };
@@ -511,6 +620,8 @@ var DeaggregationGraphView = function (options) {
 
     oldBins = _bins;
     oldAxes = _axes;
+
+    _centerView();
 
     // create new views
     _axes = [];
