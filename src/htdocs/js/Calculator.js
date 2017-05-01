@@ -69,6 +69,9 @@ var Calculator = function (/*params*/) {
       url: url,
       success: function (response) {
         _this.onXhrSuccess(response, service, analysis, callback);
+      },
+      error: function (err) {
+        throw err;
       }
     });
   };
