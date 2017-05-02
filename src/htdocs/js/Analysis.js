@@ -23,6 +23,7 @@ var Analysis = function (options) {
     region: null,
 
     location: null,
+    error: null,
 
     imt: 'PGA',
     vs30: '760',
@@ -60,6 +61,10 @@ var Analysis = function (options) {
   // Not really needed, but for consistency with other methods ...
   _this.getLocation = function () {
     return _this.get('location');
+  };
+
+  _this.getLocationError = function () {
+    return _this.get('locationError');
   };
 
   _this.getRegion = function () {
