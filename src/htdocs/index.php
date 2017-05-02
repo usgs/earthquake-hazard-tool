@@ -4,7 +4,7 @@ if (!isset($TEMPLATE)) {
 
   $TITLE = 'Unified Hazard Tool';
 
-  $CONTACT = 'pmpowers@usgs.gov';
+  $CONTACT = 'pmpowers+uht@usgs.gov';
   $CONTACT_URL = 'mailto:{CONTACT}?subject=' .
       rawurlencode(html_entity_decode($TITLE));
 
