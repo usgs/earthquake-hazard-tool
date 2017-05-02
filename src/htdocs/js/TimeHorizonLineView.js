@@ -53,10 +53,13 @@ var TimeHorizonLineView = function (params) {
   };
 
   _this.render = Util.compose(function (changed) {
-    var timeHorizon = _this.view.model.get('timeHorizon'),
-        xExtent = _this.view.getPlotXExtent(),
-        afe,
-        data;
+    var afe,
+        data,
+        timeHorizon,
+        xExtent;
+
+    timeHorizon = _this.view.model.get('timeHorizon');
+    xExtent = _this.view.getPlotXExtent(_this.view.getXExtent());
 
     if (isNaN(xExtent[0])) {
       data = [];
