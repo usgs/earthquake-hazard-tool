@@ -93,6 +93,10 @@ var __calculateBounds = function (bindata) {
  *
  * @param options {Object}
  *        options are passed to SelectedCollectionView.
+ * @param options.bounds {Array<Array>}
+ *        default null.
+ *        plotting bounds.
+ *        can be changed later by setting VIEW.bounds and calling VIEW.render
  * @param options.collection {Collection<Deaggregation>}
  *        collection with data to display.
  *        selected Deaggregation object is displayed.
@@ -126,6 +130,8 @@ var DeaggregationGraphView = function (options) {
     options = Util.extend({}, _DEFAULTS, options);
 
     _this.el.innerHTML = '<div class="DeaggregationGraphView"></div>';
+
+    _this.bounds = options.bounds || null;
 
     _axes = [];
     _bins = [];
@@ -518,7 +524,7 @@ var DeaggregationGraphView = function (options) {
     z1 = 35;
 
     if (_this.model) {
-      bounds = _this.model.get('bounds');
+      bounds = _this.bounds;
       if (!bounds) {
         bounds = __calculateBounds(_this.model.get('data'));
       }
