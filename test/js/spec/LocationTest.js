@@ -11,13 +11,8 @@ var locationFail,
 
 locationFail = {
   edition: 'E2014R1',
-  location: {
-    confidence: -1,
-    latitude: 3,
-    longitude: -118,
-    method: 'coordinate',
-    place: ''
-  }
+  error: 'error',
+  location: null
 };
 
 locationPass = {
@@ -28,7 +23,8 @@ locationPass = {
     longitude: -118,
     method: 'coordinate',
     place: ''
-  }
+  },
+  error: null
 };
 
 describe('LocationTest', function () {
@@ -49,41 +45,25 @@ describe('LocationTest', function () {
     });
   });
 
-  describe('displayErrorMessage and removeErrorMessage', function () {
-    var view;
-
-    view = Location({
-      model: Model(locationFail)
-    });
-
+  describe('addErrorMessage', function () {
     it('shows error message', function () {
-      var stub;
+      var view;
 
-      stub = sinon.stub(view.dependencyFactory, 'getAllRegions', function () {
-        return [];
+      view = Location({
+        model: Model(locationFail)
       });
 
-      view.displayErrorMessage();
+      view.addErrorMessage();
 
-      expect(stub.callCount).to.equal(1);
       expect(view.el.querySelectorAll('.usa-input-error-label').length).
           to.not.equal(0);
-
-      stub.restore();
-    });
-
-    it('removes error message', function () {
-      view.removeErrorMessage();
-
-      expect(view.el.querySelectorAll('.usa-input-error-label').length).
-          to.equal(0);
 
       view.destroy();
     });
   });
 
-  describe('checkLocation', function () {
-    it('calls getRegionByEdition', function () {
+  describe('checkError', function () {
+    it('calls removeErrorMessage', function () {
       var stub,
           view;
 
@@ -91,12 +71,11 @@ describe('LocationTest', function () {
         model: Model(locationPass)
       });
 
-      stub = sinon.stub(view.dependencyFactory, 'getRegionByEdition',
-          function () {
-        return null;
+      stub = sinon .stub(view, 'removeErrorMessage', function () {
+        return;
       });
 
-      view.checkLocation();
+      view.checkError();
 
       expect(stub.callCount).to.equal(1);
 
@@ -104,53 +83,40 @@ describe('LocationTest', function () {
       view.destroy();
     });
 
-    it('calls displayErrorMessage', function () {
+    it('calls addErrorMessage', function () {
       var stub,
-          stub2,
           view;
 
       view = Location({
         model: Model(locationFail)
       });
 
-      stub = sinon.stub(view.dependencyFactory, 'getRegionByEdition',
-          function () {
-        return null;
+      stub = sinon .stub(view, 'addErrorMessage', function () {
+        return;
       });
 
-      stub2 = sinon.stub(view, 'displayErrorMessage', function () {
-        return null;
-      });
+      view.checkError();
 
-      view.checkLocation();
-
-      expect(stub2.callCount).to.equal(1);
+      expect(stub.callCount).to.equal(1);
 
       stub.restore();
       view.destroy();
     });
+  });
 
-    it('calls removeErrorMessage', function () {
-      var stub,
-          stub2,
-          view;
+  describe('removeErrorMessage', function () {
+    it('removes error message', function () {
+      var view;
 
-      view = Location();
-
-      stub = sinon.stub(view.dependencyFactory, 'getRegionByEdition',
-          function () {
-        return true;
+      view = Location({
+        model: Model(locationPass)
       });
 
-      stub2 = sinon.stub(view, 'removeErrorMessage', function () {
-        return null;
-      });
+      view.removeErrorMessage();
 
-      view.checkLocation();
+      expect(view.el.querySelectorAll('.usa-input-error-label').length).
+          to.equal(0);
 
-      expect(stub2.callCount).to.equal(1);
-
-      stub.restore();
       view.destroy();
     });
   });
