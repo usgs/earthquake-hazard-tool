@@ -4,6 +4,10 @@ if (!isset($TEMPLATE)) {
 
   $TITLE = 'Documentation &amp; Help';
 
+  $CONTACT = 'pmpowers+uht@usgs.gov';
+  $CONTACT_URL = 'mailto:{CONTACT}?subject=' .
+      rawurlencode(html_entity_decode($TITLE));
+
   // If you want to include section navigation.
   // The nearest _navigation.inc.php file will be used by default
   $NAVIGATION = true;
