@@ -106,6 +106,7 @@ var Calculator = function (/*params*/) {
     ModalView(message, {
       title: 'Error',
       classes: ['modal-error'],
+      destroyOnHide: true
     }).show();
   };
 
