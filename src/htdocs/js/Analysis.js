@@ -64,7 +64,7 @@ var Analysis = function (options) {
   };
 
   _this.getLocationError = function () {
-    return _this.get('locationError');
+    return _this.get('error');
   };
 
   _this.getRegion = function () {
