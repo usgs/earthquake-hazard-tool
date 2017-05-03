@@ -14,7 +14,6 @@ echo navGroup('Other',
   navItem('/HazardCurveGraphView.html', 'Hazard Curve GraphView') .
   navItem('/HazardResponse.html', 'Hazard Response') .
   navItem('/LayerControl.html', 'Layer Control') .
-  navItem('/LocationInfoView.html', 'Location Info View') .
   navItem('/MapView.html', 'Map View') .
   navItem('/ResponseSpectrumGraphView.html', 'Response Spectrum Graph View') .
   navItem('/SiteClassView.html', 'Site Class') .

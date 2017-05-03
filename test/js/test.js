@@ -45,7 +45,6 @@ require('./spec/SpectralPeriodViewTest');
 require('./spec/TimeHorizonInputViewTest');
 require('./spec/TimeHorizonSelectViewTest');
 require('./spec/TimeHorizonSliderViewTest');
-require('./spec/LocationInfoViewTest');
 
 require('./spec/deagg/DeaggregationTest');
 require('./spec/deagg/DeaggResponseTest');

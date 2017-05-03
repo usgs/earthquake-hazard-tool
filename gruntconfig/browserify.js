@@ -62,7 +62,6 @@ addExports(config.src + '/htdocs/js', [
   'HazardCurveGraphView',
   'HazardResponse',
   'HazardUtil',
-  'LocationInfoView',
   'MapView',
   'Meta',
   'Region',
