@@ -10,7 +10,6 @@ echo navGroup('Other',
   navItem('/AnalysisView.html', 'Analysis View') .
   navItem('/AnalysisCollectionView.html', 'Analysis Collection View') .
   navItem('/DependencyFactory.html', 'Dependency Factory') .
-  navItem('/EditionView.html', 'Edition') .
   navItem('/Fullscreen.html', 'Fullscreen') .
   navItem('/HazardCurveGraphView.html', 'Hazard Curve GraphView') .
   navItem('/HazardResponse.html', 'Hazard Response') .
