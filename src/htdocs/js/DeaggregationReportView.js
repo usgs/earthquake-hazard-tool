@@ -1,6 +1,7 @@
 'use strict';
 
-var SelectedCollectionView = require('mvc/SelectedCollectionView'),
+var DownloadView = require('mvc/DownloadView'),
+    SelectedCollectionView = require('mvc/SelectedCollectionView'),
     Formatter = require('util/Formatter'),
 
     Util = require('util/Util');
@@ -34,11 +35,9 @@ var DeaggregationReportView = function (params) {
 
 
   _initialize = function (/*params*/) {
-    _downloadEl = document.createElement('a');
+    _downloadEl = document.createElement('button');
     _downloadEl.className = 'download-deaggregation-report';
     _downloadEl.innerHTML = 'Download Deaggregation Report';
-    _downloadEl.setAttribute('download', 'deaggregation-report.txt');
-    _downloadEl.href = '#';
 
     _reportEl = document.createElement('div');
     _reportEl.className = 'deaggregation-report-summary';
@@ -53,8 +52,13 @@ var DeaggregationReportView = function (params) {
   };
 
   _onDownloadClick = function () {
-    _downloadEl.href = 'data:text/plain;charset=UTF-8,' +
-        encodeURIComponent(_this.getReport());
+    DownloadView({
+      collection: _this.getReport(),
+      format: function (text) {
+        return text;
+      },
+      title: 'Deaggregation Report'
+    }).show();
   };
 
 
