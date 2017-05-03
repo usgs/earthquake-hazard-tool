@@ -40,7 +40,6 @@ require('./spec/HazardCurveTest');
 require('./spec/HazardCurveGraphViewTest');
 require('./spec/HazardUtilTest');
 require('./spec/LocationTest');
-require('./spec/TimeHorizonInputViewTest');
 require('./spec/TimeHorizonSelectViewTest');
 require('./spec/TimeHorizonSliderViewTest');
 
