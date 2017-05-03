@@ -1,5 +1,6 @@
 'use strict';
 
+
 var View = require('mvc/View'),
     Util = require('util/Util');
 
@@ -30,36 +31,26 @@ var _DEFAULTS = {
 
 var TimeHorizonInput = function (params) {
   var _this,
-      _initialize,
-
-      _buttons,
-      _horizons,
-      _timeHorizonButtons, // button group wrapper
-      _yearsInput,
-      _yearsLabel,
-
-      _createButtonMarkup,
-      _createViewSkeleton,
-      _onTimeHorizonButtonClick,
-      _onYearsInputChange,
-      _setErrorState;
+      _initialize;
 
 
   params = Util.extend({}, _DEFAULTS, params);
   _this = View(params);
 
   _initialize = function (/*params*/) {
-    _horizons = params.horizons;
+    _this.horizons = params.horizons;
 
-    _createViewSkeleton();
+    _this.createViewSkeleton();
 
-    _yearsLabel = _this.el.querySelector('label');
-    _yearsInput = _this.el.querySelector('.input-time-horizon-years');
-    _timeHorizonButtons = _this.el.querySelector('.input-time-horizon-buttons');
-    _buttons = _timeHorizonButtons.querySelectorAll('button');
+    _this.yearsLabel = _this.el.querySelector('label');
+    _this.yearsInput = _this.el.querySelector('.input-time-horizon-years');
+    _this.timeHorizonButtons = _this.el.querySelector(
+        '.input-time-horizon-buttons');
+    _this.buttons = _this.timeHorizonButtons.querySelectorAll('button');
 
-    _yearsInput.addEventListener('change', _onYearsInputChange);
-    _timeHorizonButtons.addEventListener('click', _onTimeHorizonButtonClick);
+    _this.yearsInput.addEventListener('change', _this.onYearsInputChange);
+    _this.timeHorizonButtons.addEventListener('click',
+        _this.onTimeHorizonButtonClick);
     _this.render();
   };
 
@@ -72,7 +63,7 @@ var TimeHorizonInput = function (params) {
    * @return {String}
    *      Markup for the button.
    */
-  _createButtonMarkup = function (timeHorizon) {
+  _this.createButtonMarkup = function (timeHorizon) {
     var currentValue;
 
     currentValue = _this.model.get('timeHorizon');
@@ -86,7 +77,7 @@ var TimeHorizonInput = function (params) {
     ].join('');
   };
 
-  _createViewSkeleton = function () {
+  _this.createViewSkeleton = function () {
     _this.el.innerHTML = [
       '<label>',
         'Time Horizon',
@@ -96,7 +87,7 @@ var TimeHorizonInput = function (params) {
           'Time horizon must be between 0 and 10,000 years.',
         '</small>',
         '<div class="input-time-horizon-buttons button-group">',
-          _horizons.map(_createButtonMarkup).join(''),
+          _this.horizons.map(_this.createButtonMarkup).join(''),
         '</div>',
       '</label>'
     ].join('');
@@ -104,7 +95,7 @@ var TimeHorizonInput = function (params) {
     _this.el.classList.add('time-horizon-input');
   };
 
-  _onTimeHorizonButtonClick = function (evt) {
+  _this.onTimeHorizonButtonClick = function (evt) {
     var target,
         value;
 
@@ -125,10 +116,10 @@ var TimeHorizonInput = function (params) {
     return evt.preventDefault();
   };
 
-  _onYearsInputChange = function () {
+  _this.onYearsInputChange = function () {
     var value;
 
-    value = parseInt(_yearsInput.value, 10);
+    value = parseInt(_this.yearsInput.value, 10);
 
     if (_this.model && !isNaN(value)) {
       // Limit time-horizon input to [0 .. 10000] years
@@ -143,30 +134,6 @@ var TimeHorizonInput = function (params) {
     }
   };
 
-  _setErrorState = function (show) {
-    if (show) {
-      _this.el.classList.add('usa-input-error');
-      _yearsLabel.classList.add('usa-input-error-label');
-    } else {
-      _this.el.classList.remove('usa-input-error');
-      _yearsLabel.classList.remove('usa-input-error-label');
-    }
-  };
-
-
-  _this.destroy = Util.compose(function () {
-    _yearsInput.removeEventListener('change', _onYearsInputChange);
-    _timeHorizonButtons.removeEventListener('click', _onTimeHorizonButtonClick);
-
-    _createButtonMarkup = null;
-    _createViewSkeleton = null;
-    _onTimeHorizonButtonClick = null;
-    _onYearsInputChange = null;
-
-    _initialize = null;
-    _this = null;
-  }, _this.destroy);
-
   _this.render = function () {
     var value;
 
@@ -180,11 +147,11 @@ var TimeHorizonInput = function (params) {
 
     // Set input field
     if (value !== null) {
-      _yearsInput.value = value;
+      _this.yearsInput.value = value;
     }
 
     // Highlight corresponding button, if exists
-    Array.prototype.forEach.call(_buttons, function (button) {
+    Array.prototype.forEach.call(_this.buttons, function (button) {
       if (parseInt(button.value, 10) === value) {
         button.classList.add('selected');
       } else {
@@ -194,12 +161,37 @@ var TimeHorizonInput = function (params) {
 
     // Set appropriate error state based on current value
     value = parseInt(value, 10); // null --> NaN, '' --> NaN
-    _setErrorState(
+    _this.setErrorState(
       isNaN(value) ||
       value < 0 ||
       value > 10000
     );
   };
+
+  _this.setErrorState = function (show) {
+    if (show) {
+      _this.el.classList.add('usa-input-error');
+      _this.yearsLabel.classList.add('usa-input-error-label');
+    } else {
+      _this.el.classList.remove('usa-input-error');
+      _this.yearsLabel.classList.remove('usa-input-error-label');
+    }
+  };
+
+
+  _this.destroy = Util.compose(function () {
+    _this.yearsInput.removeEventListener('change', _this.onYearsInputChange);
+    _this.timeHorizonButtons.removeEventListener('click',
+        _this.onTimeHorizonButtonClick);
+
+    _this.createButtonMarkup = null;
+    _this.createViewSkeleton = null;
+    _this.onTimeHorizonButtonClick = null;
+    _this.onYearsInputChange = null;
+
+    _initialize = null;
+    _this = null;
+  }, _this.destroy);
 
 
   _initialize(params);
