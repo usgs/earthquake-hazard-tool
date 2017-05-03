@@ -1,9 +1,8 @@
 'use strict';
 
+
 var LocationInput = require('input/Location'),
     TimeHorizonInput = require('input/TimeHorizonInput'),
-    // TimeHorizonInputView = require('TimeHorizonInputView'),
-    // TimeHorizonSliderView = require('TimeHorizonSliderView'),
 
     Collection = require('mvc/Collection'),
     CollectionSelectBox = require('mvc/CollectionSelectBox'),
@@ -26,55 +25,34 @@ var _DEFAULTS = {
 
 var InputView = function (params) {
   var _this,
-      _initialize,
-
-      _dependencyFactory,
-      _editionInput,
-      _editions,
-      _imtInput,
-      _imts,
-      _locationInput,
-      _siteClassInput,
-      _siteClasses,
-      _timeHorizonInput,
-
-      _createViewSkeleton,
-      _destroySubViews,
-      _getEdition,
-      _getRegionSupport,
-      _getValidImts,
-      _getValidSiteClasses,
-      _initSubViews,
-      _onEditionSelect,
-      _onImtSelect,
-      _onSiteClassSelect;
+      _initialize;
 
 
   params = Util.extend({}, _DEFAULTS, params);
   _this = SelectedCollectionView(params);
 
   _initialize = function (params) {
-    _dependencyFactory = params.dependencyFactory;
+    _this.dependencyFactory = params.dependencyFactory;
 
-    _createViewSkeleton();
+    _this.createViewSkeleton();
 
-    _editions = Collection(_dependencyFactory.getAllEditions());
-    _siteClasses = Collection(_dependencyFactory.getAllSiteClasses());
-    _imts = Collection(_dependencyFactory.getAllSpectralPeriods());
+    _this.editions = Collection(_this.dependencyFactory.getAllEditions());
+    _this.siteClasses = Collection(_this.dependencyFactory.getAllSiteClasses());
+    _this.imts = Collection(_this.dependencyFactory.getAllSpectralPeriods());
 
-    _editions.on('select', _onEditionSelect);
-    _siteClasses.on('select', _onSiteClassSelect);
-    _siteClasses.on('deselect', _onSiteClassSelect);
-    _imts.on('select', _onImtSelect);
-    _imts.on('deselect', _onImtSelect);
+    _this.editions.on('select', 'onEditionSelect', _this);
+    _this.siteClasses.on('select', 'onSiteClassSelect', _this);
+    _this.siteClasses.on('deselect', 'onSiteClassSelect', _this);
+    _this.imts.on('select', 'onImtSelect', _this);
+    _this.imts.on('deselect', 'onImtSelect', _this);
 
     if (_this.model) {
-      _initSubViews();
+      _this.initSubViews();
     }
   };
 
 
-  _createViewSkeleton = function () {
+  _this.createViewSkeleton = function () {
     _this.el.classList.add('input-view');
     _this.el.classList.add('row');
     _this.el.innerHTML = [
@@ -106,23 +84,36 @@ var InputView = function (params) {
     ].join('');
   };
 
-  _destroySubViews = function () {
-    _editionInput.destroy();
-    _locationInput.destroy();
-    _imtInput.destroy();
-    _timeHorizonInput.destroy();
+  _this.destroy = Util.compose(function () {
+    _this.destroySubViews();
 
-    _editionInput = null;
-    _locationInput = null;
-    _imtInput = null;
-    _timeHorizonInput = null;
+    _this.editions.off('select', 'onEditionSelect', _this);
+    _this.siteClasses.off('select', 'onSiteClassSelect', _this);
+    _this.siteClasses.off('deselect', 'onSiteClassSelect', _this);
+    _this.imts.off('select', 'onImtSelect', _this);
+    _this.imts.off('deselect', 'onImtSelect', _this);
+
+    _initialize = null;
+    _this = null;
+  }, _this.destroy);
+
+  _this.destroySubViews = function () {
+    _this.editionInput.destroy();
+    _this.locationInput.destroy();
+    _this.imtInput.destroy();
+    _this.timeHorizonInput.destroy();
+
+    _this.editionInput = null;
+    _this.locationInput = null;
+    _this.imtInput = null;
+    _this.timeHorizonInput = null;
   };
 
-  _getEdition = function () {
-    return _dependencyFactory.getEdition(_this.model.get('edition'));
+  _this.getEdition = function () {
+    return _this.dependencyFactory.getEdition(_this.model.get('edition'));
   };
 
-  _getRegionSupport = function (key) {
+  _this.getRegionSupport = function (key) {
     var edition,
         location,
         regions,
@@ -130,8 +121,8 @@ var InputView = function (params) {
 
     supported = {};
     location = _this.model.get('location');
-    edition = _getEdition();
-    regions = _dependencyFactory.getRegions(
+    edition = _this.getEdition();
+    regions = _this.dependencyFactory.getRegions(
         edition.get('supports').region, edition.id);
 
     regions.forEach(function (region) {
@@ -147,75 +138,89 @@ var InputView = function (params) {
     return Object.keys(supported);
   };
 
-  _getValidImts = function () {
+  _this.getValidImts = function () {
     var regionSupport;
 
     try {
-      regionSupport = _getRegionSupport('imt');
+      regionSupport = _this.getRegionSupport('imt');
 
       return regionSupport;
     } catch (e) {
       // If anything goes wrong, everything is valid
-      return _dependencyFactory.getAllSpectralPeriods().map(__to_id);
+      return _this.dependencyFactory.getAllSpectralPeriods().map(__to_id);
     }
   };
 
-  _getValidSiteClasses = function () {
+  _this.getValidSiteClasses = function () {
     var regionSupport;
 
     try {
-      regionSupport = _getRegionSupport('vs30');
+      regionSupport = _this.getRegionSupport('vs30');
 
       return regionSupport;
     } catch (e) {
       // If anything goes wrong, everything is valid
-      return _dependencyFactory.getAllSiteClasses().map(__to_id);
+      return _this.dependencyFactory.getAllSiteClasses().map(__to_id);
     }
   };
 
-  _initSubViews = function () {
+  _this.initSubViews = function () {
     // All editions are always valid, so default implementation works...
-    _editionInput = CollectionSelectBox({
-      collection: _editions,
+    _this.editionInput = CollectionSelectBox({
+      collection: _this.editions,
       el: _this.el.querySelector('.input-edition-view'),
       format: __to_display,
       includeBlankOption: true,
       model: _this.model
     });
 
-    _locationInput = LocationInput({
+    _this.locationInput = LocationInput({
       el: _this.el.querySelector('.input-location-view'),
       model: _this.model
     });
 
-    _siteClassInput = CollectionSelectBox({
-      collection: _siteClasses,
+    _this.siteClassInput = CollectionSelectBox({
+      collection: _this.siteClasses,
       el: _this.el.querySelector('.input-site-class-view'),
       format: __to_display,
-      getValidOptions: _getValidSiteClasses,
+      getValidOptions: _this.getValidSiteClasses,
       includeBlankOption: true,
       model: _this.model
     });
 
-    _imtInput = CollectionSelectBox({
-      collection: _imts,
+    _this.imtInput = CollectionSelectBox({
+      collection: _this.imts,
       el: _this.el.querySelector('.input-imt-view'),
       format: __to_display,
-      getValidOptions: _getValidImts,
+      getValidOptions: _this.getValidImts,
       includeBlankOption: true,
       model: _this.model
     });
 
-    _timeHorizonInput = TimeHorizonInput({
+    _this.timeHorizonInput = TimeHorizonInput({
       el: _this.el.querySelector('.input-time-horizon-view'),
       model: _this.model
     });
   };
 
-  _onEditionSelect = function () {
+  /**
+   * Destroys sub-views then calls parent impementation to free _this.model.
+   *
+   */
+  _this.onCollectionDeselect = Util.compose(_this.destroySubViews,
+      _this.onCollectionDeselect);
+
+  /**
+   * Calls parent implementation to set _this.model then initializes sub-views.
+   *
+   */
+  _this.onCollectionSelect = Util.compose(_this.onCollectionSelect,
+      _this.initSubViews);
+
+  _this.onEditionSelect = function () {
     var edition;
 
-    edition = _editions.getSelected();
+    edition = _this.editions.getSelected();
 
     if (_this.model) {
       _this.model.set({
@@ -223,31 +228,19 @@ var InputView = function (params) {
       });
     }
 
-    if (_siteClassInput) {
-      _siteClassInput.render();
+    if (_this.siteClassInput) {
+      _this.siteClassInput.render();
     }
 
-    if (_imtInput) {
-      _imtInput.render();
-    }
-  };
-
-  _onSiteClassSelect = function () {
-    var siteClass;
-
-    siteClass = _siteClasses.getSelected();
-
-    if (_this.model) {
-      _this.model.set({
-        vs30: (siteClass ? siteClass.id : null)
-      });
+    if (_this.imtInput) {
+      _this.imtInput.render();
     }
   };
 
-  _onImtSelect = function () {
+  _this.onImtSelect = function () {
     var imt;
 
-    imt = _imts.getSelected();
+    imt = _this.imts.getSelected();
 
     if (_this.model) {
       _this.model.set({
@@ -256,40 +249,27 @@ var InputView = function (params) {
     }
   };
 
+  _this.onSiteClassSelect = function () {
+    var siteClass;
 
-  _this.destroy = Util.compose(function () {
-    _destroySubViews();
+    siteClass = _this.siteClasses.getSelected();
 
-    // TODO :: Unbind any additional listeners.
-    // TODO :: Nullify non-view attributes and methods
-
-    _initialize = null;
-    _this = null;
-  }, _this.destroy);
-
-  /**
-   * Destroys sub-views then calls parent impementation to free _this.model.
-   *
-   */
-  _this.onCollectionDeselect = Util.compose(_destroySubViews,
-      _this.onCollectionDeselect);
-
-  /**
-   * Calls parent implementation to set _this.model then initializes sub-views.
-   *
-   */
-  _this.onCollectionSelect = Util.compose(_this.onCollectionSelect,
-      _initSubViews);
+    if (_this.model) {
+      _this.model.set({
+        vs30: (siteClass ? siteClass.id : null)
+      });
+    }
+  };
 
   _this.render = function () {
     if (_this.model) {
-      _editions.selectById(_this.model.get('edition'));
-      _siteClasses.selectById(_this.model.get('vs30'));
-      _imts.selectById(_this.model.get('imt'));
+      _this.editions.selectById(_this.model.get('edition'));
+      _this.siteClasses.selectById(_this.model.get('vs30'));
+      _this.imts.selectById(_this.model.get('imt'));
     } else {
-      _editions.deselect();
-      _siteClasses.deselect();
-      _imts.deselect();
+      _this.editions.deselect();
+      _this.siteClasses.deselect();
+      _this.imts.deselect();
     }
   };
 
