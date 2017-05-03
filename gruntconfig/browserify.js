@@ -56,7 +56,6 @@ addExports(config.src + '/htdocs/js', [
   'AnalysisView',
   'ApplicationView',
   'Calculator',
-  'DataExport',
   'DeaggregationReportView',
   'DependencyFactory',
   'DynamicHazardResponse',
