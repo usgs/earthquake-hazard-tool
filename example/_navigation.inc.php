@@ -9,7 +9,6 @@ echo navGroup('Input',
 echo navGroup('Other',
   navItem('/AnalysisView.html', 'Analysis View') .
   navItem('/AnalysisCollectionView.html', 'Analysis Collection View') .
-  navItem('/ContourTypeView.html', 'Contour Type View') .
   navItem('/DataExport.html', 'Data Export') .
   navItem('/DependencyFactory.html', 'Dependency Factory') .
   navItem('/EditionView.html', 'Edition') .

@@ -33,7 +33,6 @@ mocha.ui('bdd');
 require('./spec/AnalysisViewTest');
 require('./spec/AnalysisCollectionViewTest');
 require('./spec/ApplicationViewTest');
-require('./spec/ContourTypeViewTest');
 require('./spec/CalculatorTest');
 require('./spec/DataExportTest');
 require('./spec/DependencyFactoryTest');
