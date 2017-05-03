@@ -63,10 +63,6 @@ var Analysis = function (options) {
     return _this.get('location');
   };
 
-  _this.getLocationError = function () {
-    return _this.get('error');
-  };
-
   _this.getRegion = function () {
     return _dependencyFactory.getRegion(_this.get('region'),
         _this.get('edition'));
