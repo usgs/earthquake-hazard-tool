@@ -1,5 +1,6 @@
 'use strict';
 
+
 var ComponentCurvesGraphView = require('ComponentCurvesGraphView'),
     CurveCalculator = require('CurveCalculator'),
     DependencyFactory = require('DependencyFactory'),
@@ -26,19 +27,7 @@ var _DEFAULTS = {
  */
 var CurveOutputView = function (params) {
   var _this,
-      _initialize,
-
-      _btnCalculate,
-      _calculator,
-      _componentView,
-      _curves,
-      _meanCurveView,
-      _spectrumView,
-
-      _createViewSkeleton,
-      _initSubViews,
-      _invalidateCurves,
-      _onCalculateClick;
+      _initialize;
 
 
   // Inherit from parent class
@@ -50,18 +39,18 @@ var CurveOutputView = function (params) {
    *
    */
   _initialize = function (/*params*/) {
-    _calculator = CurveCalculator();
+    _this.calculator = CurveCalculator();
 
-    _curves = Collection([]);
-    _curves.on('select', 'onCurvesSelect', _this);
-    _curves.on('deselect', 'onCurvesDeselect', _this);
+    _this.curves = Collection([]);
+    _this.curves.on('select', 'onCurvesSelect', _this);
+    _this.curves.on('deselect', 'onCurvesDeselect', _this);
 
-    _createViewSkeleton();
-    _initSubViews();
+    _this.createViewSkeleton();
+    _this.initSubViews();
   };
 
 
-  _createViewSkeleton = function () {
+  _this.createViewSkeleton = function () {
     _this.el.classList.add('curve-output-view');
     _this.el.classList.add('row');
 
@@ -80,79 +69,69 @@ var CurveOutputView = function (params) {
       '<div class="curve-output-view-component column one-of-two"></div>'
     ].join('');
 
-    _btnCalculate = _this.el.querySelector('.curve-output-calculate');
-    _btnCalculate.addEventListener('click', _onCalculateClick, _this);
+    _this.btnCalculate = _this.el.querySelector('.curve-output-calculate');
+    _this.btnCalculate.addEventListener('click', _this.onCalculateClick);
   };
 
-  _initSubViews = function () {
-    _meanCurveView = HazardCurveGraphView({
-      curves: _curves,
+  _this.destroy = Util.compose(function () {
+    _this.btnCalculate.removeEventListener('click', _this.onCalculateClick);
+
+    _this.curves.off('select', 'onCurvesSelect', _this);
+    _this.curves.off('deselect', 'onCurvesDeselect', _this);
+
+    _this.componentView.destroy();
+    _this.curves.destroy();
+    _this.meanCurveView.destroy();
+    _this.spectrumView.destroy();
+
+    _initialize = null;
+    _this = null;
+  }, _this.destroy);
+
+  _this.initSubViews = function () {
+    _this.meanCurveView = HazardCurveGraphView({
+      curves: _this.curves,
       el: _this.el.querySelector('.curve-output-view-mean')
           .appendChild(document.createElement('div')),
       title: 'Hazard Curves'
     });
 
-    _spectrumView = ResponseSpectrumGraphView({
-      curves: _curves,
+    _this.spectrumView = ResponseSpectrumGraphView({
+      curves: _this.curves,
       el: _this.el.querySelector('.curve-output-view-spectrum')
           .appendChild(document.createElement('div')),
       title: 'Uniform Hazard Response Spectrum'
     });
 
-    _componentView = ComponentCurvesGraphView({
-      collection: _curves,
+    _this.componentView = ComponentCurvesGraphView({
+      collection: _this.curves,
       el: _this.el.querySelector('.curve-output-view-component')
           .appendChild(document.createElement('div')),
       title: 'Hazard Curve Components'
     });
   };
 
-  _onCalculateClick = function () {
-    _this.trigger('calculate', {
-      calculator: _calculator,
-      serviceType: DependencyFactory.TYPE_CURVE
-    });
-  };
-
-  _invalidateCurves = function () {
+  _this.invalidateCurves = function () {
     _this.model.set({
       curves: null
     });
   };
 
-  _this.destroy = Util.compose(function () {
-    _btnCalculate.removeEventListener('click', _onCalculateClick, _this);
-    _curves.off();
-
-    _componentView.destroy();
-    _curves.destroy();
-    _meanCurveView.destroy();
-    _spectrumView.destroy();
-
-    _calculator = null;
-    _btnCalculate = null;
-    _componentView = null;
-    _curves = null;
-    _meanCurveView = null;
-    _spectrumView = null;
-
-    _createViewSkeleton = null;
-    _initSubViews = null;
-    _invalidateCurves = null;
-    _onCalculateClick = null;
-
-    _initialize = null;
-    _this = null;
-  }, _this.destroy);
+  _this.onCalculateClick = function () {
+    _this.trigger('calculate', {
+      calculator: _this.calculator,
+      serviceType: DependencyFactory.TYPE_CURVE
+    });
+  };
 
   /**
    * unset the event bindings for the model
    */
   _this.onCollectionDeselect = function () {
     _this.model.off('change', 'render', _this);
-    _this.model.off('change:edition', _invalidateCurves);
-    _this.model.off('change:location', _invalidateCurves);
-    _this.model.off('change:vs30', _invalidateCurves);
+    _this.model.off('change:edition', 'invalidateCurves', _this);
+    _this.model.off('change:location', 'invalidateCurves', _this);
+    _this.model.off('change:vs30', 'invalidateCurves', _this);
     _this.model = null;
     _this.render({model: _this.model});
   };
@@ -162,9 +141,9 @@ var CurveOutputView = function (params) {
    */
   _this.onCollectionSelect = function () {
     _this.model = _this.collection.getSelected();
-    _this.model.on('change:edition', _invalidateCurves);
-    _this.model.on('change:location', _invalidateCurves);
-    _this.model.on('change:vs30', _invalidateCurves);
+    _this.model.on('change:edition', 'invalidateCurves', _this);
+    _this.model.on('change:location', 'invalidateCurves', _this);
+    _this.model.on('change:vs30', 'invalidateCurves', _this);
     _this.model.on('change', 'render', _this);
     _this.render({model: _this.model});
   };
@@ -180,7 +159,7 @@ var CurveOutputView = function (params) {
   _this.onCurvesSelect = function () {
     var curve;
 
-    curve = _curves.getSelected();
+    curve = _this.curves.getSelected();
 
     if (_this.model) {
       _this.model.set({
@@ -230,7 +209,7 @@ var CurveOutputView = function (params) {
 
     // Update curve plotting
     try {
-      _meanCurveView.model.set({
+      _this.meanCurveView.model.set({
         'xLabel': xAxisLabel,
         'yLabel': yAxisLabel,
         'timeHorizon': timeHorizon
@@ -243,7 +222,7 @@ var CurveOutputView = function (params) {
 
     // Update spectra plotting
     try {
-      _spectrumView.model.set({
+      _this.spectrumView.model.set({
         'timeHorizon': timeHorizon
       }, {silent: true});
     } catch (e) {
@@ -252,7 +231,7 @@ var CurveOutputView = function (params) {
       }
     }
 
-    _curves.reset(data);
+    _this.curves.reset(data);
 
     if (data.length === 0) {
       _this.el.classList.remove('curve-output-ready');
@@ -261,7 +240,7 @@ var CurveOutputView = function (params) {
     }
 
     if (id !== null) {
-      _curves.selectById(id);
+      _this.curves.selectById(id);
     }
   };
 
