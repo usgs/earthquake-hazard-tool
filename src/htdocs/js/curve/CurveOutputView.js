@@ -181,6 +181,7 @@ var CurveOutputView = function (params) {
         data,
         id,
         imt,
+        rawDataUrl,
         timeHorizon,
         xAxisLabel,
         yAxisLabel;
@@ -239,7 +240,17 @@ var CurveOutputView = function (params) {
       }
     }
 
+    // Triggering reset causes plots to re-render on current (possibly empty)
+    // array of curve data
     _this.curves.reset(data);
+
+    // Update the link URL
+    rawDataUrl = _this.model.get('rawDataUrl');
+    if (rawDataUrl) {
+      _this.linkRawData.setAttribute('href', encodeURI(rawDataUrl));
+    } else {
+      _this.linkRawData.removeAttribute('href');
+    }
 
     if (data.length === 0) {
       _this.el.classList.remove('curve-output-ready');
