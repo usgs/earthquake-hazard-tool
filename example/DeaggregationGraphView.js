@@ -58,13 +58,11 @@ auto = controls.querySelector('.auto');
 fixed = controls.querySelector('.fixed');
 
 auto.addEventListener('click', function () {
-  view.model.set({
-    'bounds': null
-  });
+  view.bounds = null;
+  view.render();
 });
 
 fixed.addEventListener('click', function () {
-  view.model.set({
-    bounds: [[5, 5, 5], [95, 9, 45]]
-  });
-})
+  view.bounds = [[5, 5, 5], [95, 9, 45]];
+  view.render();
+});

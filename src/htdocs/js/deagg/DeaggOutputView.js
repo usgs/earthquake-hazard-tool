@@ -267,6 +267,8 @@ var DeaggOutputView = function (params) {
       _deaggCollection.reset(deaggs);
 
       if (deaggs.length && !_deaggCollection.getSelected()) {
+        // set graph plot area based on "Total" deaggregation, which is first
+        _graphView.bounds = DeaggGraphView.calculateBounds(deaggs[0].get('data'));
         _deaggCollection.select(deaggs[0]);
       }
 
