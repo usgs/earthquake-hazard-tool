@@ -71,7 +71,7 @@ var Calculator = function (/*params*/) {
       success: function (response) {
         // check that the response is not an error response from the ws
         if (response.status === 'success') {
-          _this.onXhrSuccess(response, service, analysis);
+          _this.onXhrSuccess(url, response, service, analysis);
         } else {
           _this.displayError(response.message);
         }
@@ -89,9 +89,10 @@ var Calculator = function (/*params*/) {
     });
   };
 
-  _this.onXhrSuccess = function (response, service, analysis) {
+  _this.onXhrSuccess = function (url, response, service, analysis) {
     analysis.set({
-      'curves': require(service.constructor)(response.response)
+      'curves': require(service.constructor)(response.response),
+      'rawDataUrl': url
     });
   };
 
