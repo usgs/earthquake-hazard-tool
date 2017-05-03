@@ -8,6 +8,8 @@
 @import 'leaflet/control/_Fullscreen.scss';
 @import 'leaflet/control/_MousePosition.scss';
 
+@import 'mvc/ModalView.scss';
+
 @import 'locationview/_controls.scss';
 @import 'locationview/CoordinateControl.scss';
 @import 'locationview/GeocodeControl.scss';
@@ -27,7 +29,6 @@
 @import '_ComponentCurvesGraphView.scss';
 @import '_CurveOutputView.scss';
 @import '_DeaggregationReportView.scss';
-@import '_DataExport.scss';
 @import '_Documentation.scss';
 @import '_ErrorsView.scss';
 @import '_HazardCurveGraphView.scss';
