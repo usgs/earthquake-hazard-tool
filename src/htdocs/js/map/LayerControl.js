@@ -328,6 +328,15 @@ var LayerControl = L.Control.extend({
     this._map.addLayer(this._currentBaselayer);
   },
 
+  _onClick: function (/*evt*/) {
+
+    this._container.classList.add('show');
+
+    L.DomEvent
+        .on(this._container, 'mousedown dblclick', L.DomEvent.stopPropagation)
+        .on(this._map._container, 'click', this._onMapClick, this);
+  },
+
   _onFaultsChange: function () {
     var layer,
         value;
@@ -368,16 +377,6 @@ var LayerControl = L.Control.extend({
       this._currentOverlay = layer.layer;
       this._map.addLayer(this._currentOverlay);
     }
-  },
-
-  _onClick: function (/*evt*/) {
-
-    this._container.classList.add('show');
-
-    L.DomEvent
-        .on(this._container, 'mousedown dblclick', L.DomEvent.stopPropagation)
-        .on(this._map._container, 'click', this._onMapClick, this);
-
   },
 
   _onMapClick: function (/*evt*/) {
