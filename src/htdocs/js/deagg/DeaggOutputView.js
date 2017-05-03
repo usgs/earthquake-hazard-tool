@@ -82,7 +82,8 @@ var DeaggOutputView = function (params) {
       _this.el.parentElement.parentElement.classList.add('accordion-closed');
       // Add warning, without calculate button
       el.innerHTML = ['<p class="alert warning">',
-          'Deaggregation calculations are not available for the selected edition.',
+          'Deaggregation calculations are not available for the selected ',
+          'edition.',
         '</p>'].join('');
       // if button exists, remove event listener
       if (_this.btnCalculate) {
@@ -253,7 +254,8 @@ var DeaggOutputView = function (params) {
 
       if (deaggs.length && !_this.deaggCollection.getSelected()) {
         // set graph plot area based on "Total" deaggregation, which is first
-        _this.graphView.bounds = DeaggGraphView.calculateBounds(deaggs[0].get('data'));
+        _this.graphView.bounds = DeaggGraphView.calculateBounds(
+            deaggs[0].get('data'));
         _this.deaggCollection.select(deaggs[0]);
       }
 
