@@ -1,5 +1,6 @@
 'use strict';
 
+
 var ConfidenceCalculator = require('locationview/ConfidenceCalculator'),
     CoordinateControl = require('locationview/CoordinateControl'),
     LocationView = require('locationview/LocationView'),
@@ -16,48 +17,59 @@ var _DEFAULTS = {
 
 var Location = function (params) {
   var _this,
-      _initialize,
-
-      _errorMessage,
-      _inputLatitude,
-      _inputLongitude,
-      _latitude,
-      _locationView,
-      _longitude,
-      _usemap,
-
-      _createViewSkeleton,
-      _onInputChange,
-      _onLocation,
-      _onUseMapClick;
+      _initialize;
 
 
   params = Util.extend({}, _DEFAULTS, params);
   _this = View(params);
 
   _initialize = function (/*params*/) {
-    _createViewSkeleton();
+    _this.createViewSkeleton();
 
-    _latitude = _this.el.querySelector('#input-latitude');
-    _longitude = _this.el.querySelector('#input-longitude');
-    _usemap = _this.el.querySelector('#input-usemap');
+    _this.latitude = _this.el.querySelector('#input-latitude');
+    _this.longitude = _this.el.querySelector('#input-longitude');
+    _this.usemap = _this.el.querySelector('#input-usemap');
 
-    _locationView = LocationView({
-      callback: _onLocation
+    _this.locationView = LocationView({
+      callback: _this.onLocation
     });
 
-    _latitude.addEventListener('change', _onInputChange, _this);
-    _longitude.addEventListener('change', _onInputChange, _this);
-    _usemap.addEventListener('click', _onUseMapClick, _this);
-    _this.model.on('change:error', _this.checkError);
-    _this.model.on('change:edition', _this.checkError);
+    _this.latitude.addEventListener('change', _this.onInputChange);
+    _this.longitude.addEventListener('change', _this.onInputChange);
+    _this.usemap.addEventListener('click', _this.onUseMapClick);
+    _this.model.on('change:error', 'checkError', _this);
+    _this.model.on('change:edition', 'checkError', _this);
 
     // Render initially to reflect model state
     _this.render();
   };
 
+  _this.addErrorMessage = function () {
+    var inputError,
+        message;
 
-  _createViewSkeleton = function () {
+    inputError = _this.model.get('error');
+    message = inputError.location;
+
+    _this.errorMessage.innerHTML = message;
+    _this.inputLatitude.parentElement.classList.add('usa-input-error-label');
+    _this.inputLongitude.parentElement.classList.add('usa-input-error-label');
+    _this.errorMessage.parentElement.classList.add('usa-input-error');
+  };
+
+  _this.checkError = function () {
+    var errorCheck;
+
+    errorCheck = _this.model.get('error');
+
+    if (errorCheck === null) {
+      _this.removeErrorMessage();
+    } else {
+      _this.addErrorMessage();
+    }
+  };
+
+  _this.createViewSkeleton = function () {
     _this.el.innerHTML = [
       '<label for="input-latitude">',
         'Latitude',
@@ -78,25 +90,49 @@ var Location = function (params) {
       '</button>'
     ].join('');
 
-    _errorMessage = _this.el.querySelector('#input-error-message');
-    _inputLatitude = _this.el.querySelector('#input-latitude');
-    _inputLongitude = _this.el.querySelector('#input-longitude');
+    _this.errorMessage = _this.el.querySelector('#input-error-message');
+    _this.inputLatitude = _this.el.querySelector('#input-latitude');
+    _this.inputLongitude = _this.el.querySelector('#input-longitude');
   };
 
-  _onInputChange = function () {
+  _this.destroy = Util.compose(function () {
+    if (_this ===  null) {
+      return; // already destroyed
+    }
+
+    if (_this.latitude) {
+      _this.latitude.removeEventListener('change', _this.onInputChange);
+    }
+
+    if(_this.longitude) {
+      _this.longitude.removeEventListener('change', _this.onInputChange);
+    }
+
+    if(_this.usemap) {
+      _this.usemap.removeEventListener('click', _this.onUseMapClick);
+    }
+
+    _this.model.off('change:error', 'checkError', _this);
+    _this.model.off('change:edition', 'checkError', _this);
+
+    _initialize = null;
+    _this = null;
+  }, _this.destroy);
+
+  _this.onInputChange = function () {
     var confidence,
         latitudeVal,
         location,
         longitudeVal;
 
     try {
-      latitudeVal = parseFloat(_latitude.value);
+      latitudeVal = parseFloat(_this.latitude.value);
     } catch (e) {
       // Ignore, validator will deal with this later...
     }
 
     try {
-      longitudeVal = parseFloat(_longitude.value);
+      longitudeVal = parseFloat(_this.longitude.value);
     } catch (e) {
       // Ignore, validator will deal with this later...
     }
@@ -131,7 +167,7 @@ var Location = function (params) {
    * trigger a render.
    *
    */
-  _onLocation = function (location) {
+  _this.onLocation = function (location) {
     // Round to only 3 decimals for locations not directly typed
     if (location.method !== CoordinateControl.METHOD) {
       location.latitude = Math.round(location.latitude * 1000) / 1000;
@@ -153,7 +189,7 @@ var Location = function (params) {
    * view in a modal dialog.
    *
    */
-  _onUseMapClick = function (evt) {
+  _this.onUseMapClick = function (evt) {
     var currentLocation,
         options;
 
@@ -172,78 +208,15 @@ var Location = function (params) {
       };
     }
 
-    _locationView.show(options);
+    _this.locationView.show(options);
     return evt.preventDefault();
   };
 
-
-  _this.addErrorMessage = function () {
-    var inputError,
-        message;
-
-    inputError = _this.model.get('error');
-    message = inputError.location;
-
-    _errorMessage.innerHTML = message;
-    _inputLatitude.parentElement.classList.add('usa-input-error-label');
-    _inputLongitude.parentElement.classList.add('usa-input-error-label');
-    _errorMessage.parentElement.classList.add('usa-input-error');
-  };
-
-  _this.checkError = function () {
-    var errorCheck;
-
-    errorCheck = _this.model.get('error');
-
-    if (errorCheck === null) {
-      _this.removeErrorMessage();
-    } else {
-      _this.addErrorMessage();
-    }
-  };
-
-  _this.destroy = Util.compose(function () {
-    if (_this ===  null) {
-      return; // already destroyed
-    }
-
-    if (_latitude) {
-      _latitude.removeEventListener('change', _onInputChange, _this);
-    }
-
-    if(_longitude) {
-      _longitude.removeEventListener('change', _onInputChange, _this);
-    }
-
-    if(_usemap) {
-      _usemap.removeEventListener('click', _onUseMapClick, _this);
-    }
-
-    _this.model.off('change:error', _this.checkError);
-    _this.model.off('change:edition', _this.checkError);
-
-    _errorMessage = null;
-    _inputLatitude = null;
-    _inputLongitude = null;
-    _latitude = null;
-    _locationView = null;
-    _longitude = null;
-    _usemap = null;
-
-    _createViewSkeleton = null;
-    _onInputChange = null;
-    _onLocation = null;
-    _onUseMapClick = null;
-
-    _initialize = null;
-    _this = null;
-  }, _this.destroy);
-
   _this.removeErrorMessage = function () {
-    _errorMessage.innerHTML = '';
-    _inputLatitude.parentElement.classList.remove('usa-input-error-label');
-    _inputLongitude.parentElement.classList.remove('usa-input-error-label');
-    _errorMessage.parentElement.classList.remove('usa-input-error');
+    _this.errorMessage.innerHTML = '';
+    _this.inputLatitude.parentElement.classList.remove('usa-input-error-label');
+    _this.inputLongitude.parentElement.classList.remove('usa-input-error-label');
+    _this.errorMessage.parentElement.classList.remove('usa-input-error');
   };
 
   _this.render = function () {
@@ -252,8 +225,8 @@ var Location = function (params) {
     location = _this.model.get('location');
 
     if (location) {
-      _latitude.value = location.latitude;
-      _longitude.value = location.longitude;
+      _this.latitude.value = location.latitude;
+      _this.longitude.value = location.longitude;
     }
   };
 
