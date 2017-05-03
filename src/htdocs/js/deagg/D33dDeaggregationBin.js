@@ -1,5 +1,6 @@
 'use strict';
 
+
 var D33dCuboid = require('d3/D33dCuboid'),
     D33dGroup = require('d3/D33dGroup'),
     Util = require('util/Util');
@@ -40,9 +41,7 @@ var _DEFAULTS = {
  */
 var D33dDeaggregationBin = function (options) {
   var _this,
-      _initialize,
-      // methods
-      _createEpsilonCuboids;
+      _initialize;
 
 
   _this = D33dGroup({
@@ -52,13 +51,13 @@ var D33dDeaggregationBin = function (options) {
   _initialize = function (options) {
     options = Util.extend({}, _DEFAULTS, options);
 
-    _createEpsilonCuboids(options);
+    _this.createEpsilonCuboids(options);
   };
 
   /**
    * Create all epsilon bins within this magnitude/distance bin.
    */
-  _createEpsilonCuboids = function (options) {
+  _this.createEpsilonCuboids = function (options) {
     var bin,
         items,
         m,
