@@ -102,7 +102,7 @@ var Location = function (params) {
     }
 
     if (isNaN(latitudeVal) && isNaN(longitudeVal)) {
-      // if either are NaN, update model
+      // Both are NaN, update model
       _this.model.set({
         location: null
       });
