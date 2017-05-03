@@ -68,12 +68,17 @@ var CurveOutputView = function (params) {
       '<div class="curve-output-view-spectrum column one-of-two"></div>',
       '<div class="curve-output-view-component column one-of-two"></div>',
       '<div class="curve-output-view-raw-data column one-of-one">',
-        '<a href="javascript:void(null);" class="rawdata">View Raw Data</a>',
+        '<a class="rawdata" target="_blank">',
+          'View Raw Data',
+        '</a>',
       '</div>',
     ].join('');
 
+
     _this.btnCalculate = _this.el.querySelector('.curve-output-calculate');
     _this.btnCalculate.addEventListener('click', _this.onCalculateClick);
+
+    _this.linkRawData = _this.el.querySelector('.curve-output-view-raw-data > a');
   };
 
   _this.destroy = Util.compose(function () {
