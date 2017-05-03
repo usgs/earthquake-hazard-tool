@@ -16,6 +16,5 @@ echo navGroup('Other',
   navItem('/LayerControl.html', 'Layer Control') .
   navItem('/MapView.html', 'Map View') .
   navItem('/ResponseSpectrumGraphView.html', 'Response Spectrum Graph View') .
-  navItem('/TimeHorizonSelectView.html', 'Time Horizon Select') .
-  navItem('/TimeHorizonSliderView.html', 'Time Horizon Slider')
+  navItem('/TimeHorizonSelectView.html', 'Time Horizon Select')
 );

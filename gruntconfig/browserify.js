@@ -67,7 +67,6 @@ addExports(config.src + '/htdocs/js', [
   'Region',
   'ResponseSpectrumGraphView',
   'TimeHorizonSelectView',
-  'TimeHorizonSliderView',
 
   'deagg/Deaggregation',
   'deagg/DeaggResponse',

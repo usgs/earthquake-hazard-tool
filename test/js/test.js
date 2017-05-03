@@ -41,7 +41,6 @@ require('./spec/HazardCurveGraphViewTest');
 require('./spec/HazardUtilTest');
 require('./spec/LocationTest');
 require('./spec/TimeHorizonSelectViewTest');
-require('./spec/TimeHorizonSliderViewTest');
 
 require('./spec/deagg/DeaggregationTest');
 require('./spec/deagg/DeaggResponseTest');
