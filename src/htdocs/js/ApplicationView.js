@@ -49,6 +49,8 @@ var ApplicationView = function (params) {
 
       // methods
       _clearOutput,
+      _formatLocationError,
+      _formatRegionError,
       _initViewContainer,
       _onCalculate,
       _onEditionChange,
@@ -58,7 +60,8 @@ var ApplicationView = function (params) {
       _onTimeHorizonChange,
       _onVs30Change,
       _updateRegion,
-      _updateVs30;
+      _updateVs30,
+      _validateLocation;
 
 
   _this = SelectedCollectionView(params);
@@ -114,6 +117,53 @@ var ApplicationView = function (params) {
 
   _clearOutput = function () {
     _this.model.set({curves: null});
+  };
+
+  _formatLocationError = function () {
+    _this.model.set({
+      error: {
+        location: '<h3>Please select a location</h3>'
+      }
+    });
+  };
+
+  _formatRegionError = function (edition) {
+    var i,
+        regions,
+        regionText;
+
+    regions = _dependencyFactory.getAllRegions(edition);
+
+    regionText = '';
+    regionText += '<h3>Selected location is outside the allowed bounds' +
+        '</h3><ul>';
+
+    for (i = 0; i < regions.length; i++) {
+      regionText +=
+      '<li>' +
+        regions[i].get('display') + ' ' +
+        '<ul>' +
+          '<span class="min-max">' +
+            '<li>' +
+              'Latitude [' + regions[i].get('minlatitude') + ', ' +
+                  regions[i].get('maxlatitude') + ']' +
+            '</li>' +
+            '<li>' +
+              'Longitude [' + regions[i].get('minlongitude') + ', ' +
+                  regions[i].get('maxlongitude') + ']' +
+            '</li>' +
+          '</span>' +
+        '</ul>' +
+      '</li>';
+    }
+
+    regionText += '</ul>';
+
+    _this.model.set({
+      error: {
+        location: regionText
+      }
+    });
   };
 
   _initViewContainer = function () {
@@ -172,6 +222,36 @@ var ApplicationView = function (params) {
     // append button to history section toggle
     _this.el.querySelector('.analysis-collection-view > .accordion-toggle').
         appendChild(_newButton);
+  };
+
+  _onCalculate = function (data) {
+    var calculator,
+        request,
+        serviceType;
+
+    if (!_validateLocation()) {
+      return;
+    }
+
+    calculator = data.calculator;
+    serviceType = data.serviceType;
+
+    if (!_queued && calculator) {
+      window.setTimeout(function () {
+        if (_this.model.get('edition') && _this.model.get('location') &&
+            _this.model.get('region') && _this.model.get('vs30')) {
+          request = calculator.getResult(
+              _dependencyFactory.getService(
+                  _this.model.get('edition'), serviceType),
+              _this.model,
+              _loaderView.hide
+            );
+          _loaderView.show(request);
+        }
+        _queued = false;
+      }, 0);
+      _queued = true;
+    }
   };
 
   /**
@@ -312,31 +392,33 @@ var ApplicationView = function (params) {
     }
   };
 
-  _onCalculate = function (data) {
-    var calculator,
-        request,
-        serviceType;
+  _validateLocation = function () {
+    var checkLocation,
+        edition,
+        location;
 
-    calculator = data.calculator;
-    serviceType = data.serviceType;
+    location = _this.model.get('location');
 
-    if (!_queued && calculator) {
-      window.setTimeout(function () {
-        if (_this.model.get('edition') && _this.model.get('location') &&
-            _this.model.get('region') && _this.model.get('vs30')) {
-          request = calculator.getResult(
-              _dependencyFactory.getService(
-                  _this.model.get('edition'), serviceType),
-              _this.model,
-              _loaderView.hide
-            );
-          _loaderView.show(request);
-        }
-        _queued = false;
-      }, 0);
-      _queued = true;
+    if (location === null) {
+      _formatLocationError();
+      return false;
     }
 
+    edition = _this.model.get('edition');
+
+    checkLocation =
+        _dependencyFactory.getRegionByEdition(edition, location);
+
+    if (checkLocation === null) {
+      _formatRegionError(edition);
+      return false;
+    }
+
+    _this.model.set({
+      error: null
+    });
+
+    return true;
   };
 
 
@@ -384,6 +466,8 @@ var ApplicationView = function (params) {
 
     // methods
     _clearOutput = null;
+    _formatLocationError = null;
+    _formatRegionError = null;
     _initViewContainer = null;
     _onEditionChange = null;
     _onLocationChange = null;
@@ -393,6 +477,7 @@ var ApplicationView = function (params) {
     _onVs30Change = null;
     _updateRegion = null;
     _updateVs30 = null;
+    _validateLocation = null;
 
     _initialize = null;
     _this = null;

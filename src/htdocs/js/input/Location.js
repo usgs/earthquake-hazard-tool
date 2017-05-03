@@ -2,7 +2,6 @@
 
 var ConfidenceCalculator = require('locationview/ConfidenceCalculator'),
     CoordinateControl = require('locationview/CoordinateControl'),
-    DependencyFactory = require('DependencyFactory'),
     LocationView = require('locationview/LocationView'),
 
     View = require('mvc/View'),
@@ -47,20 +46,14 @@ var Location = function (params) {
       callback: _onLocation
     });
 
-    _this.dependencyFactory = DependencyFactory.getInstance();
-
     _latitude.addEventListener('change', _onInputChange, _this);
     _longitude.addEventListener('change', _onInputChange, _this);
     _usemap.addEventListener('click', _onUseMapClick, _this);
-    _this.model.on('change:location', _this.checkLocation);
-    _this.model.on('change:edition', _this.checkLocation);
+    _this.model.on('change:error', _this.checkError);
+    _this.model.on('change:edition', _this.checkError);
 
     // Render initially to reflect model state
     _this.render();
-
-    // Bindings are removed and readded, so the events above will not
-    // trigger when switching between analyses in the collection
-    _this.checkLocation();
   };
 
 
@@ -153,8 +146,6 @@ var Location = function (params) {
     _this.model.set({
       location: location
     });
-
-
   };
 
   /**
@@ -185,27 +176,29 @@ var Location = function (params) {
     return evt.preventDefault();
   };
 
-  _this.checkLocation = function () {
-    var checkLocation,
-        edition,
-        location;
 
-    location = _this.model.get('location');
+  _this.addErrorMessage = function () {
+    var inputError,
+        message;
 
-    if (location === null) {
+    inputError = _this.model.get('error');
+    message = inputError.location;
+
+    _errorMessage.innerHTML = message;
+    _inputLatitude.parentElement.classList.add('usa-input-error-label');
+    _inputLongitude.parentElement.classList.add('usa-input-error-label');
+    _errorMessage.parentElement.classList.add('usa-input-error');
+  };
+
+  _this.checkError = function () {
+    var errorCheck;
+
+    errorCheck = _this.model.get('error');
+
+    if (errorCheck === null) {
       _this.removeErrorMessage();
-      return;
-    }
-
-    edition = _this.model.get('edition');
-
-    checkLocation =
-        _this.dependencyFactory.getRegionByEdition(edition, location);
-
-    if (checkLocation === null) {
-      _this.displayErrorMessage(edition);
     } else {
-      _this.removeErrorMessage();
+      _this.addErrorMessage();
     }
   };
 
@@ -226,8 +219,8 @@ var Location = function (params) {
       _usemap.removeEventListener('click', _onUseMapClick, _this);
     }
 
-    _this.model.off('change:location', _this.checkLocation);
-    _this.model.off('change:edition', _this.checkLocation);
+    _this.model.off('change:error', _this.checkError);
+    _this.model.off('change:edition', _this.checkError);
 
     _errorMessage = null;
     _inputLatitude = null;
@@ -246,44 +239,6 @@ var Location = function (params) {
     _this = null;
   }, _this.destroy);
 
-  _this.displayErrorMessage = function (edition) {
-    var i,
-        regions,
-        regionText;
-
-    regions = _this.dependencyFactory.getAllRegions(edition);
-
-    regionText = '';
-    regionText += '<h3>Selected location is outside the allowed bounds' +
-        '</h3><ul>';
-
-    for (i = 0; i < regions.length; i++) {
-      regionText +=
-      '<li>' +
-        regions[i].get('display') + ' ' +
-        '<ul>' +
-          '<span class="min-max">' +
-            '<li>' +
-              'Latitude [' + regions[i].get('minlatitude') + ', ' +
-                  regions[i].get('maxlatitude') + ']' +
-            '</li>' +
-            '<li>' +
-              'Longitude [' + regions[i].get('minlongitude') + ', ' +
-                  regions[i].get('maxlongitude') + ']' +
-            '</li>' +
-          '</span>' +
-        '</ul>' +
-      '</li>';
-    }
-
-    regionText += '</ul>';
-
-    _errorMessage.innerHTML = regionText;
-    _inputLatitude.parentElement.classList.add('usa-input-error-label');
-    _inputLongitude.parentElement.classList.add('usa-input-error-label');
-    _errorMessage.parentElement.classList.add('usa-input-error');
-  };
-
   _this.removeErrorMessage = function () {
     _errorMessage.innerHTML = '';
     _inputLatitude.parentElement.classList.remove('usa-input-error-label');
@@ -296,10 +251,7 @@ var Location = function (params) {
 
     location = _this.model.get('location');
 
-    if (!location) {
-      _latitude.value = '';
-      _longitude.value = '';
-    } else {
+    if (location) {
       _latitude.value = location.latitude;
       _longitude.value = location.longitude;
     }

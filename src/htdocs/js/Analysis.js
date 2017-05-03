@@ -23,6 +23,7 @@ var Analysis = function (options) {
     region: null,
 
     location: null,
+    error: null,
 
     imt: 'PGA',
     vs30: '760',
