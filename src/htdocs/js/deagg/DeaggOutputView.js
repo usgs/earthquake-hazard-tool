@@ -23,61 +23,30 @@ var _DEFAULTS = {
  */
 var DeaggOutputView = function (params) {
   var _this,
-      _initialize,
-
-      _btnCalculate,
-      _calculator,
-      _componentSelectView,
-      _createAlertEl,
-      _dependencyFactory,
-      _deaggCollection,
-      _graphView,
-      _reportView,
-
-      _createViewSkeleton,
-      _destroySubViews,
-      _initSubViews,
-      _invalidateDeaggregation,
-      _onCalculateClick;
+      _initialize;
 
 
   params = Util.extend({}, _DEFAULTS, params);
   _this = SelectedCollectionView(params);
 
+
   _initialize = function (params) {
     _this.el.classList.add('deagg-output-view');
 
-    _calculator = DeaggCalculator();
+    _this.calculator = DeaggCalculator();
 
-    _deaggCollection = Collection();
-    _dependencyFactory = params.dependencyFactory;
+    _this.deaggCollection = Collection();
+    _this.dependencyFactory = params.dependencyFactory;
 
-    _createViewSkeleton();
-    _initSubViews();
-  };
-
-
-  /**
-   * Populates the view container structure.
-   *
-   */
-  _createViewSkeleton = function () {
-    _this.el.innerHTML = [
-      '<div class="deagg-output-mask"></div>',
-      '<label>',
-        'Component',
-        '<select class="deagg-component-select-view"></select>',
-      '</label>',
-      '<div class="deagg-output-view-graph"></div>',
-      '<div class="deagg-output-view-report"></div>'
-    ].join('');
+    _this.createViewSkeleton();
+    _this.initSubViews();
   };
 
   /**
    * Displays info message for supported and unsupported deagg calculations
    *
    */
-  _createAlertEl = function () {
+  _this.createAlertEl = function () {
     var el,
         isSupported;
 
@@ -89,7 +58,7 @@ var DeaggOutputView = function (params) {
     }
 
     // check if edition supports a deagg calculation
-    isSupported = _dependencyFactory.isSupportedEdition(
+    isSupported = _this.dependencyFactory.isSupportedEdition(
         _this.model.get('edition'));
 
     if (isSupported) {
@@ -106,40 +75,57 @@ var DeaggOutputView = function (params) {
         '</p>'
       ].join('');
       // add calculate button
-      _btnCalculate = _this.el.querySelector('.deagg-output-calculate');
-      _btnCalculate.addEventListener('click', _onCalculateClick, _this);
+      _this.btnCalculate = _this.el.querySelector('.deagg-output-calculate');
+      _this.btnCalculate.addEventListener('click', _this.onCalculateClick);
     } else {
       // Collapse the accordion section
       _this.el.parentElement.parentElement.classList.add('accordion-closed');
       // Add warning, without calculate button
       el.innerHTML = ['<p class="alert warning">',
-          'Deaggregation calculations are not available for the selected edition.',
+          'Deaggregation calculations are not available for the selected ',
+          'edition.',
         '</p>'].join('');
       // if button exists, remove event listener
-      if (_btnCalculate) {
-        _btnCalculate.removeEventListener('click', _onCalculateClick, _this);
+      if (_this.btnCalculate) {
+        _this.btnCalculate.removeEventListener('click', _this.onCalculateClick);
       }
     }
+  };
+
+  /**
+   * Populates the view container structure.
+   *
+   */
+  _this.createViewSkeleton = function () {
+    _this.el.innerHTML = [
+      '<div class="deagg-output-mask"></div>',
+      '<label>',
+        'Component',
+        '<select class="deagg-component-select-view"></select>',
+      '</label>',
+      '<div class="deagg-output-view-graph"></div>',
+      '<div class="deagg-output-view-report"></div>'
+    ].join('');
   };
 
   /**
    * Clean up each managed sub-view.
    *
    */
-  _destroySubViews = function () {
-    if (_componentSelectView) {
-      _componentSelectView.destroy();
-      _componentSelectView = null;
+  _this.destroySubViews = function () {
+    if (_this.componentSelectView) {
+      _this.componentSelectView.destroy();
+      _this.componentSelectView = null;
     }
 
-    if (_graphView) {
-      _graphView.destroy();
-      _graphView = null;
+    if (_this.graphView) {
+      _this.graphView.destroy();
+      _this.graphView = null;
     }
 
-    if (_reportView) {
-      _reportView.destroy();
-      _reportView = null;
+    if (_this.reportView) {
+      _this.reportView.destroy();
+      _this.reportView = null;
     }
   };
 
@@ -147,42 +133,42 @@ var DeaggOutputView = function (params) {
    * Initialize each managed sub-view.
    *
    */
-  _initSubViews = function () {
-    _componentSelectView = CollectionSelectBox({
-      collection: _deaggCollection,
+  _this.initSubViews = function () {
+    _this.componentSelectView = CollectionSelectBox({
+      collection: _this.deaggCollection,
       el: _this.el.querySelector('.deagg-component-select-view'),
       format: function (m) { return m.get('component'); },
       model: _this.model
     });
 
-    _graphView = DeaggGraphView({
-      collection: _deaggCollection,
+    _this.graphView = DeaggGraphView({
+      collection: _this.deaggCollection,
       el: _this.el.querySelector('.deagg-output-view-graph')
     });
 
-    _reportView = DeaggReportView({
+    _this.reportView = DeaggReportView({
       analysis: _this.model,
-      collection: _deaggCollection,
+      collection: _this.deaggCollection,
       el: _this.el.querySelector('.deagg-output-view-report')
     });
 
-    if (!_deaggCollection.getSelected()) {
+    if (!_this.deaggCollection.getSelected()) {
       // Nothing was selected, so did not render by default, but we want
       // a graph skeleton (axes etc...) so, call render anyway
-      _graphView.render();
+      _this.graphView.render();
     }
   };
 
-  _onCalculateClick = function () {
-    _this.trigger('calculate', {
-      calculator: _calculator,
-      serviceType: DependencyFactory.TYPE_DEAGG
+  _this.invalidateDeaggregation = function () {
+    _this.model.set({
+      deaggResponses: null
     });
   };
 
-  _invalidateDeaggregation = function () {
-    _this.model.set({
-      deaggResponses: null
+  _this.onCalculateClick = function () {
+    _this.trigger('calculate', {
+      calculator: _this.calculator,
+      serviceType: DependencyFactory.TYPE_DEAGG
     });
   };
 
@@ -191,17 +177,17 @@ var DeaggOutputView = function (params) {
    *
    */
   _this.destroy = Util.compose(function () {
-    _destroySubViews();
+    _this.destroySubViews();
 
-    _deaggCollection.destroy();
-    _deaggCollection = null;
+    _this.deaggCollection.destroy();
+    _this.deaggCollection = null;
 
-    _createAlertEl = null;
-    _createViewSkeleton = null;
-    _destroySubViews = null;
-    _dependencyFactory = null;
-    _invalidateDeaggregation = null;
-    _initSubViews = null;
+    _this.createAlertEl = null;
+    _this.createViewSkeleton = null;
+    _this.destroySubViews = null;
+    _this.dependencyFactory = null;
+    _this.invalidateDeaggregation = null;
+    _this.initSubViews = null;
 
     _initialize = null;
     _this = null;
@@ -212,13 +198,13 @@ var DeaggOutputView = function (params) {
    * unset the event bindings for the model
    */
   _this.onCollectionDeselect = function () {
-    _deaggCollection.reset([]);
+    _this.deaggCollection.reset([]);
     _this.model.off('change', 'render', _this);
-    _this.model.off('change:edition', _invalidateDeaggregation);
-    _this.model.off('change:location', _invalidateDeaggregation);
-    _this.model.off('change:vs30', _invalidateDeaggregation);
-    _this.model.off('change:imt', _invalidateDeaggregation);
-    _this.model.off('change:timeHorizon', _invalidateDeaggregation);
+    _this.model.off('change:edition', 'invalidateDeaggregation', _this);
+    _this.model.off('change:location', 'invalidateDeaggregation', _this);
+    _this.model.off('change:vs30', 'invalidateDeaggregation', _this);
+    _this.model.off('change:imt', 'invalidateDeaggregation', _this);
+    _this.model.off('change:timeHorizon', 'invalidateDeaggregation', _this);
     _this.model = null;
     _this.render({model: _this.model});
   };
@@ -228,11 +214,11 @@ var DeaggOutputView = function (params) {
    */
   _this.onCollectionSelect = function () {
     _this.model = _this.collection.getSelected();
-    _this.model.on('change:edition', _invalidateDeaggregation);
-    _this.model.on('change:location', _invalidateDeaggregation);
-    _this.model.on('change:vs30', _invalidateDeaggregation);
-    _this.model.on('change:imt', _invalidateDeaggregation);
-    _this.model.on('change:timeHorizon', _invalidateDeaggregation);
+    _this.model.on('change:edition', 'invalidateDeaggregation', _this);
+    _this.model.on('change:location', 'invalidateDeaggregation', _this);
+    _this.model.on('change:vs30', 'invalidateDeaggregation', _this);
+    _this.model.on('change:imt', 'invalidateDeaggregation', _this);
+    _this.model.on('change:timeHorizon', 'invalidateDeaggregation', _this);
     _this.model.on('change', 'render', _this);
     _this.render({model: _this.model});
   };
@@ -244,7 +230,7 @@ var DeaggOutputView = function (params) {
         responses;
 
     // Update deaggregation alert info/warning
-    _createAlertEl();
+    _this.createAlertEl();
 
     try {
       deaggs = [];
@@ -264,19 +250,20 @@ var DeaggOutputView = function (params) {
         deaggs = response.get('deaggregations').data().slice(0);
       }
 
-      _deaggCollection.reset(deaggs);
+      _this.deaggCollection.reset(deaggs);
 
-      if (deaggs.length && !_deaggCollection.getSelected()) {
+      if (deaggs.length && !_this.deaggCollection.getSelected()) {
         // set graph plot area based on "Total" deaggregation, which is first
-        _graphView.bounds = DeaggGraphView.calculateBounds(deaggs[0].get('data'));
-        _deaggCollection.select(deaggs[0]);
+        _this.graphView.bounds = DeaggGraphView.calculateBounds(
+            deaggs[0].get('data'));
+        _this.deaggCollection.select(deaggs[0]);
       }
 
     } catch (e) {
-      _deaggCollection.deselect();
-      _deaggCollection.reset([]);
+      _this.deaggCollection.deselect();
+      _this.deaggCollection.reset([]);
     } finally {
-      if (_deaggCollection.data().length === 0) {
+      if (_this.deaggCollection.data().length === 0) {
         _this.el.classList.remove('deagg-output-ready');
       } else {
         _this.el.classList.add('deagg-output-ready');
