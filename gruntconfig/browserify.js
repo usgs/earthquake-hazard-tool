@@ -66,7 +66,6 @@ addExports(config.src + '/htdocs/js', [
   'Meta',
   'Region',
   'ResponseSpectrumGraphView',
-  'SiteClassView',
   'SpectralPeriodView',
   'TimeHorizonInputView',
   'TimeHorizonSelectView',

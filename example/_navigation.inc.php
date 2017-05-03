@@ -16,7 +16,6 @@ echo navGroup('Other',
   navItem('/LayerControl.html', 'Layer Control') .
   navItem('/MapView.html', 'Map View') .
   navItem('/ResponseSpectrumGraphView.html', 'Response Spectrum Graph View') .
-  navItem('/SiteClassView.html', 'Site Class') .
   navItem('/SpectralPeriodView.html', 'SpectralPeriodView') .
   navItem('/TimeHorizonInputView.html', 'Time Horizon Input') .
   navItem('/TimeHorizonSelectView.html', 'Time Horizon Select') .
