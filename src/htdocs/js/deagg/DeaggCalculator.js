@@ -1,5 +1,6 @@
 'use strict';
 
+
 var Calculator = require('Calculator'),
 
     Collection = require('mvc/Collection');
@@ -44,7 +45,9 @@ var DeaggCalculator = function () {
   };
 
   _this.onXhrSuccess = function (response, service, analysis) {
-    var deaggResponses = Collection(response.response.map(
+    var deaggResponses;
+
+    deaggResponses = Collection(response.response.map(
         require(service.constructor)));
 
     analysis.set({
