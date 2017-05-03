@@ -1,29 +1,16 @@
 'use strict';
 
+
 var Analysis = require('Analysis'),
     AnalysisView = require('AnalysisView'),
-
     Collection = require('mvc/Collection'),
-    View = require('mvc/View'),
+    Util = require('util/Util'),
+    View = require('mvc/View');
 
-    Util = require('util/Util');
 
 var AnalysisCollectionView = function (params) {
   var _this,
-      _initialize,
-
-      _collection,
-      _destroyCollection,
-      _list,
-      _views,
-
-      _createView,
-      _onAnalysisAdd,
-      _onAnalysisDeselect,
-      _onAnalysisRemove,
-      _onAnalysisReset,
-      _onAnalysisSelect,
-      _onClick;
+      _initialize;
 
 
   _this = View(params||{});
@@ -32,35 +19,35 @@ var AnalysisCollectionView = function (params) {
     params = params || {};
 
     if (params.collection) {
-      _collection = params.collection;
+      _this.collection = params.collection;
     } else {
-      _destroyCollection = true;
-      _collection = Collection([]);
+      _this.destroyCollection = true;
+      _this.collection = Collection([]);
     }
 
     if (_this.el.nodeName.toUpperCase() === 'OL' ||
         _this.el.nodeName.toUpperCase() === 'UL') {
-      _list = _this.el;
+      _this.list = _this.el;
     } else {
-      _list = _this.el.appendChild(document.createElement('ol'));
+      _this.list = _this.el.appendChild(document.createElement('ol'));
     }
-    _list.classList.add('analysis-collection-list');
-    _list.classList.add('no-style');
-    _list.addEventListener('click', _onClick);
+    _this.list.classList.add('analysis-collection-list');
+    _this.list.classList.add('no-style');
+    _this.list.addEventListener('click', _this.onClick);
 
-    _views = Collection([]);
-    _onAnalysisReset();
+    _this.views = Collection([]);
+    _this.onAnalysisReset();
 
-    _collection.on('add', _onAnalysisAdd);
-    _collection.on('remove', _onAnalysisRemove);
-    _collection.on('reset', _onAnalysisReset);
+    _this.collection.on('add', 'onAnalysisAdd', _this);
+    _this.collection.on('remove', 'onAnalysisRemove', _this);
+    _this.collection.on('reset', 'onAnalysisReset', _this);
 
-    _collection.on('select', _onAnalysisSelect);
-    _collection.on('deselect', _onAnalysisDeselect);
+    _this.collection.on('select', 'onAnalysisSelect', _this);
+    _this.collection.on('deselect', 'onAnalysisDeselect', _this);
   };
 
 
-  _createView = function (analysis) {
+  _this.createView = function (analysis) {
     var a,
         view;
 
@@ -79,73 +66,96 @@ var AnalysisCollectionView = function (params) {
     return view;
   };
 
-  _onAnalysisAdd = function (analyses) {
+  _this.destroy = Util.compose(function () {
+    _this.list.removeEventListener('click', _this.onClick);
+
+    _this.collection.off('add', 'onAnalysisAdd', _this);
+    _this.collection.off('remove', 'onAnalysisRemove', _this);
+    _this.collection.off('reset', 'onAnalysisReset', _this);
+
+    _this.collection.off('select', 'onAnalysisSelect', _this);
+    _this.collection.off('deselect', 'onAnalysisDeselect', _this);
+
+    if (_this.destroyCollection) {
+      _this.collection.destroy();
+    }
+
+    _this.views.destroy();
+
+    _initialize = null;
+    _this = null;
+  }, _this.destroy);
+
+  _this.onAnalysisAdd = function (analyses) {
     analyses.forEach(function (analysis) {
-      _views.add(_createView(analysis));
+      _this.views.add(_this.createView(analysis));
     });
 
     _this.render();
   };
 
-  _onAnalysisDeselect = function (analysis) {
+  _this.onAnalysisDeselect = function (analysis) {
     var view;
 
-    view = _views.get(analysis.id);
+    view = _this.views.get(analysis.id);
     if (view) {
       view.el.classList.remove('selected');
     }
   };
 
-  _onAnalysisRemove = function (analyses) {
-    analyses.forEach(function (analysis) {
-      var view = _views.get(analysis.id);
+  _this.onAnalysisRemove = function (analyses) {
+    var view;
 
-      _views.remove(view);
+    analyses.forEach(function (analysis) {
+      view = _this.views.get(analysis.id);
+
+      _this.views.remove(view);
       view.destroy();
     });
 
-    if (_views.data().length === 0) {
-      _collection.add(Analysis());
+    if (_this.views.data().length === 0) {
+      _this.collection.add(Analysis());
     }
 
     // if selected analysis was deleted, select newest model in the collection
-    if (!_collection.getSelected()) {
-      _collection.select(_collection.data()[_collection.data().length - 1]);
+    if (!_this.collection.getSelected()) {
+      _this.collection.select(_this.collection.data()
+          [_this.collection.data().length - 1]);
     }
 
     _this.render();
   };
 
-  _onAnalysisReset = function () {
-    _views.data().forEach(function (view) {
-      _views.remove(view);
+  _this.onAnalysisReset = function () {
+    _this.views.data().forEach(function (view) {
+      _this.views.remove(view);
       view.destroy();
     });
 
-    _collection.data().forEach(function (analysis) {
-      _views.add(_createView(analysis));
+    _this.collection.data().forEach(function (analysis) {
+      _this.views.add(_this.createView(analysis));
     });
 
     _this.render();
   };
 
-  _onAnalysisSelect = function (analysis) {
+  _this.onAnalysisSelect = function (analysis) {
     var view;
 
-    view = _views.get(analysis.id);
+    view = _this.views.get(analysis.id);
     if (view) {
       view.el.classList.add('selected');
     }
   };
 
-  _onClick = function (evt) {
+  _this.onClick = function (evt) {
     var element,
         id,
         parent;
 
     evt = Util.getEvent(evt);
     element = evt.target;
-    parent = Util.getParentNode(element, 'li', _list);
+    parent = Util.getParentNode(element, 'li', _this.list);
 
     if (parent) {
       id = parent.getAttribute('data-analysis-id');
@@ -155,64 +165,30 @@ var AnalysisCollectionView = function (params) {
 
     if (id !== null) {
       if (element.classList.contains('analysis-delete-link')) {
-        _collection.remove(_collection.get(id));
+        _this.collection.remove(_this.collection.get(id));
       } else {
-        _collection.selectById(id);
+        _this.collection.selectById(id);
       }
     }
 
     return evt.originalEvent.preventDefault();
   };
 
-
-  _this.destroy = Util.compose(function () {
-    _list.removeEventListener('click', _onClick);
-
-    _collection.off('add', _onAnalysisAdd);
-    _collection.off('remove', _onAnalysisRemove);
-    _collection.off('reset', _onAnalysisReset);
-
-    _collection.off('select', _onAnalysisSelect);
-    _collection.off('deselect', _onAnalysisDeselect);
-
-    if (_destroyCollection) {
-      _collection.destroy();
-    }
-
-    _views.destroy();
-
-    _collection = null;
-    _destroyCollection = null;
-    _list = null;
-    _views = null;
-
-    _createView = null;
-    _onAnalysisAdd = null;
-    _onAnalysisDeselect = null;
-    _onAnalysisRemove = null;
-    _onAnalysisReset = null;
-    _onAnalysisSelect = null;
-    _onClick = null;
-
-    _initialize = null;
-    _this = null;
-  }, _this.destroy);
-
   _this.render = function () {
     var fragment;
 
     fragment = document.createDocumentFragment();
 
-    _collection.data().forEach(function (analysis) {
-      var view = _views.get(analysis.id);
+    _this.collection.data().forEach(function (analysis) {
+      var view = _this.views.get(analysis.id);
 
       if (view) {
         fragment.insertBefore(view.el, fragment.firstChild);
       }
     });
 
-    Util.empty(_list);
-    _list.appendChild(fragment);
+    Util.empty(_this.list);
+    _this.list.appendChild(fragment);
   };
 
 
