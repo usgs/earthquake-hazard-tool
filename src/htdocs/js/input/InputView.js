@@ -229,7 +229,8 @@ var InputView = function (params) {
 
     if (_this.model) {
       _this.model.set({
-        edition: (edition ? edition.id : null)
+        edition: (edition ? edition.id : null),
+        rawDataUrl: null
       });
     }
 
@@ -261,7 +262,8 @@ var InputView = function (params) {
 
     if (_this.model) {
       _this.model.set({
-        vs30: (siteClass ? siteClass.id : null)
+        vs30: (siteClass ? siteClass.id : null),
+        rawDataUrl: null
       });
     }
   };
