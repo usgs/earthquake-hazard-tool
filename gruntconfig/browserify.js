@@ -148,6 +148,20 @@ var browserify = {
       require: RESPONSE_HANDLERS,
       external: EXPORTS.concat(['leaflet'])
     }
+  },
+
+  // builds a test bundle with instrumentation for coverage output
+  coverage: {
+    src: [config.test + '/js/test.js'],
+    dest: config.build + '/' + config.test + '/js/test.js',
+    options: {
+      alias: EXPORTS,
+      require: RESPONSE_HANDLERS,
+      transform: ['browserify-istanbul'],
+      external: [
+        'leaflet'
+      ]
+    }
   }
 };
 

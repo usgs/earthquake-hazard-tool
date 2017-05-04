@@ -31,7 +31,7 @@ var watch = {
       'jshint:test',
       'browserify:test',
       'copy:test',
-      'mocha_phantomjs'
+      'mocha_phantomjs:test'
     ]
   },
 
@@ -43,7 +43,7 @@ var watch = {
       'jshint:dev',
       'browserify:index',
       'browserify:bundle',
-      'mocha_phantomjs'
+      'mocha_phantomjs:test'
     ]
   },
 

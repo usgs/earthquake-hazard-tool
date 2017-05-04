@@ -116,6 +116,17 @@ var connect = {
     }
   },
 
+  coverage: {
+    options: {
+      base: [
+        config.build + '/' + config.test,
+        config.build + '/' + config.src + '/htdocs',
+        config.etc,
+        'node_modules' // primarily for mocha/chai
+      ],
+      port: config.coveragePort
+    }
+  },
 
   data: {
     options: {
