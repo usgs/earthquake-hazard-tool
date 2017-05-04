@@ -7,6 +7,7 @@ var gruntConfig = {
   connect: require('./connect'),
   copy: require('./copy'),
   jshint: require('./jshint'),
+  makeReport: require('./istanbul'),
   mocha_phantomjs: require('./mocha_phantomjs'),
   postcss: require('./postcss'),
   uglify: require('./uglify'),
@@ -21,6 +22,7 @@ var gruntConfig = {
     'grunt-contrib-jshint',
     'grunt-contrib-uglify',
     'grunt-contrib-watch',
+    'grunt-istanbul',
     'grunt-mocha-phantomjs',
     'grunt-postcss'
   ]
