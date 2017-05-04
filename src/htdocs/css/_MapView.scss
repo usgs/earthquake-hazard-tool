@@ -8,29 +8,6 @@
   padding: 0;
 }
 
-/* have attribution span entire bottom of map, raise the other controls */
-.leaflet-bottom {
-  width: 100%;
-
-  > :last-child {
-    margin-bottom: 26px;
-  }
-}
-
-.leaflet-control-attribution {
-  border-radius: 0;
-  bottom: 0;
-  left: 0;
-  overflow: hidden;
-  position: absolute;
-  right: 0;
-  text-align: center;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  width: 100%;
-}
-
-
 .hazard-fault-layer-popup {
   max-height: 300px;
   overflow-y: auto;
