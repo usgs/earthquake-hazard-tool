@@ -28,7 +28,7 @@ module.exports = function (grunt) {
     'browserify:test',
     'copy:test',
     'connect:test',
-    'mocha_phantomjs',
+    'mocha_phantomjs:test',
     // start server
     'configureProxies:dev',
     'connect:data',
