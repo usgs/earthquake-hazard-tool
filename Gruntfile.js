@@ -65,6 +65,16 @@ module.exports = function (grunt) {
     'browserify:test',
     'copy:test',
     'connect:test',
-    'mocha_phantomjs'
+    'mocha_phantomjs:test'
+  ]);
+
+  grunt.registerTask('coverage', [
+    'clean',
+    'browserify:coverage',
+    'copy:leaflet',
+    'copy:test',
+    'connect:coverage',
+    'mocha_phantomjs:coverage',
+    'makeReport'
   ]);
 };
