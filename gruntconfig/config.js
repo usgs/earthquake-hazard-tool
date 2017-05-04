@@ -5,6 +5,8 @@ var BASE_PORT = 8500;
 var config = {
   build: '.build',
   buildPort: BASE_PORT,
+  coverage: 'coverage',
+  coveragePort: BASE_PORT + 2,
   dataPort: BASE_PORT + 7,
   dist: 'dist',
   distPort: BASE_PORT + 3,
