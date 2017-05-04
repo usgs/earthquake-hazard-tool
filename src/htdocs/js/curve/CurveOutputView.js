@@ -66,11 +66,19 @@ var CurveOutputView = function (params) {
       '</div>',
       '<div class="curve-output-view-mean column one-of-two"></div>',
       '<div class="curve-output-view-spectrum column one-of-two"></div>',
-      '<div class="curve-output-view-component column one-of-two"></div>'
+      '<div class="curve-output-view-component column one-of-two"></div>',
+      '<div class="curve-output-view-raw-data column one-of-one">',
+        '<a class="rawdata" target="_blank">',
+          'View Raw Data',
+        '</a>',
+      '</div>',
     ].join('');
+
 
     _this.btnCalculate = _this.el.querySelector('.curve-output-calculate');
     _this.btnCalculate.addEventListener('click', _this.onCalculateClick);
+
+    _this.linkRawData = _this.el.querySelector('.curve-output-view-raw-data > a');
   };
 
   _this.destroy = Util.compose(function () {
@@ -173,6 +181,7 @@ var CurveOutputView = function (params) {
         data,
         id,
         imt,
+        curveServiceUrl,
         timeHorizon,
         xAxisLabel,
         yAxisLabel;
@@ -231,7 +240,17 @@ var CurveOutputView = function (params) {
       }
     }
 
+    // Triggering reset causes plots to re-render on current (possibly empty)
+    // array of curve data
     _this.curves.reset(data);
+
+    // Update the link URL
+    curveServiceUrl = _this.model.get('curveServiceUrl');
+    if (curveServiceUrl) {
+      _this.linkRawData.setAttribute('href', encodeURI(curveServiceUrl));
+    } else {
+      _this.linkRawData.removeAttribute('href');
+    }
 
     if (data.length === 0) {
       _this.el.classList.remove('curve-output-ready');

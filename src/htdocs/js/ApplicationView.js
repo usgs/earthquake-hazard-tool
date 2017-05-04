@@ -421,7 +421,6 @@ var ApplicationView = function (params) {
     return true;
   };
 
-
   _this.destroy = Util.compose(_this.destroy, function () {
     _calculator.destroy();
 

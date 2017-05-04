@@ -43,14 +43,15 @@ var DeaggCalculator = function () {
     return url;
   };
 
-  _this.onXhrSuccess = function (response, service, analysis) {
+  _this.onXhrSuccess = function (url, response, service, analysis) {
     var deaggResponses;
 
     deaggResponses = Collection(response.response.map(
         require(service.constructor)));
 
     analysis.set({
-      'deaggResponses': deaggResponses
+      'deaggResponses': deaggResponses,
+      'deaggServiceUrl': url
     });
   };
 
