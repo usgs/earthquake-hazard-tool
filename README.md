@@ -1,9 +1,7 @@
 earthquake-hazard-tool
 ==============
-[![Build Status](https://travis-ci.org/usgs/earthquake-design-ws.svg?branch=master)]
-(https://travis-ci.org/usgs/earthquake-design-ws)
-[![Coverage](https://codecov.io/gh/usgs/earthquake-hazard-tool/branch/master/graph/badge.svg)]
-(https://codecov.io/gh/usgs/earthquake-hazard-tool)
+[![Build Status](https://travis-ci.org/usgs/earthquake-design-ws.svg?branch=master)](https://travis-ci.org/usgs/earthquake-design-ws)
+[![Coverage](https://codecov.io/gh/usgs/earthquake-hazard-tool/branch/master/graph/badge.svg)](https://codecov.io/gh/usgs/earthquake-hazard-tool)
 
 Unified application for hazard calculations.
 
