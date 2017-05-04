@@ -1,125 +1,80 @@
 'use strict';
 
-var Analysis = require('Analysis'),
+
+var Accordion = require('accordion/Accordion'),Analysis = require('Analysis'),
     AnalysisCollectionView = require('AnalysisCollectionView'),
     Calculator = require('CurveCalculator'),
+    Collection = require('mvc/Collection'),
     CurveOutputView = require('curve/CurveOutputView'),
     DeaggOutputView = require('deagg/DeaggOutputView'),
     InputView = require('input/InputView'),
     LoaderView = require('LoaderView'),
     MapView = require('MapView'),
-
-    Accordion = require('accordion/Accordion'),
-
-    Collection = require('mvc/Collection'),
     SelectedCollectionView = require('mvc/SelectedCollectionView'),
-
     Util = require('util/Util');
 
 
 var ApplicationView = function (params) {
   var _this,
-      _initialize,
-
-      // variables
-      _accordion,
-      _analysisCollectionEl,
-      _analysisCollectionView,
-      _inputEl,
-      _inputView,
-      _calculator,
-      _computeCurveBtn,
-      _curveOutput,
-      _curveOutputEl,
-      _curveOutputView,
-      _deaggOutputEl,
-      _deaggOutputView,
-      _dependencyFactory,
-      _editions,
-      _hazardCurveEl,
-      _hazardCurveView,
-      _hazardSpectrumEl,
-      _hazardSpectrumView,
-      _loaderView,
-      _newButton,
-      _mapEl,
-      _mapView,
-      _queued,
-      _siteClasses,
-
-      // methods
-      _clearOutput,
-      _formatLocationError,
-      _formatRegionError,
-      _initViewContainer,
-      _onCalculate,
-      _onEditionChange,
-      _onLocationChange,
-      _onNewButtonClick,
-      _onRegionChange,
-      _onTimeHorizonChange,
-      _onVs30Change,
-      _updateRegion,
-      _updateVs30,
-      _validateLocation;
+      _initialize;
 
 
   _this = SelectedCollectionView(params);
 
   _initialize = function (params) {
-    _initViewContainer();
+    _this.initViewContainer();
 
-    _dependencyFactory = params.dependencyFactory;
+    _this.dependencyFactory = params.dependencyFactory;
 
-    _calculator = Calculator(params.webServices);
+    _this.calculator = Calculator(params.webServices);
 
-    _loaderView = LoaderView();
+    _this.loaderView = LoaderView();
 
-    _siteClasses = Collection(_dependencyFactory.getAllSiteClasses());
-    _editions = Collection(_dependencyFactory.getAllEditions());
+    _this.siteClasses = Collection(_this.dependencyFactory.getAllSiteClasses());
+    _this.editions = Collection(_this.dependencyFactory.getAllEditions());
 
-    _mapView = MapView({
+    _this.mapView = MapView({
       collection: _this.collection,
-      dependencyFactory: _dependencyFactory,
-      editions: _editions,
-      el: _mapEl
+      dependencyFactory: _this.dependencyFactory,
+      editions: _this.editions,
+      el: _this.mapEl
     });
 
     // render map before closing the accordion, no need to invalidateSize
     _this.el.querySelector('.accordion-map').classList.add('accordion-closed');
 
-    _inputView = InputView({
+    _this.inputView = InputView({
       collection: _this.collection,
-      dependencyFactory: _dependencyFactory,
-      el: _inputEl
+      dependencyFactory: _this.dependencyFactory,
+      el: _this.inputEl
     });
 
-    _curveOutputView = CurveOutputView({
+    _this.curveOutputView = CurveOutputView({
       collection: _this.collection,
-      el: _curveOutputEl
+      el: _this.curveOutputEl
     });
 
-    _deaggOutputView = DeaggOutputView({
+    _this.deaggOutputView = DeaggOutputView({
       collection: _this.collection,
-      el: _deaggOutputEl,
-      dependencyFactory: _dependencyFactory
+      el: _this.deaggOutputEl,
+      dependencyFactory: _this.dependencyFactory
     });
 
-    _analysisCollectionView = AnalysisCollectionView({
+    _this.analysisCollectionView = AnalysisCollectionView({
       collection: _this.collection,
-      el: _analysisCollectionEl
+      el: _this.analysisCollectionEl
     });
 
-    _curveOutputView.on('calculate', _onCalculate, _this);
-    _deaggOutputView.on('calculate', _onCalculate, _this);
+    _this.curveOutputView.on('calculate', 'onCalculate', _this);
+    _this.deaggOutputView.on('calculate', 'onCalculate', _this);
   };
 
 
-  _clearOutput = function () {
+  _this.clearOutput = function () {
     _this.model.set({curves: null});
   };
 
-  _formatLocationError = function () {
+  _this.formatLocationError = function () {
     _this.model.set({
       error: {
         location: '<h3>Please select a location</h3>'
@@ -127,12 +82,12 @@ var ApplicationView = function (params) {
     });
   };
 
-  _formatRegionError = function (edition) {
+  _this.formatRegionError = function (edition) {
     var i,
         regions,
         regionText;
 
-    regions = _dependencyFactory.getAllRegions(edition);
+    regions = _this.dependencyFactory.getAllRegions(edition);
 
     regionText = '';
     regionText += '<h3>Selected location is outside the allowed bounds' +
@@ -166,7 +121,7 @@ var ApplicationView = function (params) {
     });
   };
 
-  _initViewContainer = function () {
+  _this.initViewContainer = function () {
     var el;
 
     el = _this.el;
@@ -174,90 +129,90 @@ var ApplicationView = function (params) {
     el.className = 'application-container';
     el.innerHTML = '';
 
-    _mapEl = document.createElement('section');
-    _inputEl = document.createElement('section');
-    _curveOutputEl = document.createElement('section');
-    _deaggOutputEl = document.createElement('section');
-    _analysisCollectionEl = document.createElement('section');
+    _this.mapEl = document.createElement('section');
+    _this.inputEl = document.createElement('section');
+    _this.curveOutputEl = document.createElement('section');
+    _this.deaggOutputEl = document.createElement('section');
+    _this.analysisCollectionEl = document.createElement('section');
 
     // By providing "el" to the Accordion, the sub-view containers are
     // automatically appended to this view's "el".
-    _accordion = Accordion({
+    _this.accordion = Accordion({
       el: el,
       accordions: [
         {
           classes: 'accordion-map',
-          content: _mapEl,
+          content: _this.mapEl,
           toggleText: 'Earthquake Hazard and Probability Maps'
         },
         {
           classes: 'accordion-input',
-          content: _inputEl,
+          content: _this.inputEl,
           toggleText: 'Input'
         },
         {
           classes: 'accordion-curve',
-          content: _curveOutputEl,
+          content: _this.curveOutputEl,
           toggleText: 'Hazard Curve'
         },
         {
           classes: 'accordion-deagg',
-          content: _deaggOutputEl,
+          content: _this.deaggOutputEl,
           toggleText: 'Deaggregation'
         },
         {
           classes: 'analysis-collection-view',
-          content: _analysisCollectionEl,
+          content: _this.analysisCollectionEl,
           toggleText: 'History'
         }
       ]
     });
 
     // history button
-    _newButton = document.createElement('button');
-    _newButton.className = 'analysis-collection-view-new';
-    _newButton.innerHTML = 'New';
-    _newButton.addEventListener('click', _onNewButtonClick);
+    _this.newButton = document.createElement('button');
+    _this.newButton.className = 'analysis-collection-view-new';
+    _this.newButton.innerHTML = 'New';
+    _this.newButton.addEventListener('click', _this.onNewButtonClick);
 
     // append button to history section toggle
     _this.el.querySelector('.analysis-collection-view > .accordion-toggle').
-        appendChild(_newButton);
+        appendChild(_this.newButton);
   };
 
-  _onCalculate = function (data) {
+  _this.onCalculate = function (data) {
     var calculator,
         request,
         serviceType;
 
-    if (!_validateLocation()) {
+    if (!_this.validateLocation()) {
       return;
     }
 
     calculator = data.calculator;
     serviceType = data.serviceType;
 
-    if (!_queued && calculator) {
+    if (!_this.queued && calculator) {
       window.setTimeout(function () {
         if (_this.model.get('edition') && _this.model.get('location') &&
             _this.model.get('region') && _this.model.get('vs30')) {
           request = calculator.getResult(
-              _dependencyFactory.getService(
+              _this.dependencyFactory.getService(
                   _this.model.get('edition'), serviceType),
               _this.model,
-              _loaderView.hide
+              _this.loaderView.hide
             );
-          _loaderView.show(request);
+          _this.loaderView.show(request);
         }
-        _queued = false;
+        _this.queued = false;
       }, 0);
-      _queued = true;
+      _this.queued = true;
     }
   };
 
   /**
    * Adds new analysis to the collection and selects the analysis
    */
-  _onNewButtonClick = function (evt) {
+  _this.onNewButtonClick = function (evt) {
     var analysis;
 
     analysis = Analysis();
@@ -288,35 +243,35 @@ var ApplicationView = function (params) {
   // (4) region changes   --> run calcuation if all values are set
   //
 
-  _onEditionChange = function (/*changes*/) {
-    _updateVs30();
-    _updateRegion();
-    _clearOutput();
+  _this.onEditionChange = function (/*changes*/) {
+    _this.updateVs30();
+    _this.updateRegion();
+    _this.clearOutput();
   };
 
-  _onLocationChange = function (/*changes*/) {
-    _updateVs30();
-    _updateRegion();
-    _clearOutput();
+  _this.onLocationChange = function (/*changes*/) {
+    _this.updateVs30();
+    _this.updateRegion();
+    _this.clearOutput();
   };
 
-  _onRegionChange = function (/*changes*/) {
-    _clearOutput();
+  _this.onRegionChange = function (/*changes*/) {
+    _this.clearOutput();
   };
 
-  _onVs30Change = function (/*changes*/) {
-    _updateRegion();
-    _clearOutput();
+  _this.onVs30Change = function (/*changes*/) {
+    _this.updateRegion();
+    _this.clearOutput();
   };
 
-  _onTimeHorizonChange = function (/*changes*/) {
+  _this.onTimeHorizonChange = function (/*changes*/) {
   };
 
   /**
    * Resets the collection of siteClasses based on what is available for
    * current selection of edition/location.
    */
-  _updateVs30 = function () {
+  _this.updateVs30 = function () {
     var edition,
         ids,
         location,
@@ -326,9 +281,9 @@ var ApplicationView = function (params) {
     ids = {};
 
     try {
-      edition = _dependencyFactory.getEdition(_this.model.get('edition'));
+      edition = _this.dependencyFactory.getEdition(_this.model.get('edition'));
       location = _this.model.get('location');
-      regions = _dependencyFactory.getRegions(
+      regions = _this.dependencyFactory.getRegions(
           edition.get('supports').region, edition.id);
 
       regions.forEach(function (region) {
@@ -339,19 +294,19 @@ var ApplicationView = function (params) {
         }
       });
 
-      siteClasses = _dependencyFactory.getSiteClasses(Object.keys(ids),
+      siteClasses = _this.dependencyFactory.getSiteClasses(Object.keys(ids),
           _this.model.get('edition'));
     } catch (e) {
       // Just ignore, will set to use all site classes below
     }
 
     if (!siteClasses) {
-      siteClasses = _dependencyFactory.getAllSiteClasses(
+      siteClasses = _this.dependencyFactory.getAllSiteClasses(
           _this.model.get('edition'));
     }
 
-    _siteClasses.reset(siteClasses, {silent: true});
-    _siteClasses.trigger('reset', {});
+    _this.siteClasses.reset(siteClasses, {silent: true});
+    _this.siteClasses.trigger('reset', {});
   };
 
   /**
@@ -359,7 +314,7 @@ var ApplicationView = function (params) {
    * edition, location, and vs30.
    *
    */
-  _updateRegion = function () {
+  _this.updateRegion = function () {
     var edition,
         location,
         regions,
@@ -373,11 +328,11 @@ var ApplicationView = function (params) {
       return;
     }
 
-    edition = _dependencyFactory.getEdition(_this.model.get('edition'));
+    edition = _this.dependencyFactory.getEdition(_this.model.get('edition'));
     location = _this.model.get('location');
 
     if (edition && location) {
-      regions = _dependencyFactory.getRegions(
+      regions = _this.dependencyFactory.getRegions(
           edition.get('supports').region, edition.id);
 
       regions.some(function (region) {
@@ -392,7 +347,7 @@ var ApplicationView = function (params) {
     }
   };
 
-  _validateLocation = function () {
+  _this.validateLocation = function () {
     var checkLocation,
         edition,
         location;
@@ -400,17 +355,17 @@ var ApplicationView = function (params) {
     location = _this.model.get('location');
 
     if (location === null) {
-      _formatLocationError();
+      _this.formatLocationError();
       return false;
     }
 
     edition = _this.model.get('edition');
 
     checkLocation =
-        _dependencyFactory.getRegionByEdition(edition, location);
+        _this.dependencyFactory.getRegionByEdition(edition, location);
 
     if (checkLocation === null) {
-      _formatRegionError(edition);
+      _this.formatRegionError(edition);
       return false;
     }
 
@@ -422,72 +377,36 @@ var ApplicationView = function (params) {
   };
 
   _this.destroy = Util.compose(_this.destroy, function () {
-    _calculator.destroy();
+    _this.calculator.destroy();
 
-    _newButton.removeEventListener('click', _onNewButtonClick);
-    _computeCurveBtn.removeEventListener('click', _this.queueCalculation,
+    _this.curveOutputView.off('calculate', 'onCalculate', _this);
+    _this.deaggOutputView.off('calculate', 'onCalculate', _this);
+
+    _this.newButton.removeEventListener('click', _this.onNewButtonClick);
+    _this.computeCurveBtn.removeEventListener('click', _this.queueCalculation,
         _this);
 
     // sub-views
-    _accordion.destroy();
-    _inputView.destroy();
-    _curveOutputView.destroy();
-    _deaggOutputView.destroy();
-    _mapView.destroy();
+    _this.accordion.destroy();
+    _this.inputView.destroy();
+    _this.curveOutputView.destroy();
+    _this.deaggOutputView.destroy();
+    _this.mapView.destroy();
 
     // models/collections
-    _editions.destroy();
-    _siteClasses.destroy();
-
-    // variables
-    _accordion = null;
-    _analysisCollectionEl = null;
-    _analysisCollectionView = null;
-    _inputEl = null;
-    _inputView = null;
-    _calculator = null;
-    _computeCurveBtn = null;
-    _curveOutput = null;
-    _deaggOutputEl = null;
-    _deaggOutputView = null;
-    _dependencyFactory = null;
-    _editions = null;
-    _hazardCurveEl = null;
-    _hazardCurveView = null;
-    _hazardSpectrumEl = null;
-    _hazardSpectrumView = null;
-    _loaderView = null;
-    _mapEl = null;
-    _mapView = null;
-    _newButton = null;
-    _queued = null;
-    _siteClasses = null;
-
-    // methods
-    _clearOutput = null;
-    _formatLocationError = null;
-    _formatRegionError = null;
-    _initViewContainer = null;
-    _onEditionChange = null;
-    _onLocationChange = null;
-    _onNewButtonClick = null;
-    _onRegionChange = null;
-    _onTimeHorizonChange = null;
-    _onVs30Change = null;
-    _updateRegion = null;
-    _updateVs30 = null;
-    _validateLocation = null;
+    _this.editions.destroy();
+    _this.siteClasses.destroy();
 
     _initialize = null;
     _this = null;
   });
 
   _this.onCollectionDeselect = function () {
-    _this.model.off('change:edition', _onEditionChange);
-    _this.model.off('change:location', _onLocationChange);
-    _this.model.off('change:region', _onRegionChange);
-    _this.model.off('change:vs30', _onVs30Change);
-    _this.model.off('change:timeHorizon', _onTimeHorizonChange);
+    _this.model.off('change:edition', 'onEditionChange', _this);
+    _this.model.off('change:location', 'onLocationChange', _this);
+    _this.model.off('change:region', 'onRegionChange', _this);
+    _this.model.off('change:vs30', 'onVs30Change', _this);
+    _this.model.off('change:timeHorizon', 'onTimeHorizonChange', _this);
     _this.model.off('change:curves', 'render', _this);
 
     _this.model = null;
@@ -497,11 +416,11 @@ var ApplicationView = function (params) {
   _this.onCollectionSelect = function () {
     _this.model = _this.collection.getSelected();
 
-    _this.model.on('change:edition', _onEditionChange);
-    _this.model.on('change:location', _onLocationChange);
-    _this.model.on('change:region', _onRegionChange);
-    _this.model.on('change:vs30', _onVs30Change);
-    _this.model.on('change:timeHorizon', _onTimeHorizonChange);
+    _this.model.on('change:edition', 'onEditionChange', _this);
+    _this.model.on('change:location', 'onLocationChange', _this);
+    _this.model.on('change:region', 'onRegionChange', _this);
+    _this.model.on('change:vs30', 'onVs30Change', _this);
+    _this.model.on('change:timeHorizon', 'onTimeHorizonChange', _this);
     _this.model.on('change:curves', 'render', _this);
 
     _this.render({model: _this.model});
@@ -509,20 +428,20 @@ var ApplicationView = function (params) {
 
   _this.queueCalculation = function () {
     var request;
-    if (!_queued) {
+    if (!_this.queued) {
       window.setTimeout(function () {
         if (_this.model.get('edition') && _this.model.get('location') &&
             _this.model.get('region') && _this.model.get('vs30')) {
-          request = _calculator.getResult(
-              _dependencyFactory.getService(_this.model.get('edition')),
+          request = _this.calculator.getResult(
+              _this.dependencyFactory.getService(_this.model.get('edition')),
               _this.model,
-              _loaderView.hide
+              _this.loaderView.hide
             );
-          _loaderView.show(request);
+          _this.loaderView.show(request);
         }
-        _queued = false;
+        _this.queued = false;
       }, 0);
-      _queued = true;
+      _this.queued = true;
     }
   };
 
