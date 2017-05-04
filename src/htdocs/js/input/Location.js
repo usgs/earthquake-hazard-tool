@@ -142,7 +142,8 @@ var Location = function (params) {
       // Both are NaN, update model
       _this.model.set({
         location: null,
-        rawDataUrl: null
+        curveServiceUrl: null,
+        deaggServiceUrl: null
       });
     } else if (!(isNaN(latitudeVal) || isNaN(longitudeVal))) {
       // Neither is NaN, update model
@@ -159,7 +160,8 @@ var Location = function (params) {
 
       _this.model.set({
         location: location,
-        rawDataUrl: null
+        curveServiceUrl: null,
+        deaggServiceUrl: null
       });
     }
   };
@@ -184,7 +186,8 @@ var Location = function (params) {
 
     _this.model.set({
       location: location,
-      rawDataUrl: null
+      curveServiceUrl: null,
+      deaggServiceUrl: null
     });
   };
 

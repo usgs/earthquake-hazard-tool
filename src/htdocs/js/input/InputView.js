@@ -230,7 +230,8 @@ var InputView = function (params) {
     if (_this.model) {
       _this.model.set({
         edition: (edition ? edition.id : null),
-        rawDataUrl: null
+        curveServiceUrl: null,
+        deaggServiceUrl: null
       });
     }
 
@@ -250,7 +251,9 @@ var InputView = function (params) {
 
     if (_this.model) {
       _this.model.set({
-        imt: (imt ? imt.id : null)
+        imt: (imt ? imt.id : null),
+        curveServiceUrl: null,
+        deaggServiceUrl: null
       });
     }
   };

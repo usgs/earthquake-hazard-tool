@@ -92,7 +92,7 @@ var Calculator = function (/*params*/) {
   _this.onXhrSuccess = function (url, response, service, analysis) {
     analysis.set({
       'curves': require(service.constructor)(response.response),
-      'rawDataUrl': url
+      'curveServiceUrl': url
     });
   };
 

@@ -181,7 +181,7 @@ var CurveOutputView = function (params) {
         data,
         id,
         imt,
-        rawDataUrl,
+        curveServiceUrl,
         timeHorizon,
         xAxisLabel,
         yAxisLabel;
@@ -245,9 +245,9 @@ var CurveOutputView = function (params) {
     _this.curves.reset(data);
 
     // Update the link URL
-    rawDataUrl = _this.model.get('rawDataUrl');
-    if (rawDataUrl) {
-      _this.linkRawData.setAttribute('href', encodeURI(rawDataUrl));
+    curveServiceUrl = _this.model.get('curveServiceUrl');
+    if (curveServiceUrl) {
+      _this.linkRawData.setAttribute('href', encodeURI(curveServiceUrl));
     } else {
       _this.linkRawData.removeAttribute('href');
     }
