@@ -366,11 +366,7 @@ var DeaggregationReportView = function (params) {
     output.push('</div>');
 
     // get contributing sources
-    output.push(
-      '<div class="contributors-section">',
-        '<h4>Deaggregation Contributors</h4>',
-        _this.getSources(),
-      '</div>');
+    output.push(_this.getSources());
 
     return output.join('');
   };
@@ -390,23 +386,29 @@ var DeaggregationReportView = function (params) {
     // all contributing sources from deagg response
     sources = _this.model.get('sources');
 
+    if (!sources || sources.length === 0) {
+      return;
+    }
+
     buf = [
-      '<table class="contributing-sources">',
-        '<thead>',
-          '<tr>',
-            '<th>Source Set <i class="material-icons down-arrow">&#xE5DA;</i>',
-              ' Source</th>',
-            '<th>Type</th>',
-            '<th title="distance (km)">r</th>',
-            '<th title="magnitude">m</th>',
-            '<th title="epsilon (mean values)">ε<sub>0</sub></th>',
-            '<th title="longitude">lon</th>',
-            '<th title="latitude">lat</th>',
-            '<th title="azimuth">az</th>',
-            '<th title="percent contributed" title="">%</th>',
-          '</tr>',
-        '</thead>',
-        '<tbody>'
+      '<div class="contributors-section">',
+        '<h4>Deaggregation Contributors</h4>',
+        '<table class="contributing-sources">',
+          '<thead>',
+            '<tr>',
+              '<th>Source Set <i class="material-icons down-arrow">&#xE5DA;</i>',
+                ' Source</th>',
+              '<th>Type</th>',
+              '<th title="distance (km)">r</th>',
+              '<th title="magnitude">m</th>',
+              '<th title="epsilon (mean values)">ε<sub>0</sub></th>',
+              '<th title="longitude">lon</th>',
+              '<th title="latitude">lat</th>',
+              '<th title="azimuth">az</th>',
+              '<th title="percent contributed" title="">%</th>',
+            '</tr>',
+          '</thead>',
+          '<tbody>'
     ];
 
     for (i = 0, len = sources.length; i < len; i++) {
@@ -415,8 +417,9 @@ var DeaggregationReportView = function (params) {
     }
 
     buf.push(
-        '</tbody>',
-      '</table>'
+          '</tbody>',
+        '</table>',
+      '</div>'
     );
 
     return '<div class="horizontal-scrolling">' + buf.join('') + '</div>';
