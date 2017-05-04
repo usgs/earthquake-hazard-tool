@@ -25,7 +25,10 @@ if (!isset($TEMPLATE)) {
 
   <p>
     These instructions will help you compute calculations using the
-    Unified Hazard Tool
+    Unified Hazard Tool. Please also see the 
+    <a href="https://github.com/usgs/nshmp-haz-ws/wiki"> supplementary
+    documentation</a> for more detailed information on the data 
+    and services underlying this application.
   </p>
 
   <h3>Earthquake Hazard and Probability Maps</h3>
