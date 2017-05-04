@@ -18,7 +18,7 @@ var ResponseSpectrumGraphView = function (options) {
 
   _this = D3View(Util.extend({
     clickToSelect: false,
-    xLabel: 'Spectral Period',
+    xLabel: 'Spectral Period (s)',
     yLabel: 'Ground Motion (g)'
   }, options));
 
