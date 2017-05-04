@@ -1,9 +1,9 @@
 'use strict';
 
-var HazardCurve = require('HazardCurve'),
-    HazardUtil = require('HazardUtil'),
 
-    Collection = require('mvc/Collection'),
+var Collection = require('mvc/Collection'),
+    HazardCurve = require('HazardCurve'),
+    HazardUtil = require('HazardUtil'),
     Model = require('mvc/Model'),
     Util = require('util/Util');
 
@@ -13,11 +13,7 @@ var _TYPE = 'HazardResponse';
 
 var HazardResponse = function (params) {
   var _this,
-      _initialize,
-
-      _createCurve,
-      _spatiallyInterpolate,
-      _trimSmallValues;
+      _initialize;
 
 
   _this = Model();
@@ -38,26 +34,24 @@ var HazardResponse = function (params) {
       attributes.xlabel = response.metadata.xlabel;
       attributes.ylabel = response.metadata.ylabel;
 
-      attributes.curves.push(_createCurve(response));
+      attributes.curves.push(_this.createCurve(response));
     });
 
     attributes.curves = Collection(attributes.curves);
 
-
     _this.set(attributes);
   };
 
-
-  _createCurve = function (response) {
+  _this.createCurve = function (response) {
     var data,
         metadata,
         yvals;
 
-    response = _trimSmallValues(response);
+    response = _this.trimSmallValues(response);
     data = response.data;
     metadata = response.metadata;
 
-    yvals = _spatiallyInterpolate(metadata.latitude, metadata.longitude, data);
+    yvals = _this.spatiallyInterpolate(metadata.latitude, metadata.longitude, data);
 
     return HazardCurve({
       label: metadata.imt.display,
@@ -68,53 +62,12 @@ var HazardResponse = function (params) {
     });
   };
 
-  /**
-   * Trims off Y values that are lower than 1E-14.
-   * Only uses the number of points as the curve with the least number of
-   * points.
-   *
-   * @param response {object}
-   *     contains all data.
-   */
-  _trimSmallValues = function (response) {
-    var curves,
-        index,
-        metadata;
+  _this.destroy = Util.compose(_this.destroy, function () {
+    _initialize = null;
+    _this = null;
+  });
 
-    curves = response.data;
-    metadata = response.metadata;
-
-    // Finds smallest index of y values below 1E-14
-    index = null;
-    curves.every(function (curve) {
-      curve.yvals.every(function (point, i) {
-        if (point <= 1e-14) {
-          if (index === null || i < index) {
-            index = i;
-          }
-          return false;
-        } else {
-          return true;
-        }
-      });
-    });
-
-    //If value found then trim all data arrays
-    if (index !== null) {
-      metadata.xvals = metadata.xvals.slice(0, index);
-
-      response.data = curves.map(function (curve) {
-        curve = Util.extend({}, curve);
-        curve.yvals = curve.yvals.slice(0, index);
-
-        return curve;
-      });
-    }
-
-    return response;
-  };
-
-  _spatiallyInterpolate = function (latitude, longitude, data) {
+  _this.spatiallyInterpolate = function (latitude, longitude, data) {
     var bottom,
         numYVals,
         result,
@@ -164,14 +117,51 @@ var HazardResponse = function (params) {
     return result;
   };
 
+  /**
+   * Trims off Y values that are lower than 1E-14.
+   * Only uses the number of points as the curve with the least number of
+   * points.
+   *
+   * @param response {object}
+   *     contains all data.
+   */
+  _this.trimSmallValues = function (response) {
+    var curves,
+        index,
+        metadata;
 
-  _this.destroy = Util.compose(_this.destroy, function () {
-    _createCurve = null;
-    _spatiallyInterpolate = null;
+    curves = response.data;
+    metadata = response.metadata;
 
-    _initialize = null;
-    _this = null;
-  });
+    // Finds smallest index of y values below 1E-14
+    index = null;
+    curves.every(function (curve) {
+      curve.yvals.every(function (point, i) {
+        if (point <= 1e-14) {
+          if (index === null || i < index) {
+            index = i;
+          }
+          return false;
+        } else {
+          return true;
+        }
+      });
+    });
+
+    //If value found then trim all data arrays
+    if (index !== null) {
+      metadata.xvals = metadata.xvals.slice(0, index);
+
+      response.data = curves.map(function (curve) {
+        curve = Util.extend({}, curve);
+        curve.yvals = curve.yvals.slice(0, index);
+
+        return curve;
+      });
+    }
+
+    return response;
+  };
 
 
   _initialize(params);
