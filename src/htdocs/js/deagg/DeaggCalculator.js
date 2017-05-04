@@ -43,17 +43,13 @@ var DeaggCalculator = function () {
     return url;
   };
 
-  _this.onXhrSuccess = function (response, service, analysis, callback) {
+  _this.onXhrSuccess = function (response, service, analysis) {
     var deaggResponses = Collection(response.response.map(
         require(service.constructor)));
 
     analysis.set({
       'deaggResponses': deaggResponses
     });
-
-    if (callback) {
-      callback({analysis: analysis, service: service});
-    }
   };
 
 

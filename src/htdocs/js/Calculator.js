@@ -1,7 +1,8 @@
 'use strict';
 
 
-var Xhr = require('util/Xhr');
+var ModalView = require('mvc/ModalView'),
+    Xhr = require('util/Xhr');
 
 
 var Calculator = function (/*params*/) {
@@ -68,22 +69,45 @@ var Calculator = function (/*params*/) {
     return Xhr.ajax({
       url: url,
       success: function (response) {
-        _this.onXhrSuccess(response, service, analysis, callback);
+        // check that the response is not an error response from the ws
+        if (response.status === 'success') {
+          _this.onXhrSuccess(response, service, analysis);
+        } else {
+          _this.displayError(response.message);
+        }
+        if (callback) {
+          callback({analysis: analysis, service: service});
+        }
       },
       error: function (err) {
+        _this.displayError(err.message);
+        if (callback) {
+          callback({analysis: analysis, service: service});
+        }
         throw err;
       }
     });
   };
 
-  _this.onXhrSuccess = function (response, service, analysis, callback) {
+  _this.onXhrSuccess = function (response, service, analysis) {
     analysis.set({
       'curves': require(service.constructor)(response.response)
     });
+  };
 
-    if (callback) {
-      callback({analysis: analysis, service: service});
-    }
+  /**
+   * Display error message from XHR request in a modal pop-up
+   *
+   * @param message {String}
+   *        Error message to display inside modal pop-up
+   *
+   */
+  _this.displayError = function (message) {
+    ModalView(message, {
+      title: 'Error',
+      classes: ['modal-error'],
+      destroyOnHide: true
+    }).show();
   };
 
   return _this;
