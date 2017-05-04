@@ -4,8 +4,8 @@ php:
   - '5.6'
 before_install:
   - composer self-update
-  - nvm install 4.2.4
-  - nvm use 4.2.4
+  - nvm install 4.8.3
+  - nvm use 4.8.3
   - npm --version
   - node --version
   - npm install -g grunt-cli
