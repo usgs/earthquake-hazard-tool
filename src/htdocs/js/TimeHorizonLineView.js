@@ -43,12 +43,10 @@ var TimeHorizonLineView = function (params) {
   };
 
   _this.onPointOut = function () {
-    console.log('onPointOut');
     // ... do nothing ...
   };
 
   _this.onPointOver = function () {
-    console.log('onPointOver');
     // ... do nothing ...
   };
 
