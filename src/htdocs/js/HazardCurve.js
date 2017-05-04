@@ -1,17 +1,16 @@
 'use strict';
 
-var Model = require('mvc/Model'),
-    Util = require('util/Util'),
 
-    HazardUtil = require('HazardUtil');
+var HazardUtil = require('HazardUtil'),
+    Model = require('mvc/Model'),
+    Util = require('util/Util');
+
 
 var CURVE_ID = 0;
 
 var HazardCurve = function (params) {
   var _this,
-      _initialize,
-
-      _hazardUtil;
+      _initialize;
 
   _this = Model(Util.extend({
     id: 'curve-' + CURVE_ID++,
@@ -23,7 +22,7 @@ var HazardCurve = function (params) {
   }, params));
 
   _initialize = function () {
-    _hazardUtil = HazardUtil;
+    _this.hazardUtil = HazardUtil;
   };
 
   /**
@@ -83,7 +82,7 @@ var HazardCurve = function (params) {
     x1 = right[0];
     y1 = right[1];
 
-    return _hazardUtil.interpolateLogLog(y0, x0, y1, x1, y);
+    return _this.hazardUtil.interpolateLogLog(y0, x0, y1, x1, y);
   };
 
   /**
@@ -134,7 +133,7 @@ var HazardCurve = function (params) {
     x1 = right[0];
     y1 = right[1];
 
-    return _hazardUtil.interpolateLogLog(x0, y0, x1, y1, x);
+    return _this.hazardUtil.interpolateLogLog(x0, y0, x1, y1, x);
   };
 
   _initialize();
