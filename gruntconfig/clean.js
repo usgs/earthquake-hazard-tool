@@ -5,6 +5,7 @@ var config = require('./config');
 var clean = {
   build: [
     config.build,
+    config.coverage,
     '.sass-cache'
   ],
 
