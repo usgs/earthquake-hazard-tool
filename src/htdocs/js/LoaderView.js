@@ -5,21 +5,19 @@ var View = require('mvc/View'),
     Util = require('util/Util');
 
 
+/**
+ * View to show user that data is being loaded,
+ * and allow request to be cancelled.
+ */
 var LoaderView = function() {
   var _this,
-      _initialize,
-
-      _cancelButton,
-      _request,
-      _showCount,
-
-      _isVisible;
+      _initialize;
 
 
   _this = View();
 
   _initialize = function () {
-    _showCount = 0;
+    _this.showCount = 0;
 
     _this.el.className = 'loader-mask';
     _this.el.innerHTML = '<div class="loader-container">' +
@@ -28,60 +26,76 @@ var LoaderView = function() {
         '<button class="cancel-request">Cancel Request</button>' +
       '</div>';
 
-    _cancelButton = _this.el.querySelector('.cancel-request');
-    _cancelButton.addEventListener('click', _this.cancel, _this);
+    _this.cancelButton = _this.el.querySelector('.cancel-request');
+    _this.cancelButton.addEventListener('click', _this.cancel);
   };
 
 
-  _isVisible = function () {
+  /**
+   * Check whether view is attached to DOM.
+   *
+   * @return {Boolean}
+   *         true when view element has parent node,
+   *         false otherwise.
+   */
+  _this.isVisible = function () {
     return _this.el.parentNode;
   };
 
 
+  /**
+   * Show the loading view.
+   */
   _this.show = function (request) {
     if (request) {
-      _request = request;
+      _this.request = request;
     }
 
-    if (_showCount === 0) {
-      document.body.appendChild(_this.el);
+    if (_this.showCount === 0) {
+      document.querySelector('body').appendChild(_this.el);
     }
 
-    _showCount += 1;
+    _this.showCount += 1;
   };
 
+  /**
+   * Hide the loading view.
+   */
   _this.hide = function () {
-    _showCount -= 1;
+    _this.showCount -= 1;
 
-    if (_showCount < 0) {
-      _showCount = 0;
+    if (_this.showCount < 0) {
+      _this.showCount = 0;
     }
 
-    if (_showCount === 0 && _isVisible()) {
+    if (_this.showCount === 0 && _this.isVisible()) {
       _this.el.parentNode.removeChild(_this.el);
     }
   };
 
+  /**
+   * Cancel any active request and hide the view.
+   */
   _this.cancel = function () {
     // cancel XHR request
-    if (_request) {
-      _request.abort();
-      _request = null;
+    if (_this.request) {
+      _this.request.abort();
+      _this.request = null;
     }
 
     // close spinner
     _this.hide();
   };
 
+  /**
+   * Destroy the view.
+   */
   _this.destroy = Util.compose(function () {
+    if (!_this) {
+      return;
+    }
 
-    _cancelButton.removeEventListener('click', _this.cancel, _this);
-
-    _isVisible = null;
-
-    _cancelButton = null;
-    _request = null;
-    _showCount = null;
+    _this.cancelButton.removeEventListener('click', _this.cancel);
 
     _this = null;
     _initialize = null;
@@ -93,9 +107,11 @@ var LoaderView = function() {
 };
 
 
-var _INSTANCE = LoaderView();
-
+var _INSTANCE;
 
 module.exports = function () {
+  if (!_INSTANCE) {
+     _INSTANCE = LoaderView();
+  }
   return _INSTANCE;
 };
