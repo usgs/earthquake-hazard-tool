@@ -1,7 +1,7 @@
 'use strict';
 
-var d3 = require('d3'),
-    Collection = require('mvc/Collection'),
+var Collection = require('mvc/Collection'),
+    d3 = require('d3'),
     D3View = require('d3/D3View'),
     HazardCurveLineView = require('./HazardCurveLineView'),
     TimeHorizonLineView = require('./TimeHorizonLineView'),
@@ -28,20 +28,8 @@ var d3 = require('d3'),
  */
 var HazardCurveGraphView = function (options) {
   var _this,
-      _initialize,
-      // variables
-      _curves,
-      _destroyCurves,
-      _timeHorizon,
-      // methods
-      _getTicks,
-      _onAdd,
-      _onDeselect,
-      _onRemove,
-      _onReset,
-      _onSelect,
-      _onViewSelect,
-      _onViewDeselect;
+      _initialize;
+
 
   _this = D3View(Util.extend({
     xLabel: 'Ground Motion (g)',
@@ -56,35 +44,64 @@ var HazardCurveGraphView = function (options) {
       legendPosition: 'bottomleft',
       timeHorizon: 2475,
       xAxisScale: d3.scale.log(),
-      xAxisTicks: _getTicks,
+      xAxisTicks: _this.getTicks,
       yAxisScale: d3.scale.log(),
-      yAxisTicks: _getTicks
+      yAxisTicks: _this.getTicks
     }, {silent: true});
 
     // set defaults
     options = options || {};
 
     // HazardCurve collection
-    _curves = options.curves;
-    _destroyCurves = false;
-    if (!_curves) {
-      _curves = Collection();
-      _destroyCurves = true;
+    _this.curves = options.curves;
+    _this.destroyCurves = false;
+    if (!_this.curves) {
+      _this.curves = Collection();
+      _this.destroyCurves = true;
     }
-    _curves.on('add', _onAdd);
-    _curves.on('deselect', _onDeselect);
-    _curves.on('remove', _onRemove);
-    _curves.on('reset', _onReset);
-    _curves.on('select', _onSelect);
-    _this.curves = _curves;
-    _this.views.on('select', _onViewSelect);
-    _this.views.on('deselect', _onViewDeselect);
+    _this.curves.on('add', 'onAdd', _this);
+    _this.curves.on('deselect', 'onDeselect', _this);
+    _this.curves.on('remove', 'onRemove', _this);
+    _this.curves.on('reset', 'onReset', _this);
+    _this.curves.on('select', 'onSelect', _this);
+    _this.views.on('select', 'onViewSelect', _this);
+    _this.views.on('deselect', 'onViewDeselect', _this);
 
-    _timeHorizon = TimeHorizonLineView({
+    _this.timeHorizon = TimeHorizonLineView({
       el: document.createElementNS('http://www.w3.org/2000/svg', 'g'),
       view: _this
     });
     _this.curves.reset(_this.curves.data());
+  };
+
+  /**
+   * Unbind event listeners and free references.
+   */
+  _this.destroy = Util.compose(function () {
+    if (_this === null) {
+      return;
+    }
+
+    if (_this.destroyCurves) {
+      _this.curves.destroy();
+    } else {
+      _this.curves.off('add', 'onAdd', _this);
+      _this.curves.off('deselect', 'onDeselect', _this);
+      _this.curves.off('remove', 'onRemove', _this);
+      _this.curves.off('reset', 'onReset', _this);
+      _this.curves.off('select', 'onSelect', _this);
+    }
+
+    _this.views.off('select', 'onViewSelect', _this);
+    _this.views.off('deselect', 'onViewDeselect', _this);
+
+    _this.timeHorizon.destroy();
+
+    _this = null;
+  }, _this.destroy);
+
+  _this.getLegendClass = function () {
+    return 'legend-content HazardCurveGraphView-legend';
   };
 
   /**
@@ -95,7 +112,7 @@ var HazardCurveGraphView = function (options) {
    * @return {Array<Number}
    *         padded extent.
    */
-  _getTicks = function (extent) {
+  _this.getTicks = function (extent) {
     var base,
         baseLog,
         end,
@@ -118,89 +135,6 @@ var HazardCurveGraphView = function (options) {
     }
     return ticks;
   };
-
-  /**
-   * Curve add handler.
-   *
-   * @param curves {Array<HazardCurve>}
-   *        curves that were added.
-   */
-  _onAdd = function (curves) {
-    // add time horizon view as first line
-    if (_this.views.data().length === 0 && curves.length > 0) {
-      _this.views.add(_timeHorizon);
-    }
-
-    curves.forEach(function (curve) {
-      var view = HazardCurveLineView(Util.extend({
-        view: _this
-      }, curve.get()));
-      view.id = curve.id;
-      _this.views.add(view);
-    });
-  };
-
-  /**
-   * Curve deselect handler.
-   */
-  _onDeselect = function () {
-    _this.views.deselect();
-  };
-
-  /**
-   * Curve remove handler.
-   *
-   * @param curves {Array<HazardCurve>}
-   *        curves that were removed.
-   */
-  _onRemove = function (curves) {
-    var toRemove = [];
-    curves.forEach(function (curve) {
-      var view = _this.views.get(curve.id);
-      if (view) {
-        toRemove.push(view);
-      }
-    });
-    _this.views.remove.apply(_this.views, toRemove);
-    // remove time horizon if only line
-    if (_this.views.data().length === 1) {
-      _this.views.remove(_timeHorizon);
-    }
-  };
-
-  /**
-   * Curve reset handler.
-   */
-  _onReset = function () {
-    _this.views.reset([]);
-    _onAdd(_curves.data());
-  };
-
-  /**
-   * Curve select handler.
-   */
-  _onSelect = function (curve) {
-    _this.views.selectById(curve.id);
-  };
-
-  /**
-   * View deselect handler.
-   *
-   * Deselects curve in curves collection.
-   */
-  _onViewDeselect = function () {
-    _curves.deselect();
-  };
-
-  /**
-   * View select handler.
-   *
-   * Selects the corresponding curve in the curves collection.
-   */
-  _onViewSelect = function () {
-    _curves.selectById(_this.views.getSelected().id);
-  };
-
   /**
    * Set default extent if there is no data.
    */
@@ -234,57 +168,100 @@ var HazardCurveGraphView = function (options) {
   });
 
   /**
-   * Unbind event listeners and free references.
+   * Curve add handler.
+   *
+   * @param curves {Array<HazardCurve>}
+   *        curves that were added.
    */
-  _this.destroy = Util.compose(function () {
-    if (_this === null) {
-      return;
+  _this.onAdd = function (curves) {
+    // add time horizon view as first line
+    if (_this.views.data().length === 0 && curves.length > 0) {
+      _this.views.add(_this.timeHorizon);
     }
 
-    if (_destroyCurves) {
-      _this.curves.destroy();
-    } else {
-      _curves.off('add', _onAdd);
-      _curves.off('deselect', _onDeselect);
-      _curves.off('remove', _onRemove);
-      _curves.off('reset', _onReset);
-      _curves.off('select', _onSelect);
-    }
-    _this.curves = null;
-
-    _this.views.off('select', _onViewSelect);
-    _this.views.off('deselect', _onViewDeselect);
-
-    _timeHorizon.destroy();
-    _timeHorizon = null;
-
-    _onAdd = null;
-    _onDeselect = null;
-    _onRemove = null;
-    _onReset = null;
-    _onSelect = null;
-    _onViewSelect = null;
-    _onViewDeselect = null;
-    _this = null;
-  }, _this.destroy);
-
-  _this.getLegendClass = function () {
-    return 'legend-content HazardCurveGraphView-legend';
+    curves.forEach(function (curve) {
+      var view = HazardCurveLineView(Util.extend({
+        view: _this
+      }, curve.get()));
+      view.id = curve.id;
+      _this.views.add(view);
+    });
   };
 
   _this.onClick = function (view) {
     var curve;
 
     if (_this.model.get('clickToSelect') &&
-        view !== _timeHorizon) {
+        view !== _this.timeHorizon) {
 
-      curve = _curves.get(view.id);
+      curve = _this.curves.get(view.id);
       if (curve) {
-        _curves.select(curve);
+        _this.curves.select(curve);
       } else {
-        _curves.deselect();
+        _this.curves.deselect();
       }
     }
+  };
+
+  /**
+   * Curve deselect handler.
+   */
+  _this.onDeselect = function () {
+    _this.views.deselect();
+  };
+
+  /**
+   * Curve remove handler.
+   *
+   * @param curves {Array<HazardCurve>}
+   *        curves that were removed.
+   */
+  _this.onRemove = function (curves) {
+    var toRemove = [];
+    curves.forEach(function (curve) {
+      var view = _this.views.get(curve.id);
+      if (view) {
+        toRemove.push(view);
+      }
+    });
+    _this.views.remove.apply(_this.views, toRemove);
+    // remove time horizon if only line
+    if (_this.views.data().length === 1) {
+      _this.views.remove(_this.timeHorizon);
+    }
+  };
+
+  /**
+   * Curve reset handler.
+   */
+  _this.onReset = function () {
+    _this.views.reset([]);
+    _this.onAdd(_this.curves.data());
+  };
+
+  /**
+   * Curve select handler.
+   */
+  _this.onSelect = function (curve) {
+    _this.views.selectById(curve.id);
+  };
+
+  /**
+   * View deselect handler.
+   *
+   * Deselects curve in curves collection.
+   */
+  _this.onViewDeselect = function () {
+    _this.curves.deselect();
+  };
+
+  /**
+   * View select handler.
+   *
+   * Selects the corresponding curve in the curves collection.
+   */
+  _this.onViewSelect = function () {
+    _this.curves.selectById(_this.views.getSelected().id);
   };
 
 
