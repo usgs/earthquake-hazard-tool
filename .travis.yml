@@ -4,8 +4,8 @@ php:
   - '5.6'
 before_install:
   - composer self-update
-  - nvm install 4.2.1
-  - nvm use 4.2.1
+  - nvm install 4.2.4
+  - nvm use 4.2.4
   - npm --version
   - node --version
   - npm install -g grunt-cli
@@ -14,4 +14,6 @@ install:
   - npm install caniuse-db
   - npm install
 script:
-  - npm test
+  - grunt coverage
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
