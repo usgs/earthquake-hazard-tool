@@ -1,20 +1,21 @@
 'use strict';
 
-var DeaggCalculator = require('deagg/DeaggCalculator'),
+var Collection = require('mvc/Collection'),
+    CollectionSelectBox = require('mvc/CollectionSelectBox'),
+    DeaggCalculator = require('deagg/DeaggCalculator'),
     DeaggGraphView = require('deagg/DeaggregationGraphView'),
     DeaggReportView = require('DeaggregationReportView'),
     DependencyFactory = require('DependencyFactory'),
-
-    Collection = require('mvc/Collection'),
-    CollectionSelectBox = require('mvc/CollectionSelectBox'),
     SelectedCollectionView = require('mvc/SelectedCollectionView'),
-
     Util = require('util/Util');
 
 
-var _DEFAULTS = {
+var _DEFAULTS;
+
+_DEFAULTS = {
 
 };
+
 
 /**
  * This view serves as a wrapper around the various output component views
@@ -29,7 +30,6 @@ var DeaggOutputView = function (params) {
   params = Util.extend({}, _DEFAULTS, params);
   _this = SelectedCollectionView(params);
 
-
   _initialize = function (params) {
     _this.el.classList.add('deagg-output-view');
 
@@ -41,6 +41,7 @@ var DeaggOutputView = function (params) {
     _this.createViewSkeleton();
     _this.initSubViews();
   };
+
 
   /**
    * Displays info message for supported and unsupported deagg calculations
@@ -109,6 +110,27 @@ var DeaggOutputView = function (params) {
   };
 
   /**
+   * Free resouces associated with this view.
+   *
+   */
+  _this.destroy = Util.compose(function () {
+    _this.destroySubViews();
+
+    _this.deaggCollection.destroy();
+    _this.deaggCollection = null;
+
+    _this.createAlertEl = null;
+    _this.createViewSkeleton = null;
+    _this.destroySubViews = null;
+    _this.dependencyFactory = null;
+    _this.invalidateDeaggregation = null;
+    _this.initSubViews = null;
+
+    _initialize = null;
+    _this = null;
+  }, _this.destroy);
+
+  /**
    * Clean up each managed sub-view.
    *
    */
@@ -171,28 +193,6 @@ var DeaggOutputView = function (params) {
       serviceType: DependencyFactory.TYPE_DEAGG
     });
   };
-
-  /**
-   * Free resouces associated with this view.
-   *
-   */
-  _this.destroy = Util.compose(function () {
-    _this.destroySubViews();
-
-    _this.deaggCollection.destroy();
-    _this.deaggCollection = null;
-
-    _this.createAlertEl = null;
-    _this.createViewSkeleton = null;
-    _this.destroySubViews = null;
-    _this.dependencyFactory = null;
-    _this.invalidateDeaggregation = null;
-    _this.initSubViews = null;
-
-    _initialize = null;
-    _this = null;
-  }, _this.destroy);
-
 
   /**
    * unset the event bindings for the model

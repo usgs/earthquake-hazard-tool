@@ -1,27 +1,32 @@
 'use strict';
 
 
-var LocationInput = require('input/Location'),
-    TimeHorizonInput = require('input/TimeHorizonInput'),
-
-    Collection = require('mvc/Collection'),
+var Collection = require('mvc/Collection'),
     CollectionSelectBox = require('mvc/CollectionSelectBox'),
+    LocationInput = require('input/Location'),
     SelectedCollectionView = require('mvc/SelectedCollectionView'),
-
+    TimeHorizonInput = require('input/TimeHorizonInput'),
     Util = require('util/Util');
 
 
-var __to_id = function (model) {
+var __to_display,
+    __to_id;
+
+__to_id = function (model) {
   return model.id;
 };
 
-var __to_display = function (model) {
+__to_display = function (model) {
   return model.get('display');
 };
 
-var _DEFAULTS = {
+
+var _DEFAULTS;
+
+_DEFAULTS = {
   includeBlankOption: true
 };
+
 
 var InputView = function (params) {
   var _this,
@@ -272,6 +277,7 @@ var InputView = function (params) {
       _this.imts.deselect();
     }
   };
+
 
   _initialize(params);
   params = null;

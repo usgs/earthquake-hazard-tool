@@ -1,5 +1,6 @@
 'use strict';
 
+
 var _latitude,
     _longitude,
     _number,
@@ -59,11 +60,13 @@ _value = function (value) {
   }
 };
 
+
 var Formatter = {
   latitude: _latitude,
   longitude: _longitude,
   number: _number,
   value: _value
 };
+
 
 module.exports = Formatter;

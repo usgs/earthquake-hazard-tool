@@ -1,20 +1,20 @@
 'use strict';
 
 
-var ComponentCurvesGraphView = require('ComponentCurvesGraphView'),
+var Collection = require('mvc/Collection'),
+    ComponentCurvesGraphView = require('ComponentCurvesGraphView'),
     CurveCalculator = require('CurveCalculator'),
     DependencyFactory = require('DependencyFactory'),
     HazardCurveGraphView = require('HazardCurveGraphView'),
     ResponseSpectrumGraphView = require('ResponseSpectrumGraphView'),
-
-    Collection = require('mvc/Collection'),
     SelectedCollectionView = require('mvc/SelectedCollectionView'),
-
     Util = require('util/Util');
 
 
 // Default values to be used by constructor
-var _DEFAULTS = {
+var _DEFAULTS;
+
+_DEFAULTS = {
    // ... some defaults ...
 };
 

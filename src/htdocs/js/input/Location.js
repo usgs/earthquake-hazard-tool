@@ -4,13 +4,13 @@
 var ConfidenceCalculator = require('locationview/ConfidenceCalculator'),
     CoordinateControl = require('locationview/CoordinateControl'),
     LocationView = require('locationview/LocationView'),
-
     View = require('mvc/View'),
-
     Util = require('util/Util');
 
 
-var _DEFAULTS = {
+var _DEFAULTS;
+
+_DEFAULTS = {
 
 };
 
@@ -56,6 +56,7 @@ var Location = function (params) {
     _this.inputLongitude.parentElement.classList.add('usa-input-error-label');
     _this.errorMessage.parentElement.classList.add('usa-input-error');
   };
+
 
   _this.checkError = function () {
     var errorCheck;

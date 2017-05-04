@@ -6,7 +6,9 @@ var D33dCuboid = require('d3/D33dCuboid'),
     Util = require('util/Util');
 
 
-var _DEFAULTS = {
+var _DEFAULTS;
+
+_DEFAULTS = {
   size: 1,
   xScale: 1,
   yScale: 1,

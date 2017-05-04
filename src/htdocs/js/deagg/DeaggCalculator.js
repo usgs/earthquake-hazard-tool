@@ -2,7 +2,6 @@
 
 
 var Calculator = require('Calculator'),
-
     Collection = require('mvc/Collection');
 
 

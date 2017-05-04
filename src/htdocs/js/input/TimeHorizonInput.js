@@ -1,11 +1,13 @@
 'use strict';
 
 
-var View = require('mvc/View'),
-    Util = require('util/Util');
+var Util = require('util/Util'),
+    View = require('mvc/View');
 
 
-var _DEFAULTS = {
+var _DEFAULTS;
+
+_DEFAULTS = {
   horizons: [
     {
       id: '2P50',
@@ -95,6 +97,20 @@ var TimeHorizonInput = function (params) {
     _this.el.classList.add('time-horizon-input');
   };
 
+  _this.destroy = Util.compose(function () {
+    _this.yearsInput.removeEventListener('change', _this.onYearsInputChange);
+    _this.timeHorizonButtons.removeEventListener('click',
+        _this.onTimeHorizonButtonClick);
+
+    _this.createButtonMarkup = null;
+    _this.createViewSkeleton = null;
+    _this.onTimeHorizonButtonClick = null;
+    _this.onYearsInputChange = null;
+
+    _initialize = null;
+    _this = null;
+  }, _this.destroy);
+
   _this.onTimeHorizonButtonClick = function (evt) {
     var target,
         value;
@@ -177,21 +193,6 @@ var TimeHorizonInput = function (params) {
       _this.yearsLabel.classList.remove('usa-input-error-label');
     }
   };
-
-
-  _this.destroy = Util.compose(function () {
-    _this.yearsInput.removeEventListener('change', _this.onYearsInputChange);
-    _this.timeHorizonButtons.removeEventListener('click',
-        _this.onTimeHorizonButtonClick);
-
-    _this.createButtonMarkup = null;
-    _this.createViewSkeleton = null;
-    _this.onTimeHorizonButtonClick = null;
-    _this.onYearsInputChange = null;
-
-    _initialize = null;
-    _this = null;
-  }, _this.destroy);
 
 
   _initialize(params);

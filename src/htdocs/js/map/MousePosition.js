@@ -52,8 +52,10 @@ L.Control.MousePosition = L.Control.extend({
   }
 });
 
+
 L.control.mousePosition = function (options) {
   return new L.Control.MousePosition(options);
 };
+
 
 module.exports = L.Control.MousePosition;

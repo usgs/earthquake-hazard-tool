@@ -12,8 +12,13 @@ var Collection = require('mvc/Collection'),
     Util = require('util/Util');
 
 
-var _DEFAULTS = {};
+var _DEFAULTS;
 
+_DEFAULTS = {
+};
+
+
+var __calculateBounds;
 
 /**
  * Calculate deaggregation data bounds.
@@ -38,7 +43,7 @@ var _DEFAULTS = {};
  *         Array contains two sub arrays,
  *         containing minimum and maximum values for each axis.
  */
-var __calculateBounds = function (bindata) {
+__calculateBounds = function (bindata) {
   var x0,
       x1,
       y0,
@@ -108,7 +113,6 @@ var DeaggregationGraphView = function (options) {
 
 
   _this = SelectedCollectionView(options);
-
 
   _initialize = function (options) {
     options = Util.extend({}, _DEFAULTS, options);

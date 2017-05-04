@@ -14,9 +14,13 @@ var Grayscale = require('leaflet/layer/Grayscale'),
 // Public class
 // --------------------------------------------------
 
-var Z_BASELAYER_INDEX = 0,
-    Z_OVERLAY_INDEX = 100,
-    Z_DATASET_INDEX = 1000;
+var Z_BASELAYER_INDEX,
+    Z_OVERLAY_INDEX,
+    Z_DATASET_INDEX;
+
+Z_BASELAYER_INDEX = 0;
+Z_OVERLAY_INDEX = 100;
+Z_DATASET_INDEX = 1000;
 
 var LayerControl = L.Control.extend({
   options: {
@@ -222,7 +226,6 @@ var LayerControl = L.Control.extend({
   },
 
 
-
   _createBaseLayerOptions: function () {
     var baseLayersInfo;
 
@@ -389,8 +392,10 @@ var LayerControl = L.Control.extend({
   }
 });
 
+
 L.Control.hazardLayerControl = function (options) {
   return new LayerControl(options);
 };
+
 
 module.exports = LayerControl;
