@@ -252,7 +252,6 @@ var InputView = function (params) {
     if (_this.model) {
       _this.model.set({
         imt: (imt ? imt.id : null),
-        curveServiceUrl: null,
         deaggServiceUrl: null
       });
     }
@@ -266,7 +265,8 @@ var InputView = function (params) {
     if (_this.model) {
       _this.model.set({
         vs30: (siteClass ? siteClass.id : null),
-        rawDataUrl: null
+        curveServiceUrl: null,
+        deaggServiceUrl: null
       });
     }
   };
