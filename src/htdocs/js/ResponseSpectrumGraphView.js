@@ -10,11 +10,8 @@ var Collection = require('mvc/Collection'),
 
 var ResponseSpectrumGraphView = function (options) {
   var _this,
-      _initialize,
-      // variables
-      _curves,
-      _destroyCurves,
-      _spectrum;
+      _initialize;
+
 
   _this = D3View(Util.extend({
     clickToSelect: false,
@@ -23,39 +20,50 @@ var ResponseSpectrumGraphView = function (options) {
   }, options));
 
   _initialize = function (options) {
+    var curves;
+
     _this.el.classList.add('ResponseSpectrumGraphView');
 
-    _curves = options.curves;
-    _destroyCurves = false;
-    if (!_curves) {
-      _curves = Collection();
-      _destroyCurves = true;
+    curves = options.curves;
+    if (!curves) {
+      curves = Collection();
+      _this.destroyCurves = true;
     }
-    _curves.on('add', _this.render);
-    _curves.on('remove',  _this.render);
-    _curves.on('reset', _this.render);
-    _curves.on('select', _this.render);
+    curves.on('add', _this.render);
+    curves.on('remove',  _this.render);
+    curves.on('reset', _this.render);
+    curves.on('select', _this.render);
+    _this.curves = curves;
 
-    _spectrum = ResponseSpectrumLineView({
+    _this.spectrum = ResponseSpectrumLineView({
       view: _this,
-      curves: _curves
+      curves: curves
     });
-    _this.views.add(_spectrum);
+    _this.views.add(_this.spectrum);
   };
 
   /**
    * Unbind event listeners and free references.
    */
   _this.destroy = Util.compose(function () {
-    if (_destroyCurves) {
-      _curves.destroy();
-    } else {
-      _curves.off('add', _this.render);
-      _curves.off('remove', _this.render);
-      _curves.off('reset', _this.render);
-      _curves.off('select', _this.render);
+    var curves;
+
+    if (!_this) {
+      return;
     }
-    _curves = null;
+
+    curves = _this.curves;
+    if (_this.destroyCurves) {
+      curves.destroy();
+    } else {
+      curves.off('add', _this.render);
+      curves.off('remove', _this.render);
+      curves.off('reset', _this.render);
+      curves.off('select', _this.render);
+    }
+
+    _initialize = null;
+    _this = null;
   }, _this.destroy);
 
   /**
@@ -97,7 +105,7 @@ var ResponseSpectrumGraphView = function (options) {
         timeHorizon,
         yExtent;
 
-    imt = _curves.getSelected();
+    imt = _this.curves.getSelected();
     if (imt !== null) {
       imt = imt.get('imt');
     }
@@ -108,7 +116,7 @@ var ResponseSpectrumGraphView = function (options) {
     yExtent = [];
 
     // rebuild data for new time horizon
-    _curves.data().forEach(function (c) {
+    _this.curves.data().forEach(function (c) {
       var x = c.get('period'),
           y = c.getX(afe);
 
@@ -132,7 +140,7 @@ var ResponseSpectrumGraphView = function (options) {
       yExtent: yExtent
     }, {silent:true});
 
-    _spectrum.model.set({
+    _this.spectrum.model.set({
       data: data,
       imt: imt // Send IMT so the line highlights the corresponding point
     }, {silent: true});
