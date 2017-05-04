@@ -74,6 +74,31 @@ var ApplicationView = function (params) {
     _this.model.set({curves: null});
   };
 
+  _this.destroy = Util.compose(_this.destroy, function () {
+    _this.calculator.destroy();
+
+    _this.curveOutputView.off('calculate', 'onCalculate', _this);
+    _this.deaggOutputView.off('calculate', 'onCalculate', _this);
+
+    _this.newButton.removeEventListener('click', _this.onNewButtonClick);
+    _this.computeCurveBtn.removeEventListener('click', _this.queueCalculation,
+        _this);
+
+    // sub-views
+    _this.accordion.destroy();
+    _this.inputView.destroy();
+    _this.curveOutputView.destroy();
+    _this.deaggOutputView.destroy();
+    _this.mapView.destroy();
+
+    // models/collections
+    _this.editions.destroy();
+    _this.siteClasses.destroy();
+
+    _initialize = null;
+    _this = null;
+  });
+
   _this.formatLocationError = function () {
     _this.model.set({
       error: {
@@ -209,18 +234,30 @@ var ApplicationView = function (params) {
     }
   };
 
-  /**
-   * Adds new analysis to the collection and selects the analysis
-   */
-  _this.onNewButtonClick = function (evt) {
-    var analysis;
+  _this.onCollectionDeselect = function () {
+    _this.model.off('change:edition', 'onEditionChange', _this);
+    _this.model.off('change:location', 'onLocationChange', _this);
+    _this.model.off('change:region', 'onRegionChange', _this);
+    _this.model.off('change:vs30', 'onVs30Change', _this);
+    _this.model.off('change:timeHorizon', 'onTimeHorizonChange', _this);
+    _this.model.off('change:curves', 'render', _this);
 
-    analysis = Analysis();
-    _this.collection.add(analysis);
-    _this.collection.select(analysis);
+    _this.model = null;
+    _this.render({model: null});
+  };
 
-    evt.cancelBubble = true;
-    return evt.preventDefault();
+
+  _this.onCollectionSelect = function () {
+    _this.model = _this.collection.getSelected();
+
+    _this.model.on('change:edition', 'onEditionChange', _this);
+    _this.model.on('change:location', 'onLocationChange', _this);
+    _this.model.on('change:region', 'onRegionChange', _this);
+    _this.model.on('change:vs30', 'onVs30Change', _this);
+    _this.model.on('change:timeHorizon', 'onTimeHorizonChange', _this);
+    _this.model.on('change:curves', 'render', _this);
+
+    _this.render({model: _this.model});
   };
 
   //
@@ -255,8 +292,25 @@ var ApplicationView = function (params) {
     _this.clearOutput();
   };
 
+  /**
+   * Adds new analysis to the collection and selects the analysis
+   */
+  _this.onNewButtonClick = function (evt) {
+    var analysis;
+
+    analysis = Analysis();
+    _this.collection.add(analysis);
+    _this.collection.select(analysis);
+
+    evt.cancelBubble = true;
+    return evt.preventDefault();
+  };
+
   _this.onRegionChange = function (/*changes*/) {
     _this.clearOutput();
+  };
+
+  _this.onTimeHorizonChange = function (/*changes*/) {
   };
 
   _this.onVs30Change = function (/*changes*/) {
@@ -264,7 +318,64 @@ var ApplicationView = function (params) {
     _this.clearOutput();
   };
 
-  _this.onTimeHorizonChange = function (/*changes*/) {
+  _this.queueCalculation = function () {
+    var request;
+    if (!_this.queued) {
+      window.setTimeout(function () {
+        if (_this.model.get('edition') && _this.model.get('location') &&
+            _this.model.get('region') && _this.model.get('vs30')) {
+          request = _this.calculator.getResult(
+              _this.dependencyFactory.getService(_this.model.get('edition')),
+              _this.model,
+              _this.loaderView.hide
+            );
+          _this.loaderView.show(request);
+        }
+        _this.queued = false;
+      }, 0);
+      _this.queued = true;
+    }
+  };
+
+  _this.render = function (/*changes*/) {
+  };
+
+  /**
+   * Sets the region for the current model based on the currently selected
+   * edition, location, and vs30.
+   *
+   */
+  _this.updateRegion = function () {
+    var edition,
+        location,
+        regions,
+        vs30;
+
+    vs30 = _this.model.get('vs30');
+
+    if (vs30 === null) {
+      // no vs30, can't choose a region...
+      _this.model.set({'region': null});
+      return;
+    }
+
+    edition = _this.dependencyFactory.getEdition(_this.model.get('edition'));
+    location = _this.model.get('location');
+
+    if (edition && location) {
+      regions = _this.dependencyFactory.getRegions(
+          edition.get('supports').region, edition.id);
+
+      regions.some(function (region) {
+        var supports = region.get('supports').vs30;
+
+        if (region.contains(location) && supports.indexOf(vs30) !== -1) {
+          // region contains location and supports the current vs30, select it
+          _this.model.set({region: region.get('id')});
+          return true; // break, essentially
+        }
+      });
+    }
   };
 
   /**
@@ -309,44 +420,6 @@ var ApplicationView = function (params) {
     _this.siteClasses.trigger('reset', {});
   };
 
-  /**
-   * Sets the region for the current model based on the currently selected
-   * edition, location, and vs30.
-   *
-   */
-  _this.updateRegion = function () {
-    var edition,
-        location,
-        regions,
-        vs30;
-
-    vs30 = _this.model.get('vs30');
-
-    if (vs30 === null) {
-      // no vs30, can't choose a region...
-      _this.model.set({'region': null});
-      return;
-    }
-
-    edition = _this.dependencyFactory.getEdition(_this.model.get('edition'));
-    location = _this.model.get('location');
-
-    if (edition && location) {
-      regions = _this.dependencyFactory.getRegions(
-          edition.get('supports').region, edition.id);
-
-      regions.some(function (region) {
-        var supports = region.get('supports').vs30;
-
-        if (region.contains(location) && supports.indexOf(vs30) !== -1) {
-          // region contains location and supports the current vs30, select it
-          _this.model.set({region: region.get('id')});
-          return true; // break, essentially
-        }
-      });
-    }
-  };
-
   _this.validateLocation = function () {
     var checkLocation,
         edition,
@@ -374,78 +447,6 @@ var ApplicationView = function (params) {
     });
 
     return true;
-  };
-
-  _this.destroy = Util.compose(_this.destroy, function () {
-    _this.calculator.destroy();
-
-    _this.curveOutputView.off('calculate', 'onCalculate', _this);
-    _this.deaggOutputView.off('calculate', 'onCalculate', _this);
-
-    _this.newButton.removeEventListener('click', _this.onNewButtonClick);
-    _this.computeCurveBtn.removeEventListener('click', _this.queueCalculation,
-        _this);
-
-    // sub-views
-    _this.accordion.destroy();
-    _this.inputView.destroy();
-    _this.curveOutputView.destroy();
-    _this.deaggOutputView.destroy();
-    _this.mapView.destroy();
-
-    // models/collections
-    _this.editions.destroy();
-    _this.siteClasses.destroy();
-
-    _initialize = null;
-    _this = null;
-  });
-
-  _this.onCollectionDeselect = function () {
-    _this.model.off('change:edition', 'onEditionChange', _this);
-    _this.model.off('change:location', 'onLocationChange', _this);
-    _this.model.off('change:region', 'onRegionChange', _this);
-    _this.model.off('change:vs30', 'onVs30Change', _this);
-    _this.model.off('change:timeHorizon', 'onTimeHorizonChange', _this);
-    _this.model.off('change:curves', 'render', _this);
-
-    _this.model = null;
-    _this.render({model: null});
-  };
-
-  _this.onCollectionSelect = function () {
-    _this.model = _this.collection.getSelected();
-
-    _this.model.on('change:edition', 'onEditionChange', _this);
-    _this.model.on('change:location', 'onLocationChange', _this);
-    _this.model.on('change:region', 'onRegionChange', _this);
-    _this.model.on('change:vs30', 'onVs30Change', _this);
-    _this.model.on('change:timeHorizon', 'onTimeHorizonChange', _this);
-    _this.model.on('change:curves', 'render', _this);
-
-    _this.render({model: _this.model});
-  };
-
-  _this.queueCalculation = function () {
-    var request;
-    if (!_this.queued) {
-      window.setTimeout(function () {
-        if (_this.model.get('edition') && _this.model.get('location') &&
-            _this.model.get('region') && _this.model.get('vs30')) {
-          request = _this.calculator.getResult(
-              _this.dependencyFactory.getService(_this.model.get('edition')),
-              _this.model,
-              _this.loaderView.hide
-            );
-          _this.loaderView.show(request);
-        }
-        _this.queued = false;
-      }, 0);
-      _this.queued = true;
-    }
-  };
-
-  _this.render = function (/*changes*/) {
   };
 
 
