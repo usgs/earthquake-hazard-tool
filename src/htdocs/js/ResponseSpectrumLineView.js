@@ -6,13 +6,7 @@ var D3LineView = require('d3/D3LineView'),
 
 var ResponseSpectrumLineView = function (params) {
   var _this,
-      _initialize,
-
-      _curves,
-
-      _getImt,
-      _getPointClasses,
-      _onPointClick;
+      _initialize;
 
 
   _this = D3LineView(Util.extend({
@@ -26,31 +20,33 @@ var ResponseSpectrumLineView = function (params) {
 
   _initialize = function (params) {
     _this.el.classList.add('ResponseSpectrumLineView');
-    _curves = params.curves;
+    _this.curves = params.curves;
   };
 
 
-  _getImt = function (data/*, index, scope*/) {
+  _this.getImt = function (data/*, index, scope*/) {
     return data[2];
   };
 
-  _getPointClasses = function (data/*, index, scope*/) {
-    var classes = ['point'];
+  _this.getPointClasses = function (data/*, index, scope*/) {
+    var classes;
 
-    if (_getImt(data) === _this.model.get('imt')) {
+    classes = ['point'];
+
+    if (_this.getImt(data) === _this.model.get('imt')) {
       classes.push('selected');
     }
 
     return classes.join(' ');
   };
 
-  _onPointClick = function (data/*, index*/) {
+  _this.onPointClick = function (data/*, index*/) {
     var pointImt = data[2];
 
-    if (_curves) {
-      _curves.data().some(function (c) {
+    if (_this.curves) {
+      _this.curves.data().some(function (c) {
         if (c.get('imt') === pointImt) {
-          _curves.select(c);
+          _this.curves.select(c);
           return true;
         }
       });
@@ -98,13 +94,13 @@ var ResponseSpectrumLineView = function (params) {
   _this.plotPoints = function (points) {
     points.enter()
         .append('svg:circle')
-        .attr('data-imt', _getImt)
+        .attr('data-imt', _this.getImt)
         .on('mouseout', _this.onPointOut)
         .on('mouseover', _this.onPointOver)
-        .on('click', _onPointClick);
+        .on('click', _this.onPointClick);
 
     points.attr('r', _this.model.get('pointRadius'))
-        .attr('class', _getPointClasses)
+        .attr('class', _this.getPointClasses)
         .attr('data-index', function (d, i) { return i+1; })
         .attr('cx', _this.getScaleX)
         .attr('cy', _this.getScaleY);
@@ -138,7 +134,7 @@ var ResponseSpectrumLineView = function (params) {
 
     for (i = 0; i < data.length; i++) {
       point = data[i];
-      if (_getImt(point) === imt) {
+      if (_this.getImt(point) === imt) {
         break;
       }
     }
