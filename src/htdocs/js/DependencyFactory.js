@@ -1,10 +1,9 @@
 'use strict';
 
-var Meta = require('Meta'),
+
+var Collection = require('mvc/Collection'),
+    Meta = require('Meta'),
     Region = require('Region'),
-
-    Collection = require('mvc/Collection'),
-
     Util = require('util/Util'),
     Xhr = require('util/Xhr');
 
@@ -37,21 +36,7 @@ var _INSTANCE = null;
 
 var DependencyFactory = function (params) {
   var _this,
-      _initialize,
-
-      _callbacks,
-      _data,
-      _isReady,
-      _pendingRequests,
-      _services,
-
-      _buildCollection,
-      _fetchService,
-      _getAllFromAll,
-      _getSupported,
-      _onComplete,
-      _onError,
-      _onSuccess;
+      _initialize;
 
 
   _this = {
@@ -79,24 +64,34 @@ var DependencyFactory = function (params) {
 
     params = Util.extend({}, _DEFAULTS, params);
 
-    _data = {};
+    _this.data = {};
 
-    _services = params.services;
-    _pendingRequests = {};
+    _this.services = params.services;
+    _this.pendingRequests = {};
 
-    _callbacks = [];
-    _isReady = false;
+    _this.callbacks = [];
+    _this.isReady = false;
 
-    for (serviceType in _services) {
-      services = _services[serviceType];
+    for (serviceType in _this.services) {
+      services = _this.services[serviceType];
 
       for (serviceName in services) {
-          _fetchService(serviceName, serviceType);
+          _this.fetchService(serviceName, serviceType);
       }
     }
   };
 
-  _fetchService = function (serviceName, serviceType) {
+  /**
+   * Clean up variables and methods
+   */
+  _this.destroy = function () {
+    _this = null;
+    _initialize = null;
+
+    _INSTANCE = null;
+  };
+
+  _this.fetchService = function (serviceName, serviceType) {
     var service,
         url;
 
@@ -105,85 +100,43 @@ var DependencyFactory = function (params) {
     if (service) {
       url = service.metaUrl;
 
-      _pendingRequests[serviceName] = true;
+      _this.pendingRequests[serviceName] = true;
 
       Xhr.ajax({
         error: function () {
-          _onError(serviceName);
-          _onComplete(serviceName);
+          _this.onError(serviceName);
+          _this.onComplete(serviceName);
         },
         success: function (data/*, xhr*/) {
-          _onSuccess(serviceName, data, serviceType);
-          _onComplete(serviceName);
+          _this.onSuccess(serviceName, data, serviceType);
+          _this.onComplete(serviceName);
         },
         url: url
       });
     }
   };
 
-  _onComplete = function (serviceName) {
-    if (_pendingRequests.hasOwnProperty(serviceName)) {
-      _pendingRequests[serviceName] = null;
-      delete _pendingRequests[serviceName];
-    }
+  _this.getAllEditions = function (editionId) {
+    var all,
+        service;
 
-    if (Object.keys(_pendingRequests).length === 0) {
-      _isReady = true;
+    if (editionId) {
+      service = _this.getService(editionId);
 
-      _callbacks.forEach(function (callback) {
-        callback();
-      });
-    }
-  };
-
-  /**
-   * Sets the dependency collections with the default values
-   * returned by the Xhr request.
-   *
-   * @param serviceName {String}
-   *      The name for the service to which the data should be associated.
-   * @param data {Object}
-   *      Data returned from the service fetch request.
-   */
-  _onSuccess = function (serviceName, data, serviceType) {
-    var service;
-
-    service = _this.getServiceByName(serviceName, serviceType);
-
-    service.params = data.parameters;
-    service.urlStub = data.syntax;
-
-    service.editions = Collection(data.parameters.edition.values.map(Meta));
-    service.regions = Collection(data.parameters.region.values.map(Region));
-    service.siteClasses = Collection(data.parameters.vs30.values.map(Meta));
-    service.spectralPeriods = Collection(data.parameters.imt.values.map(Meta));
-  };
-
-  /**
-   * Error callback when a service fetch fails
-   */
-  _onError = function (serviceName) {
-    throw new Error('Error retreiving data for service: ' + serviceName + '.');
-  };
-
-  /**
-   * Filter a collection based on an array of ids
-   *
-   * @param  collection {Collection}
-   *         The collection to be filtered.
-   *
-   * @param  ids {Array}
-   *         The ids to look for in the collection.
-   *
-   * @return {Collection}
-   *         The filtered collection.
-   */
-  _getSupported = function (collection, ids) {
-    return collection.data().filter(function (model) {
-      if (ids.indexOf(model.get('id')) !== -1) {
-        return true;
+      if (service) {
+        all = service.editions.data();
+      } else {
+        all = [];
       }
+    } else {
+      all = _this.getAllFromAll('editions');
+    }
+
+    all.sort(function (a,b) {
+      return a.get('displayorder') - b.get('displayorder');
     });
+
+    return all;
   };
 
   /**
@@ -198,7 +151,7 @@ var DependencyFactory = function (params) {
    *      An array containing models corresponding to a unique set of models
    *      of the given typeName across all services.
    */
-  _getAllFromAll = function (typeName) {
+  _this.getAllFromAll = function (typeName) {
     var all,
         data,
         i,
@@ -210,8 +163,8 @@ var DependencyFactory = function (params) {
     all = {};
 
     // Use an object to create a unique list
-    for (serviceType in _services) {
-      services = _services[serviceType];
+    for (serviceType in _this.services) {
+      services = _this.services[serviceType];
 
       for (serviceName in services) {
         data = services[serviceName][typeName].data();
@@ -223,13 +176,13 @@ var DependencyFactory = function (params) {
       }
     }
 
-    // Object.keys(_services).forEach(function (serviceType) {
-    //   var services = _services[serviceType];
+    // Object.keys(_this.services).forEach(function (serviceType) {
+    //   var services = _this.services[serviceType];
 
     //   Object.keys(services).forEach(function (serviceName) {
     //     var collection;
 
-    //     collection = _services[serviceName][typeName];
+    //     collection = _this.services[serviceName][typeName];
 
     //     collection.data().forEach(function (model) {
     //       all[model.id] = model;
@@ -243,30 +196,67 @@ var DependencyFactory = function (params) {
     });
   };
 
-  /**
-   * Clean up variables and methods
-   */
-  _this.destroy = function () {
-    _buildCollection = null;
-    _fetchService = null;
-    _getAllFromAll = null;
-    _getSupported = null;
-    _onComplete = null;
-    _onError = null;
-    _onSuccess = null;
+  _this.getAllRegions = function (editionId) {
+    var dependencyFactory,
+        edition,
+        regions;
 
-    _callbacks = null;
-    _data = null;
-    _isReady = null;
-    _pendingRequests = null;
-    _services = null;
+    dependencyFactory = _this;
 
-    _this = null;
-    _initialize = null;
+    if (editionId) {
+      edition = _this.getEdition(editionId);
+      if (!edition) {
+        return [];
+      }
+      regions = edition.get('supports').region || [];
 
-    _INSTANCE = null;
+      regions = regions.map(function (regionId) {
+        return dependencyFactory.getRegion(regionId, editionId);
+      });
+    } else {
+      regions = _this.getAllFromAll('regions');
+    }
+
+    return regions;
   };
 
+  _this.getAllSiteClasses = function (editionId) {
+    var all,
+        service;
+
+    if (editionId) {
+      service = _this.getService(editionId);
+
+      if (service) {
+        all = service.siteClasses.data();
+      } else {
+        all = [];
+      }
+    } else {
+      all = _this.getAllFromAll('siteClasses');
+    }
+
+    return all;
+  };
+
+  _this.getAllSpectralPeriods = function (editionId) {
+    var all,
+        service;
+
+    if (editionId) {
+      service = _this.getService(editionId);
+
+      if (service) {
+        all = service.spectralPeriods.data();
+      } else {
+        all = [];
+      }
+    } else {
+      all = _this.getAllFromAll('spectralPeriods');
+    }
+
+    return all;
+  };
 
   // Edition methods ...
 
@@ -288,233 +278,10 @@ var DependencyFactory = function (params) {
     service = _this.getService(editionId);
 
     if (service) {
-      return _getSupported(service.editions, ids);
+      return _this.getSupported(service.editions, ids);
     } else {
       return [];
     }
-  };
-
-  _this.getAllEditions = function (editionId) {
-    var all,
-        service;
-
-    if (editionId) {
-      service = _this.getService(editionId);
-
-      if (service) {
-        all = service.editions.data();
-      } else {
-        all = [];
-      }
-    } else {
-      all = _getAllFromAll('editions');
-    }
-
-    all.sort(function (a,b) {
-      return a.get('displayorder') - b.get('displayorder');
-    });
-
-    return all;
-  };
-
-  // Region methods ...
-
-  _this.getRegion = function (id, editionId) {
-    var service;
-
-    service = _this.getService(editionId);
-
-    if (service) {
-      return service.regions.get(id);
-    } else {
-      return null;
-    }
-  };
-
-  _this.getRegions = function (ids, editionId) {
-    var service;
-
-    service = _this.getService(editionId);
-
-    if (service) {
-      return _getSupported(service.regions, ids);
-    } else {
-      return [];
-    }
-  };
-
-  _this.getAllRegions = function (editionId) {
-    var dependencyFactory,
-        edition,
-        regions;
-
-    dependencyFactory = _this;
-
-    if (editionId) {
-      edition = _this.getEdition(editionId);
-      if (!edition) {
-        return [];
-      }
-      regions = edition.get('supports').region || [];
-
-      regions = regions.map(function (regionId) {
-        return dependencyFactory.getRegion(regionId, editionId);
-      });
-    } else {
-      regions = _getAllFromAll('regions');
-    }
-
-    return regions;
-  };
-
-  // Site class methods ...
-
-  _this.getSiteClass = function (id, editionId) {
-    var service;
-
-    service = _this.getService(editionId);
-
-    if (service) {
-      return service.siteClasses.get(id);
-    } else {
-      return null;
-    }
-  };
-
-  _this.getSiteClasses = function (ids, editionId) {
-    var service;
-
-    service = _this.getService(editionId);
-
-    if (service) {
-      return _getSupported(service.siteClasses, ids);
-    } else {
-      return [];
-    }
-  };
-
-  _this.getAllSiteClasses = function (editionId) {
-    var all,
-        service;
-
-    if (editionId) {
-      service = _this.getService(editionId);
-
-      if (service) {
-        all = service.siteClasses.data();
-      } else {
-        all = [];
-      }
-    } else {
-      all = _getAllFromAll('siteClasses');
-    }
-
-    return all;
-  };
-
-  // Spectral period methods ...
-
-  _this.getSpectralPeriod = function (id, editionId) {
-    var service;
-
-    service = _this.getService(editionId);
-
-    if (service) {
-      return service.spectralPeriods.get(id);
-    } else {
-      return null;
-    }
-  };
-
-  _this.getSpectralPeriods = function (ids, editionId) {
-    var service;
-
-    service = _this.getService(editionId);
-
-    if (service) {
-      return _getSupported(service.spectralPeriods, ids);
-    } else {
-      return [];
-    }
-  };
-
-  _this.getAllSpectralPeriods = function (editionId) {
-    var all,
-        service;
-
-    if (editionId) {
-      service = _this.getService(editionId);
-
-      if (service) {
-        all = service.spectralPeriods.data();
-      } else {
-        all = [];
-      }
-    } else {
-      all = _getAllFromAll('spectralPeriods');
-    }
-
-    return all;
-  };
-
-  // Service methods ...
-
-  _this.getServices = function () {
-    return _services;
-  };
-
-  _this.getService = function (editionId, serviceType) {
-    var serviceName,
-        service,
-        services;
-
-    if (serviceType) {
-      services = _services[serviceType];
-
-      for (serviceName in services) {
-        service = services[serviceName];
-
-        if (service.editions && service.editions.get(editionId)) {
-          return service;
-        } else {
-          service = null;
-        }
-      }
-    } else {
-      for (serviceType in _services) {
-        services = _services[serviceType];
-
-        for (serviceName in services) {
-          service = services[serviceName];
-
-          if (service.editions && service.editions.get(editionId)) {
-            return service;
-          } else {
-            service = null;
-          }
-        }
-      }
-    }
-
-    return service;
-  };
-
-  _this.getServiceByName = function (serviceName, serviceType) {
-    var service,
-        type;
-
-    if (serviceType && _services.hasOwnProperty(serviceType)) {
-      service = _services[serviceType][serviceName];
-    } else {
-      for (type in _services) {
-        service = _services[type][serviceName];
-        if (service) {
-          break;
-        }
-      }
-    }
-
-    return service;
   };
 
   /**
@@ -538,6 +305,20 @@ var DependencyFactory = function (params) {
     ids = edition.get('supports').contourType;
 
     return _this.getContourTypes(ids);
+  };
+
+  // Region methods ...
+
+  _this.getRegion = function (id, editionId) {
+    var service;
+
+    service = _this.getService(editionId);
+
+    if (service) {
+      return service.regions.get(id);
+    } else {
+      return null;
+    }
   };
 
   /**
@@ -581,6 +362,150 @@ var DependencyFactory = function (params) {
     return region;
   };
 
+  _this.getRegions = function (ids, editionId) {
+    var service;
+
+    service = _this.getService(editionId);
+
+    if (service) {
+      return _this.getSupported(service.regions, ids);
+    } else {
+      return [];
+    }
+  };
+
+  // Service methods ...
+
+  _this.getService = function (editionId, serviceType) {
+    var serviceName,
+        service,
+        services;
+
+    if (serviceType) {
+      services = _this.services[serviceType];
+
+      for (serviceName in services) {
+        service = services[serviceName];
+
+        if (service.editions && service.editions.get(editionId)) {
+          return service;
+        } else {
+          service = null;
+        }
+      }
+    } else {
+      for (serviceType in _this.services) {
+        services = _this.services[serviceType];
+
+        for (serviceName in services) {
+          service = services[serviceName];
+
+          if (service.editions && service.editions.get(editionId)) {
+            return service;
+          } else {
+            service = null;
+          }
+        }
+      }
+    }
+
+    return service;
+  };
+
+  _this.getServiceByName = function (serviceName, serviceType) {
+    var service,
+        type;
+
+    if (serviceType && _this.services.hasOwnProperty(serviceType)) {
+      service = _this.services[serviceType][serviceName];
+    } else {
+      for (type in _this.services) {
+        service = _this.services[type][serviceName];
+        if (service) {
+          break;
+        }
+      }
+    }
+
+    return service;
+  };
+
+  _this.getServices = function () {
+    return _this.services;
+  };
+
+  // Site class methods ...
+
+  _this.getSiteClass = function (id, editionId) {
+    var service;
+
+    service = _this.getService(editionId);
+
+    if (service) {
+      return service.siteClasses.get(id);
+    } else {
+      return null;
+    }
+  };
+
+  _this.getSiteClasses = function (ids, editionId) {
+    var service;
+
+    service = _this.getService(editionId);
+
+    if (service) {
+      return _this.getSupported(service.siteClasses, ids);
+    } else {
+      return [];
+    }
+  };
+
+  // Spectral period methods ...
+
+  _this.getSpectralPeriod = function (id, editionId) {
+    var service;
+
+    service = _this.getService(editionId);
+
+    if (service) {
+      return service.spectralPeriods.get(id);
+    } else {
+      return null;
+    }
+  };
+
+  _this.getSpectralPeriods = function (ids, editionId) {
+    var service;
+
+    service = _this.getService(editionId);
+
+    if (service) {
+      return _this.getSupported(service.spectralPeriods, ids);
+    } else {
+      return [];
+    }
+  };
+
+  /**
+   * Filter a collection based on an array of ids
+   *
+   * @param  collection {Collection}
+   *         The collection to be filtered.
+   *
+   * @param  ids {Array}
+   *         The ids to look for in the collection.
+   *
+   * @return {Collection}
+   *         The filtered collection.
+   */
+  _this.getSupported = function (collection, ids) {
+    return collection.data().filter(function (model) {
+      if (ids.indexOf(model.get('id')) !== -1) {
+        return true;
+      }
+    });
+  };
+
   /**
    * Checks if the edition supports deaggregation calculations
    *
@@ -603,6 +528,51 @@ var DependencyFactory = function (params) {
     }
   };
 
+  _this.onComplete = function (serviceName) {
+    if (_this.pendingRequests.hasOwnProperty(serviceName)) {
+      _this.pendingRequests[serviceName] = null;
+      delete _this.pendingRequests[serviceName];
+    }
+
+    if (Object.keys(_this.pendingRequests).length === 0) {
+      _this.isReady = true;
+
+      _this.callbacks.forEach(function (callback) {
+        callback();
+      });
+    }
+  };
+
+  /**
+   * Error callback when a service fetch fails
+   */
+  _this.onError = function (serviceName) {
+    throw new Error('Error retreiving data for service: ' + serviceName + '.');
+  };
+
+  /**
+   * Sets the dependency collections with the default values
+   * returned by the Xhr request.
+   *
+   * @param serviceName {String}
+   *      The name for the service to which the data should be associated.
+   * @param data {Object}
+   *      Data returned from the service fetch request.
+   */
+  _this.onSuccess = function (serviceName, data, serviceType) {
+    var service;
+
+    service = _this.getServiceByName(serviceName, serviceType);
+
+    service.params = data.parameters;
+    service.urlStub = data.syntax;
+
+    service.editions = Collection(data.parameters.edition.values.map(Meta));
+    service.regions = Collection(data.parameters.region.values.map(Region));
+    service.siteClasses = Collection(data.parameters.vs30.values.map(Meta));
+    service.spectralPeriods = Collection(data.parameters.imt.values.map(Meta));
+  };
+
   /**
    * Build an array of callbacks to be executed when the
    * Xhr request is returned.
@@ -611,10 +581,10 @@ var DependencyFactory = function (params) {
    *         a callback to be called by the Xhr success callback
    */
   _this.whenReady = function (callback) {
-    if (_isReady) {
+    if (_this.isReady) {
       callback();
     } else {
-      _callbacks.push(callback);
+      _this.callbacks.push(callback);
     }
   };
 
