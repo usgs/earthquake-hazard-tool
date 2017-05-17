@@ -1,10 +1,10 @@
 'use strict';
 
-var Collection = require('mvc/Collection'),
-    SelectedCollectionView = require('mvc/SelectedCollectionView'),
-    Util = require('util/Util'),
 
-    HazardCurveGraphView = require('./HazardCurveGraphView');
+var Collection = require('mvc/Collection'),
+    HazardCurveGraphView = require('./HazardCurveGraphView'),
+    SelectedCollectionView = require('mvc/SelectedCollectionView'),
+    Util = require('util/Util');
 
 
 var _EMPTY_CLASS,
@@ -26,10 +26,7 @@ _EMPTY_CLASS = 'ComponentCurvesGraphView-empty';
  */
 var ComponentCurvesGraphView = function (options) {
   var _this,
-      _initialize,
-
-      _curves,
-      _curveView;
+      _initialize;
 
 
   _this = SelectedCollectionView(options);
@@ -42,10 +39,10 @@ var ComponentCurvesGraphView = function (options) {
     _this.el.classList.add(_EMPTY_CLASS);
     _this.el.innerHTML = '<div></div>';
 
-    _curves = Collection();
-    _curveView = HazardCurveGraphView({
+    _this.curves = Collection();
+    _this.curveView = HazardCurveGraphView({
       el: _this.el.querySelector('div'),
-      curves: _curves
+      curves: _this.curves
     });
   };
 
@@ -53,11 +50,8 @@ var ComponentCurvesGraphView = function (options) {
    * Destroy collection and wrapped view.
    */
   _this.destroy = Util.compose(function () {
-    _curveView.destroy();
-    _curveView = null;
-
-    _curves.destroy();
-    _curves = null;
+    _this.curveView.destroy();
+    _this.curves.destroy();
   }, _this.destroy);
 
   /**
@@ -86,10 +80,10 @@ var ComponentCurvesGraphView = function (options) {
     }
 
     // update collection
-    _curveView.model.set({
+    _this.curveView.model.set({
       title: label
     }, {silent: true});
-    _curves.reset(components);
+    _this.curves.reset(components);
   };
 
 

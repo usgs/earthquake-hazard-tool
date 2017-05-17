@@ -1,9 +1,9 @@
 'use strict';
 
-var HazardCurve = require('HazardCurve'),
-    HazardUtil = require('HazardUtil'),
 
-    Collection = require('mvc/Collection'),
+var Collection = require('mvc/Collection'),
+    HazardCurve = require('HazardCurve'),
+    HazardUtil = require('HazardUtil'),
     Model = require('mvc/Model');
 
 
@@ -13,11 +13,7 @@ var _MIN_VALUE = 1E-14,
 
 var DynamicHazardResponse = function (params) {
   var _this,
-      _initialize,
-
-      _createComponentCurveCollection,
-      _createTotalCurve,
-      _trimSmallValues;
+      _initialize;
 
 
   _this = Model();
@@ -38,7 +34,7 @@ var DynamicHazardResponse = function (params) {
       attributes.xlabel = response.metadata.xlabel;
       attributes.ylabel = response.metadata.ylabel;
 
-      attributes.curves.push(_createTotalCurve(response));
+      attributes.curves.push(_this.createTotalCurve(response));
     });
 
     attributes.curves = Collection(attributes.curves);
@@ -46,8 +42,31 @@ var DynamicHazardResponse = function (params) {
     _this.set(attributes, {silent: true});
   };
 
+  _this.createComponentCurveCollection = function (response) {
+    var curves,
+        data,
+        metadata;
 
-  _createTotalCurve = function (response) {
+    curves = [];
+
+    metadata = response.metadata;
+    data = response.data;
+
+    data.forEach(function (item) {
+      if (item.component.toLowerCase() !== 'total') {
+        curves.push(HazardCurve({
+          label: item.component,
+          imt: metadata.imt.value,
+          period: HazardUtil.periodToNumber(metadata.imt.value),
+          data: _this.trimSmallValues(metadata.xvalues, item.yvalues)
+        }));
+      }
+    });
+
+    return Collection(curves);
+  };
+
+  _this.createTotalCurve = function (response) {
     var metadata,
         item;
 
@@ -65,36 +84,12 @@ var DynamicHazardResponse = function (params) {
       label: metadata.imt.display,
       imt: metadata.imt.value,
       period: HazardUtil.periodToNumber(metadata.imt.value),
-      data: _trimSmallValues(metadata.xvalues, item.yvalues),
-      components: _createComponentCurveCollection(response)
+      data: _this.trimSmallValues(metadata.xvalues, item.yvalues),
+      components: _this.createComponentCurveCollection(response)
     });
   };
 
-  _createComponentCurveCollection = function (response) {
-    var curves,
-        data,
-        metadata;
-
-    curves = [];
-
-    metadata = response.metadata;
-    data = response.data;
-
-    data.forEach(function (item) {
-      if (item.component.toLowerCase() !== 'total') {
-        curves.push(HazardCurve({
-          label: item.component,
-          imt: metadata.imt.value,
-          period: HazardUtil.periodToNumber(metadata.imt.value),
-          data: _trimSmallValues(metadata.xvalues, item.yvalues)
-        }));
-      }
-    });
-
-    return Collection(curves);
-  };
-
-  _trimSmallValues = function (xvals, yvals) {
+  _this.trimSmallValues = function (xvals, yvals) {
     var index;
 
     yvals.some(function (val, idx) {

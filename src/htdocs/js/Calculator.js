@@ -8,10 +8,50 @@ var ModalView = require('mvc/ModalView'),
 var Calculator = function (/*params*/) {
   var _this;
 
+
   _this = {
     getResult: null,
     parseInputs: null,
     callXHR: null
+  };
+
+  _this.callXHR = function (url, service, analysis, callback) {
+    return Xhr.ajax({
+      url: url,
+      success: function (response) {
+        // check that the response is not an error response from the ws
+        if (response.status === 'success') {
+          _this.onXhrSuccess(url, response, service, analysis);
+        } else {
+          _this.displayError(response.message);
+        }
+        if (callback) {
+          callback({analysis: analysis, service: service});
+        }
+      },
+      error: function (err) {
+        _this.displayError(err.message);
+        if (callback) {
+          callback({analysis: analysis, service: service});
+        }
+        throw err;
+      }
+    });
+  };
+
+  /**
+   * Display error message from XHR request in a modal pop-up
+   *
+   * @param message {String}
+   *        Error message to display inside modal pop-up
+   *
+   */
+  _this.displayError = function (message) {
+    ModalView(message, {
+      title: 'Error',
+      classes: ['modal-error'],
+      destroyOnHide: true
+    }).show();
   };
 
    /**
@@ -32,6 +72,13 @@ var Calculator = function (/*params*/) {
 
     url = _this.parseInputs(service.params, service.urlStub, analysis);
     return _this.callXHR(url, service, analysis, callback);
+  };
+
+  _this.onXhrSuccess = function (url, response, service, analysis) {
+    analysis.set({
+      'curves': require(service.constructor)(response.response),
+      'curveServiceUrl': url
+    });
   };
 
   /**
@@ -65,51 +112,6 @@ var Calculator = function (/*params*/) {
     return url;
   };
 
-  _this.callXHR = function (url, service, analysis, callback) {
-    return Xhr.ajax({
-      url: url,
-      success: function (response) {
-        // check that the response is not an error response from the ws
-        if (response.status === 'success') {
-          _this.onXhrSuccess(url, response, service, analysis);
-        } else {
-          _this.displayError(response.message);
-        }
-        if (callback) {
-          callback({analysis: analysis, service: service});
-        }
-      },
-      error: function (err) {
-        _this.displayError(err.message);
-        if (callback) {
-          callback({analysis: analysis, service: service});
-        }
-        throw err;
-      }
-    });
-  };
-
-  _this.onXhrSuccess = function (url, response, service, analysis) {
-    analysis.set({
-      'curves': require(service.constructor)(response.response),
-      'curveServiceUrl': url
-    });
-  };
-
-  /**
-   * Display error message from XHR request in a modal pop-up
-   *
-   * @param message {String}
-   *        Error message to display inside modal pop-up
-   *
-   */
-  _this.displayError = function (message) {
-    ModalView(message, {
-      title: 'Error',
-      classes: ['modal-error'],
-      destroyOnHide: true
-    }).show();
-  };
 
   return _this;
 };
