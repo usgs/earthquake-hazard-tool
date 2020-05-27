@@ -38,7 +38,7 @@
     "hazdev-leaflet": "0.2.3",
     "hazdev-location-view": "0.4.3",
     "hazdev-tablist": "0.1.2",
-    "hazdev-template": "1.2.0",
+    "hazdev-template": "git+https://github.com/usgs/hazdev-template.git#1.4.0",
     "hazdev-webutils": "0.1.9",
     "http-rewrite-middleware": "0.1.6",
     "ini": "1.3.4",
