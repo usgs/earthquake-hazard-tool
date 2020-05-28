@@ -11,6 +11,8 @@ RUN yum install -y \
         bzip2 \
         git \
         php \
+        php-pdo \
+        php-pgsql \
     && npm install -g grunt-cli
 
 COPY . /earthquake-hazard-tool
@@ -19,7 +21,7 @@ WORKDIR /earthquake-hazard-tool
 # Build project
 RUN /bin/bash --login -c "\
     npm install --no-save \
-    && php src/lib/pre-install.php --non-interactive --skip-prompts \
+    && php src/lib/pre-install.php --non-interactive \
     && grunt build \
     && rm dist/conf/config.ini \
     "
