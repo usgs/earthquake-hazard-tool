@@ -23,4 +23,5 @@ services:
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: 'password'
       POSTGRES_DB: 'earthquake'
-    volumes: - ./data/postgresql:/var/lib/postgresql
+    volumes: 
+      - ./data/postgresql/data:/var/lib/postgresql/data
