@@ -73,9 +73,15 @@ foreach ($argv as $arg) {
   if ($arg === '--non-interactive') {
     define('NON_INTERACTIVE', true);
   }
+  elseif ($arg === '--skip-prompts') {
+    define('SKIP_PROMPTS', true);
+  }
 }
 if (!defined('NON_INTERACTIVE')) {
   define('NON_INTERACTIVE', false);
+}
+if (!defined('SKIP_PROMPTS')) {
+  define('SKIP_PROMPTS', false);
 }
 
 
@@ -125,6 +131,6 @@ file_put_contents($APACHE_CONFIG_FILE, '
 	</Location>
 ');
 
-if (promptYesNo('Would you like to perform database installation', false)) {
+if (SKIP_PROMPTS || promptYesNo('Would you like to perform database installation', false)) {
   include_once 'db/setup.php';
 }

@@ -1,11 +1,12 @@
 version: '3'
 services:
   ws:
+    container_name: earthquake-hazard-tool
     build: .
     ports:
       - '8080:80'
     environment:
-      DB_DSN: 'pgsql:host=database;port=5432;dbname=postgres'
+      DB_DSN: 'pgsql:host=database;port=5432;dbname=earthquake'
       DB_SCHEMA: 'postgres'
       DB_USER: 'postgres'
       DB_PASS: 'password'
@@ -14,8 +15,11 @@ services:
     links:
       - 'db:database'
   db:
+    container_name: earthquake-hazard-tool-db
     image: 'postgres'
     ports:
       - '5432:5432'
     environment:
       POSTGRES_PASSWORD: 'password'
+      POSTGRES_USER: 'postgres'
+      POSTGRES_DB: 'earthquake'
