@@ -1,27 +1,27 @@
-version: '3'
+version: "3"
 services:
   ws:
     container_name: earthquake-hazard-tool
     build: .
     ports:
-      - '8080:80'
+      - "8080:80"
     environment:
-      DB_DSN: 'pgsql:host=database;port=5432;dbname=earthquake'
-      DB_SCHEMA: 'earthquake'
-      DB_USER: 'postgres'
-      DB_PASS: 'password'
-      CURVE_SERVICES: 'staticcurve|/hazws/staticcurve/1|HazardResponse,dynamiccurve|https://earthquake.usgs.gov/nshmp-haz-ws/hazard|DynamicHazardResponse'
-      DEAGG_SERVICES: 'dynamicdeagg|https://earthquake.usgs.gov/nshmp-haz-ws/deagg|deagg/DeaggResponse'
+      DB_DSN: "pgsql:host=database;port=5432;dbname=earthquake"
+      DB_SCHEMA: "earthquake"
+      DB_USER: "postgres"
+      DB_PASS: "password"
+      CURVE_SERVICES: "staticcurve|/hazws/staticcurve/1|HazardResponse,dynamiccurve|https://earthquake.usgs.gov/nshmp-haz-ws/hazard|DynamicHazardResponse"
+      DEAGG_SERVICES: "dynamicdeagg|https://earthquake.usgs.gov/nshmp-haz-ws/deagg|deagg/DeaggResponse"
     links:
-      - 'db:database'
+      - "db:database"
   db:
     container_name: earthquake-hazard-tool-db
-    image: 'postgres'
+    image: "postgres"
     ports:
-      - '5432:5432'
+      - "5432:5432"
     environment:
-      POSTGRES_USER: 'postgres'
-      POSTGRES_PASSWORD: 'password'
-      POSTGRES_DB: 'earthquake'
-    volumes: 
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_DB: "earthquake"
+    volumes:
       - ./data/postgresql/data:/var/lib/postgresql/data
