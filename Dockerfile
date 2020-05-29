@@ -4,7 +4,6 @@ ARG FROM_IMAGE=usgs/httpd-php:latest
 
 FROM ${BUILD_IMAGE} as buildenv
 
-
 # php required for pre-install
 USER root
 RUN yum install -y \
