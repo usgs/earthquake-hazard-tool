@@ -3,6 +3,14 @@
 $oldDir = getcwd();
 chdir(dirname(__FILE__));
 
+# run args in case this file is run on its own. assume least interaction
+if (!defined('SKIP_PROMPTS')) {
+  define('SKIP_PROMPTS', true);
+}
+if (!defined('NON_INTERACTIVE')) {
+  define('NON_INTERACTIVE', true);
+}
+
 include_once 'connect.admin.db.php';
 include_once '../install-funcs.inc.php';
 
