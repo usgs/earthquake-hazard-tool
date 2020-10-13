@@ -1,3 +1,7 @@
+**THIS PROJECT HAS BEEN ARCHIVED**
+
+Please see https://code.usgs.gov/ghsc/hazdev/earthquake-hazard-tool
+
 earthquake-hazard-tool
 ==============
 [![Build Status](https://travis-ci.org/usgs/earthquake-design-ws.svg?branch=master)](https://travis-ci.org/usgs/earthquake-design-ws)
