@@ -3,6 +3,8 @@
 date_default_timezone_set('UTC');
 
 $CONFIG = parse_ini_file('config.ini');
+# override INI configuration using environment
+$CONFIG = array_merge($CONFIG, $_ENV);
 
 $APP_DIR = $CONFIG['APP_DIR'];
 $DATA_DIR = $CONFIG['DATA_DIR'];

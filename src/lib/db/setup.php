@@ -3,6 +3,14 @@
 $oldDir = getcwd();
 chdir(dirname(__FILE__));
 
+# run args in case this file is run on its own. assume least interaction
+if (!defined('SKIP_PROMPTS')) {
+  define('SKIP_PROMPTS', true);
+}
+if (!defined('NON_INTERACTIVE')) {
+  define('NON_INTERACTIVE', true);
+}
+
 include_once 'connect.admin.db.php';
 include_once '../install-funcs.inc.php';
 
@@ -19,7 +27,7 @@ $regionFactory = new RegionFactory($db);
 include_once './metadata.php';
 
 try {
-  if (promptYesNo('Do you want to create tables/views?', true)) {
+  if (SKIP_PROMPTS || promptYesNo('Do you want to create tables/views?', true)) {
     $db->beginTransaction();
     $db->exec(file_get_contents('./schema.sql'));
     $db->exec('GRANT SELECT ON ALL TABLES IN SCHEMA ' . $CONFIG['DB_SCHEMA'] .
@@ -29,7 +37,7 @@ try {
   }
 
 
-  if (promptYesNo('Do you want to load metadata?', true)) {
+  if (SKIP_PROMPTS || promptYesNo('Do you want to load metadata?', true)) {
     $db->beginTransaction();
 
     foreach ($imts as $imt) {
@@ -53,7 +61,7 @@ try {
   }
 
 
-  if (promptYesNo('Do you want to load static curve data?', true)) {
+  if (SKIP_PROMPTS || promptYesNo('Do you want to load static curve data?', true)) {
     include_once './load.php';
   }
 
