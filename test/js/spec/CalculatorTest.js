@@ -43,7 +43,7 @@ describe('Calculator', function () {
       stub;
 
   before(function (done) {
-    stub = sinon.stub(Xhr, 'ajax', function (options) {
+    stub = sinon.stub(Xhr, 'ajax').callsFake(function (options) {
       options.success(metadata);
     });
 
@@ -64,7 +64,7 @@ describe('Calculator', function () {
       });
 
       stub.restore();
-      stub = sinon.stub(Xhr, 'ajax', function (options) {
+      stub = sinon.stub(Xhr, 'ajax').callsFake(function (options) {
         options.success(data);
       });
 

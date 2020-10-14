@@ -71,7 +71,7 @@ describe('LocationTest', function () {
         model: Model(locationPass)
       });
 
-      stub = sinon .stub(view, 'removeErrorMessage', function () {
+      stub = sinon .stub(view, 'removeErrorMessage').callsFake(function () {
         return;
       });
 
@@ -91,7 +91,7 @@ describe('LocationTest', function () {
         model: Model(locationFail)
       });
 
-      stub = sinon .stub(view, 'addErrorMessage', function () {
+      stub = sinon .stub(view, 'addErrorMessage').callsFake(function () {
         return;
       });
 
