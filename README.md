@@ -24,7 +24,7 @@ There are multiple dependencies that must be installed for this project:
 
 #### Install PHP
 ```bash
-$ brew install php55
+$ brew install php55 --with-postgresql --with-cgi
 ```
 
 #### Install PostgreSQL
